@@ -3,7 +3,7 @@
 
 name: "우태균"
 job: "Back-end Programmer"
-hi: "안녕하세요.\n모두 환영합니다!"
+hi: "안녕하세요.<br/>모두 환영합니다!"
 avatar_img: "/assets/img/me.png" # path to your avatar
 intro:
   - "Some thing about yourself"
