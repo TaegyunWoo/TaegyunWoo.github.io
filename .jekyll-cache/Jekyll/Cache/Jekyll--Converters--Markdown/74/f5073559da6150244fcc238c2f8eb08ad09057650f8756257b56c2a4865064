@@ -1,0 +1,18 @@
+I"=<p>Series are enssentially Jekyll Collections. So to add new series is like adding new collections. Say we want to add series <code class="language-plaintext highlighter-rouge">tutorial</code></p>
+
+<ol>
+  <li>config your series in <code class="language-plaintext highlighter-rouge">_config.yml</code> like</li>
+</ol>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">collections</span><span class="pi">:</span>
+  <span class="na">tutorial</span><span class="pi">:</span>
+    <span class="na">output</span><span class="pi">:</span> <span class="no">true</span>
+</code></pre></div></div>
+
+<ol>
+  <li>make corresponding series folder under project root: <code class="language-plaintext highlighter-rouge">_tutorial/</code></li>
+  <li>post under series by adding new markdown file into <code class="language-plaintext highlighter-rouge">_tutorial/</code></li>
+</ol>
+
+<p>See <a href="https://jekyllrb.com/docs/collections/">Jekyll official doc on <code class="language-plaintext highlighter-rouge">Collections</code></a></p>
+:ET

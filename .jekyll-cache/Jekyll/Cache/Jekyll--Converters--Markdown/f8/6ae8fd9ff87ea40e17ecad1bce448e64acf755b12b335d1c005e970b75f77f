@@ -1,0 +1,20 @@
+I"š<h1 id="intro">Intro</h1>
+
+<p><img src="/assets/img/mockup.png" alt="mockup" /></p>
+
+<p><strong>Textalic</strong> is a simple, responsive jekyll theme focus on blogging. Here is a <a href="https://unifreak.github.io">live demo</a>.</p>
+
+<h1 id="features">Features</h1>
+
+<ul>
+  <li>Github flavor markdown rendering</li>
+  <li>Post category, tag and series</li>
+  <li>Code highlighting</li>
+  <li>Autogenerate table of content</li>
+  <li>Disqus comment</li>
+  <li>Fulltext search (powered by <a href="https://github.com/christian-fei/Simple-Jekyll-Search">jekyll-simple-search plugin</a>)</li>
+  <li>Google analytics</li>
+  <li>Atom feed</li>
+  <li>Sitemap</li>
+</ul>
+:ET

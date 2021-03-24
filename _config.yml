@@ -19,13 +19,13 @@ layout: post
 permalink: /:categories/:title
 excerpt_separator: "[-----]"
 
-url: # Required: replace this with your domain
-name: textalic # Required: will be displayed on every page's header
-title: site title # Required: site's default title
+url: https://taegyunwoo.github.io/ # Required: replace this with your domain
+name: MeCoMeGae # Required: will be displayed on every page's header
+title: 매코매개 # Required: site's default title
 shout: # Required: **TWO** lines, will be displayed on page's header.
-  - one liner one...
-  - one liner two...
-description: "Some short description on your site" # Required
+  - 매일 코딩
+  - 매일 개발
+description: "개발자 블로그입니다." # Required
 
 disqus:
   comments: true # Global toggle on/off disqus comment
