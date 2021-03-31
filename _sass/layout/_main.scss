@@ -236,6 +236,7 @@ ul.tags {
     padding: 0;
     font-size: 2rem;
     box-shadow: 0 0 10px #999;
+    text-overflow: ellipsis;
 
     li {
         height: 5rem;
