@@ -6,8 +6,8 @@ job: "Back-end Programmer"
 hi: "안녕하세요.<br/>모두 환영합니다!"
 avatar_img: "/assets/img/me.png" # path to your avatar
 intro:
-  - "Some thing about yourself"
-  - "Can have multiple lines"
+  - "항상 성장하고싶은 백엔드 프로그래머입니다."
+  - "좋은 프로그래머가 무엇인지 항상 고민합니다."
 skills:
   - name: "Programming"
     icon-class: "fa fa-terminal"
