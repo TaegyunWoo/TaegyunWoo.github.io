@@ -5,6 +5,10 @@ markdown: CommonMarkGhPages
 kramdown:
   input: GFM
 
+commonmark:
+  options: ["SMART", "FOOTNOTES"]
+  extensions: ["strikethrough", "autolink", "table", "tagfilter"]
+
 plugins:
   - jekyll-paginate
   - jekyll-sitemap
