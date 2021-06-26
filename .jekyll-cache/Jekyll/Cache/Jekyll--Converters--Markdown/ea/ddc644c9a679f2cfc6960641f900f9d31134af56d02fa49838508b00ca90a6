@@ -1,89 +1,121 @@
----
-category: 데이터구조
-tags: [데이터구조, 자료구조, 개요]
----
+I"�?<h1 id="자료형--추상-자료형">자료형 &amp; 추상 자료형</h1>
 
-# 자료형 & 추상 자료형
+<h2 id="추상-자료형">추상 자료형</h2>
 
-## 추상 자료형
+<h3 id="추상화란">추상화란?</h3>
 
-### 추상화란?
+<ul>
+  <li>어떤 시스템의 간략화 된 기술 또는 명세</li>
+  <li>정보은닉</li>
+</ul>
 
-- 어떤 시스템의 간략화 된 기술 또는 명세
-- 정보은닉
+<h3 id="추상-자료형이란">추상 자료형이란?</h3>
 
-### 추상 자료형이란?
+<ul>
+  <li>ADT : Abstract Data Type</li>
+  <li>데이터나 연산이 무엇인가를 정의</li>
+  <li>데이터나 연산을 어떻게 구현할 것인지는 정의하지 않음</li>
+</ul>
 
-- ADT : Abstract Data Type
-- 데이터나 연산이 무엇인가를 정의
-- 데이터나 연산을 어떻게 구현할 것인지는 정의하지 않음
+<p><br /><br /></p>
 
-<br><br>
+<h2 id="자료형-vs-추상-자료형">자료형 vs 추상 자료형</h2>
 
-## 자료형 vs 추상 자료형
+<h3 id="자료형이란">자료형이란?</h3>
 
-### 자료형이란?
+<ul>
+  <li><strong>데이터의 집합 + 연산의 집합</strong></li>
+</ul>
 
-- **데이터의 집합 + 연산의 집합**
+<h3 id="자료형-예시">자료형 예시</h3>
 
-### 자료형 예시
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th><int 데이터="" 타입=""></int></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>데이터</strong></td>
+      <td>{ …, -2, -1, 0, 1, 2, … }</td>
+    </tr>
+    <tr>
+      <td><strong>연산</strong></td>
+      <td>+, -, *, /, %</td>
+    </tr>
+  </tbody>
+</table>
 
-| | <int 데이터 타입> |
-|-|---|
-| **데이터** | { ..., -2, -1, 0, 1, 2, ... } |
-| **연산** | +, -, *, /, % |
+<h3 id="추상-자료형이란-1">추상 자료형이란?</h3>
 
+<ul>
+  <li>데이터 : 집합 개념</li>
+  <li>연산의 정의 : 연산의 이름, 매개변수, 연산의 결과, 연산이 수행하는 기능 등을 기술</li>
+</ul>
 
-### 추상 자료형이란?
+<blockquote>
+  <p><strong>즉, 연산은 함수와 유사하다.</strong></p>
+</blockquote>
 
-- 데이터 : 집합 개념
-- 연산의 정의 : 연산의 이름, 매개변수, 연산의 결과, 연산이 수행하는 기능 등을 기술
+<h3 id="추상-자료형-예시">추상 자료형 예시</h3>
 
-> **즉, 연산은 함수와 유사하다.**
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th><자연수 ADT=""></자연수></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>데이터</strong></td>
+      <td>1에서 시작하여 INT_MAX까지의 순서화된 정수의 부분 범위</td>
+    </tr>
+    <tr>
+      <td><strong>연산</strong></td>
+      <td><strong>add(x, y)</strong> : x+y가 INT_MAX보다 작으면 x+y 반환 <br /> <strong>distance(x, y)</strong> : x가 y보다 크면 x-y 반환, x가 y보다 작으면 y-x 반환</td>
+    </tr>
+  </tbody>
+</table>
 
-### 추상 자료형 예시
+<p><br /><br /></p>
+<h1 id="추상-자료형--자료구조">추상 자료형 &amp; 자료구조</h1>
 
-| | <자연수 ADT> |
-|-|------------------|
-| **데이터** | 1에서 시작하여 INT_MAX까지의 순서화된 정수의 부분 범위 |
-| **연산** | **add(x, y)** : x+y가 INT_MAX보다 작으면 x+y 반환 <br> **distance(x, y)** : x가 y보다 크면 x-y 반환, x가 y보다 작으면 y-x 반환 |
+<h2 id="추상-자료형과-자료구조의-관계">추상 자료형과 자료구조의 관계</h2>
 
-<br><br>
-# 추상 자료형 & 자료구조
+<h3 id="자료구조">자료구조</h3>
 
-## 추상 자료형과 자료구조의 관계
+<p>자료구조는 추상 자료형을 프로그래밍 언어로 구현한 것</p>
 
-### 자료구조
+<p><br /></p>
 
-자료구조는 추상 자료형을 프로그래밍 언어로 구현한 것
+<h2 id="추상-자료형-구현">추상 자료형 구현</h2>
 
-<br>
+<h3 id="c언어에서의-추상-자료형">C언어에서의 추상 자료형</h3>
 
-## 추상 자료형 구현
+<ul>
+  <li><strong>데이터</strong> : 구조체</li>
+  <li><strong>연산</strong> : 함수</li>
+</ul>
 
-### C언어에서의 추상 자료형
+<p><br /><br /></p>
+<h1 id="실행-시간-측정법">실행 시간 측정법</h1>
 
-- **데이터** : 구조체
-- **연산** : 함수
+<h2 id="함수">함수</h2>
 
+<h3 id="사용-함수">사용 함수</h3>
 
-<br><br>
-# 실행 시간 측정법
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;time.h&gt;
+</span><span class="n">clock</span><span class="p">()</span>
+</code></pre></div></div>
 
-## 함수
+<측정시간을 현실시간으로="" 변환="" 공식="">
 
-### 사용 함수
+&gt; (double) (끝시각 - 시작시각) / CLOCKS_PER_SEC
 
-```c
-#include <time.h>
-clock()
-```
-
-<측정시간을 현실시간으로 변환 공식>
-
-> (double) (끝시각 - 시작시각) / CLOCKS_PER_SEC
-
-<br>
+<br />
 
 ### 반환값
 
@@ -111,7 +143,7 @@ int main(void) {
 }
 ```
 
-<br><br><br>
+<br /><br /><br />
 
 # 알고리즘 성능 분석
 
@@ -122,7 +154,7 @@ int main(void) {
 - **시간 복잡도 분석** : 알고리즘의 수행 시간 분석
 - **공간 복잡도 분석** : 수행시 필요로 하는 메모리 공간 분석
 
-<br>
+<br />
 
 ## 시간 복잡도
 
@@ -133,7 +165,7 @@ int main(void) {
 - 비교 연산
 - 이동 연산
 
-> **보통 반복 루프 제어 연산은 고려X**
+&gt; **보통 반복 루프 제어 연산은 고려X**
 
 ### 특징
 
@@ -150,16 +182,16 @@ int main(void) {
 	int n; //n은 입력의 크기
 	int sum = 0;          // 1
 	int i = 0;            // 1
-	for(i=0; i<n; i++) {    // 루프 제어는 고려X
+	for(i=0; i&lt;n; i++) {    // 루프 제어는 고려X
 		sum += i;           // 더하기 연산 1번 * n
 		sum--;              // 빼기 연산 1번 * n
 	}
 }
 ```
 
-> **따라서 T(n) = 2n + 2**
+&gt; **따라서 T(n) = 2n + 2**
 
-<br><br><br>
+<br /><br /><br />
 
 # 빅오 표기법
 
@@ -181,7 +213,7 @@ int main(void) {
 
 "T(n) = 2n^2 + 5n +10"일때 ⇒ $O(n^2)$
 
-<br>
+<br />
 
 ## 빅오 표기법의 종류
 
@@ -192,7 +224,7 @@ int main(void) {
     문제가 절반씩 연속적으로 줄어드는 경우
 
 	```c
-    for(int i=1; i<n; i*=2) {
+    for(int i=1; i&lt;n; i*=2) {
         //do
     }
 	```
@@ -206,9 +238,9 @@ int main(void) {
 
 ### 빅오 표기법의 복잡도 순
 
-$$O(1) < O(logn) < O(n) < O(nlogn) < O(n^2) < O(n^k) < O(2^n) < O(n!)$$
+$O(1) &lt; O(logn) &lt; O(n) &lt; O(nlogn) &lt; O(n^2) &lt; O(n^k) &lt; O(2^n) &lt; O(n!)$
 
-<br><br>
+<br /><br />
 
 # 빅오메가 표기법
 
@@ -222,13 +254,13 @@ $$O(1) < O(logn) < O(n) < O(nlogn) < O(n^2) < O(n^k) < O(2^n) < O(n!)$$
 
 ### 정의
 
-> **두 개의 함수 f(n)과 g(n)이 주어졌을 때, 모든 n≥n0에 대하여 |f(n)| ≥ c|g(n)|을 만족하는 2개의 상수 c, n0이 존재하면 f(n) = Ω(g(n))이다.**
+&gt; **두 개의 함수 f(n)과 g(n)이 주어졌을 때, 모든 n≥n0에 대하여 |f(n)| ≥ c|g(n)|을 만족하는 2개의 상수 c, n0이 존재하면 f(n) = Ω(g(n))이다.**
 
 ### 특징
 
 - 빅오메가는 하한이다.
 
-<br><br>
+<br /><br />
 
 # 빅세타 표기법
 
@@ -236,13 +268,13 @@ $$O(1) < O(logn) < O(n) < O(nlogn) < O(n^2) < O(n^k) < O(2^n) < O(n!)$$
 
 ### 정의
 
-> **두 개의 함수 f(n)과 g(n)이 주어졌을 때, 모든 n≥n0에 대하여 c1|g(n)| ≤ |f(n)| ≤ c2|g(n)|을 만족하는 3개의 상수 c1, c2, n0이 존재하면 f(n) = θ(g(n))이다.**
+&gt; **두 개의 함수 f(n)과 g(n)이 주어졌을 때, 모든 n≥n0에 대하여 c1|g(n)| ≤ |f(n)| ≤ c2|g(n)|을 만족하는 3개의 상수 c1, c2, n0이 존재하면 f(n) = θ(g(n))이다.**
 
 ### 특징
 
 - O() == Ω()
 
-<br><br><br>
+<br /><br /><br />
 # 1차원 배열
 
 ## 설명
@@ -252,11 +284,11 @@ $$O(1) < O(logn) < O(n) < O(nlogn) < O(n^2) < O(n^k) < O(2^n) < O(n!)$$
 - 직접 접근 방식
 - 항목 접근 시간 복잡도 ⇒ O(1)
 
-| <링크드 리스트(연결 리스트)> |
+| &lt;링크드 리스트(연결 리스트)&gt; |
 |------------------------------|
 |순사접근방식 (첫 요소부터 하나씩 찾아감)|
 |항목 접근 시간 복잡도 ⇒ O(n)|
-<br>
+<br />
 
 ### 배열의 초기화
 
@@ -267,9 +299,9 @@ $$O(1) < O(logn) < O(n) < O(nlogn) < O(n^2) < O(n^k) < O(2^n) < O(n!)$$
 int nums[5] = { 1, 2, 3 };
 ```
 
->배열의 크기보다 적은 수의 요소로 초기화 ⇒ 나머지 공간을 0으로 채움
+&gt;배열의 크기보다 적은 수의 요소로 초기화 ⇒ 나머지 공간을 0으로 채움
 
-<br><br>
+<br /><br />
 
 ## 문자열 : 특별한 1차원 배열
 
@@ -284,7 +316,7 @@ int main(void) {
 }
 ```
 
-<br>
+<br />
 
 ### 문자열 복사 함수
 
@@ -308,7 +340,7 @@ int main(void) {
 	strcpy(copy, name);
 }
 ```
-<br><br>
+<br /><br />
 ### 문자열 비교 함수
 ```c
 #include <string.h>
@@ -316,7 +348,7 @@ int main(void) {
 strcmp(문자열1, 문자열2)
 ```
 
-<br><br><br>
+<br /><br /><br />
 
 # 2차원 배열
 
@@ -339,7 +371,7 @@ int nums[3][4] = { {1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12} }
 
 ![2차원배열 저장형태](/assets/img/데이터구조_개요/Untitled_4.png)
 
-<br><br><br>
+<br /><br /><br />
 
 # 파라미터 전달 방식
 
@@ -369,7 +401,7 @@ int main(void) {
 }
 ```
 
-<br><br>
+<br /><br />
 
 ## 배열의 전달
 
@@ -380,7 +412,7 @@ int main(void) {
 - 함수로 배열(주소)을 전달할 때, 길이도 같이 전달해야 한다.
 (보통 배열의 길이까지 매개변수로 받는다.)
 
-<br><br><br>
+<br /><br /><br />
 
 # 구조체
 
@@ -433,7 +465,7 @@ int main(void) {
 }
 ```
 
-<br>
+<br />
 
 ## 사용 방법 2 : typedef
 
@@ -448,7 +480,7 @@ typedef struct 구조체이름 {
 } 별칭;
 ```
 
-> typedef로 별칭까지 설정시, 구조체이름은 생략가능
+&gt; typedef로 별칭까지 설정시, 구조체이름은 생략가능
 
 ### 선언 방법
 
@@ -480,7 +512,7 @@ int main(void) {
 }
 ```
 
-<br>
+<br />
 
 ## 멤버 접근
 
@@ -503,12 +535,12 @@ struct person {
 int main(void) {
 	struct person me;
 	me.age = 24;
-	//me.name = "홍길동"; => 불가능!!!!!!
+	//me.name = "홍길동"; =&gt; 불가능!!!!!!
 	strcpy(me.name, "홍길동");
 }
 ```
 
-<br>
+<br />
 
 ## 구조체 복사
 
@@ -543,7 +575,7 @@ int main(void) {
 }
 ```
 
-<br><br><br>
+<br /><br /><br />
 
 # 배열과 구조체 응용 : 다항식
 
@@ -557,7 +589,7 @@ int main(void) {
 
 - 다항식의 차수(degree) : 다항식에서 가장 큰 차수
 
-<br><br>
+<br /><br />
 
 ## 다항식의 배열 표현 : 다항식의 왼쪽부터 계수 저장
 
@@ -568,7 +600,7 @@ int main(void) {
 - 항의 계수 : 배열에 저장
 - 항의 차수 : 배열의 인덱스
 
-> '다항식의 차수' - '배열 요소 중 해당요소의 인덱스' = 차수
+&gt; '다항식의 차수' - '배열 요소 중 해당요소의 인덱스' = 차수
 
 ![왼쪽부터 계수 저장](/assets/img/데이터구조_개요/Untitled_2.png)
 
@@ -611,7 +643,7 @@ int main() {
 }
 ```
 
-<br><br>
+<br /><br />
 
 ## 다항식의 배열 표현 : 다항식의 오른쪽부터 계수 저장
 
@@ -622,7 +654,7 @@ int main() {
 - 항의 계수 : 배열에 저장
 - 항의 차수 : 배열의 인덱스
 
-> '배열 요소 중 해당요소의 인덱스' = 차수
+&gt; '배열 요소 중 해당요소의 인덱스' = 차수
 
 ![오른쪽부터 계수저장](/assets/img/데이터구조_개요/Untitled_3.png)
 
@@ -634,7 +666,7 @@ int main() {
 
 - 다항식을 1차원 배열로 표현하기 위해 변환한다.
 
-> $p(x) = 10x^{5}+6x+3 = 10x^{5}+0x^{4}+0x^{3}+0x^{2}+6x+3x^0$
+&gt; $p(x) = 10x^{5}+6x+3 = 10x^{5}+0x^{4}+0x^{3}+0x^{2}+6x+3x^0$
 
 ### 예시 코드
 
@@ -665,7 +697,7 @@ int main() {
 }
 ```
 
-<br><br>
+<br /><br />
 
 ## 다항식 구현 : 방법 1
 
@@ -690,12 +722,12 @@ typedef struct {
 Poly setPoly() {
 	Poly p;
 	printf("다항식의 차수를 입력하세요 : ");
-	scanf("%d", &p.degree);
+	scanf("%d", &amp;p.degree);
 	
 	int i;
 	printf("다항식의 계수들을 차례대로 입력해주세요.");
-	for(i=0; i<=p.degree; i++) {
-		scanf("%f", &p.coef[i]);
+	for(i=0; i&lt;=p.degree; i++) {
+		scanf("%f", &amp;p.coef[i]);
 	}
 	
 	return p;
@@ -704,7 +736,7 @@ Poly setPoly() {
 //다항식 출력 함수
 void printPoly(Poly p) {
 	int i;
-	for(i=0; i<p.degree; i++) {
+	for(i=0; i&lt;p.degree; i++) {
 		// "p.degree - i"가 차수  
 		printf("%.1fx^%d + ", p.coef[i], p.degree - i);
 	}
@@ -717,7 +749,7 @@ int main() {
 }
 ```
 
-<br><br>
+<br /><br />
 
 ## 다항식 구현 : 방법 2
 
@@ -742,12 +774,12 @@ typedef struct {
 Poly setPoly() {
 	Poly p;
 	printf("다항식의 차수를 입력하세요 : ");
-	scanf("%d", &p.degree);
+	scanf("%d", &amp;p.degree);
 	
 	int i;
 	printf("다항식의 계수들을 차례대로 입력해주세요.");
-	for(i=p.degree; i>=0; i--) {
-		scanf("%f", &p.coef[i]);
+	for(i=p.degree; i&gt;=0; i--) {
+		scanf("%f", &amp;p.coef[i]);
 	}
 	
 	return p;
@@ -756,7 +788,7 @@ Poly setPoly() {
 //다항식 출력 함수
 void printPoly(Poly p) {
 	int i;
-	for(i=p.degree; i>0; i--) {
+	for(i=p.degree; i&gt;0; i--) {
 		// "i"가 차수  
 		printf("%.1fx^%d + ", p.coef[i], i);
 	}
@@ -769,7 +801,7 @@ int main() {
 }
 ```
 
-<br><br>
+<br /><br />
 
 ## 희소 다항식의 표현
 
@@ -777,7 +809,7 @@ int main() {
 
 대부분 항의 계수가 0인 다항식
 
-> $10x^{100} + 7$
+&gt; $10x^{100} + 7$
 
 ### 기존 방식의 문제점
 
@@ -808,3 +840,5 @@ typedef struct {
 	Hang h[MAX_HANG]; //각 항을 담는 배열
 } Poly;
 ```
+</stdio.h></stdio.h></stdio.h></stdio.h></stdio.h></stdlib.h></stdio.h></stdio.h></stdio.h></stdio.h></stdio.h></stdio.h></stdio.h></stdio.h></stdlib.h></stdio.h></string.h></stdio.h></string.h></stdio.h></예시></stdlib.h></stdio.h></time.h></stdlib.h></stdio.h></측정시간을>
+:ET
