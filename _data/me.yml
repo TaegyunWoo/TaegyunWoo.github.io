@@ -14,7 +14,7 @@ skills:
     list: ["Java", "Servlet/JSP", "MySQL", "HTML", "CSS"]
   - name: "Framework"
     icon-class: "fa fa-th-list"
-    list: ["Spring", "JSTL"]
+    list: ["Spring", "JPA"]
   - name: "Tools"
     icon-class: "fa fa-cogs"
     list: ["Linux", "Docker", "Git"]
