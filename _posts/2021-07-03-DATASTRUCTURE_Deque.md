@@ -1,5 +1,5 @@
 ---
-category: 데이터구조
+category: DataStructure
 tags: [데이터구조, 자료구조, 덱]
 title: "데이터구조 [덱]"
 date:   2021-07-03 12:00:00 
