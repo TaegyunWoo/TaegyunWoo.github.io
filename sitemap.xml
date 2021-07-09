@@ -19,11 +19,6 @@ layout : null
       {% else %}
         <changefreq>monthly</changefreq>
       {% endif %}
-      {% if post.sitemap.priority %}
-        <priority>{{ post.sitemap.priority }}</priority>
-      {% else %}
-        <priority>0.5</priority>
-      {% endif %}
     </url>
     {% endunless %}
   {% endfor %}
@@ -42,11 +37,6 @@ layout : null
         <changefreq>{{ page.sitemap.changefreq }}</changefreq>
       {% else %}
         <changefreq>monthly</changefreq>
-      {% endif %}
-      {% if page.sitemap.priority %}
-        <priority>{{ page.sitemap.priority }}</priority>
-      {% else %}
-        <priority>0.3</priority>
       {% endif %}
     </url>
     {% endunless %}
