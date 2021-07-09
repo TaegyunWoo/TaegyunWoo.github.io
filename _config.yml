@@ -20,7 +20,7 @@ layout: post
 permalink: /:categories/:title
 excerpt_separator: "[-----]"
 
-url: https://taegyunwoo.github.io # Required: replace this with your domain
+url: https://taegyunwoo.github.io/ # Required: replace this with your domain
 name: MeCoMeGae # Required: will be displayed on every page's header
 title: 매코매개 # Required: site's default title
 shout: # Required: **TWO** lines, will be displayed on page's header.
