@@ -2,8 +2,8 @@
 category: DataStructure
 tags: [데이터구조, 자료구조, 리스트, 헤드포인터, 헤드노드]
 title: "[데이터구조] 리스트의 헤드 포인터 & 헤드 노드"
-date:   2021-07-14 14:41:00 
-lastmod : 2021-07-14 14:41:00
+date:   2021-07-13 13:41:00 
+lastmod : 2021-07-13 13:41:00
 sitemap :
   changefreq : daily
   priority : 1.0
@@ -27,7 +27,7 @@ sitemap :
 
 >참고: 일반적으로 'org'은 헤드노드를 가르킴
 
-![헤드포인터와 헤드노드](/assets/img/2021-07-14-DATASTRUCTURE_HeadPointer/Untitled_6.png)
+![헤드포인터와 헤드노드](/assets/img/2021-07-13-DATASTRUCTURE_HeadPointer/Untitled_6.png)
 
 <br>
 

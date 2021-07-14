@@ -2,7 +2,7 @@
 category: DataStructure
 tags: [데이터구조, 자료구조, 이중연결리스트]
 title: "[데이터구조] 이중연결리스트와 헤드포인터"
-date:   2021-07-13 13:00:00 
+date:   2021-07-14 13:00:00 
 lastmod : 2021-07-14 15:00:00
 sitemap :
   changefreq : daily
