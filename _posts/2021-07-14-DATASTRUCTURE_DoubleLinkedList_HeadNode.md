@@ -1,7 +1,7 @@
 ---
 category: DataStructure
 tags: [데이터구조, 자료구조, 이중연결리스트]
-title: "[데이터구조] 이중연결리스트와 헤드포인터"
+title: "[데이터구조] 이중연결리스트와 헤드노드"
 date:   2021-07-14 13:00:00 
 lastmod : 2021-07-14 15:00:00
 sitemap :
@@ -11,7 +11,7 @@ sitemap :
 
 <br/><br/>
 
-# Double Linked List - with "Head Pointer"
+# Double Linked List - with "Head Node"
 
 ## 개요
 
