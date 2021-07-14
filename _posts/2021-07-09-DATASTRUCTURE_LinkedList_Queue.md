@@ -1,7 +1,7 @@
 ---
 category: DataStructure
 tags: [데이터구조, 자료구조, 연결리스트, 큐]
-title: "데이터구조 [연결리스트-큐]"
+title: "[데이터구조] 연결리스트-큐"
 date:   2021-07-09 12:00:00 
 lastmod : 2021-07-09 12:00:00
 sitemap :

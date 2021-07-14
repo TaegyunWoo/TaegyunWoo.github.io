@@ -2,7 +2,7 @@
 category: DataStructure
 tags: [데이터구조, 자료구조, 개요]
 layout: post
-title: "데이터구조 개요"
+title: "[데이터구조] 개요"
 date:   2021-06-26 12:00:00 
 lastmod : 2021-06-26 12:00:00
 sitemap :
