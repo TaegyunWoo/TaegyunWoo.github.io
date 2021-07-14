@@ -101,7 +101,7 @@ sitemap :
 - 삽입 위치 다음의 모든 항목들을 뒤로 한 칸씩 이동시킴
 - 가장 뒤에 있는 요소부터 뒤로 이동시킴
 
-![삽입연산by배열](assets/img/2021-07-14-DATASTRUCTURE_List/Untitled.png)
+![삽입연산by배열](/assets/img/2021-07-14-DATASTRUCTURE_List/Untitled.png)
 
 ### 삭제 연산
 
@@ -110,7 +110,7 @@ sitemap :
 - 시간복잡도: O(n)
     > 매우 비효율적임
 
-![삭제연산by배열](assets/img/2021-07-14-DATASTRUCTURE_List/Untitled_1.png)
+![삭제연산by배열](/assets/img/2021-07-14-DATASTRUCTURE_List/Untitled_1.png)
 
 <br>
 
@@ -362,7 +362,7 @@ int main() {
 - 마지막 노드의 링크 값: NULL
 - **크기 제한X**
 
-![연결리스트 특징](assets/img/2021-07-14-DATASTRUCTURE_List/Untitled_2.png)
+![연결리스트 특징](/assets/img/2021-07-14-DATASTRUCTURE_List/Untitled_2.png)
 
 <br>
 
@@ -391,14 +391,14 @@ int main() {
 - 첫번째 노드로 삽입할 경우
     1. '추가할 노드의 link 필드 값'를 '헤드 포인터의 값'으로 취함
     2. '헤드 포인터의 값'를 '추가할 노드의 주소값'으로 취함
-    ![삽입연산1by연결리스트](assets/img/2021-07-14-DATASTRUCTURE_List/Untitled_3.png)
+    ![삽입연산1by연결리스트](/assets/img/2021-07-14-DATASTRUCTURE_List/Untitled_3.png)
 
 <br>
 
 - 중간 노드로 삽입할 경우
     1. '추가할 노드의 link 필드 값'을 '추가할 노드가 들어갈 인덱스의 앞 노드의 link 필드 값'으로 취함
     2. '추가할 노드가 들어갈 인덱스의 앞 노드의 link 필드 값'을 '추가할 노드의 주소값'으로 취함
-    ![삽입연산2by연결리스트](assets/img/2021-07-14-DATASTRUCTURE_List/Untitled_4.png)
+    ![삽입연산2by연결리스트](/assets/img/2021-07-14-DATASTRUCTURE_List/Untitled_4.png)
 
     > 즉, 추가될 위치의 앞 노드를 알아야 삽입이 가능함
 
@@ -418,12 +418,12 @@ int main() {
 - 첫번째 노드를 삭제할 경우
     1. '헤드포인터의 값'을 '헤드포인터가 가르키는 노드의 link필드 값'으로 취함
     2. free( 헤드포인터가 가르켰었던 노드 )
-    ![삭제연산1by연결리스트](assets/img/2021-07-14-DATASTRUCTURE_List/Untitled_3.png)
+    ![삭제연산1by연결리스트](/assets/img/2021-07-14-DATASTRUCTURE_List/Untitled_3.png)
 
 - 중간 노드를 삭제할 경우
     1. '삭제할 노드의 앞 노드의 link필드 값'을 '삭제할 노드의 link필드 값'으로 취함
     2. free(삭제할 노드)
-    ![삭제연산2by연결리스트](assets/img/2021-07-14-DATASTRUCTURE_List/Untitled_5.png)
+    ![삭제연산2by연결리스트](/assets/img/2021-07-14-DATASTRUCTURE_List/Untitled_5.png)
     > 즉, 추가될 위치의 앞 노드를 알아야 삽입이 가능함
 
 > **<위 두 경우의 처리방법이 다른 이유>**  
