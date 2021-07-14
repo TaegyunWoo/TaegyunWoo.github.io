@@ -54,7 +54,7 @@ typedef struct DblLinkedNode {
 
 <br>
 
-**< 공백리스트에서도 성립함 (헤드노드사용시) >**
+**< 공백리스트에서도 성립함 (헤드노드사용시) >**  
 ![이중연결리스트의 삽입연산1](/assets/img/2021-07-14-DATASTRUCTURE_DoubleLinkedList/Untitled_9.png)
 
 - 헤드노드의 prev가 자기의 next를 가르키고
