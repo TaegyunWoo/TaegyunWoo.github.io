@@ -422,7 +422,7 @@ int main() {
 
 - 중간 노드를 삭제할 경우
     1. '삭제할 노드의 앞 노드의 link필드 값'을 '삭제할 노드의 link필드 값'으로 취함
-    2. free(삭제할 노드)
+    2. free(삭제할 노드)  
     ![삭제연산2by연결리스트](/assets/img/2021-07-14-DATASTRUCTURE_List/Untitled_5.png)
     > 즉, 추가될 위치의 앞 노드를 알아야 삽입이 가능함
 
