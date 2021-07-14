@@ -11,6 +11,7 @@ commonmark:
 
 plugins:
   - jekyll-paginate
+  - jekyll-sitemap
   - jekyll-feed
 
 paginate: 7

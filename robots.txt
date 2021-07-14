@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: http://taegyunwoo.github.io/sitemap.xml
