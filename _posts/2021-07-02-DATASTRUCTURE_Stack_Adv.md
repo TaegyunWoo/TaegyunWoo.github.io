@@ -47,19 +47,19 @@ sitemap :
 
 - **의사코드**
 
-    ![괄호검사 의사코드](/assets/img/데이터구조_스택응용/Untitled_13.png)
+    ![괄호검사 의사코드](/assets/img/2021-07-02-DATASTRUCTURE_Stack_Adv/Untitled_13.png)
 
 <br><br>
 
 ### 예시 : 성공
 
-![괄호검사 성공](/assets/img/데이터구조_스택응용/Untitled_14.png)
+![괄호검사 성공](/assets/img/2021-07-02-DATASTRUCTURE_Stack_Adv/Untitled_14.png)
 
 <br>
 
 ### 예시 : 조건 위배
 
-![괄호검사 조건 위배](/assets/img/데이터구조_스택응용/Untitled_15.png)
+![괄호검사 조건 위배](/assets/img/2021-07-02-DATASTRUCTURE_Stack_Adv/Untitled_15.png)
 
 <br>
 
@@ -218,15 +218,15 @@ a*b+5|+5*ab|ab*5+|
 
 <예시>
 
-![후위 표기 수식 1](/assets/img/데이터구조_스택응용/Untitled_16.png)
+![후위 표기 수식 1](/assets/img/2021-07-02-DATASTRUCTURE_Stack_Adv/Untitled_16.png)
 
-![후위 표기 수식 2](/assets/img/데이터구조_스택응용/Untitled_17.png)
+![후위 표기 수식 2](/assets/img/2021-07-02-DATASTRUCTURE_Stack_Adv/Untitled_17.png)
 
 <br>
 
 ### 알고리즘
 
-![후위 표기식 알고리즘](/assets/img/데이터구조_스택응용/Untitled_18.png)
+![후위 표기식 알고리즘](/assets/img/2021-07-02-DATASTRUCTURE_Stack_Adv/Untitled_18.png)
 
 <숫자 검출>  
 0 : 48  
@@ -352,19 +352,19 @@ int main() {
 
 > 오른쪽 괄호 : 스택's 왼쪽 괄호 위에 쌓여있는 모든 연산자 pop
 
-![중위에서 후위 변환 알고리즘](/assets/img/데이터구조_스택응용/Untitled_19.png)
+![중위에서 후위 변환 알고리즘](/assets/img/2021-07-02-DATASTRUCTURE_Stack_Adv/Untitled_19.png)
 
 <br>
 
 ### A*B+C 변환 예시
 
-![A*B+C 변환 예시](/assets/img/데이터구조_스택응용/Untitled_20.png)
+![A*B+C 변환 예시](/assets/img/2021-07-02-DATASTRUCTURE_Stack_Adv/Untitled_20.png)
 
 <br>
 
 ### (A+B)*C 변환 예시
 
-![(A+B)*C 변환 예시](/assets/img/데이터구조_스택응용/Untitled_21.png)
+![(A+B)*C 변환 예시](/assets/img/2021-07-02-DATASTRUCTURE_Stack_Adv/Untitled_21.png)
 
 <br><br>
 

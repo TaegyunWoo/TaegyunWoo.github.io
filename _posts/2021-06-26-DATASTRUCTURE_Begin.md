@@ -307,7 +307,7 @@ strcpy(복사, 원본);
 
 - 항상 가장 마지막 요소에는 문자열의 끝을 알리는 '\0'이 들어감
 
-	![1차원배열 형태](/assets/img/데이터구조_개요/Untitled_0.png)
+	![1차원배열 형태](/assets/img/2021-06-26-DATASTRUCTURE_Begin/Untitled_0.png)
 
 ```c
 #include <stdio.h>
@@ -346,7 +346,7 @@ int nums[3][4] = { {1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12} }
 
 같은 행끼리 붙여서 메모리에 저장
 
-![2차원배열 저장형태](/assets/img/데이터구조_개요/Untitled_4.png)
+![2차원배열 저장형태](/assets/img/2021-06-26-DATASTRUCTURE_Begin/Untitled_4.png)
 
 <br><br><br>
 
@@ -579,7 +579,7 @@ int main(void) {
 
 > '다항식의 차수' - '배열 요소 중 해당요소의 인덱스' = 차수
 
-![왼쪽부터 계수 저장](/assets/img/데이터구조_개요/Untitled_2.png)
+![왼쪽부터 계수 저장](/assets/img/2021-06-26-DATASTRUCTURE_Begin/Untitled_2.png)
 
 ### 예시 다항식
 
@@ -633,7 +633,7 @@ int main() {
 
 > '배열 요소 중 해당요소의 인덱스' = 차수
 
-![오른쪽부터 계수저장](/assets/img/데이터구조_개요/Untitled_3.png)
+![오른쪽부터 계수저장](/assets/img/2021-06-26-DATASTRUCTURE_Begin/Untitled_3.png)
 
 ### 예시 다항식
 
@@ -796,7 +796,7 @@ int main() {
 
 "각 항의 차수와 계수를 담는 구조체"를 멤버로 갖는 구조체 이용
 
-![희소다항식 표현](/assets/img/데이터구조_개요/Untitled_4.png)
+![희소다항식 표현](/assets/img/2021-06-26-DATASTRUCTURE_Begin/Untitled_4.png)
 
 ### 예시 코드
 

@@ -67,7 +67,7 @@ sitemap :
 
 ### 삽입(push) & 삭제(pop)
 
-![push&pop](/assets/img/데이터구조_스택/Untitled_5.png)
+![push&pop](/assets/img/2021-07-02-DATASTRUCTURE_Stack/Untitled_5.png)
 
 - **is_empty()** : 스택이 공백상태인지 검사
 - **is_full()** : 스택이 포화상태인지 검사
@@ -112,11 +112,11 @@ sitemap :
 
 ### 스택 연산 : is_empty()
 
-![is_empty 연산](/assets/img/데이터구조_스택/Untitled_6.png)
+![is_empty 연산](/assets/img/2021-07-02-DATASTRUCTURE_Stack/Untitled_6.png)
 
 ### 스택 연산 : is_full()
 
-![is_full 연산](/assets/img/데이터구조_스택/Untitled_7.png)
+![is_full 연산](/assets/img/2021-07-02-DATASTRUCTURE_Stack/Untitled_7.png)
 
 ### 스택 연산 : init()
 
@@ -124,14 +124,14 @@ sitemap :
 - 스택을 공백상태로 만드는 것
 - top == -1
 
-![초기화 연산](/assets/img/데이터구조_스택/Untitled_8.png)
+![초기화 연산](/assets/img/2021-07-02-DATASTRUCTURE_Stack/Untitled_8.png)
 
 ### 스택 연산 : size()
 
 - **요소의 개수**
  - top + 1
 
-![size 연산](/assets/img/데이터구조_스택/Untitled_9.png)
+![size 연산](/assets/img/2021-07-02-DATASTRUCTURE_Stack/Untitled_9.png)
 
 ### 스택 연산 : push()
 
@@ -140,7 +140,7 @@ sitemap :
  - top을 하나 증가
  - 스택이 포화상태인지 체크
 
-![push 연산](/assets/img/데이터구조_스택/Untitled_10.png)
+![push 연산](/assets/img/2021-07-02-DATASTRUCTURE_Stack/Untitled_10.png)
 
 ### 스택 연산 : pop()
 
@@ -149,7 +149,7 @@ sitemap :
  - top이 가르키는 값 반환
  - top이 하나 감소
 
-![pop 연산](/assets/img/데이터구조_스택/Untitled_11.png)
+![pop 연산](/assets/img/2021-07-02-DATASTRUCTURE_Stack/Untitled_11.png)
 
 
 ### int형 스택 자료형 선언
@@ -158,7 +158,7 @@ sitemap :
 
 **(요소의 데이터타입 선언)**
 
-![데이터타입 선언](/assets/img/데이터구조_스택/Untitled_12.png)
+![데이터타입 선언](/assets/img/2021-07-02-DATASTRUCTURE_Stack/Untitled_12.png)
 
 <br/><br/>
 

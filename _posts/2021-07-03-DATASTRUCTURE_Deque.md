@@ -19,13 +19,13 @@ sitemap :
 
 - **전단(front)과 후단(rear)** 에서 모두 삽입, 삭제가 가능한 큐
 
-![덱 개요](/assets/img/데이터구조_덱/Untitled_33.png)
+![덱 개요](/assets/img/2021-07-03-DATASTRUCTURE_Deque/Untitled_33.png)
 
 <br/>
 
 ### 덱 연산 예시
 
-![덱 연산 예시](/assets/img/데이터구조_덱/Untitled_34.png)
+![덱 연산 예시](/assets/img/2021-07-03-DATASTRUCTURE_Deque/Untitled_34.png)
 
 <br/>
 

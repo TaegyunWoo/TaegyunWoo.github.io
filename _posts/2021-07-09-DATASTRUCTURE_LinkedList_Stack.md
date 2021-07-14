@@ -40,7 +40,7 @@ sitemap :
   - 첫 번째 노드의 주소를 저장하는 포인터 변수
   - 헤드포인터 == top
 
-![연결리스트 구조](/assets/img/데이터구조_연결리스트_스택/Untitled_47.png)
+![연결리스트 구조](/assets/img/2021-07-09-DATASTRUCTURE_LinkedList_Stack/Untitled_47.png)
 
 <br/><br/><br/>
 
@@ -48,7 +48,7 @@ sitemap :
 
 ### 구성요소
 
-![연결리스트 구성요소](/assets/img/데이터구조_연결리스트_스택/Untitled_48.png)
+![연결리스트 구성요소](/assets/img/2021-07-09-DATASTRUCTURE_LinkedList_Stack/Untitled_48.png)
 
 ### 노드 구조
 

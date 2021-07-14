@@ -48,7 +48,7 @@ sitemap :
                큐가 가득 차 있지 않다면 false
 - **size()** : 큐의 모든 요소들의 개수 반환
 
-![Enqueue, Dequeue 연산](/assets/img/데이터구조_큐/Untitled_22.png)
+![Enqueue, Dequeue 연산](/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_22.png)
 
 <br/><br/>
 
@@ -62,7 +62,7 @@ sitemap :
 
 ### 원리
 
-![선형큐 Enqueue 연산](/assets/img/데이터구조_큐/Untitled_23.png)
+![선형큐 Enqueue 연산](/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_23.png)
 
 <br/>
 
@@ -70,7 +70,7 @@ sitemap :
 
 - 삽입을 계속하기 위해서는 **요소들을 이동**시켜야 함 (dequeue 할 때 마다)
 
-![선형큐의 문제점](/assets/img/데이터구조_큐/Untitled_24.png)
+![선형큐의 문제점](/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_24.png)
 
 > 해결법 : 원형큐
 
@@ -87,7 +87,7 @@ sitemap :
 
 ### 원형 큐의 삽입 삭제 연산
 
-![원형 큐 Enqueue, Dequeue 연산](/assets/img/데이터구조_큐/Untitled_25.png)
+![원형 큐 Enqueue, Dequeue 연산](/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_25.png)
 
 <br/>
 
@@ -104,7 +104,7 @@ sitemap :
 이것은 공백상태와 동일한 상태로, 포화상태와 공백상태의 구분이 불가능하다.  
 ⇒ **해결책 : 하나의 공간은 남겨둔다.**
 
-![원형큐 마지막 공간 남기기](/assets/img/데이터구조_큐/Untitled_26.png)
+![원형큐 마지막 공간 남기기](/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_26.png)
 
 <br/><br/>
 
@@ -116,13 +116,13 @@ sitemap :
 - front와 rear 동일한 값으로 설정
 - 모두 0으로 초기화
 
-![초기화 연산](/assets/img/데이터구조_큐/Untitled_27.png)
+![초기화 연산](/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_27.png)
 
 <br/>
 
 ### size() 연산
 
-![size 연산](/assets/img/데이터구조_큐/Untitled_28.png)
+![size 연산](/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_28.png)
 
 > <MAX_QUEUE_SIZE를 더한 뒤, 다시 MAX_QUEUE_SIZE로 나누는 이유>  
 **rear<front 일때, 음수가 나오지 않게 하기 위해**
@@ -131,13 +131,13 @@ sitemap :
 
 ### is_empty() 연산
 
-![is_empty 연산](/assets/img/데이터구조_큐/Untitled_29.png)
+![is_empty 연산](/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_29.png)
 
 <br/>
 
 ### is_full() 연산
 
-![is_full 연산](/assets/img/데이터구조_큐/Untitled_30.png)
+![is_full 연산](/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_30.png)
 
 <br/>
 
@@ -146,7 +146,7 @@ sitemap :
 - 나머지 연산을 사용하여 인덱스를 원형으로 회전시킨다.
 (index가 큐의 최대 크기를 넘지 못하도록)
 
-![삽입 연산](/assets/img/데이터구조_큐/Untitled_31.png)
+![삽입 연산](/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_31.png)
 
 <br/>
 
@@ -155,7 +155,7 @@ sitemap :
 - 나머지 연산을 사용하여 인덱스를 원형으로 회전시킨다.
 (index가 큐의 최대 크기를 넘지 못하도록)
 
-![삭제 연산](/assets/img/데이터구조_큐/Untitled_32.png)
+![삭제 연산](/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_32.png)
 
 <br/><br/>
 

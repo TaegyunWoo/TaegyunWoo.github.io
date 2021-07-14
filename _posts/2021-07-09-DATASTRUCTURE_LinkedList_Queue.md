@@ -17,7 +17,7 @@ sitemap :
 
 ### 구성요소
 
-![연결리스트 큐 구성요소](/assets/img/데이터구조_연결리스트_큐/Untitled_49.png)
+![연결리스트 큐 구성요소](/assets/img/2021-07-09-DATASTRUCTURE_LinkedList_Queue/Untitled_49.png)
 
 <br>
 
@@ -71,7 +71,7 @@ int is_empty() {
 - <큐가 비어있는 상태에서 enqueue할 때>
   - front와 rear 모두 새로운 노드를 가르킨다.
 
-  ![큐가 비어있는 상태에서 enqueue](/assets/img/데이터구조_연결리스트_큐/Untitled_50.png)
+  ![큐가 비어있는 상태에서 enqueue](/assets/img/2021-07-09-DATASTRUCTURE_LinkedList_Queue/Untitled_50.png)
 
 <br>
 
@@ -79,7 +79,7 @@ int is_empty() {
   1. **'새로운 노드의 link'** 는 'rear가 가르키는 노드'의 주소값을 가르킨다.
   2. **'rear가 가리키는 노드의 link'** 는 새로운 노드의 주소값을 가르킨다.
 
-  ![큐가 비어있는 상태에서 enqueue](/assets/img/데이터구조_연결리스트_큐/Untitled_51.png)
+  ![큐가 비어있는 상태에서 enqueue](/assets/img/2021-07-09-DATASTRUCTURE_LinkedList_Queue/Untitled_51.png)
 
 ```c
 void enqueue(Element e) {
