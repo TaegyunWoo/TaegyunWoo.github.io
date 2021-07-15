@@ -1,0 +1,241 @@
+I"F<p><br/><br/></p>
+<h1 id="section">큐</h1>
+<h2 id="section-1">개요</h2>
+<h3 id="section-2">특징</h3>
+<ul>
+<li><strong>선입선출</strong></li>
+</ul>
+<p><br/><br/></p>
+<h2 id="adt">큐 ADT</h2>
+<h3 id="section-3">특징</h3>
+<ul>
+<li><strong>삽입</strong> : 큐의 후단(rear)</li>
+<li><strong>삭제</strong> : 큐의 전단(front)</li>
+</ul>
+<br/>
+<h3 id="section-4">데이터</h3>
+<p>선입선출의 접근 방법을 유지하는 요소들의 모음</p>
+<br/>
+<h3 id="section-5">연산</h3>
+<ul>
+<li><strong>init()</strong> : 큐를 초기화한다.</li>
+<li><strong>enqueue(e)</strong> : 주어진 요소 e를 큐의 맨 뒤에 추가</li>
+<li><strong>dequeue()</strong> : 큐가 비어있지 않으면 맨 앞 요소를 삭제하고 반환한다.</li>
+<li><strong>is_empty()</strong> : 큐가 비어있으면 true
+큐가 비어있지 않다면 false</li>
+<li><strong>peek()</strong> : 큐가 비어있지 않으면 맨 앞 요소를 삭제하지 않고 반환한다.</li>
+<li><strong>is_full()</strong> : 큐가 가득 차 있으면 true
+큐가 가득 차 있지 않다면 false</li>
+<li><strong>size()</strong> : 큐의 모든 요소들의 개수 반환</li>
+</ul>
+<p><img src="/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_22.png" alt="Enqueue, Dequeue 연산" /></p>
+<p><br/><br/></p>
+<h2 id="section-6">선형큐</h2>
+<h3 id="section-7">특징</h3>
+<ul>
+<li><strong>선형으로 큐를 구현</strong></li>
+</ul>
+<br/>
+<h3 id="section-8">원리</h3>
+<p><img src="/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_23.png" alt="선형큐 Enqueue 연산" /></p>
+<br/>
+<h3 id="section-9">선형큐의 문제점</h3>
+<ul>
+<li>삽입을 계속하기 위해서는 <strong>요소들을 이동</strong>시켜야 함 (dequeue 할 때 마다)</li>
+</ul>
+<p><img src="/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_24.png" alt="선형큐의 문제점" /></p>
+<blockquote>
+<p>해결법 : 원형큐</p>
+</blockquote>
+<p><br/><br/></p>
+<h2 id="section-10">원형 큐</h2>
+<h3 id="section-11">구조</h3>
+<ul>
+<li><strong>front</strong> : 첫 번째 요소 하나 앞의 인덱스</li>
+<li><strong>rear</strong> : 마지막 요소의 인덱스</li>
+</ul>
+<br/>
+<h3 id="section-12">원형 큐의 삽입 삭제 연산</h3>
+<p><img src="/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_25.png" alt="원형 큐 Enqueue, Dequeue 연산" /></p>
+<br/>
+<h3 id="section-13">상태</h3>
+<ul>
+<li>공백상태</li>
+<li>front == rear</li>
+<li>포화상태</li>
+<li>M : 원형큐의 최대크기</li>
+<li>front%M == (rear+1)%M</li>
+</ul>
+<blockquote>
+<p>&lt;문제점&gt;<br/>
+원형큐의 모든 공간에 요소가 있다면, “front == rear == 0”이 된다.
+이것은 공백상태와 동일한 상태로, 포화상태와 공백상태의 구분이 불가능하다.<br />
+⇒ <strong>해결책 : 하나의 공간은 남겨둔다.</strong></p>
+</blockquote>
+<p><img src="/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_26.png" alt="원형큐 마지막 공간 남기기" /></p>
+<p><br/><br/></p>
+<h2 id="section-14">알고리즘</h2>
+<h3 id="init-">init() 연산</h3>
+<ul>
+<li>공백상태로 만드는 것</li>
+<li>front와 rear 동일한 값으로 설정</li>
+<li>모두 0으로 초기화</li>
+</ul>
+<p><img src="/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_27.png" alt="초기화 연산" /></p>
+<br/>
+<h3 id="size-">size() 연산</h3>
+<p><img src="/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_28.png" alt="size 연산" /></p>
+<blockquote>
+<p>&lt;MAX_QUEUE_SIZE를 더한 뒤, 다시 MAX_QUEUE_SIZE로 나누는 이유&gt;<br />
+<strong>rear&lt;front 일때, 음수가 나오지 않게 하기 위해</strong></p>
+</blockquote>
+<br/>
+<h3 id="isempty-">is_empty() 연산</h3>
+<p><img src="/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_29.png" alt="is_empty 연산" /></p>
+<br/>
+<h3 id="isfull-">is_full() 연산</h3>
+<p><img src="/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_30.png" alt="is_full 연산" /></p>
+<br/>
+<h3 id="enqueue-">삽입(enqueue) 연산</h3>
+<ul>
+<li>나머지 연산을 사용하여 인덱스를 원형으로 회전시킨다.
+(index가 큐의 최대 크기를 넘지 못하도록)</li>
+</ul>
+<p><img src="/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_31.png" alt="삽입 연산" /></p>
+<br/>
+<h3 id="dequeue-">삭제(dequeue) 연산</h3>
+<ul>
+<li>나머지 연산을 사용하여 인덱스를 원형으로 회전시킨다.
+(index가 큐의 최대 크기를 넘지 못하도록)</li>
+</ul>
+<p><img src="/assets/img/2021-07-03-DATASTRUCTURE_Queue/Untitled_32.png" alt="삭제 연산" /></p>
+<p><br/><br/></p>
+<h2 id="section-15">구현</h2>
+<h3 id="section-16">초기변수설정</h3>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define Element int
+#define MAX_QUEUE_SIZE 100
+</span>
+<span class="n">Element</span> <span class="n">data</span><span class="p">[</span><span class="n">MAX_QUEUE_SIZE</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">front</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">rear</span><span class="p">;</span>
+</code></pre></div></div>
+<h3 id="init">init()</h3>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">front</span> <span class="o">=</span> <span class="n">rear</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="isempty">is_empty()</h3>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">is_empty</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="n">front</span><span class="o">==</span><span class="n">rear</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="isfull">is_full()</h3>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">is_full</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="n">front</span> <span class="o">==</span> <span class="p">(</span><span class="n">rear</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">MAX_QUEUE_SIZE</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="size">size()</h3>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">size</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="p">(</span><span class="n">rear</span> <span class="o">-</span> <span class="n">front</span> <span class="o">+</span> <span class="n">MAX_QUEUE_SIZE</span><span class="p">)</span> <span class="o">%</span> <span class="n">MAX_QUEUE_SIZE</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="printqueue">print_queue()</h3>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">print_queue</span><span class="p">(</span><span class="kt">char</span> <span class="n">msg</span><span class="p">[])</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">maxi</span> <span class="o">=</span> <span class="n">rear</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">front</span> <span class="o">&gt;=</span> <span class="n">rear</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">maxi</span> <span class="o">+=</span> <span class="n">MAX_QUEUE_SIZE</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"%s[%2d] = "</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">size</span><span class="p">());</span>
+	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="n">front</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;=</span><span class="n">maxi</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"%2d "</span><span class="p">,</span> <span class="n">queue</span><span class="p">[</span><span class="n">i</span><span class="o">%</span><span class="n">MAX_QUEUE_SIZE</span><span class="p">]);</span>
+	<span class="p">}</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="enqueue">삽입(enqueue)</h3>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">enqueue</span><span class="p">(</span><span class="n">Element</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span> <span class="n">is_full</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
+		<span class="n">error</span><span class="p">(</span><span class="s">"큐 포화 에러"</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">rear</span> <span class="o">=</span> <span class="p">(</span><span class="n">rear</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">MAX_QUEUE_SIZE</span><span class="p">;</span>
+	<span class="n">queue</span><span class="p">[</span><span class="n">rear</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="dequeue">삭제(dequeue)</h3>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Element</span> <span class="nf">dequeue</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span> <span class="n">is_empty</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
+		<span class="n">error</span><span class="p">(</span><span class="s">"큐 공백 에러"</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">front</span> <span class="o">=</span> <span class="p">(</span><span class="n">front</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">MAX_QUEUE_SIZE</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">queue</span><span class="p">[</span><span class="n">front</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="peek">살펴보기(peek)</h3>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Element</span> <span class="nf">peek</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">is_empty</span><span class="p">())</span> <span class="p">{</span>
+		<span class="n">error</span><span class="p">(</span><span class="s">"큐 공백상태"</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">queue</span><span class="p">[(</span><span class="n">front</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">MAX_QUEUE_SIZE</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="section-17">종합예제</h3>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+#define Element int
+#define MAX_QUEUE_SIZE 100
+</span>
+<span class="n">Element</span> <span class="n">queue</span><span class="p">[</span><span class="n">MAX_QUEUE_SIZE</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">front</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">rear</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">front</span> <span class="o">=</span> <span class="n">rear</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>	
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">size</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="p">(</span><span class="n">rear</span><span class="o">-</span><span class="n">front</span><span class="o">+</span><span class="n">MAX_QUEUE_SIZE</span><span class="p">)</span> <span class="o">%</span> <span class="n">MAX_QUEUE_SIZE</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">is_full</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="n">front</span> <span class="o">==</span> <span class="p">(</span><span class="n">rear</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">MAX_QUEUE_SIZE</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">is_empty</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="n">front</span> <span class="o">==</span> <span class="n">rear</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">enqueue</span><span class="p">(</span><span class="n">Element</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">is_full</span><span class="p">())</span> <span class="p">{</span>
+		<span class="n">error</span><span class="p">(</span><span class="s">"큐 포화상태"</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">rear</span> <span class="o">=</span> <span class="p">(</span><span class="n">rear</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">MAX_QUEUE_SIZE</span><span class="p">;</span>
+	<span class="n">queue</span><span class="p">[</span><span class="n">rear</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">Element</span> <span class="nf">dequeue</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">is_empty</span><span class="p">())</span> <span class="p">{</span>
+		<span class="n">error</span><span class="p">(</span><span class="s">"큐 공백상태"</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">front</span> <span class="o">=</span> <span class="p">(</span><span class="n">front</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">MAX_QUEUE_SIZE</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">queue</span><span class="p">[</span><span class="n">front</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="n">Element</span> <span class="nf">peek</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">is_empty</span><span class="p">())</span> <span class="p">{</span>
+		<span class="n">error</span><span class="p">(</span><span class="s">"큐 공백상태"</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">queue</span><span class="p">[(</span><span class="n">front</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">MAX_QUEUE_SIZE</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">init</span><span class="p">();</span>
+	<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">enqueue</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+	<span class="p">}</span>
+	
+	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">112</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"dequeue : %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">dequeue</span><span class="p">());</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+:ET

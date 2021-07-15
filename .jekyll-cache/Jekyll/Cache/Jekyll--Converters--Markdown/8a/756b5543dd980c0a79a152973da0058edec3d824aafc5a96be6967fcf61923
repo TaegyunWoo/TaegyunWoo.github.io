@@ -1,0 +1,415 @@
+I"h�<p><br/><br/></p>
+<h1 id="section">스택 응용</h1>
+<h2 id="section-1">괄호 검사</h2>
+<h3 id="section-2">목적</h3>
+<ul>
+<li>
+<p>같은 유형의 괄호가 쌍을 이루어야 한다.</p>
+</li>
+<li>
+<p>소괄호, 중괄호, 대괄호 모두 포함</p>
+</li>
+</ul>
+<h3 id="section-3">조건</h3>
+<ol>
+<li>‘왼쪽 괄호의 개수’와 ‘오른쪽 괄호의 개수’가 같아야 한다.</li>
+<li>왼쪽 괄호는 오른쪽 괄호보다 먼저 나와야 한다.</li>
+<li>괄호 사이에는 포함 관계만 존재한다.</li>
+</ol>
+<h3 id="section-4">알고리즘</h3>
+<ul>
+<li>
+<p>기본 원리</p>
+<ul>
+<li>왼쪽 괄호 입력 : push</li>
+<li>오른쪽 괄호 입력 : pop</li>
+</ul>
+</li>
+<li>
+<p>개요</p>
+<ul>
+<li>문자를 저장하는 스택 준비. (공백상태)</li>
+<li>문자열에 있는 괄호를 차례대로 조사, 왼쪽 괄호 발견시 push.</li>
+<li>오른쪽 괄호 발견시 pop.</li>
+</ul>
+</li>
+<li>
+<p>위배 조건</p>
+<ul>
+<li>pop : 스택이 비어있다면 조건2 위배</li>
+<li>pop : 꺼낸 괄호가 오른쪽 괄호와 짝이 맞지 않다면 조건3 위배</li>
+<li>마무리 : 마지막까지 스택이 비어있지 않다면 조건1 위배</li>
+</ul>
+<blockquote>
+<p><strong>조건 모두 만족 ⇒ 성공 (true)</strong></p>
+</blockquote>
+<blockquote>
+<p><strong>조건 위배 ⇒ 실패 (false)</strong></p>
+</blockquote>
+</li>
+<li>
+<p><strong>의사코드</strong></p>
+<p><img src="/assets/img/2021-07-02-DATASTRUCTURE_Stack_Adv/Untitled_13.png" alt="괄호검사 의사코드" /></p>
+</li>
+</ul>
+<p><br><br></p>
+<h3 id="section-5">예시 : 성공</h3>
+<p><img src="/assets/img/2021-07-02-DATASTRUCTURE_Stack_Adv/Untitled_14.png" alt="괄호검사 성공" /></p>
+<br>
+<h3 id="section-6">예시 : 조건 위배</h3>
+<p><img src="/assets/img/2021-07-02-DATASTRUCTURE_Stack_Adv/Untitled_15.png" alt="괄호검사 조건 위배" /></p>
+<br>
+<h3 id="section-7">코드화</h3>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+#define MAX_SIZE 100
+</span>
+<span class="k">typedef</span> <span class="kt">char</span> <span class="n">Element</span><span class="p">;</span>
+<p><span class="n">Element</span> <span class="n">stack</span><span class="p">[</span><span class="n">MAX_SIZE</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">top</span><span class="p">;</span></p>
+<p><span class="kt">void</span> <span class="nf">error</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">msg</span><span class="p">)</span> <span class="p">{</span>
+<span class="n">printf</span><span class="p">(</span><span class="s">”%s”</span><span class="p">,</span> <span class="n">msg</span><span class="p">);</span>
+<span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span></p>
+<p><span class="kt">void</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+<span class="n">top</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span></p>
+<p><span class="kt">int</span> <span class="nf">is_empty</span><span class="p">()</span> <span class="p">{</span>
+<span class="k">return</span> <span class="n">top</span><span class="o">==-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span></p>
+<p><span class="kt">int</span> <span class="nf">is_full</span><span class="p">()</span> <span class="p">{</span>
+<span class="k">return</span> <span class="n">top</span><span class="o">==</span><span class="n">MAX_SIZE</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span></p>
+<p><span class="kt">void</span> <span class="nf">push</span><span class="p">(</span><span class="n">Element</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">if</span><span class="p">(</span><span class="n">is_full</span><span class="p">())</span>
+<span class="n">error</span><span class="p">(</span><span class="s">“stack overflow”</span><span class="p">);</span>
+<span class="n">stack</span><span class="p">[</span><span class="o">++</span><span class="n">top</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span><span class="p">;</span>
+<span class="p">}</span></p>
+<p><span class="n">Element</span> <span class="nf">pop</span><span class="p">()</span> <span class="p">{</span>
+<span class="k">if</span><span class="p">(</span><span class="n">is_empty</span><span class="p">())</span>
+<span class="n">error</span><span class="p">(</span><span class="s">“왼쪽 괄호 부재”</span><span class="p">);</span>
+<span class="k">return</span> <span class="n">stack</span><span class="p">[</span><span class="n">top</span><span class="o">–</span><span class="p">];</span>
+<span class="p">}</span></p>
+<p><span class="n">Element</span> <span class="nf">peek</span><span class="p">()</span> <span class="p">{</span>
+<span class="k">if</span><span class="p">(</span><span class="n">is_empty</span><span class="p">())</span>
+<span class="n">error</span><span class="p">(</span><span class="s">“stack underflow”</span><span class="p">);</span>
+<span class="k">return</span> <span class="n">stack</span><span class="p">[</span><span class="n">top</span><span class="p">];</span>
+<span class="p">}</span></p>
+<p><span class="kt">int</span> <span class="nf">size</span><span class="p">()</span> <span class="p">{</span>
+<span class="k">return</span> <span class="n">top</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span></p>
+<p><span class="kt">int</span> <span class="nf">is_right_pair</span><span class="p">(</span><span class="n">Element</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">if</span><span class="p">(</span><span class="n">e</span><span class="o">==</span><span class="sc">’)’</span> <span class="o">&amp;&amp;</span> <span class="n">peek</span><span class="p">()</span><span class="o">==</span><span class="sc">’(’</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">e</span><span class="o">==</span><span class="sc">’}’</span> <span class="o">&amp;&amp;</span> <span class="n">peek</span><span class="p">()</span><span class="o">==</span><span class="sc">’{’</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">e</span><span class="o">==</span><span class="sc">’]’</span> <span class="o">&amp;&amp;</span> <span class="n">peek</span><span class="p">()</span><span class="o">==</span><span class="sc">’[’</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span></p>
+<p><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+<span class="kt">char</span> <span class="n">s</span><span class="p">[]</span> <span class="o">=</span> <span class="s">”[21()]”</span><span class="p">;</span>
+<span class="n">init</span><span class="p">();</span></p>
+<pre><code>&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;'\0'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;'('&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; 
+		&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;'{'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; 
+		&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;'['&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;')'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;is_right_pair&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;pop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;	
+			&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;짝이 맞지 않음&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;'}'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;is_right_pair&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;pop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;	
+			&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;짝이 맞지 않음&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;']'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;is_right_pair&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;pop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;	
+			&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;짝이 맞지 않음&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;성공!&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;오른쪽 짝이 없음&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; 
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="p">}</span>
+</code></pre></div></div></p>
+<p><br><br><br><br></p>
+<h2 id="section-8">수식 계산</h2>
+<h3 id="section-9">수식의 표기방법</h3>
+<ul>
+<li><strong>전위 (prefix)</strong></li>
+<li><strong>중위 (infix)</strong></li>
+<li><strong>후위 (postfix)</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>중위 표기법</th>
+<th>전위 표기법</th>
+<th>후위 표기법</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2+3*4</td>
+<td>+2*34</td>
+<td>234*+</td>
+</tr>
+<tr>
+<td>a*b+5</td>
+<td>+5*ab</td>
+<td>ab*5+</td>
+</tr>
+<tr>
+<td>(1+2)+7</td>
+<td>+7+12</td>
+<td>12+7+</td>
+</tr>
+</tbody>
+</table>
+<p><br><br></p>
+<h3 id="section-10">컴퓨터에서의 수식 계산순서</h3>
+<ul>
+<li>중위 → 후위 → 계산</li>
+</ul>
+<br>
+<h3 id="section-11">후위 표기 장점</h3>
+<ul>
+<li>괄호를 사용하지 않고도 계산 가능</li>
+<li>연산자의 우선순위 고려 X</li>
+<li>수식을 읽으며 바로 계산 가능</li>
+</ul>
+<br>
+<h3 id="section-12">후위 표기의 계산 원리</h3>
+<ol>
+<li>전체 수식을 왼쪽에서 오른쪽으로 스캔</li>
+<li>스캔 과정에서 피연산자 검출 ⇒ 스택에 push</li>
+<li>연산자 검출 ⇒ pop 2번  (피연산자 2개 꺼냄)</li>
+<li>계산 결과 ⇒ push</li>
+<li>반복</li>
+</ol>
+<br>
+<p>&lt;예시&gt;</p>
+<p><img src="/assets/img/2021-07-02-DATASTRUCTURE_Stack_Adv/Untitled_16.png" alt="후위 표기 수식 1" /></p>
+<p><img src="/assets/img/2021-07-02-DATASTRUCTURE_Stack_Adv/Untitled_17.png" alt="후위 표기 수식 2" /></p>
+<br>
+<h3 id="section-13">알고리즘</h3>
+<p><img src="/assets/img/2021-07-02-DATASTRUCTURE_Stack_Adv/Untitled_18.png" alt="후위 표기식 알고리즘" /></p>
+<p>&lt;숫자 검출&gt;<br />
+0 : 48<br />
+9 : 57</p>
+<p>&lt;문자끼리 산술연산&gt;<br />
+‘6’-‘0’ ⇒ int형 6</p>
+<p><br><br></p>
+<h3 id="section-14">구현</h3>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+</span>
+<span class="cp">#define MAX_SIZE 100
+</span><span class="k">typedef</span> <span class="kt">double</span> <span class="n">Element</span><span class="p">;</span>
+<p><span class="n">Element</span> <span class="n">stack</span><span class="p">[</span><span class="n">MAX_SIZE</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">top</span><span class="p">;</span></p>
+<p><span class="kt">void</span> <span class="nf">error</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">msg</span><span class="p">)</span> <span class="p">{</span>
+<span class="n">printf</span><span class="p">(</span><span class="s">”%s”</span><span class="p">,</span> <span class="n">msg</span><span class="p">);</span>
+<span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span></p>
+<p><span class="kt">void</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+<span class="n">top</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span></p>
+<p><span class="kt">int</span> <span class="nf">is_empty</span><span class="p">()</span> <span class="p">{</span>
+<span class="k">return</span> <span class="n">top</span><span class="o">==-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span></p>
+<p><span class="kt">int</span> <span class="nf">is_full</span><span class="p">()</span> <span class="p">{</span>
+<span class="k">return</span> <span class="n">top</span><span class="o">==</span><span class="n">MAX_SIZE</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span></p>
+<p><span class="kt">void</span> <span class="nf">push</span><span class="p">(</span><span class="n">Element</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">if</span><span class="p">(</span><span class="n">is_full</span><span class="p">())</span>
+<span class="n">error</span><span class="p">(</span><span class="s">“stack overflow”</span><span class="p">);</span>
+<span class="n">stack</span><span class="p">[</span><span class="o">++</span><span class="n">top</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span><span class="p">;</span>
+<span class="p">}</span></p>
+<p><span class="n">Element</span> <span class="nf">pop</span><span class="p">()</span> <span class="p">{</span>
+<span class="k">if</span><span class="p">(</span><span class="n">is_empty</span><span class="p">())</span>
+<span class="n">error</span><span class="p">(</span><span class="s">“stack underflow”</span><span class="p">);</span>
+<span class="k">return</span> <span class="n">stack</span><span class="p">[</span><span class="n">top</span><span class="o">–</span><span class="p">];</span>
+<span class="p">}</span></p>
+<p><span class="n">Element</span> <span class="nf">peek</span><span class="p">()</span> <span class="p">{</span>
+<span class="k">if</span><span class="p">(</span><span class="n">is_empty</span><span class="p">())</span>
+<span class="n">error</span><span class="p">(</span><span class="s">“stack underflow”</span><span class="p">);</span>
+<span class="k">return</span> <span class="n">stack</span><span class="p">[</span><span class="n">top</span><span class="p">];</span>
+<span class="p">}</span></p>
+<p><span class="kt">int</span> <span class="nf">size</span><span class="p">()</span> <span class="p">{</span>
+<span class="k">return</span> <span class="n">top</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span></p>
+<p><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+<span class="kt">char</span> <span class="n">post</span><span class="p">[]</span> <span class="o">=</span> <span class="s">“23+4*5”</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">post</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">!=</span><span class="sc">’\0’</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">post</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="kt">double</span> <span class="n">second</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">first</span><span class="p">;</span></p>
+<pre><code>	&lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;'+'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;second&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;'-'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;second&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;'*'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;second&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;'/'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;second&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;'0'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;result: %.2f&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+</code></pre>
+<p><span class="p">}</span>
+</code></pre></div></div></p>
+<p><br><br></p>
+<h2 id="section-15">중위표기 ⇒ 후위표기 변환</h2>
+<h3 id="amp--">중위 &amp; 후위 공통점</h3>
+<p>피연산자의 순서 동일</p>
+<h3 id="amp---1">중위 &amp; 후위 차이점</h3>
+<p>연산자의 순서만 다르다</p>
+<blockquote>
+<p>따라서, 연산자만 스택에 저장했다가 출력</p>
+</blockquote>
+<blockquote>
+<p>2+3*4 ⇒ 234*+</p>
+</blockquote>
+<br>
+<h3 id="section-16">알고리즘</h3>
+<ol>
+<li>피연산자 검출 ⇒ 그대로 출력</li>
+<li>‘top요소’보다 ‘우선 순위가 높은 연산자’ 검출 ⇒ push</li>
+<li>‘top요소’보다 ‘우선 순위가 낮거나 같은 연산자’ 검출 ⇒ pop</li>
+</ol>
+<blockquote>
+<p>왼쪽 괄호 : 가장 낮은 우선순위의 연산자 취급</p>
+</blockquote>
+<blockquote>
+<p>오른쪽 괄호 : 스택’s 왼쪽 괄호 위에 쌓여있는 모든 연산자 pop</p>
+</blockquote>
+<p><img src="/assets/img/2021-07-02-DATASTRUCTURE_Stack_Adv/Untitled_19.png" alt="중위에서 후위 변환 알고리즘" /></p>
+<br>
+<h3 id="abc--">A*B+C 변환 예시</h3>
+<p><img src="/assets/img/2021-07-02-DATASTRUCTURE_Stack_Adv/Untitled_20.png" alt="A*B+C 변환 예시" /></p>
+<br>
+<h3 id="abc---1">(A+B)*C 변환 예시</h3>
+<p><img src="/assets/img/2021-07-02-DATASTRUCTURE_Stack_Adv/Untitled_21.png" alt="(A+B)*C 변환 예시" /></p>
+<p><br><br></p>
+<h3 id="section-17">구현</h3>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+</span>
+<span class="cp">#define MAX_SIZE 100
+</span><span class="k">typedef</span> <span class="kt">char</span> <span class="n">Element</span><span class="p">;</span>
+<p><span class="n">Element</span> <span class="n">stack</span><span class="p">[</span><span class="n">MAX_SIZE</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">top</span><span class="p">;</span></p>
+<p><span class="kt">void</span> <span class="nf">error</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">msg</span><span class="p">)</span> <span class="p">{</span>
+<span class="n">printf</span><span class="p">(</span><span class="s">”%s”</span><span class="p">,</span> <span class="n">msg</span><span class="p">);</span>
+<span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span></p>
+<p><span class="kt">void</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+<span class="n">top</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span></p>
+<p><span class="kt">int</span> <span class="nf">is_empty</span><span class="p">()</span> <span class="p">{</span>
+<span class="k">return</span> <span class="n">top</span><span class="o">==-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span></p>
+<p><span class="kt">int</span> <span class="nf">is_full</span><span class="p">()</span> <span class="p">{</span>
+<span class="k">return</span> <span class="n">top</span><span class="o">==</span><span class="n">MAX_SIZE</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span></p>
+<p><span class="kt">void</span> <span class="nf">push</span><span class="p">(</span><span class="n">Element</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">if</span><span class="p">(</span><span class="n">is_full</span><span class="p">())</span>
+<span class="n">error</span><span class="p">(</span><span class="s">“stack overflow”</span><span class="p">);</span>
+<span class="n">stack</span><span class="p">[</span><span class="o">++</span><span class="n">top</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span><span class="p">;</span>
+<span class="p">}</span></p>
+<p><span class="n">Element</span> <span class="nf">pop</span><span class="p">()</span> <span class="p">{</span>
+<span class="k">if</span><span class="p">(</span><span class="n">is_empty</span><span class="p">())</span>
+<span class="n">error</span><span class="p">(</span><span class="s">“stack underflow”</span><span class="p">);</span>
+<span class="k">return</span> <span class="n">stack</span><span class="p">[</span><span class="n">top</span><span class="o">–</span><span class="p">];</span>
+<span class="p">}</span></p>
+<p><span class="n">Element</span> <span class="nf">peek</span><span class="p">()</span> <span class="p">{</span>
+<span class="k">if</span><span class="p">(</span><span class="n">is_empty</span><span class="p">())</span>
+<span class="n">error</span><span class="p">(</span><span class="s">“stack underflow”</span><span class="p">);</span>
+<span class="k">return</span> <span class="n">stack</span><span class="p">[</span><span class="n">top</span><span class="p">];</span>
+<span class="p">}</span></p>
+<p><span class="kt">int</span> <span class="nf">size</span><span class="p">()</span> <span class="p">{</span>
+<span class="k">return</span> <span class="n">top</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span></p>
+<p><span class="kt">int</span> <span class="nf">prior</span><span class="p">(</span><span class="kt">char</span> <span class="n">op</span><span class="p">)</span> <span class="p">{</span><span class="c1">//우선순위 반환 </span>
+<span class="k">switch</span><span class="p">(</span><span class="n">op</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">case</span> <span class="sc">’(’</span><span class="p">:</span> <span class="k">case</span> <span class="sc">’)’</span> <span class="p">:</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">case</span> <span class="sc">’+’</span><span class="p">:</span> <span class="k">case</span> <span class="sc">’-’</span> <span class="p">:</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="k">case</span> <span class="sc">’*’</span><span class="p">:</span> <span class="k">case</span> <span class="sc">’/’</span> <span class="p">:</span> <span class="k">return</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">}</span></p>
+<p><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span></p>
+<pre><code>&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;(4+3+3)*5+(4/2)&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;'\0'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pushed_op&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;'0'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;'9'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 숫자라면 즉시 출력 &lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%c&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;'('&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;')'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;is_empty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//스택이 빌때까지 &lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;pushed_op&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pushed_op&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;'('&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//(가 발견될때 까지 &lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%c&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pushed_op&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;'+'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;'-'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;'*'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;'/'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//일반 연산자일때&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;is_empty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;pushed_op&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;peek&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prior&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;prior&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pushed_op&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%c&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+				&lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+	
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;is_empty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//마지막으로 스택에 남아있는 연산자 출력 &lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%c&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="p">}</span>
+</code></pre></div></div></p>
+:ET

@@ -1,0 +1,56 @@
+I"X<p><br/><br/></p>
+<h1 id="section">헤드 포인터와 헤드 노드</h1>
+<h2 id="section-1">개요</h2>
+<h3 id="section-2">헤드 포인터 방식의 문제점</h3>
+<ul>
+<li>맨 앞 노드의 처리가 까다롭다.</li>
+</ul>
+<blockquote>
+<p>Ex) “맨앞에 노드추가” , “중간에 노드추가” 따로 처리해주어야함.</p>
+</blockquote>
+<ul>
+<li>해결방법: 헤드 노드</li>
+</ul>
+<br>
+<h3 id="section-3">헤드 노드</h3>
+<blockquote>
+<p>참고: 일반적으로 ‘org’은 헤드노드를 가르킴</p>
+</blockquote>
+<p><img src="/assets/img/2021-07-13-DATASTRUCTURE_HeadPointer/Untitled_6.png" alt="헤드포인터와 헤드노드" /></p>
+<br>
+<h3 id="section-4">노드헤더 사용 리스트의 특징</h3>
+<ul>
+<li>헤드 노드를 제외한 모든 노드가 선행 노드를 갖는다.</li>
+<li>insert와 delete 연산이 간단해진다.</li>
+<li><code>get_entry(-1)</code> 연산이 헤드노드의 주소를 반환하도록 수정해야한다.</li>
+</ul>
+<p><br><br></p>
+<h2 id="codegetentryint-indexcode--"><code>get_entry(int index)</code> 연산의 변화</h2>
+<h3 id="getentryint-index">get_entry(int index)</h3>
+<br>
+<p><strong>&lt;헤드 포인터&gt;</strong></p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Node</span><span class="o">*</span> <span class="nf">get_entry</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+	<span class="n">Node</span> <span class="o">*</span><span class="n">n</span> <span class="o">=</span> <span class="n">head</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">index</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">link</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">==</span><span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//끝까지 탐색했을때 (찾으려는 index가 존재하지 않을때)</span>
+			<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">n</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<br>
+<p><strong>&lt;헤드 노드&gt;</strong></p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Node</span><span class="o">*</span> <span class="nf">get_entry</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+	<span class="n">Node</span> <span class="o">*</span><span class="n">n</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">org</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=-</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">index</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">link</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">==</span><span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//끝까지 탐색했을때 (찾으려는 index가 존재하지 않을때)</span>
+			<span class="k">break</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">n</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+:ET
