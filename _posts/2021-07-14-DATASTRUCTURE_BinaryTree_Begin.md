@@ -1,8 +1,8 @@
 ---
 category: DataStructure
-tags: [데이터구조, 자료구조, 이중연결리스트]
-title: "[데이터구조] 이중연결리스트와 헤드노드"
-date:   2021-07-14 13:00:00 
+tags: [데이터구조, 자료구조, 이진트리, 개요]
+title: "[데이터구조] 이진트리 개요"
+date:   2021-07-14 15:00:00 
 lastmod : 2021-07-14 15:00:00
 sitemap :
   changefreq : daily
@@ -11,425 +11,359 @@ sitemap :
 
 <br/><br/>
 
-# Double Linked List - with "Head Node"
+# 트리
 
 ## 개요
 
-### 특징
+### 트리란?
 
-- 링크 필드가 양방향(총 2개)를 표현함
-- 각 노드의 선행노드를 쉽게 알 수 있음
+- 계층적인 구조를 나타내는 자료구조
+- 부모-자식 관계의 노드들로 이루어짐
 
-> 실제로는 이중 연결리스트 + 원형 연결 리스트를 혼합한 형태가 많이 사용됨
+<br/>
 
-<br>
+### 용어 총정리
 
-### 노드 구조
+- **노드**
+  - 트리의 구성요소
+- **루트**
+  - 부모가 없는 노드
+- **서브 트리**
+  - 하나의 노드와 자손들로 이루어짐
 
-![이중연결리스트의 노드구조](/assets/img/2021-07-14-DATASTRUCTURE_DoubleLinkedList/Untitled_8.png)
+    ![트리구조](/assets/img/2021-07-14-DATASTRUCTURE_BinaryTree_Begin/Untitled_24.png)
 
-<br>
+- **단말 노드**
+  - 자식이 없는 노드
+- **비단말 노드**
+  - 자식을 가지는 노드
+- **간선, 엣지**
+  - 연결선
+- **자식**
+  - 직계 자손
+- **부모**
+  - 직계 조상
+- **형제**
+  - 같은 부모를 갖는 노드 관계
+- **조상**
+- **자손**
+- **차수**
+  - 어떤 노드의 자식 노드의 수
+- **트리의 차수**
+  - 트리가 가지고 있는 노드의 차수 중 가장 큰 값
+- **레벨**
+  - 트리의 각 층의 번호
+  - 루트노드는 레벨1이다.
 
-```c
-typedef int Element;
-typedef struct DblLinkedNode {
-	Element data;
-	struct DblLinkedNode *prev;
-	struct DblLinkedNode *next;
-} Node;
-```
+- **높이**
+  - 트리의 최대 레벨
+    ![트리높이](/assets/img/2021-07-14-DATASTRUCTURE_BinaryTree_Begin/Untitled_25.png)
 
-<br>
-
-### 단점
-
-- 공간을 많이 차지
-- 복잡한 코드
-
-<br>
-
-### 성립관계
-
-- **p == p->next->prev == p->prev->next**
-
-<br>
-
-**< 공백리스트에서도 성립함 (헤드노드사용시) >**  
-![이중연결리스트의 삽입연산1](/assets/img/2021-07-14-DATASTRUCTURE_DoubleLinkedList/Untitled_9.png)
-
-- 헤드노드의 prev가 자기의 next를 가르키고
-- 헤드노드의 next가 자기의 prev를 가르키기 때문에
-
-<br>
-
-### 삽입 연산 ( 이중 연결 리스트의 insert_next 연산 )
-
-![이중연결리스트의 삽입연산2](/assets/img/2021-07-14-DATASTRUCTURE_DoubleLinkedList/Untitled_10.png)
-
-<br>
-
-```c
-void insert_next(Node *before, Node *n) {
-	if( n != NULL ) {
-		n->prev = before;       // (1)
-		n->next = before->next; // (2) (선행노드가 마지막 노드라면 => NULL 들어감 )
-		
-		if( before->next != NULL ) { //선행노드가 마지막 노드가 아닐때
-			before->next->prev = n; // (3)
-		}
-		before->next = n;       // (4)
-	}
-}
-```
-
-<br>
-
-### 삭제 연산 ( 이중 연결 리스트의 remove_next 연산 )
-
-삭제 함수 이름이 remove_*next*()일 필요가 없음
- ⇒ 선행노드에 대한 정보가 없어도 삭제할 수 있기 때문에
- ⇒ remove_*next* → remove_*curr*
-
-![이중연결리스트의 삭제연산](/assets/img/2021-07-14-DATASTRUCTURE_DoubleLinkedList/Untitled_8.png)
-
-```c
-void remove_curr( Node *n ) {
-	if(n->prev != NULL) { //삭제하려는 노드가 첫번째 노드가 아닐때
-		n->next->prev = n->prev;
-	}
-	if(n->next != NULL) { //삭제하려는 노드가 마지막 노드가 아닐때
-		n->prev->next = n->next;
-	}
-}
-```
+- **포레스트**
+  - 여러 개의 트리의 집합
 
 <br><br>
 
-## 이중 연결리스트 + 헤드노드
+## 일반 트리 표현
 
-### 초기변수 및 구조체
+### 배열활용
+
+- 노드 구조를 이용
+- 데이터 필드와 링크 필드 존재
+- 링크 필드: 배열형태
+
+  > 배열로 구현된 링크필드:  
+  각 요소가 해당 노드의 자식을 각각 의미함
+    (링크필드의 길이 == 노드의 차수)
+
+    > 노드마다 배열의 길이가 달라짐 (자식의 개수가 다르므로)
+
+![배열 트리](/assets/img/2021-07-14-DATASTRUCTURE_BinaryTree_Begin/Untitled_26.png)
+
+<br/>
+
+### 연결 리스트 활용
+
+- 노드 구조를 이용
+- 데이터 필드
+- 링크 필드 1: 연결 리스트 형태, 현 노드의 첫 번째 자식노드
+- 링크 필드 2: 연결 리스트 형태, 현 노드의 오른쪽 형제노드
+
+![연결리스트 트리](/assets/img/2021-07-14-DATASTRUCTURE_BinaryTree_Begin/Untitled_27.png)
+
+> *하지만 너무 복잡하다.*
+
+<br/><br/>
+
+## 이진 트리
+
+### 이진 트리란?
+
+- 모든 노드가 최대 두 개의 서브트리를 가지고 있는 것
+- 모든 노드의 차수가 2이하
+- 자식들간(서브 트리)의 순서가 존재 (왼쪽, 오른쪽)
+
+<br/>
+
+### 이진 트리 성질
+
+- 노드의 개수가 $n$개일때,  
+간선의 개수는 $n-1$개이다.
+- $h$: 높이 일 때,  
+최소 $h$개~최대 $2^h-1$개의 노드를 가짐
+  - 노드개수가 최소인 경우
+    ![이진트리 성질1](/assets/img/2021-07-14-DATASTRUCTURE_BinaryTree_Begin/Untitled_28.png)
+
+  - 노드개수가 최대인 경우
+        ![이진트리 성질2](/assets/img/2021-07-14-DATASTRUCTURE_BinaryTree_Begin/Untitled_29.png)
+
+- n: 노드개수 일 때,  
+*$ceiling(log_2(n+1))$이상 $n$이하의 높이*를 가짐
+
+<br/>
+
+### 이진트리 분류
+
+![이진트리 분류1](/assets/img/2021-07-14-DATASTRUCTURE_BinaryTree_Begin/Untitled_30.png)
+
+![이진트리 분류2](/assets/img/2021-07-14-DATASTRUCTURE_BinaryTree_Begin/Untitled_31.png)
+
+<br/><br/>
+
+## 포화 이진 트리
+
+### 포화 이진 트리란?
+
+- 트리의 각 레벨에 노드가 꽉 차있는 이진 트리
+
+### 특징
+
+- 높이가 k이고 노드 개수가 n일 때,
+$n = 2^k-1$
+
+### 노드 번호
+
+- 레벨 단위로 왼쪽에서 오른쪽으로 순서대로 번호를 붙임
+- 번호는 항상 일정하다 (루트노드의 오른쪽 자식노드의 번호 == 항상 3)
+
+![노드 번호](/assets/img/2021-07-14-DATASTRUCTURE_BinaryTree_Begin/Untitled_32.png)
+
+<br/><br/>
+
+## 완전 이진 트리
+
+### 완전 이진 트리란?
+
+- 높이가 h일 때,
+레벨1 ~ 레벨(h-1) 까지는 노드가 모두 채워짐
+- 마지막 레벨 h에서는 노드가 순서대로 채워짐
+(중간에 빈 곳이 있으면 안됨)
+
+<br/>
+
+### 노드 번호
+
+- 포화 이진트리와 동일
+
+### 예시
+
+![완전이진트리 예시](/assets/img/2021-07-14-DATASTRUCTURE_BinaryTree_Begin/Untitled_33.png)
+
+<br/><br/>
+
+## 이진 트리의 추상 자료형
+
+### 데이터 (전체 이진트리의 데이터)
+
+- 노드의 집합
+  - 공집합
+  - 루트 노드
+  - 왼쪽 서브 트리
+  - 오른쪽 서브 트리
+  > (모든 서브 트리는 이진트리이어야 함)
+
+### 연산
+
+- **init()**
+  - 이진 트리 초기화
+- **is_empty()**
+  - 이진 트리가 공백 상태인지 확인
+- **create_tree( e, left, right )**
+  - 이진 트리 left와 right를 자식노드로,
+  - e를 루트로 하는 이진 트리 생성
+- **get_root()**
+  - 이진 트리의 루트 노드를 반환
+- **get_count()**
+  - 이진 트리의 노드의 수를 반환
+- **get_leaf_count()**
+  - 이진 트리의 단말 노드의 수를 반환
+- **get_height()**
+  - 이진 트리의 높이 반환
+
+<br/>
+
+### 이진 트리 표현: 배열
+
+- 포화 이진 트리 or 완전 이진 트리 or 일반 이진 트리 표현가능
+
+- 표현 예시
+  - 전제
+    - 완전트리
+    - 높이에 따라 배열의 길이 결정
+    - 높이 k: 길이가 $2^k-1$인 배열이 필요
+
+      > 완전 이진 트리가 최대로 가질 수 있는 노드 수 = 포화 이진 트리의 노드 수
+
+  - 표현법
+    - 각 노드에 번호를 붙여서 그 번호를 배열의 인덱스로 삼아 노드의 데이터를 배열에 저장
+    ![배열트리 표현법](/assets/img/2021-07-14-DATASTRUCTURE_BinaryTree_Begin/Untitled_34.png)
+
+<br/>
+
+- 특징
+  - 어떤 노드의 인덱스를 알면, 그 노드의 부모나 자식 인덱스 계산 가능
+  > be) 노드의 번호 == 배열 인덱스
+
+<br/>
+
+- 노드 i의 부모 노드 인덱스
+  - i가 왼쪽 자식일 때: **i/2**
+  - i가 오른쪽 자식일 때: **floor(i/2)**
+
+<br/>
+
+- 노드 i의 왼쪽 자식 노드 인덱스
+  - 2*i
+
+<br/>
+
+- 노드 i의 오른쪽 자식 노드 인덱스
+  - 2*i + 1
+
+<br/>
+
+- 문제점
+
+  - 기억 공간 낭비
+  - 배열의 크기에 따라 트리의 높이 제한
+
+<br/>
+
+### 이진 트리 표현: 링크
+
+- 부모 노드가 자식 노드를 가리키게 함 (with 포인터)
+- 주요 표현법
+  ![링크트리 표현법1](/assets/img/2021-07-14-DATASTRUCTURE_BinaryTree_Begin/Untitled_35.png)
+
+  ![링크트리 표현법2](/assets/img/2021-07-14-DATASTRUCTURE_BinaryTree_Begin/Untitled_36.png)
+
+<br/><br/>
+
+## 이진트리 구현 - 링크 이용
+
+### 노드 구조체
 
 ```c
-typedef int Element;
+typedef char TElement; //트리의 노드에 저장할 데이터 타입
 
-//노드
-typedef struct LinkedNode {
-	Element data; //데이터필드
-	struct LinkedNode *prev; //선행노드를 가르키는 링크 필드
-	struct LinkedNode *next; //후행노드를 가르키는 링크 필드
-} Node;
+//노드 구조체
+typedef struct BinTrNode {
+	TElement data; //노드에 저장될 데이터
+	struct BinTrNode *left; //노드의 왼쪽 자식노드
+	struct BinTrNode *right; //노드의 오른쪽 자식노드
+} TNode;
 
-Node org; //헤드노드 (정적으로 생성함)
+TNode *root = NULL; //루트노드를 가르킬 포인터 변수
 ```
 
-<br>
+<br/>
 
-### error(char *msg)
+### init_tree()
 
 ```c
-void error(char *msg) {
-	printf("%s", msg);
-	exit(1);
+void init_tree() {
+	root = NULL;
 }
 ```
 
-<br>
+<br/>
 
-### init_list()
+### is_empty_tree()
 
 ```c
-void init_list() {
-	org.next = NULL;
-	//원형 리스트가 아니기 때문에, prev 초기화 필요X (헤드노드의 prev는 항상 NULL임)
+int is_empty_tree() {
+	return root == NULL;
 }
 ```
 
-<br>
+<br/>
 
-### get_head()
-
-첫 번째 노드 반환
+### get_root()
 
 ```c
-Node* get_head() {
-	return org.next;
+TNode* get_root() {
+	return root;
 }
 ```
 
-<br>
+<br/>
 
-### is_empty()
-
-```c
-int is_empty() {
-	return get_head()==NULL;
-}
-```
-
-<br>
-
-### is_full()
-
-- 포화상태는 존재하지 않기 때문에 의미가 없다.
-
-<br>
-
-### get_entry(int index)
+### create_tree(TElement value, TNode * left, TNode* right)
 
 ```c
-Node* get_entry(int index) {
-	int i;
-	Node *n = &org;
-	for(i=-1; i<index; i++, n=n->next) {
-		if(n==NULL) { //끝까지 탐색했을때 (찾으려는 index가 존재하지 않을때)
-			break;
-		}
-	}
+TNode* create_tree(TElement value, TNode * left, TNode* right) {
+	TNode *n = (TNode*)malloc(sizeof(TNode));
+	n->data = value;
+	n->left = left;
+	n->right = right;
 	return n;
 }
 ```
 
-<br>
+<br/>
 
-### replace(int index, Element e)
-
-```c
-void replace(int index, Element e) {
-	Node *n = get_entry(index);
-	if(n != NULL) {
-		n->data = e;
-	}
-}
-```
-
-<br>
-
-### size()
+### 전체 예시
 
 ```c
-int size() {
-	int counter = 0;
-	Node *n = NULL;
-	for(n=get_head(); n!=NULL; n=n->next) {
-		counter++;
-	}
-	return counter;
-}
-```
+typedef char TElement; //트리의 노드에 저장할 데이터 타입
 
-<br>
+//노드 구조체
+typedef struct BinTrNode {
+	TElement data; //노드에 저장될 데이터
+	struct BinTrNode *left; //노드의 왼쪽 자식노드
+	struct BinTrNode *right; //노드의 오른쪽 자식노드
+} TNode;
 
-### clear_list()
+TNode *root = NULL; //루트노드를 가르킬 포인터 변수
 
-```c
-void clear_list() {
-	while(!is_empty()) {
-		delete();
-	}
-}
-```
-
-<br>
-
-### find( Element e )
-
-```c
-Element find( Element e ) {
-	Node *n;
-	for(n=get_head(); n!=NULL; n=n->next) {
-		if(n->data == e) {
-			return n;
-		}
-	}
-	return NULL; //탐색 실패시
-}
-```
-
-<br>
-
-### insert_next( Node *before, Node *node ) & insert( int pos, Element e )
-
-```c
-void insert_next(Node *before, Node *node) {
-	if( node != NULL ) {
-		node->prev = before;
-		node->next = before->next;
-		if( before->next != NULL ) {
-			before->next->prev = node;
-		}
-		before->next = node;
-	}
+void init_tree() {
+	root = NULL;
 }
 
-void insert( int pos, Element e ) {
-	Node *new_node, *before;
-	before = get_entry(pos-1);
-	if( before != NULL ) { //선행노드가 존재할 때
-		new_node = (Node*)malloc(sizeof(Node));
-		new_node->data = e;
-		new_node->prev = NULL;
-		new_node->next = NULL;
-		insert_next(before, new_node);
-	}
-}
-```
-
-<br>
-
-### remove_curr(Node *before) & delete(int pos)
-
-```c
-void remove_curr( Node *n ) {
-	if(n->prev != NULL) { //삭제하려는 노드가 첫번째 노드가 아닐때
-		n->next->prev = n->prev;
-	}
-	if(n->next != NULL) { //삭제하려는 노드가 마지막 노드가 아닐때
-		n->prev->next = n->next;
-	}
+int is_empty_tree() {
+	return root == NULL;
 }
 
-void delete(int pos) {
-	Node *n = get_entry(pos);
-	if(n != NULL) {
-		remove_curr(n);
-    free(n);
-	}
-}
-```
-
-<br>
-
-### 전체 코드
-
-```c
-#include <stdio.h>
-
-typedef int Element;
-
-//노드
-typedef struct LinkedNode {
-	Element data; //데이터필드
-	struct LinkedNode *prev; //선행노드를 가르키는 링크 필드
-	struct LinkedNode *next; //후행노드를 가르키는 링크 필드
-} Node;
-
-Node org; //헤드노드 (정적으로 생성함)
-
-void error(char *msg) {
-	printf("%s", msg);
-	exit(1);
+TNode* get_root() {
+	return root;
 }
 
-void init_list() {
-	org.next = NULL;
-	//원형 리스트가 아니기 때문에, prev 초기화 필요X (헤드노드의 prev는 항상 NULL임)
-}
-
-Node* get_head() {
-	return org.next;
-}
-
-int is_empty() {
-	return get_head()==NULL;
-}
-
-Node* get_entry(int index) {
-	int i;
-	Node *n = &org;
-	for(i=-1; i<index; i++, n=n->next) {
-		if(n==NULL) { //끝까지 탐색했을때 (찾으려는 index가 존재하지 않을때)
-			break;
-		}
-	}
+TNode* create_tree(TElement value, TNode * left, TNode* right) {
+	TNode *n = (TNode*)malloc(sizeof(TNode));
+	n->data = value;
+	n->left = left;
+	n->right = right;
 	return n;
 }
 
-void replace(int index, Element e) {
-	Node *n = get_entry(index);
-	if(n != NULL) {
-		n->data = e;
-	}
-}
-
-int size() {
-	int counter = 0;
-	Node *n = NULL;
-	for(n=get_head(); n!=NULL; n=n->next) {
-		counter++;
-	}
-	return counter;
-}
-
-void clear_list() {
-	while(!is_empty()) {
-		delete();
-	}
-}
-
-Element find( Element e ) {
-	Node *n;
-	for(n=get_head(); n!=NULL; n=n->next) {
-		if(n->data == e) {
-			return n;
-		}
-	}
-	return NULL; //탐색 실패시
-}
-
-void insert_next(Node *before, Node *node) {
-	if( node != NULL ) {
-		node->prev = before;
-		node->next = before->next;
-		if( before->next != NULL ) {
-			before->next->prev = node;
-		}
-		before->next = node;
-	}
-}
-
-void insert( int pos, Element e ) {
-	Node *new_node, *before;
-	before = get_entry(pos-1);
-	if( before != NULL ) { //선행노드가 존재할 때
-		new_node = (Node*)malloc(sizeof(Node));
-		new_node->data = e;
-		new_node->prev = NULL;
-		new_node->next = NULL;
-		insert_next(before, new_node);
-	}
-}
-
-void remove_curr( Node *n ) {
-	if(n->prev != NULL) { //삭제하려는 노드가 첫번째 노드가 아닐때
-		n->next->prev = n->prev;
-	}
-	if(n->next != NULL) { //삭제하려는 노드가 마지막 노드가 아닐때
-		n->prev->next = n->next;
-	}
-}
-
-void delete(int pos) {
-	Node *n = get_entry(pos);
-	if(n != NULL) {
-		remove_curr(n);
-    	free(n);
-	} else {
-		printf("delete ERR\n");
-	}
-}
-
-int main() {
-	init_list();
-	int i;
-	
-	for(i=0; i<10; i++) {
-		insert(i, i);
-	}
-	
-	delete(4);
-	delete(2);
-	delete(5);
-	
-	printf("%d\n", size());
+void main() {
+	TNode *b, *c, *d, *e, *f;
+	init_tree();
+	d = create_tree('D', NULL, NULL);
+	e = create_tree('E', NULL, NULL);
+	b = create_tree('B', d, e);
+	f = create_tree('F', NULL, NULL);
+	c = create_tree('C', f, NULL);
+	root = create_tree('A', b, c);
 }
 ```
