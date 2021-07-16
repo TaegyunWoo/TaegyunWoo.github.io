@@ -85,7 +85,7 @@ sitemap :
 
 따라서, n을 1/2로 계속 나누어 총 k번 분할하여 계산하므로  
 층의 개수: ![k](https://latex.codecogs.com/svg.image?k)  
-![k](https://latex.codecogs.com/svg.image?k) : ![n=2^k](https://latex.codecogs.com/svg.image?n=2^{k})이므로 ![k=log_2n](https://latex.codecogs.com/svg.image?k&space;=&space;log_{2}n)  
+![k](https://latex.codecogs.com/svg.image?k) : ![n=2^k](https://latex.codecogs.com/svg.image?n=2^{k})이므로 ![k=log_2n](https://latex.codecogs.com/svg.image?k=log_{2}n)  
 결과적으로 합병 정렬의 시간복잡도  
 ⇒ 층수 * 각층계산시간 =  
 ![log_{2}n * O(n) = O(nlog_{2}n) = O(nlogn)](https://latex.codecogs.com/svg.image?log_{2}n&space;*&space;O(n)&space;=&space;O(nlog_{2}n)&space;=&space;O(nlogn))
