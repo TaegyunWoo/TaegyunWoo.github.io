@@ -26,7 +26,7 @@ sitemap :
 
 ### 예시
 
-![예시](assets/img/2021-07-16-ALGORITHM_QuickSort/Untitled_25.png)
+![예시](/assets/img/2021-07-16-ALGORITHM_QuickSort/Untitled_25.png)
 
 <br><br>
 
@@ -34,7 +34,7 @@ sitemap :
 
 ### 의사코드
 
-![의사 코드](assets/img/2021-07-16-ALGORITHM_QuickSort/Untitled_26.png)
+![의사 코드](/assets/img/2021-07-16-ALGORITHM_QuickSort/Untitled_26.png)
 
 > 별도의 병합과정 필요X
 
@@ -42,15 +42,15 @@ sitemap :
 
 ### 2번 절차
 
-![2번 절차 - 1](assets/img/2021-07-16-ALGORITHM_QuickSort/Untitled_27.png)
+![2번 절차 - 1](/assets/img/2021-07-16-ALGORITHM_QuickSort/Untitled_27.png)
 
-![2번 절차 - 2](assets/img/2021-07-16-ALGORITHM_QuickSort/Untitled_28.png)
+![2번 절차 - 2](/assets/img/2021-07-16-ALGORITHM_QuickSort/Untitled_28.png)
 
 <br>
 
 ### 상세 원리
 
-![상세 원리](assets/img/2021-07-16-ALGORITHM_QuickSort/Untitled_29.png)
+![상세 원리](/assets/img/2021-07-16-ALGORITHM_QuickSort/Untitled_29.png)
 
 > 피봇은 i가 끝까지 도달한 뒤,  
 j가 가르키는 요소와 위치를 변경한다.
@@ -95,7 +95,7 @@ j가 가르키는 요소와 위치를 변경한다.
 1. 랜덤 선정
 2. "가장 왼쪽 숫자" & "중간 숫자" & "가장 오른쪽 숫자" 중 중앙값으로 피봇 선정
 
-![피봇 선정 방법](assets/img/2021-07-16-ALGORITHM_QuickSort/Untitled_30.png)
+![피봇 선정 방법](/assets/img/2021-07-16-ALGORITHM_QuickSort/Untitled_30.png)
 
 <br><br>
 
