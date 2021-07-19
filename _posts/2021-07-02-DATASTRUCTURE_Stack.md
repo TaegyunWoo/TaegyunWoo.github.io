@@ -274,3 +274,16 @@ int main() {
 	printf("%d", stack[1]);
 }
 ```
+
+<br><br>
+
+---
+
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>성결대학교 컴퓨터 공학과 박미옥 교수님 (2021)</li>
+    <li>최영규, 『두근두근 자료구조』</li>
+  </ul>
+  본 게시글은 위 강의 및 교재를 기반으로 정리한 글입니다.
+</div>
