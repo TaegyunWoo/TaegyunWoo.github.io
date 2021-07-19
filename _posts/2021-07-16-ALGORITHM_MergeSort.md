@@ -92,3 +92,10 @@ sitemap :
 
 원래는 ![O(nlog_2n)](https://latex.codecogs.com/svg.image?O(nlog_{2}n)) 이지만, ![O(nlog_{10}n)](https://latex.codecogs.com/svg.image?O(nlog_{10}n)) 도 가능
 *(2는 무시)*
+
+<br><br>
+
+<div style="background-color: cadetblue;font-weight: bold;font-size: large;">
+- 성결대학교 컴퓨터 공학과 임태수 교수님 <br>
+- 양성봉, 『알기 쉬운 알고리즘』<br>
+</div>
