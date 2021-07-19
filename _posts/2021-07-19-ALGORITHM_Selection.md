@@ -207,7 +207,7 @@ sitemap :
 ### good분할만 있을 때의 시간 복잡도
 
 - 리스트 크기가 3/4배로 연속적으로 감소
-- ![O(n+\frac{3}{4}n+\frac{3}{4}^2n+...+\frac{3}{4}^{i-1}n+\frac{3}{4}^in)\\=O(n)](https://latex.codecogs.com/svg.image?O(n+\frac{3}{4}n+\frac{3}{4}^2n+...+\frac{3}{4}^{i-1}n+\frac{3}{4}^in)\\=O(n))
+- ![O(n&plus;\frac{3}{4}n&plus;{\frac{3}{4}}^{2}n&plus;...&plus;{\frac{3}{4}}^{i-1}n&plus;{\frac{3}{4}}^{i}n)=O(n)](https://latex.codecogs.com/svg.image?O(n&plus;\frac{3}{4}n&plus;{\frac{3}{4}}^{2}n&plus;...&plus;{\frac{3}{4}}^{i-1}n&plus;{\frac{3}{4}}^{i}n)=O(n))
 
 <br>
 
