@@ -95,7 +95,11 @@ sitemap :
 
 <br><br>
 
-<div style="background-color: cadetblue;font-weight: bold;font-size: large;">
-- 성결대학교 컴퓨터 공학과 임태수 교수님 <br>
-- 양성봉, 『알기 쉬운 알고리즘』<br>
-</div>
+---
+
+<br>
+
+- *성결대학교 컴퓨터 공학과 임태수 교수님*
+- *양성봉, 『알기 쉬운 알고리즘』*  
+
+본 게시글은 위 강의 및 교재를 기반으로 정리한 글입니다.
