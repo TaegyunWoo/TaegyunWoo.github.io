@@ -1,9 +1,9 @@
 ---
 category: Algorithm
-tags: [알고리즘, 분할정복, 합병정렬]
-title: "[알고리즘 - 분할정복] 합병정렬"
+tags: [알고리즘, 분할정복, 선택정렬]
+title: "[알고리즘 - 분할정복] 선택정렬"
 date:   2021-07-16 15:00:00 
-lastmod : 2021-07-16 15:00:00
+lastmod : 2021-07-19 15:00:00
 sitemap :
   changefreq : daily
   priority : 1.0
