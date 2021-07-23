@@ -13,7 +13,7 @@ sitemap :
 
 # 들어가며..
 
-스프링의 핵심적인 개념은 바로 **OCP(개방-폐쇄 원칙)**와 **DIP(의존 역전 원칙)**이다. 이들은 모두 객체지향 설계 원칙인 SOLID의 일부이다. 해당 원칙들을 지키기 위해 만들어진 것이 바로 스프링 프레임워크이다. 따라서, 스프링을 본격적으로 공부하기 전에 해당 개념들을 정리하고자 한다.
+스프링의 핵심적인 개념은 바로 **OCP(개방-폐쇄 원칙)** 와 **DIP(의존 역전 원칙)** 이다. 이들은 모두 객체지향 설계 원칙인 SOLID의 일부이다. 해당 원칙들을 지키기 위해 만들어진 것이 바로 스프링 프레임워크이다. 따라서, 스프링을 본격적으로 공부하기 전에 해당 개념들을 정리하고자 한다.
 
 간단한 회원 도메인을 통해 이러한 개념들을 익힐 수 있도록 한다.
 
@@ -174,9 +174,9 @@ public class MemberServiceImpl implements MemberService {
 <br>
 
 - MemberServiceImpl 클래스
-  - **객체 실행**에 집중하는 클래스
+  - **객체 실행** 에 집중하는 클래스
 - AppConfig 클래스
-  - **객체 생성 및 연결**에 집중하는 클래스
+  - **객체 생성 및 연결** 에 집중하는 클래스
 
 이것을 코드화한다면 다음과 같다.
 
@@ -245,9 +245,9 @@ public class MemberServiceImpl implements MemberService {
     }
     ```
 
-이와 같이 설계를 변경하면, `MemberServiceImpl` 클래스는 `MemoryMemberRepository` 구체 클래스를 의존하지 않게 된다. 단지, `MemberRepository` 인터페이스만 의존하게 된다. 따라서, `MemberServiceImpl` 클래스는 **실행**에만 집중하면 된다. 어떤 구체 클래스의 객체를 주입할 것인지는 `AppConfig` 클래스가 담당하게 된다. 즉, **DIP를 만족**한다.
+이와 같이 설계를 변경하면, `MemberServiceImpl` 클래스는 `MemoryMemberRepository` 구체 클래스를 의존하지 않게 된다. 단지, `MemberRepository` 인터페이스만 의존하게 된다. 따라서, `MemberServiceImpl` 클래스는 **실행** 에만 집중하면 된다. 어떤 구체 클래스의 객체를 주입할 것인지는 `AppConfig` 클래스가 담당하게 된다. 즉, **DIP를 만족** 한다.
 
-또한, `MemberRepository` 의 구현 객체를 `MemoryMemberRepository` 가 아닌 `DbMemberRepository` 로 바꾼다고 했을 때 `MemberServiceImpl` 클래스를 수정할 필요가 없다. 단지, `AppConfig` 클래스의 `memberService` 메서드를 수정하면 된다. 이를 통해 Dependency Injection (의존성 주입) 을 수행한다. 따라서, **OCP를 만족**한다.
+또한, `MemberRepository` 의 구현 객체를 `MemoryMemberRepository` 가 아닌 `DbMemberRepository` 로 바꾼다고 했을 때 `MemberServiceImpl` 클래스를 수정할 필요가 없다. 단지, `AppConfig` 클래스의 `memberService` 메서드를 수정하면 된다. 이를 통해 Dependency Injection (의존성 주입) 을 수행한다. 따라서, **OCP를 만족** 한다.
 
 # 정리
 
