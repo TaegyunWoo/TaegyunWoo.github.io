@@ -1,7 +1,7 @@
 ---
 category: Spring
-tags: [스프링, 핵심원리, OCP, DIP]
-title: "[스프링 - 핵심원리] OCP와 DIP"
+tags: [스프링, 핵심원리, OCP, DIP, SRP]
+title: "[스프링 - 핵심원리] OCP와 DIP 그리고 SRP"
 date:   2021-07-23 11:00:00 
 lastmod : 2021-07-23 11:00:00
 sitemap :
@@ -13,7 +13,7 @@ sitemap :
 
 # 들어가며..
 
-스프링의 핵심적인 개념은 바로 **OCP(개방-폐쇄 원칙)** 와 **DIP(의존 역전 원칙)** 이다. 이들은 모두 객체지향 설계 원칙인 SOLID의 일부이다. 해당 원칙들을 지키기 위해 만들어진 것이 바로 스프링 프레임워크이다. 따라서, 스프링을 본격적으로 공부하기 전에 해당 개념들을 정리하고자 한다.
+스프링의 핵심적인 개념은 바로 **OCP(개방-폐쇄 원칙)** 와 **DIP(의존 역전 원칙)** 그리고 **SRP(단일 책임 원칙)** 이다. 이들은 모두 객체지향 설계 원칙인 SOLID의 일부이다. 해당 원칙들을 지키기 위해 만들어진 것이 바로 스프링 프레임워크이다. 따라서, 스프링을 본격적으로 공부하기 전에 해당 개념들을 정리하고자 한다.
 
 간단한 회원 도메인을 통해 이러한 개념들을 익힐 수 있도록 한다.
 
@@ -148,11 +148,11 @@ public class MemberServiceImpl implements MemberService {
     - `MemberServiceImpl`클래스의 `private final MemberRepository memberRepository = new MemoryMemberRepository();`를 `private final MemberRepository memberRepository = new DbMemberRepository();`로 **수정해야하기 때문**이다.
     - 즉, `MemberServiceImpl`클래스의 변경이 불가피하므로 OCP를 위배한다.
 
-- 위 설계는 DIP 원칙을 위배한다.
+- 위 설계는 DIP와 SRP 원칙을 위배한다.
     - `MemberRepository`인터페이스와 이에 대한 구체화 클래스 `MemoryMemberRepository` 모두 종속되기 때문이다.
     (`private final MemberRepository memberRepository = new MemoryMemberRepository();`)
-    - 즉, 인터페이스와 구체화 클래스가 모두 한 클래스 내에서 호출되기에 DIP를 위배한다.
-    - DIP를 만족하려면 추상(인터페이스)에만 의존해야한다.
+    - 즉, 인터페이스와 구체화 클래스가 모두 한 클래스 내에서 호출되기에 DIP와 SRP를 위배한다.
+    - DIP와 SRP를 만족하려면 추상(인터페이스)에만 의존해야한다.
 
 <br>
 
@@ -258,10 +258,10 @@ public class MemberServiceImpl implements MemberService {
     - 예) `private final MemberRepository memberRepository = new MemoryMemberRepository();`
 
 - **관심사 분리**
-    - 한 클래스가 '객체생성', '객체연결', '객체실행' 을 모두 실행하게 된다면, OCP와 DIP를 위배하게 된다.
+    - 한 클래스가 '객체생성', '객체연결', '객체실행' 을 모두 실행하게 된다면, OCP와 DIP 그리고 SRP를 위배하게 된다.
     - 따라서, 관심사 분리가 필요하다.
 
-- **생성자 주입을 통한 OCP, DIP 만족**
+- **생성자 주입을 통한 OCP, DIP, SRP 만족**
 
 <br>
 
