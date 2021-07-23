@@ -1,7 +1,7 @@
 ---
 category: Algorithm
 tags: [알고리즘, 다이나믹프로그래밍, 개요]
-title: "[알고리즘 - 다이나믹프로그래밍] 개요"
+title: "[알고리즘 - Dynamic Programming] 개요"
 date:   2021-07-21 11:00:00 
 lastmod : 2021-07-21 11:00:00
 sitemap :
