@@ -1,7 +1,7 @@
 ---
 category: Algorithm
-tags: [알고리즘, 다이나믹프로그래밍, 모든쌍최단경로]
-title: "[알고리즘 - Dynamic Programming] 모든 쌍 최단 경로"
+tags: [알고리즘, 다이나믹프로그래밍, AllPairsShortestPaths]
+title: "[알고리즘 - 동적계획] 모든 쌍 최단 경로"
 date:   2021-07-23 11:00:00 
 lastmod : 2021-07-23 11:00:00
 sitemap :
@@ -11,7 +11,7 @@ sitemap :
 
 <br/><br/>
 
-# 동적 계획 : 모든 쌍 최단 경로
+# Dynamic Programming : 모든 쌍 최단 경로
 
 ## 개요
 
