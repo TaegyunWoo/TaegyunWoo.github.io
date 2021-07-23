@@ -64,7 +64,7 @@ sitemap :
 
 - ![{D_{ij}}^k](https://latex.codecogs.com/svg.image?{D_{ij}}^k)
   - 점i에서 점j까지 갈 수 있는 모든 경로 중 가장 짧은 경로의 거리
-  - $D_{ij}$ : 2차원 배열
+  - ![D_{ij}](https://latex.codecogs.com/svg.image?D_{ij}) : 2차원 배열
   - **i** : 출발점
   - **j** : 도착점
   - **k** : i~j 까지의 최단거리에서 경유 할 수 있는 최대점
