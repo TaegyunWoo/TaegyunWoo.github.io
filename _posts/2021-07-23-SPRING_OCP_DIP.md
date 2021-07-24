@@ -269,7 +269,7 @@ public class MemberServiceImpl implements MemberService {
 
 <br>
 
+<a href="https://inf.run/pcN8"><img src="/assets/img/Inflearn_Spring_SpringCore/Logo.png" width="200px" height="200px"></a>
+
 - *본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.*
 - *더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.*
-
-  [인프런 강의로 가기](https://inf.run/pcN8)
