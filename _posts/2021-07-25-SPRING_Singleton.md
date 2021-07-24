@@ -285,7 +285,7 @@ public class SingletonTest {
 - 각 클라이언트들이 하나의 객체를 공유한다.
 - 스프링 컨테이너는 바이트코드를 조작하여 싱글톤을 유지할 수 있다.
 
-    > 자세한 내용은 다음 게시글에서 다룬다.
+    > 자세한 내용은 [다음 게시글](https://taegyunwoo.github.io/spring/SPRING_Configuration)에서 다룬다.
 
 > 참고로 요청마다 새로운 객체를 생성해서 반환하는 기능 역시 스프링이 지원한다.
 
