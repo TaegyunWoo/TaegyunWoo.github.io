@@ -21,7 +21,6 @@ skills:
 
 display_name: "WooTaegyun"
 contact:
-  - {name: "Mobile", icon-class: "fa fa-phone-square", text: "010-2458-9804", link: "tel: 010 2458 9804"}
   - {name: "Email", icon-class: "fa fa-envelope", text: "dnxprbs@gmail.com", link: "mailto: dnxprbs@gmail.com"}
 social:
   - {name: "GitHub", icon-class: "fa fa-github-square", text: "https://github.com/TaegyunWoo", link: "https://github.com/TaegyunWoo"}
