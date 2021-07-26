@@ -56,10 +56,14 @@ public class HelloBean {}
 
 ### 수동 등록시, 지정하는 방법
 
+- 설정 정보 클래스에 작성한다.
+
 ```java
 @Scope("prototype")
-@Component
-public class HelloBean {}
+@Bean
+PrototypeBean HelloBean() {
+	return new HelloBean();
+}
 ```
 
 <br><br>
