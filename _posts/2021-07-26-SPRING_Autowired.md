@@ -1,5 +1,6 @@
 ---
 category: Spring
+layout: post
 tags: [스프링, 핵심원리, autowired, 충돌]
 title: "[스프링 - 핵심원리] @Autowired 와 충돌문제"
 date:   2021-07-26 12:30:00 
