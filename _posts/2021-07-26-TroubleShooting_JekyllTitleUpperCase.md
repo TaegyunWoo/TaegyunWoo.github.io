@@ -1,5 +1,5 @@
 ---
-category: T/S
+category: T.S
 tags: [TroubleShooting, 지킬블로그, 제목대문자]
 title: "지킬블로그 제목에서 대문자 표현이 정상작동하지 않는 문제와 해결법"
 date:   2021-07-26 13:30:00 
