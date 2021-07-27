@@ -225,7 +225,7 @@ spring.mvc.view.suffix=.jsp
 
 ### 뷰 리졸버 동작 방식
 
-![MVC%201%2026808a4d2bd74b039151a6f4df3e1be1/Untitled.png](MVC%201%2026808a4d2bd74b039151a6f4df3e1be1/Untitled.png)
+![MVC](/assets/img/2021-07-27-SPRING_MVC_Structure/Untitled.png)
 
 - 뷰 리졸버
 
