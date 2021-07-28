@@ -1,5 +1,5 @@
 ---
-category: Spring
+category: Spring-Core
 tags: [스프링, 핵심원리, 제어역전, 의존관계주입, 컨테이너]
 title: "[스프링 - 핵심원리] 제어의 역전, 의존관계 주입, 컨테이너"
 date:   2021-07-24 00:30:00 
