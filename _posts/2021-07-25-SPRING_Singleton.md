@@ -1,5 +1,5 @@
 ---
-category: Spring
+category: Spring-Core
 tags: [스프링, 핵심원리, 싱글톤, 스프링컨테이너]
 title: "[스프링 - 핵심원리] 싱글톤과 스프링 컨테이너"
 date:   2021-07-25 00:30:00 

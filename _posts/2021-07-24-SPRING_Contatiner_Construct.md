@@ -1,5 +1,5 @@
 ---
-category: Spring
+category: Spring-Core
 tags: [스프링, 핵심원리, 컨테이너, 컨테이너생성]
 title: "[스프링 - 핵심원리] 스프링 컨테이너 생성"
 date:   2021-07-24 18:30:00 

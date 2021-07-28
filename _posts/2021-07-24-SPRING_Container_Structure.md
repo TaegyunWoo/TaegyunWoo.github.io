@@ -1,5 +1,5 @@
 ---
-category: Spring
+category: Spring-Core
 tags: [스프링, 핵심원리, 컨테이너구조, 설정형식, BeanDefinition]
 title: "[스프링 - 핵심원리] 스프링 컨테이너의 구조와, 다양한 설정 형식 지원의 원리"
 date:   2021-07-24 21:30:00 

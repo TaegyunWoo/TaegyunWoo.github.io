@@ -1,5 +1,5 @@
 ---
-category: Spring
+category: Spring-Core
 tags: [스프링, 핵심원리, 빈스코프, 웹스코프, 프록시]
 title: "[스프링 - 핵심원리] 스코프와 프록시"
 date:   2021-07-26 17:30:00 

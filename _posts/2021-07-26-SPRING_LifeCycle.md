@@ -1,5 +1,5 @@
 ---
-category: Spring
+category: Spring-Core
 tags: [스프링, 핵심원리, 빈생명주기, 초기화, 종료]
 title: "[스프링 - 핵심원리] 빈 생명주기 콜백과 관련 기능들"
 date:   2021-07-26 15:30:00 

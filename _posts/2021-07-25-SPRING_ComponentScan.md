@@ -1,5 +1,5 @@
 ---
-category: Spring
+category: Spring-Core
 tags: [스프링, 핵심원리, 컴포넌트스캔, Autowired]
 title: "[스프링 - 핵심원리] 컴포넌트 스캔"
 date:   2021-07-25 14:30:00 

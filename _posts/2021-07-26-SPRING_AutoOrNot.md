@@ -1,5 +1,5 @@
 ---
-category: Spring
+category: Spring-Core
 tags: [스프링, 핵심원리, 수동빈등록, 자동빈등록, 권장사항]
 title: "[스프링 - 핵심원리] 수동 빈 등록 VS 자동 빈 등록"
 date:   2021-07-26 14:00:00 

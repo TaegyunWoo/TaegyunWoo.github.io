@@ -1,5 +1,5 @@
 ---
-category: Spring
+category: Spring-Core
 tags: [스프링, 핵심원리, Bean, getBean, getBeansOfType]
 title: "[스프링 - 핵심원리] 스프링 빈 조회의 방법들"
 date:   2021-07-24 20:30:00 

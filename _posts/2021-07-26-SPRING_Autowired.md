@@ -1,5 +1,5 @@
 ---
-category: Spring
+category: Spring-Core
 layout: post
 tags: [스프링, 핵심원리, autowired, 충돌]
 title: "[스프링 - 핵심원리] @Autowired 와 충돌문제"

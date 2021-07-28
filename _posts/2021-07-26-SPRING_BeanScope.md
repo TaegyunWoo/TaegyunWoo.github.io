@@ -1,5 +1,5 @@
 ---
-category: Spring
+category: Spring-Core
 tags: [스프링, 핵심원리, 빈스코프, 프로토타입빈]
 title: "[스프링 - 핵심원리] 빈 스코프"
 date:   2021-07-26 16:30:00 
