@@ -182,6 +182,11 @@ public class OldController implements Controller {
 
 이번에는 뷰 리졸버에 대해 알아보자.
 
+### 뷰 리졸버?
+뷰 리졸버는 컨트롤러(핸들러)에게 전달받은 **뷰의 논리적 이름을 물리적 경로로 변환** 시켜준다.  
+
+예를 들어, 컨트롤러가 호출하고자하는 뷰의 물리적 경로가 `/dir1/dir2/myView.jsp`이고, 컨트롤러가 반환한 뷰의 논리적 이름이 `myView` 이라고 해보자. 이때 뷰 리졸버는 `myView` 라는 논리적 이름을 정확한 경로인 `/dir1/dir2/myView.jsp` 으로 변환해준다. 따라서, 프론트 컨트롤러 ( `DispatcherServlet` )가 해당 뷰를 렌더링할 수 있게 된다.
+
 <br>
 
 ### 초기 스프링 컨트롤러: View 조회할 수 있도록 변경
