@@ -11,7 +11,7 @@ sitemap :
 
 <br/><br/>
 
-스프링은 애노테이션을 활용한 매우 유연하고, 실용적인 컨트롤러를 만들 수 있도록 `@RequestMapping` 애노테이션을 지원한다.
+스프링은 매우 유연하고, 실용적인 컨트롤러를 만들 수 있도록 `@RequestMapping` 애노테이션을 지원한다.
 
 <br>
 
@@ -19,7 +19,7 @@ sitemap :
 
 ## `@RequestMapping` 의 목적
 
-- 애노테이션을 활용한 매우 유연하고, 실용적인 컨트롤러를 만들 수 있도록 하는 것
+- 애노테이션을 활용하여 매우 유연하고, 실용적인 컨트롤러를 만들 수 있도록 하는 것
 
 - RequestMappingHandlerMapping , RequestMappingHandlerAdapter
     - 위 두가지 기능(핸들러 매핑 , 핸들러 어댑터)을 모두 수행하기 위한 애노테이션이다.
@@ -29,7 +29,7 @@ sitemap :
 
 ## `@RequestMapping` 기반의 스프링 MVC 컨트롤러 - V1
 
-`@RequestMapping` 애너테이션을 적용한 컨트롤러를 작성해보자. 이전에 다뤘던 회원 비즈니스 로직을 기반으로 컨트롤러를 작성할 것이다.
+`@RequestMapping` 애너테이션을 적용한 컨트롤러를 작성해보자. 이전에 다뤘던 회원 도메인을 기반으로 컨트롤러를 작성할 것이다.
 
 > 회원 도메인 관련 코드는 [이전 글](https://taegyunwoo.github.io/spring/SPRING_OCP_DIP)의 도메인 부분을 참고하자.
 
@@ -212,7 +212,7 @@ public class SpringMemberControllerV2 {
 
 ## `@RequestMapping` 기반의 컨트롤러를 보다 실용적으로 - V3
 
-각 컨트롤러(메서드)에서 `ModelAndView` 객체를 반환하기가 번거롭다. 따라서 위에서 작성한 코드(V2)를 보다 실용적인 방식으로 수정해본다.
+각각의 메서드에서 `ModelAndView` 객체에 '뷰의 논리 이름'과 'Model'을 세팅하여, 다시 일일히 반환하기가 번거롭다. 따라서 위에서 작성한 코드(V2)를 보다 실용적인 방식으로 수정해본다.
 
 > **실무에서는 지금부터 설명하는 방식을 주로 사용한다.**
 
@@ -273,7 +273,7 @@ public class SpringMemberControllerV3 {
 
     - 위에서 작성한 메서드 `save()` , `members()` 를 보면 Model을 파라미터로 받는 것을 확인할 수 있다.
     - `model` 객체에 데이터 추가 및 조회 할 수 있다.
-    - 스프링 컨테이너가 매개변수를 넘겨주고, 또 다시 view 단에 해당 `model` 객체를 넘겨준다.
+    - 스프링 컨테이너가 알아서 메서드에게 매개변수를 넘겨주고, 또 다시 view 단에 해당 `model` 객체를 넘겨준다.
 - **ViewName 직접 반환**
     - 뷰의 논리 이름을 반환할 수 있다.
 - `@RequestParam` **사용**
