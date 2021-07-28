@@ -1,5 +1,5 @@
 ---
-category: Spring
+category: Spring-MVC
 tags: [스프링, MVC, 요청헤더]
 title: "[스프링 - MVC] HTTP 헤더 정보 조회"
 date:   2021-07-28 13:30:00 

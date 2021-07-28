@@ -1,5 +1,5 @@
 ---
-category: Spring
+category: Spring-MVC
 tags: [스프링, MVC, RequestMapping]
 title: "[스프링 - MVC] @RequestMapping과 원리"
 date:   2021-07-27 20:30:00 

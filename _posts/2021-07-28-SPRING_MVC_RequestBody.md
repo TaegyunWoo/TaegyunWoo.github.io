@@ -1,5 +1,5 @@
 ---
-category: Spring
+category: Spring-MVC
 tags: [스프링, MVC, 요청메시지, 바디데이터]
 title: "[스프링 - MVC] HTTP 요청 바디 데이터 조회"
 date:   2021-07-28 17:30:00 

@@ -1,5 +1,5 @@
 ---
-category: Spring
+category: Spring-MVC
 tags: [스프링, MVC, ModelAttribute, 객체바인딩]
 title: "[스프링 - MVC] @ModelAttribute"
 date:   2021-07-28 15:30:00 

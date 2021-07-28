@@ -1,5 +1,5 @@
 ---
-category: Spring
+category: Spring-MVC
 tags: [스프링, MVC, 요청파라미터]
 title: "[스프링 - MVC] HTTP 요청 파라미터 조회"
 date:   2021-07-28 14:30:00 

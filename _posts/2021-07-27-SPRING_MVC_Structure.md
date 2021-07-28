@@ -1,5 +1,5 @@
 ---
-category: Spring
+category: Spring-MVC
 tags: [스프링, MVC, MVC구조]
 title: "[스프링 - MVC] MVC 구조에 대한 이해"
 date:   2021-07-27 17:30:00 

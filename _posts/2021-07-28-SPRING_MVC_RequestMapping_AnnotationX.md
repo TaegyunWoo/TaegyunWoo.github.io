@@ -1,5 +1,5 @@
 ---
-category: Spring
+category: Spring-MVC
 tags: [스프링, MVC, 요청매핑]
 title: "[스프링 - MVC] 요청매핑을 하는 다양한 방법"
 date:   2021-07-28 11:30:00 
