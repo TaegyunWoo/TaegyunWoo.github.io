@@ -319,6 +319,8 @@ public class MappingController {
 - 요청 메시지의 **헤더** `content-type` **의 값을 활용하여 매핑** 한다. (consumes)
 - 요청 메시지의 **헤더** `Accept` **의 값을 활용하여 매핑** 한다. (produces)
 
+<br>
+
 ### `content-type` 헤더 값으로 매핑하기
 
 ```java
