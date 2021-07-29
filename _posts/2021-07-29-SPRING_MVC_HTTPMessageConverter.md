@@ -57,7 +57,7 @@ HTTP 메시지 컨버터는 아래 경우에서 적용된다.
 
 ## 주요 메시지 컨버터
 
-![MVC%201%2026808a4d2bd74b039151a6f4df3e1be1/Untitled%204.png](MVC%201%2026808a4d2bd74b039151a6f4df3e1be1/Untitled%204.png)
+![메시지 컨터버들](/assets/img/2021-07-29-SPRING_MVC_HTTPMessageConverter/Untitled%204.png)
 
 스프링 부트가 제공하는 주요 메시지 컨버터의 종류는 위와 같다. 이때, 클래스타입과 미디어타입을 비교하여 어떤 메시지 컨버터를 사용할 것인지 결정된다.
 
