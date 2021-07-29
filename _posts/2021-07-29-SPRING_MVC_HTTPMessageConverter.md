@@ -1,7 +1,7 @@
 ---
 category: Spring-MVC
 tags: [스프링, MVC, HttpMessageConverter]
-title: "[스프링 - MVC] 정적 리소스와 뷰 템플릿으로 응답하기"
+title: "[스프링 - MVC] HTTP 메시지 컨버터"
 date:   2021-07-29 15:30:00 
 lastmod : 2021-07-29 15:30:00
 sitemap :
