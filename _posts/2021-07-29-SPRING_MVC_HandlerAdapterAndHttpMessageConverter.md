@@ -1,6 +1,6 @@
 ---
 category: Spring-MVC
-tags: [스프링, MVC, 핸들러어댑터, HTTP메시지컨버터]
+tags: [스프링, MVC, 핸들러어댑터, HTTP메시지]
 title: "[스프링 - MVC] 요청 매핑 핸들러 어댑터 구조"
 date:   2021-07-29 16:30:00 
 lastmod : 2021-07-29 16:30:00
