@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 다이나믹프로그래밍, AllPairsShortestPaths]
+tags: [알고리즘, 다이나믹프로그래밍, 최단경로]
 title: "[알고리즘 - 동적계획] 모든 쌍 최단 경로"
 date:   2021-07-23 11:00:00 
 lastmod : 2021-07-23 11:00:00

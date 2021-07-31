@@ -1,6 +1,6 @@
 ---
 category: Spring-MVC
-tags: [스프링, MVC, HttpMessageConverter]
+tags: [스프링, MVC, HTTP메시지컨버터]
 title: "[스프링 - MVC] HTTP 메시지 컨버터"
 date:   2021-07-29 15:30:00 
 lastmod : 2021-07-29 15:30:00
