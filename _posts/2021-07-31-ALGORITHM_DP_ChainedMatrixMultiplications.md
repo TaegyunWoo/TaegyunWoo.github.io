@@ -88,11 +88,15 @@ sitemap :
 - C[1][3] 일때 (행렬의 개수가 3개일 때)
   - ![C[1][3]=min[A_1(A_2A_3),(A_1A_2)A_3]](https://latex.codecogs.com/svg.image?C[1][3]=min[A_1(A_2A_3),(A_1A_2)A_3])
 
-  - ![(A_1A_2)A_3](https://latex.codecogs.com/svg.image?(A_1A_2)A_3) 의 최소곱셈개수 = ![(d_0*d_1*d_2)+(d_0*d_2*d_3)](https://latex.codecogs.com/svg.image?(d_0*d_1*d_2)+(d_0*d_2*d_3))
+  - ![(A_1A_2)A_3](https://latex.codecogs.com/svg.image?(A_1A_2)A_3)
+  의 최소곱셈개수 =
+  ![(d_0*d_1*d_2)+(d_0*d_2*d_3)](https://latex.codecogs.com/svg.image?(d_0*d_1*d_2)+(d_0*d_2*d_3))
   
     ![C[1][3]: 1](/assets/img/2021-07-31-ALGORITHM_DP_ChainedMatrixMultiplications/Untitled%2062.png)  
   <br>
-  - ![A_1(A_2A_3)](https://latex.codecogs.com/svg.image?A_1(A_2A_3)) 의 최소곱셈개수 = ![(d_0*d_1*d_3)+(d_1*d_2*d_3)](https://latex.codecogs.com/svg.image?(d_0*d_1*d_3)+(d_1*d_2*d_3))
+  - ![A_1(A_2A_3)](https://latex.codecogs.com/svg.image?A_1(A_2A_3))
+  의 최소곱셈개수 =
+  ![(d_0*d_1*d_3)+(d_1*d_2*d_3)](https://latex.codecogs.com/svg.image?(d_0*d_1*d_3)+(d_1*d_2*d_3))
 
     ![C[1][3]: 2](/assets/img/2021-07-31-ALGORITHM_DP_ChainedMatrixMultiplications/Untitled%2063.png)
 
