@@ -1,6 +1,6 @@
 ---
 category: Thymeleaf
-tags: [타임리프, 변수표현식, SpringEL]
+tags: [타임리프, 문자리터럴]
 title: "[타임리프] 타임리프의 문자 리터럴"
 date:   2021-08-02 10:30:00 
 lastmod : 2021-08-02 10:30:00
