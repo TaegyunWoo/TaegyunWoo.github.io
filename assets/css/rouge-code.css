@@ -21,4 +21,6 @@ td.code {
 
 td.code .highlight {
     padding: 0px;
+    color: rgb(255, 90, 61);
+    font-weight: bold;
 }
