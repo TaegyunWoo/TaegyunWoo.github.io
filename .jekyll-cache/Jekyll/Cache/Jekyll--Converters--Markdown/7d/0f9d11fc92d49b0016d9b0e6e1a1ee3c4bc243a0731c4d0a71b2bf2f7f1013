@@ -1,0 +1,289 @@
+I"6Q<p><br/><br/></p>
+<h1 id="section">템플릿 레이아웃</h1>
+<p><a href="https://taegyunwoo.github.io/thymeleaf/THYMELEAF_TemplateFragment">이전 글</a>에서 일부 코드 조각을 가지와서 사용하는 템플릿 조각에 대해 알아보았다. 이번 글에서는 개념을 좀 더 확장시켜, 코드 조각을 레이아웃에 넘겨서 사용하는 방법에 대해 설명하도록 하겠다.</p>
+<p>예를 들어, 공통 정보들은 한 곳에 모아두고 공통으로 사용하지만, 각 페이지마다 필요한 정보를 더 추가해서 사용해야하는 경우가 있다. 이런 경우, 템플릿 레이아웃을 활용하여 구현하는 것이 적합하다.</p>
+<p>바로 예시 코드를 보며 설명하도록 하겠다.</p>
+<p><br><br></p>
+<h2 id="section-1">예시 코드</h2>
+<h3 id="section-2">컨트롤러</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/template"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TemplateController</span> <span class="o">{</span>
+
+	<span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/layout"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">String</span> <span class="nf">layout</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="s">"template/layout/layoutMain"</span><span class="o">;</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<br>
+<h3 id="html">템플릿 레이아웃으로 사용될 HTML</h3>
+<blockquote>
+<p><code>&lt;head&gt;</code> 부분을 메인HTML이 가져와 사용할 것이다. 그러므로 <code>&lt;head&gt;</code> 부분을 집중해서 보도록 하자!</p>
+</blockquote>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">xmlns:th=</span><span class="s">"http://www.thymeleaf.org"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head</span> <span class="na">th:fragment=</span><span class="s">"common_header(title,links)"</span><span class="nt">&gt;</span>
+
+	<span class="nt">&lt;title</span> <span class="na">th:replace=</span><span class="s">"${title}"</span><span class="nt">&gt;</span>레이아웃 타이틀<span class="nt">&lt;/title&gt;</span>
+
+	<span class="c">&lt;!-- 공통 정보 --&gt;</span>
+	<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="na">media=</span><span class="s">"all"</span> <span class="na">th:href=</span><span class="s">"@{/css/ awesomeapp.css}"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"shortcut icon"</span> <span class="na">th:href=</span><span class="s">"@{/images/favicon.ico}"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">th:src=</span><span class="s">"@{/sh/scripts/codebase.js}"</span><span class="nt">&gt;&lt;/script&gt;</span>
+	
+	<span class="c">&lt;!-- 추가 정보가 들어갈 자리 --&gt;</span>
+	<span class="nt">&lt;th:block</span> <span class="na">th:replace=</span><span class="s">"${links}"</span> <span class="nt">/&gt;</span>
+	
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<br>
+<h3 id="html-1">메인 HTML</h3>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">xmlns:th=</span><span class="s">"http://www.thymeleaf.org"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head</span> <span class="na">th:replace=</span><span class="s">"template/layout/base :: common_header(~{::title},~{::link})"</span><span class="nt">&gt;</span>
+
+	<span class="nt">&lt;title&gt;</span>메인 타이틀<span class="nt">&lt;/title&gt;</span>
+	<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">th:href=</span><span class="s">"@{/css/bootstrap.min.css}"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">th:href=</span><span class="s">"@{/themes/smoothness/jquery-ui.css}"</span><span class="nt">&gt;</span>
+
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+	메인 컨텐츠
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<br>
+<h3 id="html-2">결과 - 메인HTML</h3>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+
+	<span class="nt">&lt;title&gt;</span>메인 타이틀<span class="nt">&lt;/title&gt;</span>
+
+	<span class="c">&lt;!-- 공통 정보 --&gt;</span>
+	<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="na">media=</span><span class="s">"all"</span> <span class="na">href=</span><span class="s">"/css/awesomeapp.css"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"shortcut icon"</span> <span class="na">href=</span><span class="s">"/images/favicon.ico"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"/sh/scripts/codebase.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+
+	<span class="c">&lt;!-- 추가 정보가 들어갈 자리 --&gt;</span>
+	<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"/css/bootstrap.min.css"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"/themes/smoothness/jquery-ui.css"</span><span class="nt">&gt;</span>
+
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+	메인 컨텐츠
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<p><br><br></p>
+<h2 id="section-3">상세 설명</h2>
+<h3 id="html-3">템플릿 레이아웃으로 사용될 HTML</h3>
+<ul>
+<li><code>&lt;head th:fragment=&quot;common_header(title,links)&quot;&gt; ... &lt;/head&gt;</code>
+<ul>
+<li><code>&lt;head&gt;</code> 태그와 내부 태그들을 템플릿으로 삼는다.</li>
+<li>템플릿 이름: <code>common_header</code></li>
+<li>매개변수: <code>title</code> , <code>links</code></li>
+</ul>
+</li>
+</ul>
+<br>
+<ul>
+<li><code>&lt;title th:replace=&quot;${title}&quot;&gt;레이아웃 타이틀&lt;/title&gt;</code>
+<ul>
+<li>매개변수 <code>title</code> 에 담긴 값으로 <code>&lt;title&gt;</code> 태그를 교체한다.</li>
+<li><strong>템플릿 조각</strong> 으로 <code>th:replace</code> 를 설정했을 때
+<ul>
+<li>템플릿 조각의 경우, 오직 메인HTML에만 <code>th:replace</code> 이 적용되었고 <code>~{}</code> 표현식을 통해 설정하였다.</li>
+<li>메인HTML에 적용된 <code>th:replace</code> : <code>th:replace=&quot;~{템플릿경로 :: 조각이름}&quot;</code></li>
+</ul>
+</li>
+<li><strong>템플릿 레이아웃</strong> 으로 <code>th:replace</code> 를 설정했을 때
+<ul>
+<li>템플릿 레이아웃의 경우, 메인HTML 뿐만 아니라 템플릿 레이아웃 HTML에도 <code>th:replace</code> 이 적용된다.</li>
+<li>템플릿 레이아웃 HTML에 적용된 <code>th:replace</code> : <code>th:replace=&quot;${매개변수명}&quot;</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>이후 설명을 읽고나면, 보다 이해가 수월할 것이다.</p>
+<br>
+<h3 id="html-4">메인HTML</h3>
+<ul>
+<li><code>&lt;head th:replace=&quot;template/layout/base :: common_header(~{::title},~{::link})&quot;&gt;</code>
+<ul>
+<li>
+<p><code>th:replace=&quot;template/layout/base :: common_header(~{::title},~{::link})&quot;</code> 을 통해, <code>&lt;head&gt;</code> 태그 전체를 <code>common_header</code> 템플릿으로 변경할 것임을 알 수 있다.</p>
+</li>
+<li>
+<p><strong><code>~{::title}</code> 매개변수</strong></p>
+<ul>
+<li><code>&lt;head&gt;</code> 태그 내부에 존재하는 <code>&lt;title&gt;</code> 태그를 템플릿 레이아웃 매개변수에 데이터로 넘겨준다.</li>
+</ul>
+</li>
+<li>
+<p><strong><code>~{::link}</code> 매개변수</strong></p>
+<ul>
+<li><code>&lt;head&gt;</code> 태그 내부에 존재하는 <code>&lt;link&gt;</code> 태그를 템플릿 레이아웃 매개변수에 데이터로 넘겨준다.</li>
+<li>여러 개의 <code>&lt;link&gt;</code> 태그가 존재하지만, 모두 넘어간다.</li>
+</ul>
+</li>
+<li>
+<p>데이터를 넘겨받은 템플릿 레이아웃의 형태는 아래와 같다.</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!---------------------- 기존 코드 -----------------------&gt;</span>
+<span class="nt">&lt;head</span> <span class="na">th:fragment=</span><span class="s">"common_header(title,links)"</span><span class="nt">&gt;</span>
+
+	<span class="nt">&lt;title</span> <span class="na">th:replace=</span><span class="s">"${title}"</span><span class="nt">&gt;</span>레이아웃 타이틀<span class="nt">&lt;/title&gt;</span>
+
+	<span class="c">&lt;!-- 공통 정보 --&gt;</span>
+	<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="na">media=</span><span class="s">"all"</span> <span class="na">th:href=</span><span class="s">"@{/css/ awesomeapp.css}"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"shortcut icon"</span> <span class="na">th:href=</span><span class="s">"@{/images/favicon.ico}"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">th:src=</span><span class="s">"@{/sh/scripts/codebase.js}"</span><span class="nt">&gt;&lt;/script&gt;</span>
+	
+	<span class="c">&lt;!-- 추가 정보가 들어갈 자리 --&gt;</span>
+	<span class="nt">&lt;th:block</span> <span class="na">th:replace=</span><span class="s">"${links}"</span> <span class="nt">/&gt;</span>
+	
+<span class="nt">&lt;/head&gt;</span>
+<span class="c">&lt;!-------------------------------------------------------------------------&gt;</span>
+
+<span class="c">&lt;!------------------------ 매개변수가 적용된 코드 --------------------------&gt;</span>
+<span class="nt">&lt;head</span> <span class="na">th:fragment=</span><span class="s">"common_header(title,links)"</span><span class="nt">&gt;</span>
+
+	<span class="nt">&lt;title&gt;</span>메인 타이틀<span class="nt">&lt;/title&gt;</span>
+
+	<span class="c">&lt;!-- 공통 정보 --&gt;</span>
+	<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="na">media=</span><span class="s">"all"</span> <span class="na">th:href=</span><span class="s">"@{/css/ awesomeapp.css}"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"shortcut icon"</span> <span class="na">th:href=</span><span class="s">"@{/images/favicon.ico}"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">th:src=</span><span class="s">"@{/sh/scripts/codebase.js}"</span><span class="nt">&gt;&lt;/script&gt;</span>
+	
+	<span class="c">&lt;!-- 추가 정보가 들어갈 자리 --&gt;</span>
+	<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"/css/bootstrap.min.css"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"/themes/smoothness/jquery-ui.css"</span><span class="nt">&gt;</span>
+	
+<span class="nt">&lt;/head&gt;</span>
+<span class="c">&lt;!-------------------------------------------------------------------------&gt;</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>그리고 여기서 끝나는 것이 아니라, 메인HTML에도 변경된 템플릿 레이아웃을 적용(<code>th:replace</code>) 해야한다. 그 결과는 다음과 같다.</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+
+	<span class="nt">&lt;title&gt;</span>메인 타이틀<span class="nt">&lt;/title&gt;</span>
+
+	<span class="c">&lt;!-- 공통 정보 --&gt;</span>
+	<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="na">media=</span><span class="s">"all"</span> <span class="na">href=</span><span class="s">"/css/awesomeapp.css"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"shortcut icon"</span> <span class="na">href=</span><span class="s">"/images/favicon.ico"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"/sh/scripts/codebase.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+
+	<span class="c">&lt;!-- 추가 정보가 들어갈 자리 --&gt;</span>
+	<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"/css/bootstrap.min.css"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"/themes/smoothness/jquery-ui.css"</span><span class="nt">&gt;</span>
+
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+	메인 컨텐츠
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+</li>
+</ul>
+</li>
+</ul>
+<p><br><br></p>
+<h2 id="section-4">적용 범위의 확대</h2>
+<p>위에서 설명한 것은 <code>&lt;head&gt;</code> 태그와 같이 HTML의 일부에만 국한되었다. 하지만 <code>&lt;html&gt;</code> 태그에 템플릿 레이아웃을 적용하여, 전체 HTML을 대상으로 설정할 수 있다.</p>
+<br>
+<h3 id="section-5">컨트롤러</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/template"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TemplateController</span> <span class="o">{</span>
+
+	<span class="c1">//기존 &lt;head&gt;에 적용했던 예시의 메서드</span>
+	<span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/layout"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">String</span> <span class="nf">layout</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="s">"template/layout/layoutMain"</span><span class="o">;</span>
+	<span class="o">}</span>
+
+	<span class="c1">//전체 html에 적용하는 예시 호출</span>
+	<span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/layoutExtend"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">String</span> <span class="nf">layoutExtends</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="s">"template/layoutExtend/layoutExtendMain"</span><span class="o">;</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<br>
+<h3 id="html-5">템플릿 레이아웃으로 사용될 HTML</h3>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">th:fragment=</span><span class="s">"layout (title, content)"</span>
+	<span class="na">xmlns:th=</span><span class="s">"http:// www.thymeleaf.org"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+	<span class="nt">&lt;title</span> <span class="na">th:replace=</span><span class="s">"${title}"</span><span class="nt">&gt;</span>레이아웃 타이틀<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+
+	<span class="nt">&lt;h1&gt;</span>레이아웃 H1<span class="nt">&lt;/h1&gt;</span>
+
+	<span class="nt">&lt;div</span> <span class="na">th:replace=</span><span class="s">"${content}"</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;p&gt;</span>레이아웃 컨텐츠<span class="nt">&lt;/p&gt;</span>
+	<span class="nt">&lt;/div&gt;</span>
+
+	<span class="nt">&lt;footer&gt;</span>
+	레이아웃 푸터
+	<span class="nt">&lt;/footer&gt;</span>
+
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<br>
+<h3 id="html-6">메인 HTML</h3>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">th:replace=</span><span class="s">"~{template/layoutExtend/layoutFile :: layout(~{::title}, ~{::section})}"</span>
+	<span class="na">xmlns:th=</span><span class="s">"http://www.thymeleaf.org"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+	<span class="nt">&lt;title&gt;</span>메인 페이지 타이틀<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+	<span class="nt">&lt;section&gt;</span>
+		<span class="nt">&lt;p&gt;</span>메인 페이지 컨텐츠<span class="nt">&lt;/p&gt;</span>
+		<span class="nt">&lt;div&gt;</span>메인 페이지 포함 내용<span class="nt">&lt;/div&gt;</span>
+	<span class="nt">&lt;/section&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<br>
+<h3 id="html-7">결과 - 메인HTML</h3>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+	<span class="nt">&lt;title&gt;</span>메인 페이지 타이틀<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+	<span class="nt">&lt;h1&gt;</span>레이아웃 H1<span class="nt">&lt;/h1&gt;</span>
+	<span class="nt">&lt;section&gt;</span>
+		<span class="nt">&lt;p&gt;</span>메인 페이지 컨텐츠<span class="nt">&lt;/p&gt;</span>
+		<span class="nt">&lt;div&gt;</span>메인 페이지 포함 내용<span class="nt">&lt;/div&gt;</span>
+	<span class="nt">&lt;/section&gt;</span>
+	<span class="nt">&lt;footer&gt;</span> 레이아웃 푸터 <span class="nt">&lt;/footer&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<p>개념적으로 위에서 설명한 것과 크게 다르지 않다. 단지, 적용 범위가 <code>&lt;html&gt;</code> 로 더 확대된 것 뿐이다.</p>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/YPER"><img src="/assets/img/Inflearn_Spring_MVC2/logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

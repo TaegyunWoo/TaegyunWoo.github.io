@@ -1,0 +1,302 @@
+I"Na<p><br/><br/></p>
+<p>스프링은 매우 유연하고, 실용적인 컨트롤러를 만들 수 있도록 <code>@RequestMapping</code> 애노테이션을 지원한다.</p>
+<br>
+<h1 id="coderequestmappingcode-"><code>@RequestMapping</code> 애노테이션</h1>
+<h2 id="coderequestmappingcode--"><code>@RequestMapping</code> 의 목적</h2>
+<ul>
+<li>
+<p>애노테이션을 활용하여 매우 유연하고, 실용적인 컨트롤러를 만들 수 있도록 하는 것</p>
+</li>
+<li>
+<p>RequestMappingHandlerMapping , RequestMappingHandlerAdapter</p>
+<ul>
+<li>위 두가지 기능(핸들러 매핑 , 핸들러 어댑터)을 모두 수행하기 위한 애노테이션이다.</li>
+</ul>
+</li>
+<li>
+<p>대부분 실무에선 <code>@RequestMapping</code> 을 사용한다.</p>
+</li>
+</ul>
+<p><br><br></p>
+<h2 id="coderequestmappingcode---mvc----v1"><code>@RequestMapping</code> 기반의 스프링 MVC 컨트롤러 - V1</h2>
+<p><code>@RequestMapping</code> 애너테이션을 적용한 컨트롤러를 작성해보자. 이전에 다뤘던 회원 도메인을 기반으로 컨트롤러를 작성할 것이다.</p>
+<blockquote>
+<p>회원 도메인 관련 코드는 <a href="https://taegyunwoo.github.io/spring/SPRING_OCP_DIP">이전 글</a>의 도메인 부분을 참고하자.</p>
+</blockquote>
+<br>
+<h3 id="springmemberformcontrollerv1-----">SpringMemberFormControllerV1 - 회원 등록 폼</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.springframework.stereotype.Controller</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.RequestMapping</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.servlet.ModelAndView</span><span class="o">;</span>
+
+<span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SpringMemberFormControllerV1</span> <span class="o">{</span>
+	
+	<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/springmvc/v1/members/new-form"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">ModelAndView</span> <span class="nf">process</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="nf">ModelAndView</span><span class="o">(</span><span class="s">"new-form"</span><span class="o">);</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>
+<p><code>@Controller</code></p>
+<ul>
+<li>스프링이 자동으로 스프링 빈으로 등록한다.</li>
+<li><code>@Controller</code> 는 <code>@Component</code> 를 포함하고 있어서, <code>@ComponentScan</code> 의 대상이 된다.</li>
+</ul>
+</li>
+<li>
+<p><code>@RequestMapping</code></p>
+<ul>
+<li>요청 정보를 매핑한다. 해당 URL이 호출되면 해당 메서드가 호출된다.</li>
+<li>메서드 이름은 임의로 지어도 된다. (애노테이션 기반으로 작동하기 때문에)</li>
+</ul>
+</li>
+<li>
+<p><code>ModelAndView</code></p>
+<ul>
+<li>모델과 뷰 정보를 담아서 반환하면 된다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="springmembersavecontrollerv1----">SpringMemberSaveControllerV1 - 회원 저장</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">hello.servlet.domain.member.Member</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">hello.servlet.domain.member.MemberRepository</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.stereotype.Controller</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.RequestMapping</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.servlet.ModelAndView</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletRequest</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletResponse</span><span class="o">;</span>
+
+<span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SpringMemberSaveControllerV1</span> <span class="o">{</span>
+	
+	<span class="kd">private</span> <span class="nc">MemberRepository</span> <span class="n">memberRepository</span> <span class="o">=</span> <span class="nc">MemberRepository</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+	
+	<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/springmvc/v1/members/save"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">ModelAndView</span> <span class="nf">process</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
+		
+		<span class="c1">//전달받은 파라미터 얻기</span>
+		<span class="nc">String</span> <span class="n">username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="na">getParameter</span><span class="o">(</span><span class="s">"username"</span><span class="o">);</span>
+		<span class="kt">int</span> <span class="n">age</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">request</span><span class="o">.</span><span class="na">getParameter</span><span class="o">(</span><span class="s">"age"</span><span class="o">));</span>
+		
+		<span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">(</span><span class="n">username</span><span class="o">,</span> <span class="n">age</span><span class="o">);</span>
+		<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"member = "</span> <span class="o">+</span> <span class="n">member</span><span class="o">);</span>
+		
+		<span class="n">memberRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">member</span><span class="o">);</span>
+		
+		<span class="nc">ModelAndView</span> <span class="n">mv</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ModelAndView</span><span class="o">(</span><span class="s">"save-result"</span><span class="o">);</span>
+		
+		<span class="c1">//ModelAndView에 member 객체 추가</span>
+		<span class="n">mv</span><span class="o">.</span><span class="na">addObject</span><span class="o">(</span><span class="s">"member"</span><span class="o">,</span> <span class="n">member</span><span class="o">);</span>
+
+		<span class="k">return</span> <span class="n">mv</span><span class="o">;</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>
+<p><code>mv.addObject(&quot;member&quot;, member)</code></p>
+<ul>
+<li><code>ModelAndView</code> 를 통해 Model 데이터를 추가할 때 사용하는 메서드</li>
+<li>해당 Model 데이터 (<code>member</code>)는 뷰를 렌더링할 때 사용된다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="springmemberlistcontrollerv1---">SpringMemberListControllerV1 - 회원목록</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">hello.servlet.domain.member.Member</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">hello.servlet.domain.member.MemberRepository</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.stereotype.Controller</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.RequestMapping</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.servlet.ModelAndView</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SpringMemberListControllerV1</span> <span class="o">{</span>
+
+	<span class="kd">private</span> <span class="nc">MemberRepository</span> <span class="n">memberRepository</span> <span class="o">=</span> <span class="nc">MemberRepository</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+
+	<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/springmvc/v1/members"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">ModelAndView</span> <span class="nf">process</span><span class="o">()</span> <span class="o">{</span>
+		<span class="nc">List</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;</span> <span class="n">members</span> <span class="o">=</span> <span class="n">memberRepository</span><span class="o">.</span><span class="na">findAll</span><span class="o">();</span>
+		<span class="nc">ModelAndView</span> <span class="n">mv</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ModelAndView</span><span class="o">(</span><span class="s">"members"</span><span class="o">);</span>
+		<span class="n">mv</span><span class="o">.</span><span class="na">addObject</span><span class="o">(</span><span class="s">"members"</span><span class="o">,</span> <span class="n">members</span><span class="o">);</span>
+		<span class="k">return</span> <span class="n">mv</span><span class="o">;</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<br>
+<h3 id="coderequestmappingcode---1"><code>@RequestMapping</code> 의 특징</h3>
+<ul>
+<li><code>@RequestMapping</code> 은 <strong>클래스 단위 뿐만 아니라,</strong> <strong>메서드 단위에서도 적용될 수 있다.</strong></li>
+<li>따라서, 위에서 작성한 여러 컨트롤러들을 하나의 클래스로 통합할 수 있다!</li>
+</ul>
+<p><br><br></p>
+<h2 id="coderequestmappingcode------v2"><code>@RequestMapping</code> 기반의 컨트롤러 통합 - V2</h2>
+<h3 id="springmembercontrollerv2">SpringMemberControllerV2</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">hello.servlet.domain.member.Member</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">hello.servlet.domain.member.MemberRepository</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.stereotype.Controller</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.RequestMapping</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.servlet.ModelAndView</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletRequest</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletResponse</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="c1">//RequestMapping을 클래스와 메서드에 사용하면,</span>
+<span class="c1">//"클래스 단위 + 메서드 단위" 로 매핑하는 것을 가능하게 한다.</span>
+<span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/springmvc/v2/members"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SpringMemberControllerV2</span> <span class="o">{</span>
+	
+	<span class="kd">private</span> <span class="nc">MemberRepository</span> <span class="n">memberRepository</span> <span class="o">=</span> <span class="nc">MemberRepository</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+
+	<span class="c1">// "/springmvc/v2/members/new-form"</span>
+	<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/new-form"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">ModelAndView</span> <span class="nf">newForm</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="nf">ModelAndView</span><span class="o">(</span><span class="s">"new-form"</span><span class="o">);</span>
+	<span class="o">}</span>
+
+	<span class="c1">// "/springmvc/v2/members/save"</span>
+	<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/save"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">ModelAndView</span> <span class="nf">save</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
+		<span class="nc">String</span> <span class="n">username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="na">getParameter</span><span class="o">(</span><span class="s">"username"</span><span class="o">);</span>
+		<span class="kt">int</span> <span class="n">age</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">request</span><span class="o">.</span><span class="na">getParameter</span><span class="o">(</span><span class="s">"age"</span><span class="o">));</span>
+		<span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">(</span><span class="n">username</span><span class="o">,</span> <span class="n">age</span><span class="o">);</span>
+		<span class="n">memberRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">member</span><span class="o">);</span>
+		<span class="nc">ModelAndView</span> <span class="n">mav</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ModelAndView</span><span class="o">(</span><span class="s">"save-result"</span><span class="o">);</span>
+		<span class="n">mav</span><span class="o">.</span><span class="na">addObject</span><span class="o">(</span><span class="s">"member"</span><span class="o">,</span> <span class="n">member</span><span class="o">);</span>
+		<span class="k">return</span> <span class="n">mav</span><span class="o">;</span>
+	<span class="o">}</span>
+
+	<span class="c1">// "/springmvc/v2/members"</span>
+	<span class="nd">@RequestMapping</span>
+	<span class="kd">public</span> <span class="nc">ModelAndView</span> <span class="nf">members</span><span class="o">()</span> <span class="o">{</span>
+		<span class="nc">List</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;</span> <span class="n">members</span> <span class="o">=</span> <span class="n">memberRepository</span><span class="o">.</span><span class="na">findAll</span><span class="o">();</span>
+		<span class="nc">ModelAndView</span> <span class="n">mav</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ModelAndView</span><span class="o">(</span><span class="s">"members"</span><span class="o">);</span>
+		<span class="n">mav</span><span class="o">.</span><span class="na">addObject</span><span class="o">(</span><span class="s">"members"</span><span class="o">,</span> <span class="n">members</span><span class="o">);</span>
+		<span class="k">return</span> <span class="n">mav</span><span class="o">;</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>
+<p><strong>조합</strong></p>
+<ul>
+<li>“클래스 단위에서 쓰인 <code>@RequestMapping</code> “ 과 “메서드 단위에서 쓰인 <code>@RequestMapping</code> “ 은 조합이 가능하다.</li>
+</ul>
+</li>
+<li>
+<p><strong>조합 결과</strong></p>
+<ul>
+<li>클래스 레벨: <code>@RequestMapping(&quot;/springmvc/v2/members&quot;)</code>
+<ul>
+<li>메서드 레벨: <code>@RequestMapping(&quot;/new-form&quot;)</code> ⇒ <code>/springmvc/v2/members/new-form</code></li>
+<li>메서드 레벨: <code>@RequestMapping(&quot;/save&quot;)</code> ⇒ <code>/springmvc/v2/members/save</code></li>
+<li>메서드 레벨: <code>@RequestMapping</code> ⇒ <code>/springmvc/v2/members</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>결과적으로 상당히 깔끔하고 유지보수하기 쉬워졌다.</p>
+<p><br><br></p>
+<h2 id="coderequestmappingcode-------v3"><code>@RequestMapping</code> 기반의 컨트롤러를 보다 실용적으로 - V3</h2>
+<p>각각의 메서드에서 <code>ModelAndView</code> 객체에 ‘뷰의 논리 이름’과 ‘Model’을 세팅하여, 다시 일일히 반환하기가 번거롭다. 따라서 위에서 작성한 코드(V2)를 보다 실용적인 방식으로 수정해본다.</p>
+<blockquote>
+<p><strong>실무에서는 지금부터 설명하는 방식을 주로 사용한다.</strong></p>
+</blockquote>
+<br>
+<h3 id="springmembercontrollerv3">SpringMemberControllerV3</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">hello.servlet.domain.member.Member</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">hello.servlet.domain.member.MemberRepository</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.stereotype.Controller</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.ui.Model</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.GetMapping</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.PostMapping</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.RequestMapping</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.RequestParam</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/springmvc/v3/members"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SpringMemberControllerV3</span> <span class="o">{</span>
+
+	<span class="kd">private</span> <span class="nc">MemberRepository</span> <span class="n">memberRepository</span> <span class="o">=</span> <span class="nc">MemberRepository</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+
+	<span class="c1">// HTTP 메서드가 GET 방식인 요청 중 /springmvc/v3/members/new-form 으로 요청이 들어오면 호출됨.</span>
+	<span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/new-form"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">String</span> <span class="nf">newForm</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="s">"new-form"</span><span class="o">;</span> <span class="c1">//뷰의 논리적 이름를 반환한다.</span>
+	<span class="o">}</span>
+
+	<span class="c1">// HTTP 메서드가 POST 방식인 요청 중 /springmvc/v3/members/save 으로 요청이 들어오면 호출됨.</span>
+	<span class="nd">@PostMapping</span><span class="o">(</span><span class="s">"/save"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">String</span> <span class="nf">save</span><span class="o">(</span>
+							<span class="nd">@RequestParam</span><span class="o">(</span><span class="s">"username"</span><span class="o">)</span> <span class="nc">String</span> <span class="n">username</span><span class="o">,</span> <span class="c1">//getParameter("username")</span>
+							<span class="nd">@RequestParam</span><span class="o">(</span><span class="s">"age"</span><span class="o">)</span> <span class="kt">int</span> <span class="n">age</span><span class="o">,</span> <span class="c1">//getParameter("age")</span>
+							<span class="nc">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
+		<span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">(</span><span class="n">username</span><span class="o">,</span> <span class="n">age</span><span class="o">);</span>
+		<span class="n">memberRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">member</span><span class="o">);</span>
+
+		<span class="c1">//model에 member 객체 저장(바인딩)</span>
+		<span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"member"</span><span class="o">,</span> <span class="n">member</span><span class="o">);</span>
+
+		<span class="k">return</span> <span class="s">"save-result"</span><span class="o">;</span>
+	<span class="o">}</span>
+
+	<span class="c1">// HTTP 메서드가 GET 방식인 요청 중 /springmvc/v3/members 으로 요청이 들어오면 호출됨.</span>
+	<span class="nd">@GetMapping</span>
+	<span class="kd">public</span> <span class="nc">String</span> <span class="nf">members</span><span class="o">(</span><span class="nc">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
+		<span class="nc">List</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;</span> <span class="n">members</span> <span class="o">=</span> <span class="n">memberRepository</span><span class="o">.</span><span class="na">findAll</span><span class="o">();</span>
+		<span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"members"</span><span class="o">,</span> <span class="n">members</span><span class="o">);</span>
+		<span class="k">return</span> <span class="s">"members"</span><span class="o">;</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>
+<p><strong>Model 파라미터</strong></p>
+<ul>
+<li>위에서 작성한 메서드 <code>save()</code> , <code>members()</code> 를 보면 Model을 파라미터로 받는 것을 확인할 수 있다.</li>
+<li><code>model</code> 객체에 데이터 추가 및 조회 할 수 있다.</li>
+<li>스프링 컨테이너가 알아서 메서드에게 매개변수를 넘겨주고, 또 다시 view 단에 해당 <code>model</code> 객체를 넘겨준다.</li>
+</ul>
+</li>
+<li>
+<p><strong>ViewName 직접 반환</strong></p>
+<ul>
+<li>뷰의 논리 이름을 반환할 수 있다.</li>
+</ul>
+</li>
+<li>
+<p><code>@RequestParam</code> <strong>사용</strong></p>
+<ul>
+<li><code>@RequestParam(&quot;username&quot;)</code> 은 <code>request.getParameter(&quot;username&quot;)</code> 과 거의 같은 코드라고 생각하면 된다.</li>
+</ul>
+</li>
+<li>
+<p><code>@RequestMapping</code> <strong>을</strong> <code>@GetMapping</code> , <code>@PostMapping</code> <strong>으로 대체</strong></p>
+<ul>
+<li><code>@RequestMapping</code> 은 URL과 HTTP Method를 구분할 수 있다.</li>
+<li>예시) <code>@RequestMapping(value = &quot;/new-form&quot; , method = RequestMethod.GET)</code></li>
+<li>이것을 <code>@GetMapping</code> 과 <code>@PostMapping</code> , <code>@PutMapping</code> , <code>@PatchMapping</code> , <code>@DeleteMapping</code> 이 간편하게 지원한다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/RfTn"><img src="/assets/img/Inflearn_Spring_MVC1/Logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

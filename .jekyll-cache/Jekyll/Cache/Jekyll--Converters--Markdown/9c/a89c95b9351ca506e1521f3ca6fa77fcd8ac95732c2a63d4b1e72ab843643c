@@ -1,0 +1,90 @@
+I"�<p><br/><br/></p>
+<h1 id="section">분할 정복 : 합병 정렬</h1>
+<h2 id="section-1">개요</h2>
+<h3 id="section-2">특징</h3>
+<ul>
+<li>입력
+<ul>
+<li>2개의 부분 문제로 분할</li>
+<li>부분 문제 크기: 1/2로 감소</li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="section-3">단점</h3>
+<ul>
+<li>입력을 위한 메모리 공간 외의 추가로 입력과 같은 크기의 공간 필요
+<blockquote>
+<p>하지만 큰 의미는 없다.</p>
+</blockquote>
+</li>
+</ul>
+<br>
+<h3 id="section-4">정복방법</h3>
+<ol>
+<li>n개의 숫자들을 n/2개씩 2개의 부분문제로 분할</li>
+<li>각각의 부분문제를 재귀적으로 합병정렬</li>
+<li>2개의 정렬된 부분을 합병</li>
+</ol>
+<blockquote>
+<p>합병 과정 == 정복</p>
+</blockquote>
+<p><br><br></p>
+<h2 id="section-5">알고리즘</h2>
+<h3 id="section-6">의사코드</h3>
+<p><img src="/assets/img/2021-07-16-ALGORITHM_MergeSort/ALC44BC.png" alt="의사코드" /></p>
+<br>
+<h3 id="section-7">흐름 순서</h3>
+<p>3번째 줄이 끝난 후, 4번째 줄 시작</p>
+<p><img src="/assets/img/2021-07-16-ALGORITHM_MergeSort/Untitled_22.png" alt="흐름순서" /></p>
+<br>
+<h3 id="section-8">합병 방법</h3>
+<p><img src="/assets/img/2021-07-16-ALGORITHM_MergeSort/ALCDEED.png" alt="흐름순서1" /></p>
+<p><img src="/assets/img/2021-07-16-ALGORITHM_MergeSort/Untitled_23.png" alt="흐름순서2" /></p>
+<br>
+<h3 id="section-9">시간 복잡도</h3>
+<ul>
+<li>
+<p>합병 수행 시간</p>
+<ul>
+<li>
+<p>배열 A[n], B[m] 일때, 최대 비교 횟수 = n+m-1</p>
+</li>
+<li>
+<p>n+m 개의 공간을 채우기 위한 최대 비교 횟수 (worst case)</p>
+</li>
+<li>
+<p>최악의 경우:<br />
+(m+n) 길이의 배열을 채울때, (m+n-1)번 비교해야함</p>
+</li>
+</ul>
+<blockquote>
+<p>n + m -1 : 맨 마지막건 비교X<br />
+(하지만, 큰 의미X ⇒ 무시가능)</p>
+</blockquote>
+</li>
+</ul>
+<br>
+<p><img src="/assets/img/2021-07-16-ALGORITHM_MergeSort/Untitled_24.png" alt="시간복잡도" /></p>
+<ul>
+<li>각 층의 비교횟수 : O(n)</li>
+</ul>
+<p>따라서, n을 1/2로 계속 나누어 총 k번 분할하여 계산하므로<br />
+층의 개수: <img src="https://latex.codecogs.com/svg.image?k" alt="k" /><br />
+<img src="https://latex.codecogs.com/svg.image?k" alt="k" /> : <img src="https://latex.codecogs.com/svg.image?n=2%5E%7Bk%7D" alt="n=2^k" />이므로 <img src="https://latex.codecogs.com/svg.image?k=log_%7B2%7Dn" alt="k=log_2n" /><br />
+결과적으로 합병 정렬의 시간복잡도<br />
+⇒ 층수 * 각층계산시간 =<br />
+<img src="https://latex.codecogs.com/svg.image?log_%7B2%7Dn&amp;space;*&amp;space;O(n)&amp;space;=&amp;space;O(nlog_%7B2%7Dn)&amp;space;=&amp;space;O(nlogn)" alt="log_{2}n * O(n) = O(nlog_{2}n) = O(nlogn)" /></p>
+<p>원래는 <img src="https://latex.codecogs.com/svg.image?O(nlog_%7B2%7Dn)" alt="O(nlog_2n)" /> 이지만, <img src="https://latex.codecogs.com/svg.image?O(nlog_%7B10%7Dn)" alt="O(nlog_{10}n)" /> 도 가능
+<em>(2는 무시)</em></p>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>성결대학교 컴퓨터 공학과 임태수 교수님 (2021)</li>
+    <li>양성봉, 『알기 쉬운 알고리즘』</li>
+  </ul>
+  본 게시글은 위 강의 및 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

@@ -1,0 +1,91 @@
+I"<p><br/><br/></p>
+<h1 id="section">분할 정복 : 퀵 정렬</h1>
+<h2 id="section-1">개요</h2>
+<h3 id="section-2">특징</h3>
+<ul>
+<li>분할 정복 알고리즘으로 분류되지만, 정복 후 분할하는 알고리즘임</li>
+<li>각 부분문제의 크기가 일정하지 않다</li>
+<li>거대한 입력 크기에 대해 가장 좋은 성능을 가짐</li>
+<li>피봇 : 기준 원소</li>
+</ul>
+<br>
+<h3 id="section-3">예시</h3>
+<p><img src="/assets/img/2021-07-16-ALGORITHM_QuickSort/Untitled_25.png" alt="예시" /></p>
+<p><br><br></p>
+<h2 id="section-4">알고리즘</h2>
+<h3 id="section-5">의사코드</h3>
+<p><img src="/assets/img/2021-07-16-ALGORITHM_QuickSort/Untitled_26.png" alt="의사 코드" /></p>
+<blockquote>
+<p>별도의 병합과정 필요X</p>
+</blockquote>
+<br>
+<h3 id="section-6">2번 절차</h3>
+<p><img src="/assets/img/2021-07-16-ALGORITHM_QuickSort/Untitled_27.png" alt="2번 절차 - 1" /></p>
+<p><img src="/assets/img/2021-07-16-ALGORITHM_QuickSort/Untitled_28.png" alt="2번 절차 - 2" /></p>
+<br>
+<h3 id="section-7">상세 원리</h3>
+<p><img src="/assets/img/2021-07-16-ALGORITHM_QuickSort/Untitled_29.png" alt="상세 원리" /></p>
+<blockquote>
+<p>피봇은 i가 끝까지 도달한 뒤,<br />
+j가 가르키는 요소와 위치를 변경한다.</p>
+</blockquote>
+<ol>
+<li>A[i]번째 요소 검사 (피봇보다 작은지)</li>
+<li>작다면 : j += 1<br />
+크다면 : i+=1 한 뒤, 처음으로 돌아가기</li>
+<li>A[j]와 A[i] 위치 변환</li>
+<li>i+=1</li>
+<li>i가 끝까지 갈때까지 반복</li>
+</ol>
+<p><br><br></p>
+<h2 id="section-8">시간 복잡도</h2>
+<h3 id="section-9">특징</h3>
+<ul>
+<li>퀵 정렬의 성능 : 피봇 선택이 좌우</li>
+<li>피봇으로 가장 작은 숫자 or 가장 큰 숫자가 선택되면<br />
+⇒ 한 부분으로 치우치는 분할을 야기함</li>
+</ul>
+<br>
+<h3 id="section-10">최악 경우 시간복잡도</h3>
+<ul>
+<li>
+<p>계속해서 “가장 큰 수” or “가장 낮은 수”를 선택한다면</p>
+</li>
+<li>
+<p>$O(n^2)$</p>
+</li>
+</ul>
+<br>
+<h3 id="section-11">평균, 최선 경우 시간복잡도</h3>
+<ul>
+<li>
+<p>피봇을 항상 랜덤하게 선택한다고 가정시</p>
+</li>
+<li>
+<p><img src="https://latex.codecogs.com/svg.image?O(nlog_2n)" alt="O(nlog_2n)" /> = O(nlogn)$</p>
+</li>
+</ul>
+<br>
+<h3 id="section-12">피봇 선정 방법</h3>
+<ol>
+<li>랜덤 선정</li>
+<li>“가장 왼쪽 숫자” &amp; “중간 숫자” &amp; “가장 오른쪽 숫자” 중 중앙값으로 피봇 선정</li>
+</ol>
+<p><img src="/assets/img/2021-07-16-ALGORITHM_QuickSort/Untitled_30.png" alt="피봇 선정 방법" /></p>
+<p><br><br></p>
+<h2 id="section-13">퀵 정렬 성능 향상 방법</h2>
+<h3 id="section-14">방법</h3>
+<ul>
+<li>삽입 정렬 동시 사용</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>성결대학교 컴퓨터 공학과 임태수 교수님 (2021)</li>
+    <li>양성봉, 『알기 쉬운 알고리즘』</li>
+  </ul>
+  본 게시글은 위 강의 및 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

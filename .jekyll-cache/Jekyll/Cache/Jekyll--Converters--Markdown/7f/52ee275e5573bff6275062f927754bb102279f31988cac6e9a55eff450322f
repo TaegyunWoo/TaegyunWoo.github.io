@@ -1,0 +1,619 @@
+I"r�<p><br/><br/></p>
+<h1 id="section">이진 탐색 트리</h1>
+<h2 id="section-1">개요</h2>
+<h3 id="section-2">이진 탐색 트리 정의</h3>
+<ul>
+<li>각 노드의 값으로 key값을 갖는다.
+⇒ 따라서, 중복이 안된다.</li>
+<li>왼쪽서브트리
+<ul>
+<li>루트노드보다 작은 값</li>
+</ul>
+</li>
+<li>오른쪽서브트리
+<ul>
+<li>루트노드보다 큰 값</li>
+</ul>
+</li>
+</ul>
+<p>이진 탐색 트리를 중위순회하면 오름차순으로 정렬된 값을 구할 수 있음
+⇒ 이진 탐색을 수행하기 위해, 선행되어야함</p>
+<p><img src="/assets/img/2021-07-15-DATASTRUCTURE_BinarySearchTree/Untitled_57.png" alt="이진탐색트리 구조" /></p>
+<p><br><br></p>
+<h2 id="section-3">이진 탐색 트리 연산 개요</h2>
+<h3 id="section-4">연산 개요</h3>
+<ul>
+<li>기본적인 연산은 이진 트리와 동일하다.</li>
+</ul>
+<br>
+<ul>
+<li>연산 종류
+<ul>
+<li>삽입</li>
+<li>삭제</li>
+<li>탐색</li>
+</ul>
+</li>
+</ul>
+<br>
+<ul>
+<li>
+<p>연산 조건</p>
+<ul>
+<li>이진탐색트리의 조건을 유지하면서 처리되야함</li>
+<li>왼쪽 서브 트리 ⇒ 루트노드보다 작은 값</li>
+<li>오른쪽 서브 트리 ⇒ 루트노드보다 큰 값</li>
+</ul>
+</li>
+<li>
+<p>연산 특징</p>
+<ul>
+<li>삽입이나 삭제 연산시, 무조건 탐색이 선행되어야함</li>
+<li>왜냐하면 삽입시, 삽입할 값과 중복되는 노드값이 존재하는지 확인해야함 (키값 중복 방지)</li>
+<li>또한 삭제시, 삭제할 노드 탐색</li>
+</ul>
+</li>
+</ul>
+<p><br><br></p>
+<h2 id="section-5">이진 탐색 트리 연산: 탐색 연산</h2>
+<h3 id="section-6">탐색 연산 개요</h3>
+<ul>
+<li>탐색은 항상 루트 노드에서 시작</li>
+<li>키 값(찾으려는 값)이 루트보다 작으면 ⇒ 왼쪽 자식을 기준으로 다시 탐색</li>
+<li>키 값(찾으려는 값)이 루트보다 크면 ⇒ 오른쪽 자식을 기준으로 다시 탐색</li>
+<li>반복</li>
+</ul>
+<br>
+<h3 id="section-7">탐색 알고리즘</h3>
+<p><img src="/assets/img/2021-07-15-DATASTRUCTURE_BinarySearchTree/Untitled_58.png" alt="탐색알고리즘 1" /></p>
+<p><img src="/assets/img/2021-07-15-DATASTRUCTURE_BinarySearchTree/Untitled_59.png" alt="탐색알고리즘 2" /></p>
+<br>
+<h3 id="section-8">탐색 함수 구현 - 순환적 탐색 함수</h3>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TNode</span><span class="o">*</span> <span class="nf">search</span><span class="p">(</span> <span class="n">TNode</span> <span class="o">*</span><span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">key</span> <span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">==</span><span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">key</span> <span class="o">==</span> <span class="n">n</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">n</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">key</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">search</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span> <span class="n">key</span><span class="p">);</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">search</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span> <span class="n">key</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<br>
+<h3 id="section-9">탐색 함수 구현 - 반복적 탐색 함수</h3>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TNode</span><span class="o">*</span> <span class="nf">search_iter</span><span class="p">(</span> <span class="n">TNode</span> <span class="o">*</span><span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">key</span> <span class="p">)</span> <span class="p">{</span>
+	<span class="k">while</span><span class="p">(</span> <span class="n">n</span><span class="o">!=</span><span class="nb">NULL</span> <span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span> <span class="n">key</span> <span class="o">==</span> <span class="n">n</span><span class="o">-&gt;</span><span class="n">data</span> <span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="n">n</span><span class="p">;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">key</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">-&gt;</span><span class="n">data</span> <span class="p">)</span> <span class="p">{</span>
+			<span class="n">n</span> <span class="o">=</span> <span class="n">node</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="n">n</span> <span class="o">=</span> <span class="n">node</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span> <span class="c1">//탐색실패</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><br><br></p>
+<h2 id="section-10">이진 탐색 트리 연산: 삽입 연산</h2>
+<h3 id="section-11">삽입 연산 개요</h3>
+<ul>
+<li>노드를 삽입하기 전에 먼저 탐색을 수행</li>
+<li>중복노드 삽입 불가</li>
+<li>탐색에 실패한 위치 == 새로운 노드를 삽입하는 위치</li>
+</ul>
+<p><img src="/assets/img/2021-07-15-DATASTRUCTURE_BinarySearchTree/Untitled_60.png" alt="삽입연산" /></p>
+<br>
+<h3 id="section-12">삽입 알고리즘</h3>
+<p><img src="/assets/img/2021-07-15-DATASTRUCTURE_BinarySearchTree/Untitled_61.png" alt="삽입연산 알고리즘" /></p>
+<br>
+<h3 id="section-13">삽입 함수 구현</h3>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">insert</span><span class="p">(</span> <span class="n">TNode</span> <span class="o">*</span><span class="n">r</span><span class="p">,</span> <span class="n">TNode</span> <span class="o">*</span><span class="n">n</span> <span class="p">)</span> <span class="p">{</span> <span class="c1">// r: 루트노드, n: 삽입할 노드</span>
+
+	<span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">data</span> <span class="o">==</span> <span class="n">r</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//중복되어 삽입 실패</span>
+		<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">data</span> <span class="o">&lt;</span> <span class="n">r</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">r</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//삽입할 자리 찾음</span>
+			<span class="n">r</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>              <span class="c1">//삽입할 자리 못찾음</span>
+			<span class="n">insert</span><span class="p">(</span><span class="n">r</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">r</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//삽입할 자리 찾음</span>
+			<span class="n">r</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>               <span class="c1">//삽입할 자리 못찾음</span>
+			<span class="n">insert</span><span class="p">(</span><span class="n">r</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//삽입성공</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+<p><br><br></p>
+<h2 id="section-14">이진 탐색 트리 연산: 삭제 연산</h2>
+<h3 id="section-15">삭제 연산 개요</h3>
+<ul>
+<li>
+<p>노드 삭제의 3가지 경우가 존재</p>
+<ol>
+<li>단말 노드를 삭제할 경우</li>
+<li>자식이 하나인 노드를 삭제하려는 경우<br />
+(삭제하려는 노드가 오른쪽이나 왼쪽 서브 트리만 가지고 있을때)</li>
+<li>자식이 둘인 노드를 삭제하려는 경우<br />
+(삭제하려는 노드가 오른쪽과 왼쪽 서브 트리 모두 가지고 있을때)</li>
+</ol>
+</li>
+</ul>
+<br>
+<h3 id="section-16">단말 노드 삭제시</h3>
+<ul>
+<li>단말 노드의 부모 노드를 찾아서 연결을 끊으면 됨</li>
+</ul>
+<p><img src="/assets/img/2021-07-15-DATASTRUCTURE_BinarySearchTree/Untitled_62.png" alt="삭제연산" /></p>
+<br>
+<h3 id="section-17">자식이 하나인 노드 삭제시</h3>
+<ul>
+<li>
+<p>목표 노드 삭제 후, 해당 노드의 서브 트리는 부모 노드에 붙여줌</p>
+</li>
+<li>
+<p>삭제시 고려사항</p>
+<ul>
+<li>삭제할 노드의 자식이 왼쪽or오른쪽 자식일 수 있다.</li>
+<li>삭제할 노드가 부모의 왼쪽or오른쪽 자식일 수도 있다.</li>
+</ul>
+</li>
+</ul>
+<p><img src="/assets/img/2021-07-15-DATASTRUCTURE_BinarySearchTree/Untitled_63.png" alt="자식이 하나인 노드삭제" /></p>
+<br>
+<h3 id="section-18">두 개의 자식을 가진 노드 삭제시</h3>
+<ul>
+<li>가장 비슷한 값을 가진 노드를 삭제 노드 위치로 가져옴</li>
+</ul>
+<br>
+<ul>
+<li>
+<p>후계노드란?</p>
+<ul>
+<li>삭제되는 노드와 값이 가장 비슷한 노드</li>
+<li>삭제할 노드의 값에 후계노드의 값이 덮어씌워짐</li>
+</ul>
+</li>
+<li>
+<p>후계노드 선정방법</p>
+<ul>
+<li>삭제할 노드의 왼쪽 서브 트리에서 가장 오른쪽 아래노드 (제일 큰 값)<br />
+(Leaf노드가 아닐수있다.)</li>
+<li>삭제할 노드의 오른쪽 서브 트리에서 가장 왼쪽 아래노드  (제일 작은 값)<br />
+(Leaf노드가 아닐수있다.)</li>
+</ul>
+</li>
+</ul>
+<p><img src="/assets/img/2021-07-15-DATASTRUCTURE_BinarySearchTree/Untitled_64.png" alt="후계노드 선정" /></p>
+<blockquote>
+<p>총 2개의 후계 노드가 존재함</p>
+</blockquote>
+<br>
+<ul>
+<li>
+<p>주의점</p>
+<ul>
+<li>후계 노드로 선택된 노드가 또다른 자식 노드를 가질 수도 있음</li>
+</ul>
+</li>
+</ul>
+<p><img src="/assets/img/2021-07-15-DATASTRUCTURE_BinarySearchTree/Untitled_65.png" alt="주의점1" /></p>
+<p><img src="/assets/img/2021-07-15-DATASTRUCTURE_BinarySearchTree/Untitled_66.png" alt="주의점2" /></p>
+<br>
+<ul>
+<li>
+<p>후계자 노드 찾기</p>
+<ul>
+<li>삭제되는 노드의 오른쪽 서브트리에서 찾기
+<ul>
+<li>오른쪽 서브트리에서 왼쪽 자식 링크를 타고 NULL을 만날 때까지 계속 진행</li>
+</ul>
+</li>
+<li>삭제되는 노드의 왼쪽 서브트리에서 찾기
+<ul>
+<li>왼쪽 서브트리에서 오른쪽 자식 링크를 타고 NULL을 만날 때까지 계속 진행</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>원리</p>
+<ol>
+<li>삭제할 노드를 대신할 적절한 후계자 노드를 찾는다. (총 2개의 후계자 노드가 존재함)</li>
+<li>그 중 하나의 후계자 노드를 선택 (아무것이나 선택 가능)</li>
+<li>선택된 후계자 노드의 값(key값)을 삭제할 노드에 덮어씌움</li>
+<li>선택된 후계자 노드를 삭제</li>
+</ol>
+</li>
+</ul>
+<p><img src="/assets/img/2021-07-15-DATASTRUCTURE_BinarySearchTree/Untitled_67.png" alt="이진탐색트리 원리" /></p>
+<blockquote>
+<p>만약 후계자 노드를 오른쪽 서브트리에서 찾았다면, 해당 후계자 노드의 오른쪽 자식이 존재할 수도 있으므로, 후계자 노드의 오른쪽 링크를 “후계자 노드의 부모노드”의 왼쪽 링크로 복사해야한다.</p>
+</blockquote>
+<br>
+<h3 id="section-19">이진탐색트리 삭제 함수 구현</h3>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">delete</span><span class="p">(</span><span class="n">TNode</span> <span class="o">*</span><span class="n">parent</span><span class="p">,</span> <span class="n">TNode</span> <span class="o">*</span><span class="n">node</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// parent: 삭제할 노드의 부모노드, node: 삭제할 노드 </span>
+	<span class="n">TNode</span> <span class="o">*</span><span class="n">child</span><span class="p">,</span> <span class="o">*</span><span class="n">succ</span><span class="p">,</span> <span class="o">*</span><span class="n">succp</span><span class="p">;</span>
+	<span class="c1">//child: case2에서 사용될 변수, "삭제할 노드의 왼쪽or오른쪽 자식노드"</span>
+	<span class="c1">//succ: case3에서 사용될 변수, "후계 노드"</span>
+	<span class="c1">//succp: case3에서 사용될 변수, "후계 노드의 부모노드" </span>
+	
+	
+	<span class="c1">//case 1 : 삭제할 노드가 잎새노드일 때</span>
+	<span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span> <span class="n">parent</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span> <span class="p">{</span> <span class="c1">// 탐색 실패시 </span>
+			<span class="n">root</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">//탐색 성공시 </span>
+			<span class="k">if</span><span class="p">(</span><span class="n">parent</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">==</span> <span class="n">node</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">parent</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span> <span class="c1">// 노드 삭제 </span>
+			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+				<span class="n">parent</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span> <span class="c1">// 노드 삭제 </span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//case 2 : 삭제할 노드가 1개의 서브 트리를 가지고 있을 때 </span>
+	<span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+		<span class="n">child</span> <span class="o">=</span> <span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">?</span> <span class="n">node</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">:</span> <span class="n">node</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">;</span> <span class="c1">//삭제할 노드의 왼쪽 노드 or 오른쪽 노드를 child에 저장 </span>
+		<span class="k">if</span><span class="p">(</span><span class="n">node</span> <span class="o">==</span> <span class="n">root</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//삭제할 노드가 전체 트리의 루트노드 일때</span>
+			<span class="n">root</span> <span class="o">=</span> <span class="n">child</span><span class="p">;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			
+			<span class="k">if</span><span class="p">(</span><span class="n">parent</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">==</span> <span class="n">node</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//삭제할 노드가 parent의 왼쪽 노드라면 </span>
+				<span class="n">parent</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="n">child</span><span class="p">;</span> <span class="c1">//부모노드의 왼쪽 서브트리로서 child를 붙임 </span>
+			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>                  <span class="c1">//삭제할 노드가 parent의 오른쪽 노드라면</span>
+				<span class="n">parent</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="n">child</span><span class="p">;</span><span class="c1">//부모노드의 오른쪽 서브트리로서 child를 붙임</span>
+			<span class="p">}</span>
+			
+		<span class="p">}</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//case 3 : 삭제할 노드가 2개의 서브 트리를 가지고 있을 때 </span>
+	<span class="k">else</span> <span class="p">{</span>
+		<span class="n">succp</span> <span class="o">=</span> <span class="n">node</span><span class="p">;</span> <span class="c1">//후계 노드의 부모노드 초기화 </span>
+		<span class="n">succ</span> <span class="o">=</span> <span class="n">node</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">;</span> <span class="c1">//삭제할 노드의 오른쪽 서브트리에서 후계노드를 찾겠다. </span>
+		
+		<span class="k">while</span><span class="p">(</span><span class="n">succ</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//삭제할 노드의 오른쪽 서브트리에서 왼쪽 자식노드를 반복해서 찾아들어감</span>
+			<span class="n">succp</span> <span class="o">=</span> <span class="n">succ</span><span class="p">;</span>
+			<span class="n">succ</span> <span class="o">=</span> <span class="n">succ</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">;</span>
+		<span class="p">}</span>
+		
+		<span class="c1">//후계 노드를 찾기 위해 왼쪽 자식노드를 파고 들어감</span>
+		<span class="c1">//후계 노드가 자식노드를 가지고 있을 수 있으므로, 해당 부분 처리 </span>
+		<span class="k">if</span><span class="p">(</span><span class="n">succp</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">==</span> <span class="n">succ</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">succp</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="n">succ</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="n">succp</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="n">succ</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">;</span>
+		<span class="p">}</span>
+		
+		<span class="n">node</span><span class="o">-&gt;</span><span class="n">data</span> <span class="o">=</span> <span class="n">succ</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span> <span class="c1">//삭제할 노드의 값(key)을 "후계 노드의 값(key)로 변경" </span>
+		<span class="n">node</span> <span class="o">=</span> <span class="n">succ</span><span class="p">;</span> 
+	<span class="p">}</span>
+	
+	<span class="n">free</span><span class="p">(</span><span class="n">node</span><span class="p">);</span> <span class="c1">//삭제할 노드 제거 </span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><br><br></p>
+<h2 id="section-20">이진 탐색 전체 프로그램 구현</h2>
+<h3 id="section-21">인터페이스 함수</h3>
+<ul>
+<li>인터페이스 함수
+<ul>
+<li>함수를 보다 편리하게 사용할 수 있게 사용자에게 안내해주는 함수</li>
+</ul>
+</li>
+</ul>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//인터페이스 함수: search() 함수를 위한 함수</span>
+<span class="kt">void</span> <span class="nf">search_BST</span><span class="p">(</span><span class="kt">int</span> <span class="n">key</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">TNode</span> <span class="o">*</span><span class="n">n</span> <span class="o">=</span> <span class="n">search</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">key</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">n</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"[탐색 연산] : 성공 [%d] = 0x%x</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">n</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"[탐색 연산] : 실패: No %d!</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">key</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//인터페이스 함수: insert() 함수를 위한 함수</span>
+<span class="kt">void</span> <span class="nf">insert_BST</span><span class="p">(</span><span class="kt">int</span> <span class="n">key</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">TNode</span> <span class="o">*</span><span class="n">n</span> <span class="o">=</span> <span class="n">create_tree</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">is_empty_tree</span><span class="p">())</span> <span class="p">{</span>
+		<span class="n">root</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">insert</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">free</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//삭제연산 인터페이스 함수</span>
+<span class="kt">void</span> <span class="nf">delete_BST</span><span class="p">(</span><span class="kt">int</span> <span class="n">key</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">TNode</span> <span class="o">*</span><span class="n">parent</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="n">TNode</span> <span class="o">*</span><span class="n">node</span> <span class="o">=</span> <span class="n">root</span><span class="p">;</span>
+	
+	<span class="k">if</span><span class="p">(</span> <span class="n">node</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="k">while</span><span class="p">(</span> <span class="p">(</span><span class="n">node</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">data</span> <span class="o">!=</span> <span class="n">key</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+		<span class="n">parent</span> <span class="o">=</span> <span class="n">node</span><span class="p">;</span>
+		<span class="n">node</span> <span class="o">=</span> <span class="p">(</span><span class="n">key</span> <span class="o">&lt;</span> <span class="n">node</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">)</span> <span class="o">?</span> <span class="n">node</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">:</span> <span class="n">node</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">node</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"Error: key is not in the tree!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="n">delete</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">node</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<br>
+<h3 id="section-22">전체 프로그램</h3>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+</span>
+<span class="k">typedef</span> <span class="kt">int</span> <span class="n">TElement</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">BinTrNode</span> <span class="p">{</span>
+	<span class="n">TElement</span> <span class="n">data</span><span class="p">;</span>
+	<span class="k">struct</span> <span class="n">BinTrNode</span> <span class="o">*</span><span class="n">left</span><span class="p">;</span>
+	<span class="k">struct</span> <span class="n">BinTrNode</span> <span class="o">*</span><span class="n">right</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">TNode</span><span class="p">;</span>
+
+<span class="n">TNode</span> <span class="o">*</span><span class="n">root</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">init_tree</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">root</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">is_empty_tree</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="n">root</span><span class="o">==</span><span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">TNode</span><span class="o">*</span> <span class="nf">get_root</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="n">root</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">TNode</span><span class="o">*</span> <span class="nf">create_tree</span><span class="p">(</span> <span class="n">TElement</span> <span class="n">val</span><span class="p">,</span> <span class="n">TNode</span> <span class="o">*</span><span class="n">left</span><span class="p">,</span> <span class="n">TNode</span> <span class="o">*</span><span class="n">right</span> <span class="p">)</span> <span class="p">{</span>
+	<span class="n">TNode</span> <span class="o">*</span><span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">TNode</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">TNode</span><span class="p">));</span>
+	<span class="n">n</span><span class="o">-&gt;</span><span class="n">data</span> <span class="o">=</span> <span class="n">val</span><span class="p">;</span>
+	<span class="n">n</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span><span class="p">;</span>
+	<span class="n">n</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">n</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//--------------------------------순회---------------------------------</span>
+
+<span class="c1">//전위순회 </span>
+<span class="kt">void</span> <span class="nf">preorder</span><span class="p">(</span><span class="n">TNode</span> <span class="o">*</span><span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"[%c] "</span><span class="p">,</span> <span class="n">n</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
+		<span class="n">preorder</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">);</span>
+		<span class="n">preorder</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span> 
+
+<span class="c1">//중위순회</span>
+<span class="kt">void</span> <span class="nf">inorder</span><span class="p">(</span><span class="n">TNode</span> <span class="o">*</span><span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">preorder</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">);</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"[%c] "</span><span class="p">,</span> <span class="n">n</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
+		<span class="n">preorder</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//후위순회</span>
+<span class="kt">void</span> <span class="nf">postorder</span><span class="p">(</span><span class="n">TNode</span> <span class="o">*</span><span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">preorder</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">);</span>
+		<span class="n">preorder</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"[%c] "</span><span class="p">,</span> <span class="n">n</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//--------------------------------이진탐색---------------------------------</span>
+
+<span class="c1">//탐색 연산 </span>
+<span class="n">TNode</span><span class="o">*</span> <span class="nf">search</span><span class="p">(</span> <span class="n">TNode</span> <span class="o">*</span><span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">key</span> <span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">==</span><span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">key</span> <span class="o">==</span> <span class="n">n</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">n</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">key</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">search</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span> <span class="n">key</span><span class="p">);</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">search</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span> <span class="n">key</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//탐색 연산 인터페이스 함수</span>
+<span class="kt">void</span> <span class="nf">search_BST</span><span class="p">(</span><span class="kt">int</span> <span class="n">key</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">TNode</span> <span class="o">*</span><span class="n">n</span> <span class="o">=</span> <span class="n">search</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">key</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">n</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"[탐색 연산] : 성공 [%d] = 0x%x</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">n</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"[탐색 연산] : 실패: No %d!</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">key</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//삽입연산</span>
+<span class="kt">int</span> <span class="nf">insert</span><span class="p">(</span> <span class="n">TNode</span> <span class="o">*</span><span class="n">r</span><span class="p">,</span> <span class="n">TNode</span> <span class="o">*</span><span class="n">n</span> <span class="p">)</span> <span class="p">{</span> <span class="c1">// r: 루트노드, n: 삽입할 노드</span>
+
+	<span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">data</span> <span class="o">==</span> <span class="n">r</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//중복되어 삽입 실패</span>
+		<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">data</span> <span class="o">&lt;</span> <span class="n">r</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">r</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//삽입할 자리 찾음</span>
+			<span class="n">r</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>              <span class="c1">//삽입할 자리 못찾음</span>
+			<span class="n">insert</span><span class="p">(</span><span class="n">r</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">r</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//삽입할 자리 찾음</span>
+			<span class="n">r</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>               <span class="c1">//삽입할 자리 못찾음</span>
+			<span class="n">insert</span><span class="p">(</span><span class="n">r</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//삽입성공</span>
+
+<span class="p">}</span>
+
+<span class="c1">//삽입연산 인터페이스 함수 </span>
+<span class="kt">void</span> <span class="nf">insert_BST</span><span class="p">(</span><span class="kt">int</span> <span class="n">key</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">TNode</span> <span class="o">*</span><span class="n">n</span> <span class="o">=</span> <span class="n">create_tree</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">is_empty_tree</span><span class="p">())</span> <span class="p">{</span>
+		<span class="n">root</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">insert</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">free</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//삭제연산 </span>
+<span class="kt">void</span> <span class="nf">delete</span> <span class="p">(</span><span class="n">TNode</span> <span class="o">*</span><span class="n">parent</span><span class="p">,</span> <span class="n">TNode</span> <span class="o">*</span><span class="n">node</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// parent: 삭제할 노드의 부모노드, node: 삭제할 노드 </span>
+	<span class="n">TNode</span> <span class="o">*</span><span class="n">child</span><span class="p">,</span> <span class="o">*</span><span class="n">succ</span><span class="p">,</span> <span class="o">*</span><span class="n">succp</span><span class="p">;</span>
+	<span class="c1">//child: case2에서 사용될 변수, "삭제할 노드의 왼쪽or오른쪽 자식노드"</span>
+	<span class="c1">//succ: case3에서 사용될 변수, "후계 노드"</span>
+	<span class="c1">//succp: case3에서 사용될 변수, "후계 노드의 부모노드" </span>
+	
+	
+	<span class="c1">//case 1 : 삭제할 노드가 잎새노드일 때</span>
+	<span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span> <span class="n">parent</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span> <span class="p">{</span> <span class="c1">// 탐색 실패시 </span>
+			<span class="n">root</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">//탐색 성공시 </span>
+			<span class="k">if</span><span class="p">(</span><span class="n">parent</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">==</span> <span class="n">node</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">parent</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span> <span class="c1">// 노드 삭제 </span>
+			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+				<span class="n">parent</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span> <span class="c1">// 노드 삭제 </span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//case 2 : 삭제할 노드가 1개의 서브 트리를 가지고 있을 때 </span>
+	<span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+		<span class="n">child</span> <span class="o">=</span> <span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">?</span> <span class="n">node</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">:</span> <span class="n">node</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">;</span> <span class="c1">//삭제할 노드의 왼쪽 노드 or 오른쪽 노드를 child에 저장 </span>
+		<span class="k">if</span><span class="p">(</span><span class="n">node</span> <span class="o">==</span> <span class="n">root</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//삭제할 노드가 전체 트리의 루트노드 일때</span>
+			<span class="n">root</span> <span class="o">=</span> <span class="n">child</span><span class="p">;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			
+			<span class="k">if</span><span class="p">(</span><span class="n">parent</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">==</span> <span class="n">node</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//삭제할 노드가 parent의 왼쪽 노드라면 </span>
+				<span class="n">parent</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="n">child</span><span class="p">;</span> <span class="c1">//부모노드의 왼쪽 서브트리로서 child를 붙임 </span>
+			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>                  <span class="c1">//삭제할 노드가 parent의 오른쪽 노드라면</span>
+				<span class="n">parent</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="n">child</span><span class="p">;</span><span class="c1">//부모노드의 오른쪽 서브트리로서 child를 붙임</span>
+			<span class="p">}</span>
+			
+		<span class="p">}</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//case 3 : 삭제할 노드가 2개의 서브 트리를 가지고 있을 때 </span>
+	<span class="k">else</span> <span class="p">{</span>
+		<span class="n">succp</span> <span class="o">=</span> <span class="n">node</span><span class="p">;</span> <span class="c1">//후계 노드의 부모노드 초기화 </span>
+		<span class="n">succ</span> <span class="o">=</span> <span class="n">node</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">;</span> <span class="c1">//삭제할 노드의 오른쪽 서브트리에서 후계노드를 찾겠다. </span>
+		
+		<span class="k">while</span><span class="p">(</span><span class="n">succ</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//삭제할 노드의 오른쪽 서브트리에서 왼쪽 자식노드를 반복해서 찾아들어감</span>
+			<span class="n">succp</span> <span class="o">=</span> <span class="n">succ</span><span class="p">;</span>
+			<span class="n">succ</span> <span class="o">=</span> <span class="n">succ</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">;</span>
+		<span class="p">}</span>
+		
+		<span class="c1">//후계 노드를 찾기 위해 왼쪽 자식노드를 파고 들어감</span>
+		<span class="c1">//후계 노드가 자식노드를 가지고 있을 수 있으므로, 해당 부분 처리 </span>
+		<span class="k">if</span><span class="p">(</span><span class="n">succp</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">==</span> <span class="n">succ</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">succp</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="n">succ</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="n">succp</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="n">succ</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">;</span>
+		<span class="p">}</span>
+		
+		<span class="n">node</span><span class="o">-&gt;</span><span class="n">data</span> <span class="o">=</span> <span class="n">succ</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span> <span class="c1">//삭제할 노드의 값(key)을 "후계 노드의 값(key)로 변경" </span>
+		<span class="n">node</span> <span class="o">=</span> <span class="n">succ</span><span class="p">;</span> 
+	<span class="p">}</span>
+	
+	<span class="n">free</span><span class="p">(</span><span class="n">node</span><span class="p">);</span> <span class="c1">//삭제할 노드 제거 </span>
+<span class="p">}</span>
+
+<span class="c1">//삭제연산 인터페이스 함수</span>
+<span class="kt">void</span> <span class="nf">delete_BST</span><span class="p">(</span><span class="kt">int</span> <span class="n">key</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">TNode</span> <span class="o">*</span><span class="n">parent</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="n">TNode</span> <span class="o">*</span><span class="n">node</span> <span class="o">=</span> <span class="n">root</span><span class="p">;</span>
+	
+	<span class="k">if</span><span class="p">(</span> <span class="n">node</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="k">while</span><span class="p">(</span> <span class="p">(</span><span class="n">node</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">data</span> <span class="o">!=</span> <span class="n">key</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+		<span class="n">parent</span> <span class="o">=</span> <span class="n">node</span><span class="p">;</span>
+		<span class="n">node</span> <span class="o">=</span> <span class="p">(</span><span class="n">key</span> <span class="o">&lt;</span> <span class="n">node</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">)</span> <span class="o">?</span> <span class="n">node</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">:</span> <span class="n">node</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">node</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"Error: key is not in the tree!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="n">delete</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">node</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	
+	<span class="n">init_tree</span><span class="p">();</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"[삽입 연산] : 35 18 7 26 12 3 68 22 30 99"</span><span class="p">);</span>
+	<span class="n">init_tree</span><span class="p">();</span>
+	<span class="n">insert_BST</span><span class="p">(</span><span class="mi">35</span><span class="p">);</span> <span class="n">insert_BST</span><span class="p">(</span><span class="mi">18</span><span class="p">);</span>
+	<span class="n">insert_BST</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span> <span class="n">insert_BST</span><span class="p">(</span><span class="mi">26</span><span class="p">);</span>
+	<span class="n">insert_BST</span><span class="p">(</span><span class="mi">12</span><span class="p">);</span> <span class="n">insert_BST</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+	<span class="n">insert_BST</span><span class="p">(</span><span class="mi">68</span><span class="p">);</span> <span class="n">insert_BST</span><span class="p">(</span><span class="mi">22</span><span class="p">);</span>
+	<span class="n">insert_BST</span><span class="p">(</span><span class="mi">30</span><span class="p">);</span> <span class="n">insert_BST</span><span class="p">(</span><span class="mi">99</span><span class="p">);</span>
+	
+	<span class="c1">// 트리 정보 출력</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s"> In-Order : "</span><span class="p">);</span> <span class="n">inorder</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s"> Pre-Order : "</span><span class="p">);</span> <span class="n">preorder</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s"> Post-Order : "</span><span class="p">);</span> <span class="n">postorder</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>
+	
+	<span class="c1">//트리 정렬</span>
+	
+	
+	<span class="c1">// 탐색 연산 테스트</span>
+	<span class="n">search_BST</span><span class="p">(</span><span class="mi">26</span><span class="p">);</span>
+	<span class="n">search_BST</span><span class="p">(</span><span class="mi">25</span><span class="p">);</span>
+
+<span class="c1">//	// 삭제 연산 테스트</span>
+<span class="c1">//	delete_BST(3);</span>
+<span class="c1">//	delete_BST(68);</span>
+<span class="c1">//	delete_BST(18);</span>
+<span class="c1">//	delete_BST(35);</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+<p><br><br></p>
+<h2 id="section-23">이진탐색트리 성능</h2>
+<h3 id="section-24">최선의 경우</h3>
+<ul>
+<li>
+<p>이진 트리가 균형적으로 생성되어 있는 경우</p>
+</li>
+<li>
+<p>O(logn)</p>
+</li>
+</ul>
+<h3 id="section-25">최악의 경우</h3>
+<ul>
+<li>
+<p>경사 이진 트리일 경우</p>
+</li>
+<li>
+<p>O(n)</p>
+</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>성결대학교 컴퓨터 공학과 박미옥 교수님 (2021)</li>
+    <li>최영규, 『두근두근 자료구조』</li>
+  </ul>
+  본 게시글은 위 강의 및 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

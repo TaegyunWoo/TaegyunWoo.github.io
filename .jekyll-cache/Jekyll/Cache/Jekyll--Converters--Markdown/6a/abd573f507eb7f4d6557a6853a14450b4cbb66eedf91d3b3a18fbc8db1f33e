@@ -1,0 +1,150 @@
+I"�<p><br/><br/></p>
+<h1 id="section">동적 계획 : 연속 행렬 곱셈</h1>
+<h2 id="section-1">개요</h2>
+<h3 id="section-2">연속 행렬 곱셈이란?</h3>
+<ul>
+<li>연속된 행렬들의 곱셈에 필요한 원소간의 최소 곱셈 횟수를 찾는 문제</li>
+</ul>
+<br>
+<h3 id="section-3">행렬곱이란</h3>
+<p><img src="/assets/img/2021-07-31-ALGORITHM_DP_ChainedMatrixMultiplications/Untitled%2057.png" alt="행렬곱" /></p>
+<br>
+<h3 id="section-4">곱셈횟수</h3>
+<p><img src="/assets/img/2021-07-31-ALGORITHM_DP_ChainedMatrixMultiplications/Untitled%2058.png" alt="곱셈횟수" /></p>
+<br>
+<h3 id="section-5">연속된 행렬</h3>
+<p><img src="/assets/img/2021-07-31-ALGORITHM_DP_ChainedMatrixMultiplications/Untitled%2059.png" alt="연속된 행렬" /></p>
+<br>
+<h3 id="section-6">문제배경</h3>
+<ul>
+<li>
+<p>연속된 행렬이 3개 이상일때, 결합법칙이 성립된다.</p>
+</li>
+<li>
+<p>행렬들의 곱셈 순서에 따라, 최종 곱셈 횟수가 달라진다.</p>
+</li>
+<li>
+<p>ex) <img src="https://latex.codecogs.com/svg.image?A*B*C" alt="ABC" /> 일때</p>
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?(A*B)*C" alt="ABC" /></li>
+<li><img src="https://latex.codecogs.com/svg.image?A*(B*C)" alt="ABC" /></li>
+<li>위와 같이 2가지의 경우의 수가 가능하다.</li>
+<li>단, <img src="https://latex.codecogs.com/svg.image?B*(A*C)" alt="B*(A*C)" /> 와 같이 행렬의 순서 자체를 바꾸는 것은 불가능하다.</li>
+</ul>
+</li>
+</ul>
+<p><br><br></p>
+<h2 id="section-7">알고리즘</h2>
+<h3 id="section-8">최적화 원리</h3>
+<ul>
+<li>최적의 곱셈 순서를 <img src="https://latex.codecogs.com/svg.image?A_1*((((A_2*A_3)*A_4)*A_5)*A_6)" alt="A_1*((((A_2*A_3)*A_4)*A_5)*A_6)" /> 이라고 가정하자.</li>
+<li>이때, <img src="https://latex.codecogs.com/svg.image?(A_2*A_3)*A_4" alt="(A_2*A_3)*A_4" /> 은  반드시 연속된 행렬 <img src="https://latex.codecogs.com/svg.image?A_2,A_3,A_4" alt="A_2,A_3,A_4" /> 의 최적의 곱셈 순서이다.</li>
+<li>즉, 작은 문제의 해가 큰 문제의 해에 포함된다. ⇒ 다이나믹 프로그래밍</li>
+</ul>
+<br>
+<h3 id="section-9">의사코드</h3>
+<p><img src="/assets/img/2021-07-31-ALGORITHM_DP_ChainedMatrixMultiplications/Untitled%2060.png" alt="의사코드" /></p>
+<ul>
+<li>
+<p>행렬</p>
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?A_1,A_2,A_3,...,A_n" alt="A_1,A_2,A_3,…,A_n" /></li>
+</ul>
+</li>
+<li>
+<p>C[i][j]</p>
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?C%5Bi%5D%5Bj%5D=A_i*A_2*A_3*...*A_j" alt="C[i][j]=A_iA_2A_3*…*A_j" /> 까지의 최소 곱셈 횟수</li>
+</ul>
+</li>
+<li>
+<p>C[i][j] 구하는 식</p>
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?C%5Bi%5D%5Bj%5D=C%5Bi%5D%5Bk%5D+C%5Bk+1%5D%5Bj%5D+(d_%7Bi-1%7D*d_k*d_j)" alt="C[i][j]=C[i][k]+C[k+1][j]+(d_{i-1}d_kd_j)" /></li>
+</ul>
+</li>
+<li>
+<p>참고</p>
+<ul>
+<li>k는 C[i][j]를 구하기 위해 연속된 행렬들이 2개로 나눠지는데, k가 바로 이때의 기준 행렬의 번호이다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="cij--">C[i][j] 계산 방법</h3>
+<ul>
+<li>
+<p>C[1][2] 일때 (행렬의 개수가 2개일 때)</p>
+<ul>
+<li>
+<p><img src="https://latex.codecogs.com/svg.image?C%5B1%5D%5B2%5D=d_0*d_1*d_2" alt="C[1][2]=d_0d_1d_2" /></p>
+<p><img src="/assets/img/2021-07-31-ALGORITHM_DP_ChainedMatrixMultiplications/Untitled%2061.png" alt="C[1][2]" /></p>
+</li>
+</ul>
+</li>
+<li>
+<p>C[1][3] 일때 (행렬의 개수가 3개일 때)</p>
+<ul>
+<li>
+<p><img src="https://latex.codecogs.com/svg.image?C%5B1%5D%5B3%5D=min%5BA_1(A_2A_3),(A_1A_2)A_3%5D" alt="C[1][3]=min[A_1(A_2A_3),(A_1A_2)A_3]" /></p>
+</li>
+<li>
+<p><img src="https://latex.codecogs.com/svg.image?(A_1A_2)A_3" alt="(A_1A_2)A_3" />
+의 최소곱셈개수 =
+<img src="https://latex.codecogs.com/svg.image?(d_0*d_1*d_2)+(d_0*d_2*d_3)" alt="(d_0d_1d_2)+(d_0d_2d_3)" /></p>
+<p><img src="/assets/img/2021-07-31-ALGORITHM_DP_ChainedMatrixMultiplications/Untitled%2062.png" alt="C[1][3]: 1" /></p>
+</li>
+<li>
+<p><img src="https://latex.codecogs.com/svg.image?A_1(A_2A_3)" alt="A_1(A_2A_3)" />
+의 최소곱셈개수 =
+<img src="https://latex.codecogs.com/svg.image?(d_0*d_1*d_3)+(d_1*d_2*d_3)" alt="(d_0d_1d_3)+(d_1d_2d_3)" /></p>
+<p><img src="/assets/img/2021-07-31-ALGORITHM_DP_ChainedMatrixMultiplications/Untitled%2063.png" alt="C[1][3]: 2" /></p>
+</li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="section-10">동작 예시</h3>
+<p><img src="/assets/img/2021-07-31-ALGORITHM_DP_ChainedMatrixMultiplications/Untitled%2064.png" alt="동작 예시" /></p>
+<br>
+<h3 id="section-11">절차 : 1~2번 라인</h3>
+<ul>
+<li>배열의 대각선 원소들인 <img src="https://latex.codecogs.com/svg.image?C%5B1%5D%5B1%5D,C%5B2%5D%5B2%5D,...,C%5Bn%5D%5Bn%5D" alt="C[1][1],C[2][2],…,C[n][n]" /> 을 0으로 초기화 시킨다.</li>
+<li>왜냐하면 <img src="https://latex.codecogs.com/svg.image?A_1*A_1" alt="A_1*A_1" /> 과 같은 행렬끼리는 (즉, 자기자신끼리는) 계산할 필요가 없기 때문이다.</li>
+</ul>
+<br>
+<h3 id="section-12">절차 : 3번 라인</h3>
+<ul>
+<li>L의 크기에 따라, 배열C가 점차 채워진다.</li>
+</ul>
+<p><img src="/assets/img/2021-07-31-ALGORITHM_DP_ChainedMatrixMultiplications/Untitled%2065.png" alt="3번 라인" /></p>
+<br>
+<h3 id="section-13">절차 : 5번 라인</h3>
+<ul>
+<li>j=i+L 은 C[i][j]를 계산하기 위한 것</li>
+</ul>
+<p><img src="/assets/img/2021-07-31-ALGORITHM_DP_ChainedMatrixMultiplications/Untitled%2066.png" alt="5번 라인 - 1" /></p>
+<p><img src="/assets/img/2021-07-31-ALGORITHM_DP_ChainedMatrixMultiplications/Untitled%2067.png" alt="5번 라인 - 2" /></p>
+<br>
+<h3 id="section-14">절차 : 6번 라인</h3>
+<ul>
+<li>최소 곱셈 횟수를 찾기 위해 C[i][j]로 초기화시킨다.</li>
+</ul>
+<br>
+<h3 id="section-15">절차 : 7~10번 라인</h3>
+<ul>
+<li>k값을 i ~ (j-1) 까지 변화시킴</li>
+<li>k값을 변화시키며, C[i][j]를 찾음</li>
+</ul>
+<p><img src="/assets/img/2021-07-31-ALGORITHM_DP_ChainedMatrixMultiplications/Untitled%2068.png" alt="7~10번 라인" /></p>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>성결대학교 컴퓨터 공학과 임태수 교수님 (2021)</li>
+    <li>양성봉, 『알기 쉬운 알고리즘』</li>
+  </ul>
+  본 게시글은 위 강의 및 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

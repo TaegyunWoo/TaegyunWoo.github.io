@@ -1,0 +1,139 @@
+I"�<p><br/><br/></p>
+<h1 id="http--">HTTP 메시지 컨버터</h1>
+<p>뷰 템플릿으로 HTML을 생성해서 응답하는 것이 아니라, HTTP API처럼 JSON 데이터를 HTTP 메시지 바디에서 직접 읽거나 쓰는 경우, HTTP 메시지 컨버터를 사용하면 편리하다.</p>
+<p><br><br></p>
+<h2 id="coderesponsebodycode--"><code>@ResponseBody</code> 사용 원리</h2>
+<ul>
+<li><code>@ResponseBody</code> <strong>사용 X</strong>
+<ul>
+<li>뷰 템플릿으로 응답해야 한다면 <strong>뷰 리졸버를 통해 뷰를 호출</strong> 하게 된다.</li>
+</ul>
+</li>
+<li><code>@ResponseBody</code> <strong>사용 O</strong>
+<ul>
+<li>뷰 템플릿으로 응답하지 않고 단순히 HTTP 응답 메시지를 통해 응답한다면, <strong>뷰 리졸버를 사용하지 않고, HTTP 메시지 컨버터를 통해 응답</strong> 하게 된다.</li>
+<li>기본 문자 처리
+<ul>
+<li><code>StringHttpMessageConverter</code></li>
+</ul>
+</li>
+<li>기본 객체 처리
+<ul>
+<li><code>MappingJackson2HttpMessageConverter</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><br><br></p>
+<h2 id="http----">HTTP 메시지 컨버터 적용의 경우</h2>
+<p>HTTP 메시지 컨버터는 아래 경우에서 적용된다.</p>
+<h3 id="http-">HTTP 요청시</h3>
+<ul>
+<li><code>@ReqeustBody</code></li>
+<li><code>HttpEntity</code></li>
+<li><code>RequestEntity</code></li>
+</ul>
+<h3 id="http--1">HTTP 응답시</h3>
+<ul>
+<li><code>@ResponseBody</code></li>
+<li><code>HttpEntity</code></li>
+<li><code>ResponseEntity</code></li>
+</ul>
+<p><br><br></p>
+<h2 id="http---">HTTP 메시지 컨버터 특징</h2>
+<ul>
+<li>HTTP 메시지 컨버터는 HTTP 요청, HTTP 응답 둘 다 사용된다.</li>
+<li>‘대상 클래스 타입’과 ‘미디어 타입’ 두 가지를 체크해서 사용여부를 결정한다.</li>
+</ul>
+<p><br><br></p>
+<h2 id="section">주요 메시지 컨버터</h2>
+<p><img src="/assets/img/2021-07-29-SPRING_MVC_HTTPMessageConverter/Untitled%204.png" alt="메시지 컨터버들" /></p>
+<p>스프링 부트가 제공하는 주요 메시지 컨버터의 종류는 위와 같다. 이때, 클래스타입과 미디어타입을 비교하여 어떤 메시지 컨버터를 사용할 것인지 결정된다.</p>
+<br>
+<h3 id="bytearrayhttpmessageconverter">ByteArrayHttpMessageConverter</h3>
+<ul>
+<li><code>byte[]</code> 데이터를 처리한다.</li>
+<li>클래스 타입: <code>byte[]</code> , 미디어 타입: <code>*/*</code></li>
+<li>요청 예) <code>@RequestBody byte[] data</code></li>
+<li>응답 예) <code>return byte[]</code>
+<ul>
+<li>이때 미디어타입은 <code>application/octet-stream</code> 으로 설정된다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="stringhttpmessageconverter">StringHttpMessageConverter</h3>
+<ul>
+<li><code>String</code> 문자로 데이터를 처리한다.</li>
+<li>클래스 타입: <code>String</code> , 미디어 타입: <code>*/*</code></li>
+<li>요청 예) <code>@RequestBody String data</code></li>
+<li>응답 예) <code>return String</code>
+<ul>
+<li>이때 미디어타입은 <code>text/plain</code> 으로 설정된다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="mappingjackson2httpmessageconverter">MappingJackson2HttpMessageConverter</h3>
+<ul>
+<li><code>JSON</code> 형식으로 데이터를 처리한다.</li>
+<li>클래스 타입: 객체 또는 HashMap , 미디어 타입: <code>application/json</code></li>
+<li>요청 예) <code>@RequestBody HelloData data</code></li>
+<li>응답 예) <code>return HelloData</code>
+<ul>
+<li>이때 미디어타입은 <code>application/json</code> 으로 설정된다.</li>
+</ul>
+</li>
+</ul>
+<p><br><br></p>
+<h2 id="section-1">데이터 읽고 쓰기 원리</h2>
+<h3 id="http-----">HTTP 요청 데이터를 읽을 때의 원리</h3>
+<ol>
+<li>HTTP 요청이 오고, 컨트롤러에서 <code>@RequestBody</code> 나 <code>HttpEntity</code> 파라미터를 사용한다.</li>
+<li>메시지 컨버터가 메시지를 읽을 수 있는지 확인하기 위해, <code>canRead()</code> 를 호출한다.
+<ul>
+<li>대상 클래스 타입을 지원하는가?
+<ul>
+<li>예) <code>@RequestBody</code> 의 대상 클래스 ( <code>byte[]</code> , <code>String</code> , <code>HelloData</code> ) 체크</li>
+</ul>
+</li>
+<li>HTTP 요청의 미디어 타입(<code>content-type</code>)을 지원하는가?
+<ul>
+<li>예) <code>text/plain</code> , <code>application/json</code> , <code>*/*</code> 체크</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>canRead()</code> 조건을 만족하면 <code>read()</code> 를 호출해서 객체 생성하고, 반환한다.</li>
+<li>파라미터에 전달된다.</li>
+</ol>
+<br>
+<h3 id="http------1">HTTP 응답 데이터를 쓸 때의 원리</h3>
+<ol>
+<li>컨트롤러에서 <code>@ResponseBody</code> 나 <code>HttpEntity</code> 로 값이 반환된다.</li>
+<li>메시지 컨버터가 메시지를 쓸 수 있는지 확인하기 위해, <code>canWrite()</code> 를 호출한다.
+<ul>
+<li>대상 클래스 타입을 지원하는가?
+<ul>
+<li>예) <code>return</code> 의 대상 클래스 ( <code>byte[]</code> , <code>String</code> , <code>HelloData</code> ) 체크</li>
+</ul>
+</li>
+<li><strong>HTTP 요청</strong> 의 미디어 타입 (<code>Accept</code>)을 지원하는가?
+<ul>
+<li>예) <code>text/plain</code> , <code>application/json</code> , <code>*/*</code> 체크</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>canWrite()</code> 조건을 만족하면 <code>write()</code> 를 호출해서 HTTP 응답 메시지 바디에 데이터를 생성한다.</li>
+</ol>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/RfTn"><img src="/assets/img/Inflearn_Spring_MVC1/Logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

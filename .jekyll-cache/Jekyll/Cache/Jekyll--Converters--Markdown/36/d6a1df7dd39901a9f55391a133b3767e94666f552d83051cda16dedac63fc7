@@ -1,0 +1,136 @@
+I"� <p><br/><br/></p>
+<h1 id="section">개요</h1>
+<h2 id="codemodelattributecode-"><code>@ModelAttribute</code> 란?</h2>
+<ul>
+<li>보통 요청 파라미터를 받아서, 필요한 객체를 만들고 그 객체에 값을 넣어주어야 한다.</li>
+<li>이러한 과정을 쉽게 할 수 있도록 도와주는 기능이 있는데, 이것이 바로 <code>@ModelAttribute</code> 이다.</li>
+</ul>
+<p><br><br></p>
+<h2 id="section-1">파라미터를 바인딩할 객체 클래스</h2>
+<p><code>@ModelAttribute</code> 를 설명하기 전에, 먼저 파라미터를 담을(바인딩) 객체의 클래스를 작성하자.</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">lombok.Data</span><span class="o">;</span>
+
+<span class="nd">@Data</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloData</span> <span class="o">{</span>
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">username</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li><code>@Data</code>
+<ul>
+<li>롬복 라이브러리가 제공하는 애너테이션이다.</li>
+<li><code>@Getter</code> , <code>@Setter</code> , <code>@ToString</code> , <code>@EqualsAndHashCode</code> , <code>@RequiredArgsConstructor</code> 를 자동으로 적용해준다.</li>
+<li>즉, 해당 클래스를 VO객체로 만들어주는 애너테이션이다. (관련 메서드를 자동으로 생성해줌.)</li>
+</ul>
+</li>
+</ul>
+<p>이제 본격적으로 <code>@ModelAttribute</code> 애너테이션을 설명하도록 하겠다.</p>
+<p><br><br><br></p>
+<h1 id="codemodelattributecode"><code>@ModelAttribute</code></h1>
+<h2 id="section-2">요청파라미터를 객체에 바인딩</h2>
+<h3 id="section-3">기본적인 방식으로 객체에 바인딩하기</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">hello.springmvc.basic.HelloData</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">lombok.extern.slf4j.Slf4j</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.stereotype.Controller</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletRequest</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletResponse</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>
+<span class="o">...</span>
+
+<span class="nd">@Slf4j</span>
+<span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">RequestParamController</span> <span class="o">{</span>
+	
+	<span class="cm">/**
+	 * @ModelAttribute 사용
+	 * 참고: model.addAttribute(helloData) 코드도 함께 자동 적용됨, 뒤에 model을 설명할 때 자세히 설명
+	 */</span>
+	<span class="nd">@ResponseBody</span>
+	<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/model-attribute-v1"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">String</span> <span class="nf">modelAttributeV1</span><span class="o">(</span><span class="nd">@ModelAttribute</span> <span class="nc">HelloData</span> <span class="n">helloData</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"username={}, age={}"</span><span class="o">,</span> <span class="n">helloData</span><span class="o">.</span><span class="na">getUsername</span><span class="o">(),</span> <span class="n">helloData</span><span class="o">.</span><span class="na">getAge</span><span class="o">());</span>
+		<span class="k">return</span> <span class="s">"ok"</span><span class="o">;</span>
+	<span class="o">}</span>
+	
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li><code>@ModelAttribute HelloData helloData</code> 수행순서
+<ol>
+<li>
+<p><code>HelloData</code> 객체 생성</p>
+</li>
+<li>
+<p>요청 파라미터의 이름으로 <code>HelloData</code> 객체의 프로퍼티를 찾는다.</p>
+</li>
+<li>
+<p>해당 프로퍼티의 setter를 호출하여, 파라미터의 값을 입력(바인딩)한다.</p>
+<p>예) 파라미터 이름이 <code>username</code> 이면 <code>setUsername()</code> 메서드를 찾아서 호출하면서 값을 입력한다.</p>
+</li>
+</ol>
+</li>
+</ul>
+<br>
+<h3 id="codemodelattributecode----"><code>@ModelAttribute</code> 를 생략하여 객체에 바인딩하기</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">hello.springmvc.basic.HelloData</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">lombok.extern.slf4j.Slf4j</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.stereotype.Controller</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletRequest</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletResponse</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>
+<span class="o">...</span>
+
+<span class="nd">@Slf4j</span>
+<span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">RequestParamController</span> <span class="o">{</span>
+	
+	<span class="cm">/**
+	 * @ModelAttribute 생략 가능
+	 * String, int 같은 단순 타입 = @RequestParam
+	 * argument resolver 로 지정해둔 타입 외 = @ModelAttribute
+	 */</span>
+	<span class="nd">@ResponseBody</span>
+	<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/model-attribute-v2"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">String</span> <span class="nf">modelAttributeV2</span><span class="o">(</span><span class="nc">HelloData</span> <span class="n">helloData</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"username={}, age={}"</span><span class="o">,</span> <span class="n">helloData</span><span class="o">.</span><span class="na">getUsername</span><span class="o">(),</span> <span class="n">helloData</span><span class="o">.</span><span class="na">getAge</span><span class="o">());</span>
+		<span class="k">return</span> <span class="s">"ok"</span><span class="o">;</span>
+	<span class="o">}</span>
+	
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li><code>@ModelAttribute</code> 가 생략되었다.</li>
+<li>생략시 규칙
+<ul>
+<li><code>String</code> , <code>int</code> , <code>Integer</code> 와 같은 단순 타입의 매개변수
+<ul>
+<li><code>@RequestParam</code></li>
+</ul>
+</li>
+<li>나머지 타입의 매개변수
+<ul>
+<li>
+<p><code>@ModelAttribute</code> (argument resolver로 지정해둔 타입 외)</p>
+<blockquote>
+<p>argument resolver 관련 내용은 나중에 자세히 다룬다.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/RfTn"><img src="/assets/img/Inflearn_Spring_MVC1/Logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

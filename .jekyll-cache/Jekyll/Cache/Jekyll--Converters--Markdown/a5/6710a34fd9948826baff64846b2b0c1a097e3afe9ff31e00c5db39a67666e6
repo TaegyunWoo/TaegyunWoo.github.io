@@ -1,0 +1,76 @@
+I"R<p><br/><br/></p>
+<h1 id="section">문제 배경</h1>
+<ul>
+<li>
+<p>블로그 포스팅 중 제목에서 영문 대문자가 모두 소문자로 표현되는 문제를 발견했다.</p>
+</li>
+<li>
+<p>본인은 게시글의 제목을 아래 사진과 같이 설정했다.</p>
+<p><img src="/assets/img/2021-07-26-TroubleShooting_JekyllTitleUpperCase/Untitled%201.png" alt="제목설정" /></p>
+</li>
+<li>
+<p>보통 <code>게시글.md</code> 파일의 제목으로 게시글의 제목을 설정하지만, 본인은 위 방식이 더욱 편리하다고 생각하여, 이와 같이 블로깅을 하는 중이다.</p>
+</li>
+</ul>
+<p><br><br></p>
+<h1 id="section-1">문제 해결 탐색과정</h1>
+<ul>
+<li>
+<p>구글링을 통해 조사를 해본바, 본인과 동일한 문제를 찾을 수는 없었다.</p>
+<blockquote>
+<p>아마 블로그 테마에 따라 설정이 달라서 발생하는 문제일 수 있다고 생각된다.</p>
+</blockquote>
+</li>
+<li>
+<p>하지만, 카테고리의 첫글자를 제외한 영어 대문자가 모두 소문자로 표현되는 문제는 발견할 수 있었다.</p>
+</li>
+</ul>
+<blockquote>
+<p><a href="https://shopify.github.io/liquid/filters/capitalize/">관련 페이지1</a>,<br />
+<a href="https://stackoverflow.com/questions/19074064/why-jekyll-convert-my-capital-words-into-lowercase-in-categories">관련 페이지2</a></p>
+</blockquote>
+<ul>
+<li>따라서, 해당 해결방법을 참고하여 문제를 해결했다.</li>
+</ul>
+<p><br><br></p>
+<h1 id="section-2">문제 해결</h1>
+<h2 id="section-3">문제 원인</h2>
+<ul>
+<li><code>_includes\post_list_item.html</code> 파일</li>
+<li><code>_layouts\post.html</code> 파일</li>
+</ul>
+<p>위 두 가지 파일에 존재하는 <code>capitalize</code> 옵션이 문제인 것을 확인했다.</p>
+<br>
+<h3 id="codecapitalizecode"><code>capitalize</code></h3>
+<p>해당 옵션이 <strong>특정 문자열의 가장 첫번째 글자만 대문자로 변경한 뒤, 나머지 글자는 모두 소문자로 변경하는 것</strong> 으로 추정된다.</p>
+<p>따라서, 해당 부분을 관련 파일에서 모두 지우는 방법으로 문제를 해결했다.</p>
+<p><br><br></p>
+<h2 id="section-4">해결방법</h2>
+<h3 id="codeincludespostlistitemhtmlcode---"><code>_includes\post_list_item.html</code> 파일 내용 변경</h3>
+<ul>
+<li>
+<p>해당 파일은 <strong>게시글 목록에서 보여지는 게시글</strong> 에 대한 파일이다.</p>
+</li>
+<li>
+<p>즉, <strong>게시글 목록에서 보여지는 게시글의 제목</strong> 을 수정하는 과정이다.</p>
+</li>
+<li>
+<p>주석으로 처리된 부분 (Line: 12) 을 그 아랫줄 (Line: 13) 과 같이 변경하였다.</p>
+</li>
+</ul>
+<p><img src="/assets/img/2021-07-26-TroubleShooting_JekyllTitleUpperCase/Untitled%202.png" alt="_includes\post_list_item.html" /></p>
+<br>
+<h3 id="codelayoutsposthtmlcode---"><code>_layouts\post.html</code> 파일 내용 변경</h3>
+<ul>
+<li>
+<p>해당 파일은 <strong>게시글 자체</strong> 에 대한 파일이다.</p>
+</li>
+<li>
+<p>즉, <strong>게시글을 클릭하여 들어갔을 때의 게시글의 제목</strong> 을 수정하는 과정이다.</p>
+</li>
+<li>
+<p>주석으로 처리된 부분 (Line: 8) 을 그 아랫줄 (Line: 9) 과 같이 변경하였다.</p>
+</li>
+</ul>
+<p><img src="/assets/img/2021-07-26-TroubleShooting_JekyllTitleUpperCase/Untitled%203.png" alt="_layouts\post.html" /></p>
+:ET

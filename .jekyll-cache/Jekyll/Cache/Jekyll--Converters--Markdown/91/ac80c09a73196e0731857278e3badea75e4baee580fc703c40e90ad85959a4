@@ -1,0 +1,124 @@
+I")#<p><br/><br/></p>
+<p><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ResponseStaticTemplate">이전 글</a>에서 정적 리소스와 뷰 템플릿을 통해 응답하는 방법을 살펴보았다. 이번 글에서는 HTTP 메시지 바디에 직접 데이터를 입력하여 응답하는 방법을 알아보도록 하겠다.</p>
+<p><br><br><br></p>
+<h1 id="section">메시지 바디 응답</h1>
+<h2 id="section-1">메시지 바디를 이용한 응답</h2>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">hello.springmvc.basic.HelloData</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">lombok.extern.slf4j.Slf4j</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.http.HttpStatus</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.http.ResponseEntity</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.stereotype.Controller</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletResponse</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+
+<span class="nd">@Slf4j</span>
+<span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ResponseBodyController</span> <span class="o">{</span>
+
+	<span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/response-body-string-v1"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">responseBodyV1</span><span class="o">(</span><span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
+        <span class="n">response</span><span class="o">.</span><span class="na">getWriter</span><span class="o">().</span><span class="na">write</span><span class="o">(</span><span class="s">"ok"</span><span class="o">);</span>
+	<span class="o">}</span>
+	
+	<span class="cm">/**
+	 * HttpEntity, ResponseEntity(Http Status 추가)
+	 */</span>
+	<span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/response-body-string-v2"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">ResponseEntity</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="nf">responseBodyV2</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="nc">ResponseEntity</span><span class="o">&lt;&gt;(</span><span class="s">"ok"</span><span class="o">,</span> <span class="nc">HttpStatus</span><span class="o">.</span><span class="na">OK</span><span class="o">);</span>
+	<span class="o">}</span>
+
+	<span class="nd">@ResponseBody</span>
+	<span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/response-body-string-v3"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">String</span> <span class="nf">responseBodyV3</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="s">"ok"</span><span class="o">;</span>
+	<span class="o">}</span>
+
+	<span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/response-body-json-v1"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">ResponseEntity</span><span class="o">&lt;</span><span class="nc">HelloData</span><span class="o">&gt;</span> <span class="nf">responseBodyJsonV1</span><span class="o">()</span> <span class="o">{</span>
+		<span class="nc">HelloData</span> <span class="n">helloData</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HelloData</span><span class="o">();</span>
+		<span class="n">helloData</span><span class="o">.</span><span class="na">setUsername</span><span class="o">(</span><span class="s">"userA"</span><span class="o">);</span>
+		<span class="n">helloData</span><span class="o">.</span><span class="na">setAge</span><span class="o">(</span><span class="mi">20</span><span class="o">);</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="nc">ResponseEntity</span><span class="o">&lt;&gt;(</span><span class="n">helloData</span><span class="o">,</span> <span class="nc">HttpStatus</span><span class="o">.</span><span class="na">OK</span><span class="o">);</span>
+	<span class="o">}</span>
+
+	<span class="nd">@ResponseStatus</span><span class="o">(</span><span class="nc">HttpStatus</span><span class="o">.</span><span class="na">OK</span><span class="o">)</span>
+	<span class="nd">@ResponseBody</span>
+	<span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/response-body-json-v2"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">HelloData</span> <span class="nf">responseBodyJsonV2</span><span class="o">()</span> <span class="o">{</span>
+		<span class="nc">HelloData</span> <span class="n">helloData</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HelloData</span><span class="o">();</span>
+		<span class="n">helloData</span><span class="o">.</span><span class="na">setUsername</span><span class="o">(</span><span class="s">"userA"</span><span class="o">);</span>
+		<span class="n">helloData</span><span class="o">.</span><span class="na">setAge</span><span class="o">(</span><span class="mi">20</span><span class="o">);</span>
+		<span class="k">return</span> <span class="n">helloData</span><span class="o">;</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<p>메서드 하나하나씩 설명하도록 하겠다.</p>
+<br>
+<h3 id="coderesponsebodyv1code-"><code>responseBodyV1</code> 메서드</h3>
+<ul>
+<li><code>response.getWriter().write(&quot;ok&quot;);</code>
+<ul>
+<li>서블릿을 직접 다룰 때처럼, HttpServletResponse 객체를 통해서 HTTP 메시지 바디에 직접 <code>ok</code> 응답 메시지를 전달한다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="coderesponsebodyv2code-"><code>responseBodyV2</code> 메서드</h3>
+<ul>
+<li><code>return new ResponseEntity&lt;&gt;(&quot;ok&quot;, HttpStatus.OK);</code>
+<ul>
+<li>ResponseEntity 객체를 통해 <code>&quot;ok&quot;</code> 라는 데이터를 응답 메시지 바디에 입력하고, <code>OK 상태코드</code> 를 입력한다.</li>
+<li>이렇게 입력된 객체를 생성한 뒤, 반환하여 응답한다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="coderesponsebodyv3code-"><code>responseBodyV3</code> 메서드</h3>
+<ul>
+<li><code>@ResponseBody</code>
+<ul>
+<li>메서드에서 반환된 문자열이 응답 메시지 바디에 입력된다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="coderesponsebodyjsonv1code-"><code>responseBodyJsonV1</code> 메서드</h3>
+<ul>
+<li><code>return new ResponseEntity&lt;&gt;(helloData, HttpStatus.OK);</code>
+<ul>
+<li><code>ResponseEntity</code> 객체를 통해, 새로 생성한 객체 <code>helloData</code> 를 입력한다. (이렇게 자바 객체를 입력하면 JSON 형식으로 입력된다.)</li>
+<li><code>helloData</code> 가 JSON 형식으로 담긴 <code>ResponseEntity</code> 객체를 응답하는데 사용한다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="coderesponsebodyjsonv2code-"><code>responseBodyJsonV2()</code> 메서드</h3>
+<ul>
+<li><code>@ResponseBody</code>
+<ul>
+<li>메서드에서 반환된 자바 객체가 응답 메시지 바디에 JSON 형식으로 입력된다.</li>
+</ul>
+</li>
+</ul>
+<p><br><br></p>
+<h2 id="coderesponsebodycode"><code>@ResponseBody</code></h2>
+<p><code>@ResponseBody</code> 애너테이션은 메서드의 반환값을 직접 응답 메시지 바디에 입력하는 기능을 지원한다. 하지만, 각 메서드마다 사용하기가 번거롭다면 <code>@RestController</code> 를 사용하면 된다.</p>
+<br>
+<h3 id="coderestcontrollercode"><code>@RestController</code></h3>
+<ul>
+<li>클래스 레벨에 적용하는 애너테이션이다.</li>
+<li><code>@Controller</code> 와 <code>@ResponseBody</code> 를 포함하는 애너테이션이다.</li>
+<li>즉, 해당 클래스에 <code>@Controller</code> 를 적용하고, 모든 메서드에 <code>@ResponseBody</code> 를 적용시킨다.</li>
+</ul>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/RfTn"><img src="/assets/img/Inflearn_Spring_MVC1/Logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

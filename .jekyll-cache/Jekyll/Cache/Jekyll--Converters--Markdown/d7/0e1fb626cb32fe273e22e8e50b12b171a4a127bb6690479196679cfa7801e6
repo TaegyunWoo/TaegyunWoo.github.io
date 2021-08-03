@@ -1,0 +1,191 @@
+I"32<p><br/><br/></p>
+<h1 id="section">빈 스코프</h1>
+<h2 id="section-1">빈 스코프란?</h2>
+<p>빈 객체가 존재할 수 있는 범위를 뜻한다.</p>
+<p><br><br></p>
+<h2 id="section-2">빈 스코프의 종류</h2>
+<ul>
+<li>
+<p><strong>싱글톤</strong></p>
+<ul>
+<li>기본 스코프</li>
+<li>스프링 컨테이너의 시작과 종료까지 유지되는 가장 넓은 범위의 스코프</li>
+</ul>
+</li>
+<li>
+<p>프로토타입</p>
+<ul>
+<li>스프링 컨테이너가 <strong>프로토타입 빈의 생성과 의존관계 주입까지만 관여하고 더는 관리하는 않는 매우 짧은 범위의 스코프</strong></li>
+</ul>
+</li>
+<li>
+<p>웹 관련 스코프</p>
+<ul>
+<li>request
+<ul>
+<li>웹 요청이 들어오고 나갈때 까지 유지되는 스코프</li>
+</ul>
+</li>
+<li>session
+<ul>
+<li>웹 세션이 생성되고 종료될 때 까지 유지되는 스코프</li>
+</ul>
+</li>
+<li>application
+<ul>
+<li>웹 서블릿 컨텍스와 같은 범위로 유지되는 스코프</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>다음 게시글에서 다룬다.</p>
+</blockquote>
+</li>
+</ul>
+<br>
+<h2 id="section-3">빈 스코프 지정하기</h2>
+<p><code>@Scope(&quot;빈스코프&quot;)</code> 애너테이션을 통해 빈 스코프를 설정할 수 있다.</p>
+<br>
+<h3 id="section-4">컴포넌트 스캔을 활용한 자동 등록시, 지정하는 방법</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Scope</span><span class="o">(</span><span class="s">"prototype"</span><span class="o">)</span>
+<span class="nd">@Component</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloBean</span> <span class="o">{}</span>
+</code></pre></div></div>
+<br>
+<h3 id="section-5">수동 등록시, 지정하는 방법</h3>
+<ul>
+<li>설정 정보 클래스에 작성한다.</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Scope</span><span class="o">(</span><span class="s">"prototype"</span><span class="o">)</span>
+<span class="nd">@Bean</span>
+<span class="nc">PrototypeBean</span> <span class="nf">HelloBean</span><span class="o">()</span> <span class="o">{</span>
+	<span class="k">return</span> <span class="k">new</span> <span class="nf">HelloBean</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br><br></p>
+<h2 id="section-6">프로토타입 스코프</h2>
+<p>프로토타입 스코프를 <strong>스프링 컨테이너에서 조회하면 스프링 컨테이너는 항상 새로운 인스턴스를 생성해서 반환</strong> 한다.</p>
+<br>
+<h3 id="section-7">싱글톤 조회</h3>
+<p><img src="/assets/img/2021-07-26-SPRING_BeanScope/Untitled%2015.png" alt="싱글톤 조회" /></p>
+<br>
+<h3 id="section-8">프로토타입 빈 요청 - 1</h3>
+<p><img src="/assets/img/2021-07-26-SPRING_BeanScope/Untitled%2016.png" alt="프로토타입 빈 1" /></p>
+<ol>
+<li>프로토타입 스코프의 빈을 스프링 컨테이너에 요청한다.</li>
+<li>스프링 컨테이너는 이 시점에 프로토타입 빈을 생성하고, 필요한 의존관계를 주입한다.</li>
+</ol>
+<br>
+<h3 id="section-9">프로토타입 빈 요청 - 2</h3>
+<p><img src="/assets/img/2021-07-26-SPRING_BeanScope/Untitled%2017.png" alt="프로토타입 빈 2" /></p>
+<ol>
+<li>스프링 컨테이너는 생성한 프로토타입 빈을 클라이언트에 반환한다.</li>
+<li>이후에 스프링 컨테이너에 같은 요청이 오면 <strong>항상 새로운 프로토타입 빈을 생성해서 반환</strong> 한다.</li>
+</ol>
+<blockquote>
+<p>스프링 컨테이너는 <strong>프로토타입 빈을 생성하고, 의존관계 주입, 초기화까지만 처리</strong>한다!!!!<br />
+( 따라서, <code>@PreDestroy</code> 같은 종료 메서드가 호출되지 않는다! )</p>
+</blockquote>
+<p><br><br><br></p>
+<h1 id="section-10">싱글톤 빈과 프로토타입 빈 함께 사용하기</h1>
+<h2 id="section-11">‘프로토타입 빈’, ‘싱글톤 빈’ 함께 사용시 문제점</h2>
+<p>만약 싱글톤 빈이 의존관계 주입을 통해서 프로토타입 빈을 주입받아서 사용한다면 어떻게 될까?</p>
+<p><strong>‘프로토타입 빈’은 ‘싱글톤 빈’에 주입될 때만 생성되고, 이후로는 생성되지 않는다.</strong> 왜냐하면, 클라이언트(고객)는 항상 ‘싱글톤 빈’을 통해 ‘프로토타입 빈’을 만나기 때문이다. 즉, <strong>‘프로토타입 빈’은 주입 시점에 스프링 컨테이너에 요청해서 새로 생성되어 주입된 것이고, ‘싱글톤 빈’이 이 빈을 계속 가지고있다.</strong> ‘프로토타입 빈’을 사용할 때마다 새로 생성되는 것은 아니다!</p>
+<blockquote>
+<p>참고로, 여러 ‘싱글톤 빈’이 같은 ‘프로토타입 빈’을 주입받으면, 주입 받는 시점에 각각 새로운 ‘프로토타입 빈’이 생성되어 주입된다.</p>
+</blockquote>
+<p>그러면, 프로토타입 빈을 주입시점 뿐만 아니라, 사용할 때마다 새로 생성하는 방법은 없을까?</p>
+<p><br><br></p>
+<h2 id="objectfactory-objectprovider">ObjectFactory, ObjectProvider</h2>
+<ul>
+<li>
+<p>프로토타입 빈을 사용할 때마다 새로 생성받으려면, <strong>스프링 컨테이너에 새로 요청</strong> 하면 된다.</p>
+<ul>
+<li>즉, 프로토타입 빈을 조회하면 프로토타입 빈이 새로 생성되므로, <strong>싱글톤 빈을 사용할 때마다 프로토타입 빈을 조회하면 된다.</strong></li>
+</ul>
+</li>
+<li>
+<p><code>ObjectProvider</code></p>
+<ul>
+<li>지정한 빈을 컨테이너에서 대신 찾아주는 DL 서비스를 제공하는 것이 바로 <code>ObjectProvider</code> 이다.</li>
+<li><code>ObjectFactory</code> 에 편의 기능을 추가한 것이다.</li>
+</ul>
+<blockquote>
+<p>DL (Dependency Lookup) 이란?<br />
+의존관계를 외부에서 주입(DI) 받는 것이 아닌, 직접 필요한 의존관계를 찾는 것</p>
+</blockquote>
+</li>
+</ul>
+<p>예제 코드로 확인해보자.</p>
+<br>
+<h3 id="prototypebean">PrototypeBean</h3>
+<ul>
+<li><code>PrototypeBean</code> 은 프로토타입 빈이다.</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Scope</span><span class="o">(</span><span class="s">"prototype"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">PrototypeBean</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;addCount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getCount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nd&quot;&gt;@PostConstruct&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;PrototypeBean.init &quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nd&quot;&gt;@PreDestroy&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;destroy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;PrototypeBean.destroy&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div>
+<br></p>
+<h3 id="clientbean">ClientBean</h3>
+<ul>
+<li><code>ClientBean</code> 은 싱글톤 빈이며, ‘프로토타입 빈’을 주입받는다.</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ClientBean</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;c1&quot;&gt;//@Autowired&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//private ApplicationContext ac;&lt;/span&gt;
+
+&lt;span class=&quot;nd&quot;&gt;@Autowired&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ObjectProvider&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;PrototypeBean&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;prototypeBeanProvider&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;logic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;c1&quot;&gt;// 직접 프로토타입 빈을 조회한다.&lt;/span&gt;
+	&lt;span class=&quot;c1&quot;&gt;// PrototypeBean prototypeBean = ac.getBean(PrototypeBean.class);&lt;/span&gt;
+
+	&lt;span class=&quot;c1&quot;&gt;// 위 코드를 대체한다.&lt;/span&gt;
+	&lt;span class=&quot;nc&quot;&gt;PrototypeBean&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;prototypeBean&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;prototypeBeanProvider&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getObject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;prototypeBean&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addCount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+	&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;prototypeBean&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getCount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li><code>prototypeBeanProvider.getObject()</code>
+<ul>
+<li>항상 새로운 프로토타입 빈이 생성되어 반환한다.</li>
+<li>내부적으로 스프링 컨테이너를 통해 해당 빈을 찾아서 반환한다. (DL)</li>
+</ul>
+</li>
+</ul>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/pcN8"><img src="/assets/img/Inflearn_Spring_SpringCore/Logo.png" width="400px" height="250px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

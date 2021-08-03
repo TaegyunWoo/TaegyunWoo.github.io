@@ -1,0 +1,164 @@
+I"�$<p><br/><br/></p>
+<h1 id="section">연산</h1>
+<h2 id="section-1">개요</h2>
+<p>타임리프에서의 연산은 자바와 크게 다르지 않지만, HTML 안에서 사용하기 때문에 HTML 엔티티를 사용하는 부분에 유의하자.</p>
+<p>바로 예시 코드를 통해 설명하도록 하겠다.</p>
+<p><br><br></p>
+<h2 id="section-2">예시 코드</h2>
+<h3 id="section-3">컨트롤러</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/basic"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">BasicController</span> <span class="o">{</span>
+
+	<span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/operation"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">String</span> <span class="nf">operation</span><span class="o">(</span><span class="nc">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"nullData"</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+		<span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"data"</span><span class="o">,</span> <span class="s">"Spring!"</span><span class="o">);</span>
+		<span class="k">return</span> <span class="s">"basic/operation"</span><span class="o">;</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<br>
+<h3 id="section-4">타임리프</h3>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">xmlns:th=</span><span class="s">"http://www.thymeleaf.org"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+	<span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"UTF-8"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;title&gt;</span>Title<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+
+	<span class="nt">&lt;ul&gt;</span>
+
+		<span class="nt">&lt;li&gt;</span>산술 연산
+			<span class="nt">&lt;ul&gt;</span>
+				<span class="nt">&lt;li&gt;</span>10 + 2 = <span class="nt">&lt;span</span> <span class="na">th:text=</span><span class="s">"10 + 2"</span><span class="nt">&gt;&lt;/span&gt;&lt;/li&gt;</span>
+				<span class="nt">&lt;li&gt;</span>10 % 2 == 0 = <span class="nt">&lt;span</span> <span class="na">th:text=</span><span class="s">"10 % 2 == 0"</span><span class="nt">&gt;&lt;/span&gt;&lt;/li&gt;</span>
+			<span class="nt">&lt;/ul&gt;</span>
+		<span class="nt">&lt;/li&gt;</span>
+
+		<span class="nt">&lt;li&gt;</span>비교 연산
+			<span class="nt">&lt;ul&gt;</span>
+				<span class="nt">&lt;li&gt;</span>1 &gt; 10 = <span class="nt">&lt;span</span> <span class="na">th:text=</span><span class="s">"1 &amp;gt; 10"</span><span class="nt">&gt;&lt;/span&gt;&lt;/li&gt;</span>
+				<span class="nt">&lt;li&gt;</span>1 gt 10 = <span class="nt">&lt;span</span> <span class="na">th:text=</span><span class="s">"1 gt 10"</span><span class="nt">&gt;&lt;/span&gt;&lt;/li&gt;</span>
+				<span class="nt">&lt;li&gt;</span>1 &gt;= 10 = <span class="nt">&lt;span</span> <span class="na">th:text=</span><span class="s">"1 &gt;= 10"</span><span class="nt">&gt;&lt;/span&gt;&lt;/li&gt;</span>
+				<span class="nt">&lt;li&gt;</span>1 ge 10 = <span class="nt">&lt;span</span> <span class="na">th:text=</span><span class="s">"1 ge 10"</span><span class="nt">&gt;&lt;/span&gt;&lt;/li&gt;</span>
+				<span class="nt">&lt;li&gt;</span>1 == 10 = <span class="nt">&lt;span</span> <span class="na">th:text=</span><span class="s">"1 == 10"</span><span class="nt">&gt;&lt;/span&gt;&lt;/li&gt;</span>
+				<span class="nt">&lt;li&gt;</span>1 != 10 = <span class="nt">&lt;span</span> <span class="na">th:text=</span><span class="s">"1 != 10"</span><span class="nt">&gt;&lt;/span&gt;&lt;/li&gt;</span>
+			<span class="nt">&lt;/ul&gt;</span>
+		<span class="nt">&lt;/li&gt;</span>
+
+		<span class="nt">&lt;li&gt;</span>조건식
+			<span class="nt">&lt;ul&gt;</span>
+				<span class="nt">&lt;li&gt;</span>(10 % 2 == 0)? '짝수':'홀수' = <span class="nt">&lt;span</span> <span class="na">th:text=</span><span class="s">"(10 % 2 == 0)? '짝수':'홀수'"</span><span class="nt">&gt;&lt;/span&gt;&lt;/li&gt;</span>
+			<span class="nt">&lt;/ul&gt;</span>
+		<span class="nt">&lt;/li&gt;</span>
+
+		<span class="nt">&lt;li&gt;</span>Elvis 연산자
+			<span class="nt">&lt;ul&gt;</span>
+				<span class="nt">&lt;li&gt;</span>${data}?: '데이터가 없습니다.' = <span class="nt">&lt;span</span> <span class="na">th:text=</span><span class="s">"${data}?: '데이터가없습니다.'"</span><span class="nt">&gt;&lt;/span&gt;&lt;/li&gt;</span>
+				<span class="nt">&lt;li&gt;</span>${nullData}?: '데이터가 없습니다.' = <span class="nt">&lt;span</span> <span class="na">th:text=</span><span class="s">"${nullData}?: '데이터가 없습니다.'"</span><span class="nt">&gt;&lt;/span&gt;&lt;/li&gt;</span>
+			<span class="nt">&lt;/ul&gt;</span>
+		<span class="nt">&lt;/li&gt;</span>
+
+		<span class="nt">&lt;li&gt;</span>No-Operation
+			<span class="nt">&lt;ul&gt;</span>
+				<span class="nt">&lt;li&gt;</span>${data}?: _ = <span class="nt">&lt;span</span> <span class="na">th:text=</span><span class="s">"${data}?: _"</span><span class="nt">&gt;</span>데이터가 없습니다.<span class="nt">&lt;/span&gt;&lt;/li&gt;</span>
+				<span class="nt">&lt;li&gt;</span>${nullData}?: _ = <span class="nt">&lt;span</span> <span class="na">th:text=</span><span class="s">"${nullData}?: _"</span><span class="nt">&gt;</span>데이터가없습니다.<span class="nt">&lt;/span&gt;&lt;/li&gt;</span>
+			<span class="nt">&lt;/ul&gt;</span>
+		<span class="nt">&lt;/li&gt;</span>
+
+	<span class="nt">&lt;/ul&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<p>아래에서 자세히 설명하도록 하겠다.</p>
+<br>
+<h3 id="section-5">결과</h3>
+<p><img src="/assets/img/2021-08-02-THYMELEAF_Operations/Untitled%2010.png" alt="결과" /></p>
+<p><br><br></p>
+<h2 id="section-6">상세 설명</h2>
+<h3 id="section-7">산술 연산</h3>
+<ul>
+<li><code>th:text=&quot;10 + 2&quot;</code>
+<ul>
+<li>문자 그대로 <code>10+2</code> 를 계산할 결과를 텍스트로 출력한다.</li>
+</ul>
+</li>
+<li><code>th:text=&quot;10 % 2 == 0&quot;</code>
+<ul>
+<li><code>10%2</code> 의 결과가 <code>0</code> 인지, 불린형으로 출력한다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="section-8">비교 연산</h3>
+<ul>
+<li><code>th:text=&quot;1 &amp;gt; 10&quot;</code>
+<ul>
+<li><code>1 &gt; 10</code> 과 같은 의미이다.</li>
+<li>HTML의 엔티티인 <code>&amp;gt;</code> 를 사용한다.</li>
+<li>연산 결과인 불린형 데이터를 출력한다.</li>
+</ul>
+</li>
+<li><code>th:text=&quot;1 gt 10&quot;</code>
+<ul>
+<li>위와 동일하다.</li>
+</ul>
+</li>
+<li><code>th:text=&quot;1 &gt;= 10&quot;</code>
+<ul>
+<li>문자 그대로 <code>1 &gt;= 10</code> 의 결과를 출력한다.</li>
+</ul>
+</li>
+<li><code>th:text=&quot;1 == 10&quot;</code>
+<ul>
+<li>문자 그대로 <code>1 == 10</code> 의 결과를 출력한다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="section-9">조건식</h3>
+<ul>
+<li><code>th:text=&quot;(10 % 2 == 0)? '짝수':'홀수'&quot;</code>
+<ul>
+<li>소괄호 안에 작성된 식은 <strong>조건식</strong> 이다.</li>
+<li><code>:</code> 으로 구분된 값은 조건식 결과에 따라 선택될 값들이다.</li>
+<li>해당 조건식의 결과값이 true면, 첫 번째 값(<code>'짝수'</code>)가 선택되어 출력된다.</li>
+<li>해당 조건식의 결과값이 false면, 두 번째 값(<code>'홀수'</code>)가 선택되어 출력된다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="elvis-">Elvis 연산자</h3>
+<ul>
+<li><code>th:text=&quot;${data}?: '데이터가없습니다.'&quot;</code>
+<ul>
+<li>조건식 연산자와 유사하지만 차이점이 있다.</li>
+<li>조건식이 들어가야 하는 부분에 <strong>변수가 들어간다.</strong></li>
+<li>변수에 값이 존재하면, 해당 값을 출력한다.</li>
+<li>변수에 값이 존재하지 않으면(<code>null</code>이면), 뒤에 작성된 <code>'데이터가없습니다.'</code> 가 출력된다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="no-operation">No-Operation</h3>
+<ul>
+<li><code>th:text=&quot;${data}?: _&quot;</code>
+<ul>
+<li>Elvis 연산자와 유사하지만 차이점이 있다.</li>
+<li>변수에 값이 존재하면, 해당 값을 출력한다.</li>
+<li>변수에 값이 존재하지 않으면(<code>null</code>이면), <strong>해당 태그에 Thymeleaf를 적용하지 않는다.</strong></li>
+</ul>
+</li>
+</ul>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/YPER"><img src="/assets/img/Inflearn_Spring_MVC2/logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

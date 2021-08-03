@@ -1,0 +1,144 @@
+I"d%<p><br/><br/></p>
+<h1 id="section">조건부 평가</h1>
+<p>타임리프의 조건식은 <code>if</code> 와 <code>unless</code> 그리고 <code>switch</code> 를 사용한다.</p>
+<p>예시 코드를 통해 알아보자.</p>
+<p><br><br></p>
+<h2 id="section-1">예시 코드</h2>
+<h3 id="section-2">컨트롤러</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/basic"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">BasicController</span> <span class="o">{</span>
+
+	<span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/condition"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">String</span> <span class="nf">condition</span><span class="o">(</span><span class="nc">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">addUsers</span><span class="o">(</span><span class="n">model</span><span class="o">);</span>
+		<span class="k">return</span> <span class="s">"basic/condition"</span><span class="o">;</span>
+	<span class="o">}</span>
+
+	<span class="kd">private</span> <span class="kt">void</span> <span class="nf">addUsers</span><span class="o">(</span><span class="nc">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
+		<span class="nc">List</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+		<span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">User</span><span class="o">(</span><span class="s">"userA"</span><span class="o">,</span> <span class="mi">10</span><span class="o">));</span>
+		<span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">User</span><span class="o">(</span><span class="s">"userB"</span><span class="o">,</span> <span class="mi">20</span><span class="o">));</span>
+		<span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">User</span><span class="o">(</span><span class="s">"userC"</span><span class="o">,</span> <span class="mi">30</span><span class="o">));</span>
+		<span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"users"</span><span class="o">,</span> <span class="n">list</span><span class="o">);</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<br>
+<h3 id="section-3">타임리프</h3>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">xmlns:th=</span><span class="s">"http://www.thymeleaf.org"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+	<span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"UTF-8"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;title&gt;</span>Title<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+
+	<span class="nt">&lt;h1&gt;</span>if, unless<span class="nt">&lt;/h1&gt;</span>
+	<span class="nt">&lt;table</span> <span class="na">border=</span><span class="s">"1"</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;tr&gt;</span>
+			<span class="nt">&lt;th&gt;</span>count<span class="nt">&lt;/th&gt;</span>
+			<span class="nt">&lt;th&gt;</span>username<span class="nt">&lt;/th&gt;</span>
+			<span class="nt">&lt;th&gt;</span>age<span class="nt">&lt;/th&gt;</span>
+		<span class="nt">&lt;/tr&gt;</span>
+		<span class="nt">&lt;tr</span> <span class="na">th:each=</span><span class="s">"user, userStat : ${users}"</span><span class="nt">&gt;</span>
+			<span class="nt">&lt;td</span> <span class="na">th:text=</span><span class="s">"${userStat.count}"</span><span class="nt">&gt;</span>1<span class="nt">&lt;/td&gt;</span>
+			<span class="nt">&lt;td</span> <span class="na">th:text=</span><span class="s">"${user.username}"</span><span class="nt">&gt;</span>username<span class="nt">&lt;/td&gt;</span>
+			<span class="nt">&lt;td&gt;</span>
+				<span class="nt">&lt;span</span> <span class="na">th:text=</span><span class="s">"${user.age}"</span><span class="nt">&gt;</span>0<span class="nt">&lt;/span&gt;</span>
+				<span class="nt">&lt;span</span> <span class="na">th:text=</span><span class="s">"'미성년자'"</span> <span class="na">th:if=</span><span class="s">"${user.age lt 20}"</span><span class="nt">&gt;&lt;/span&gt;</span>
+				<span class="nt">&lt;span</span> <span class="na">th:text=</span><span class="s">"'미성년자'"</span> <span class="na">th:unless=</span><span class="s">"${user.age ge 20}"</span><span class="nt">&gt;&lt;/span&gt;</span>
+			<span class="nt">&lt;/td&gt;</span>
+		<span class="nt">&lt;/tr&gt;</span>
+	<span class="nt">&lt;/table&gt;</span>
+
+	<span class="nt">&lt;h1&gt;</span>switch<span class="nt">&lt;/h1&gt;</span>
+	<span class="nt">&lt;table</span> <span class="na">border=</span><span class="s">"1"</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;tr&gt;</span>
+			<span class="nt">&lt;th&gt;</span>count<span class="nt">&lt;/th&gt;</span>
+			<span class="nt">&lt;th&gt;</span>username<span class="nt">&lt;/th&gt;</span>
+			<span class="nt">&lt;th&gt;</span>age<span class="nt">&lt;/th&gt;</span>
+		<span class="nt">&lt;/tr&gt;</span>
+		<span class="nt">&lt;tr</span> <span class="na">th:each=</span><span class="s">"user, userStat : ${users}"</span><span class="nt">&gt;</span>
+			<span class="nt">&lt;td</span> <span class="na">th:text=</span><span class="s">"${userStat.count}"</span><span class="nt">&gt;</span>1<span class="nt">&lt;/td&gt;</span>
+			<span class="nt">&lt;td</span> <span class="na">th:text=</span><span class="s">"${user.username}"</span><span class="nt">&gt;</span>username<span class="nt">&lt;/td&gt;</span>
+			<span class="nt">&lt;td</span> <span class="na">th:switch=</span><span class="s">"${user.age}"</span><span class="nt">&gt;</span>
+				<span class="nt">&lt;span</span> <span class="na">th:case=</span><span class="s">"10"</span><span class="nt">&gt;</span>10살<span class="nt">&lt;/span&gt;</span>
+				<span class="nt">&lt;span</span> <span class="na">th:case=</span><span class="s">"20"</span><span class="nt">&gt;</span>20살<span class="nt">&lt;/span&gt;</span>
+				<span class="nt">&lt;span</span> <span class="na">th:case=</span><span class="s">"*"</span><span class="nt">&gt;</span>기타<span class="nt">&lt;/span&gt;</span>
+			<span class="nt">&lt;/td&gt;</span>
+		<span class="nt">&lt;/tr&gt;</span>
+	<span class="nt">&lt;/table&gt;</span>
+
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<p>아래에서 자세히 설명하도록 하겠다.</p>
+<br>
+<h3 id="section-4">결과</h3>
+<p><img src="/assets/img/2021-08-02-THYMELEAF_IfUnlessSwitch/Untitled%2013.png" alt="결과" /></p>
+<p><br><br></p>
+<h2 id="section-5">상세 설명</h2>
+<h3 id="if">if</h3>
+<ul>
+<li><code>th:if=&quot;${조건식}&quot;</code>
+<ul>
+<li>조건이 맞지 않으면, 해당 태그 자체를 렌더링하지 않는다.</li>
+<li>즉, 조건식이 false라면, 해당 태그가 제거된다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<ul>
+<li><code>&lt;span th:text=&quot;'미성년자'&quot; th:if=&quot;${user.age lt 20}&quot;&gt;&lt;/span&gt;</code>
+<ul>
+<li><code>th:if=&quot;${user.age lt 20}&quot;</code> 에서 조건식에 해당되는 <code>${user.age lt 20}</code> 이 false 라면 <code>&lt;span&gt;</code> 태그 자체가 제거된다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="unless">unless</h3>
+<ul>
+<li><code>th:unless=&quot;${조건식}&quot;</code>
+<ul>
+<li>if와 마찬가지로, 조건이 맞지 않으면 해당 태그 자체를 렌더링하지 않는다.</li>
+<li>이때, <code>unless</code> 는 if의 반대이다. 즉, 조건식에 not이 붙는다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<ul>
+<li><code>&lt;span th:text=&quot;'미성년자'&quot; th:unless=&quot;${user.age ge 20}&quot;&gt;&lt;/span&gt;</code>
+<ul>
+<li>if와 유사하지만, <code>${user.age ge 20}</code> 이 false일때 <code>&lt;span&gt;</code> 태그가 렌더링된다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="switch">switch</h3>
+<ul>
+<li><code>&lt;td th:switch=&quot;${user.age}&quot;&gt;</code>
+<ul>
+<li>해당 태그의 하위 태그들이 case 들이다.</li>
+<li><code>th:switch=&quot;${user.age}&quot;</code> 에서 조건식인 <code>${user.age}</code> 변수의 값에 따라, case가 적용된다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<ul>
+<li><code>th:case=&quot;*&quot;</code>
+<ul>
+<li><code>*</code> 은 디폴트값으로 해당되는 case들이 없을 때 적용된다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/YPER"><img src="/assets/img/Inflearn_Spring_MVC2/logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

@@ -1,0 +1,117 @@
+I"V<p><br/><br/></p>
+<h1 id="iocinversion-of-control">제어의 역전: IoC(Inversion of Control)</h1>
+<h2 id="section">기존 프로그램의 동작 방식</h2>
+<ul>
+<li>클라이언트 구현 객체가 스스로 필요한 서버 구현 객체를 <strong>생성</strong>, <strong>연결</strong>, <strong>실행</strong> 한다.</li>
+<li>즉, <strong>구현 객체가 프로그램 제어의 주체</strong> 가 된다.</li>
+</ul>
+<br>
+<h2 id="appconfig----">AppConfig를 구현한 프로그램의 동작 방식</h2>
+<blockquote>
+<p><code>AppConfig</code> 관련 내용은 <a href="https://taegyunwoo.github.io/spring/SPRING_OCP_DIP">이전 게시글</a> 참고</p>
+</blockquote>
+<ul>
+<li>
+<p>기존 프로그램과는 다르게 프로그램의 제어 흐름을 <code>AppConfig</code>가 가져간다.</p>
+</li>
+<li>
+<p>Ex) <a href="https://taegyunwoo.github.io/spring/SPRING_OCP_DIP">이전 게시글</a> 의 <code>MemberServiceImpl</code> 클래스는 필요한 인터페이스들을 호출하지만 어떤 구현 객체들이 실행될지 모른다.</p>
+<ul>
+<li>왜냐하면, <code>AppConfig</code> 가 구현 객체를 주입해주기 때문이다.</li>
+<li>그럼에도 <code>MemberServiceImpl</code> 클래스는 자신의 로직을 묵묵히 수행한다.</li>
+</ul>
+</li>
+<li>
+<p>이렇듯 프로그램의 제어 흐름을 직접 제어하는 것이 아니라 외부에서 관리하는 것을 <strong>제어의 역전 (IoC)</strong> 라고 한다.</p>
+</li>
+</ul>
+<p><br><br></p>
+<h1 id="didependency-injection">의존관계 주입: DI(Dependency Injection)</h1>
+<h2 id="section-1">의존관계</h2>
+<ul>
+<li>
+<p>‘인터페이스에만 의존하는 클래스’는 실제로 어떤 구현 객체가 사용될지 모른다.</p>
+</li>
+<li>
+<p>의존관계는 <strong>정적인 클래스 의존 관계</strong> 와 <strong>실행 시점에 결정되는 동적인 객체(인스턴스) 의존 관계</strong> 둘을 분리해서 생각해야한다.</p>
+</li>
+</ul>
+<br>
+<h2 id="section-2">정적인 클래스 의존관계</h2>
+<ul>
+<li>
+<p>클래스가 사용하는 <code>import</code> 코드만 보고 의존관계를 쉽게 판단할 수 있다.</p>
+</li>
+<li>
+<p>클래스 의존관계 만으로는 실제 어떤 객체가 주입되는지 알 수 없다.</p>
+</li>
+<li>
+<p>예시</p>
+<ul>
+<li>
+<p>클래스 다이어그램이 아래와 같이 주어졌다.
+(클래스 다이어그램은 클래스간의 의존관계를 나타낸다.)</p>
+<p><img src="/assets/img/2021-07-24-SPRING_IoC_DI_Container/Untitled%202.png" alt="클래스다이어그램" /></p>
+</li>
+<li>
+<p>여기서 <code>OrderServiceImpl</code> 클래스에게 <code>MemoryMemberRepository</code> 구현 객체와 <code>DbMemberRepository</code> 구체 구현 중 어떤 것이 주입되었는지 알 수 없다.</p>
+</li>
+<li>
+<p><code>FixDiscountPolicy</code> 구현 객체와 <code>RateDiscountPolicy</code> 구현 객체 역시 어떤 것이 주입되었는지 알 수 없다.</p>
+</li>
+</ul>
+</li>
+</ul>
+<br>
+<h2 id="section-3">동적인 객체 인스턴스 의존 관계</h2>
+<ul>
+<li>
+<p>객체 인스턴스 의존 관계란, 애플리케이션 실행 시점에 실제 생성된 객체 인스턴스의 참조가 연결된 의존 관계다.</p>
+</li>
+<li>
+<p>객체 인스턴스 의존 관계는 객체 다이어그램을 통해 확인할 수 있다.</p>
+<p><img src="/assets/img/2021-07-24-SPRING_IoC_DI_Container/Untitled%203.png" alt="객체다이어그램" /></p>
+</li>
+</ul>
+<br>
+<h2 id="di">의존관계 주입 (DI)</h2>
+<ul>
+<li>
+<p><strong>의존관계 주입</strong> 이란, 애플리케이션 실행 시점에 외부에서 실제 구현 객체를 생성하고 클라이언트에 전달해서 클라이언트(구현 객체를 사용하는 클래스)와 서버(구현 객체의 클래스)의 실제 의존관계가 연결 되는 것을 뜻한다.</p>
+<blockquote>
+<p><a href="https://taegyunwoo.github.io/spring/SPRING_OCP_DIP">이전 게시글</a> 참고</p>
+</blockquote>
+</li>
+</ul>
+<br>
+<ul>
+<li>
+<p>의존관계 주입을 사용하면 클라이언트 코드를 변경하지 않고, 클라이언트가 호출하는 대사의 타입 인스턴스를 변경할 수 있다.</p>
+</li>
+<li>
+<p>의존관계 주입을 사용하면 정적인 클래스 의존관계를 변경하지 않고, 동적인 객체 인스턴스 의존관계를 쉽게 변경할 수 있다.</p>
+</li>
+</ul>
+<p><br><br></p>
+<h1 id="ioc--di-">IoC 컨테이너, DI 컨테이너</h1>
+<ul>
+<li>
+<p>AppConfig 처럼 객체를 생성하고 관리하면서 의존관계를 연결해 주는 것<br />
+⇒ IoC 컨테이너 또는 DI 컨테이너</p>
+<blockquote>
+<p>최근에는 의존관계 주입에 초점을 맞추어 DI 컨테이너라 한다.</p>
+</blockquote>
+<blockquote>
+<p>IoC는 DI를 포함하는 포괄적인 개념이다.</p>
+</blockquote>
+</li>
+</ul>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/pcN8"><img src="/assets/img/Inflearn_Spring_SpringCore/Logo.png" width="400px" height="250px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

@@ -1,0 +1,244 @@
+I"vN<p><br/><br/></p>
+<h1 id="section">자바스크립트 인라인</h1>
+<h2 id="section-1">개요</h2>
+<p>타임리프는 자바스크립트에서 타임리프를 편리하게 사용할 수 있는 자바스크립트 인라인 기능을 제공한다. <code>&lt;script th:inline=&quot;javascript&quot;&gt;</code> 를 통해 기능을 지원하는데, 바로 예시 코드로 알아보자.</p>
+<p><br><br></p>
+<h2 id="section-2">예시 코드</h2>
+<h3 id="section-3">컨트롤러</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/basic"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">BasicController</span> <span class="o">{</span>
+
+	<span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/javascript"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">String</span> <span class="nf">javascript</span><span class="o">(</span><span class="nc">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">User</span><span class="o">(</span><span class="s">"userA"</span><span class="o">,</span> <span class="mi">10</span><span class="o">));</span>
+		<span class="n">addUsers</span><span class="o">(</span><span class="n">model</span><span class="o">);</span>
+		<span class="k">return</span> <span class="s">"basic/javascript"</span><span class="o">;</span>
+	<span class="o">}</span>	
+
+	<span class="kd">private</span> <span class="kt">void</span> <span class="nf">addUsers</span><span class="o">(</span><span class="nc">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
+		<span class="nc">List</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+		<span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">User</span><span class="o">(</span><span class="s">"userA"</span><span class="o">,</span> <span class="mi">10</span><span class="o">));</span>
+		<span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">User</span><span class="o">(</span><span class="s">"userB"</span><span class="o">,</span> <span class="mi">20</span><span class="o">));</span>
+		<span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">User</span><span class="o">(</span><span class="s">"userC"</span><span class="o">,</span> <span class="mi">30</span><span class="o">));</span>
+		<span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"users"</span><span class="o">,</span> <span class="n">list</span><span class="o">);</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<br>
+<h3 id="section-4">타임리프</h3>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">xmlns:th=</span><span class="s">"http://www.thymeleaf.org"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+	<span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"UTF-8"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;title&gt;</span>Title<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+
+	<span class="c">&lt;!-- 자바스크립트 인라인 사용 전 --&gt;</span>
+	<span class="nt">&lt;script&gt;</span>
+		<span class="kd">var</span> <span class="nx">username</span> <span class="o">=</span> <span class="p">[[</span><span class="nx">$</span><span class="p">{</span><span class="nx">user</span><span class="p">.</span><span class="nx">username</span><span class="p">}]];</span>
+		<span class="kd">var</span> <span class="nx">age</span> <span class="o">=</span> <span class="p">[[</span><span class="nx">$</span><span class="p">{</span><span class="nx">user</span><span class="p">.</span><span class="nx">age</span><span class="p">}]];</span>
+
+		<span class="c1">//자바스크립트 내추럴 템플릿</span>
+		<span class="kd">var</span> <span class="nx">username2</span> <span class="o">=</span> <span class="cm">/*[[${user.username}]]*/</span> <span class="dl">"</span><span class="s2">test username</span><span class="dl">"</span><span class="p">;</span>
+
+		<span class="c1">//객체</span>
+		<span class="kd">var</span> <span class="nx">user</span> <span class="o">=</span> <span class="p">[[</span><span class="nx">$</span><span class="p">{</span><span class="nx">user</span><span class="p">}]];</span>
+	<span class="nt">&lt;/script&gt;</span>
+	
+	<span class="c">&lt;!-- 자바스크립트 인라인 사용 후 --&gt;</span>
+	<span class="nt">&lt;script </span><span class="na">th:inline=</span><span class="s">"javascript"</span><span class="nt">&gt;</span>
+		<span class="kd">var</span> <span class="nx">username</span> <span class="o">=</span> <span class="p">[[</span><span class="nx">$</span><span class="p">{</span><span class="nx">user</span><span class="p">.</span><span class="nx">username</span><span class="p">}]];</span>
+		<span class="kd">var</span> <span class="nx">age</span> <span class="o">=</span> <span class="p">[[</span><span class="nx">$</span><span class="p">{</span><span class="nx">user</span><span class="p">.</span><span class="nx">age</span><span class="p">}]];</span>
+
+		<span class="c1">//자바스크립트 내추럴 템플릿</span>
+		<span class="kd">var</span> <span class="nx">username2</span> <span class="o">=</span> <span class="cm">/*[[${user.username}]]*/</span> <span class="dl">"</span><span class="s2">test username</span><span class="dl">"</span><span class="p">;</span>
+
+		<span class="c1">//객체</span>
+		<span class="kd">var</span> <span class="nx">user</span> <span class="o">=</span> <span class="p">[[</span><span class="nx">$</span><span class="p">{</span><span class="nx">user</span><span class="p">}]];</span>
+	<span class="nt">&lt;/script&gt;</span>
+
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<br>
+<h3 id="section-5">결과</h3>
+<ul>
+<li>
+<p><strong>자바스크립트 인라인 (</strong><code>th:inline=&quot;javascript&quot;</code><strong>) 사용 전</strong></p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;script&gt;</span>
+	<span class="kd">var</span> <span class="nx">username</span> <span class="o">=</span> <span class="nx">userA</span><span class="p">;</span> <span class="c1">//문법오류</span>
+	<span class="kd">var</span> <span class="nx">age</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+
+	<span class="c1">//자바스크립트 내추럴 템플릿</span>
+	<span class="kd">var</span> <span class="nx">username2</span> <span class="o">=</span> <span class="cm">/*userA*/</span> <span class="dl">"</span><span class="s2">test username</span><span class="dl">"</span><span class="p">;</span> <span class="c1">//렌더링 내용이 주석처리됨</span>
+
+	<span class="c1">//객체</span>
+	<span class="kd">var</span> <span class="nx">user</span> <span class="o">=</span> <span class="nx">BasicController</span><span class="p">.</span><span class="nx">User</span><span class="p">(</span><span class="nx">username</span><span class="o">=</span><span class="nx">userA</span><span class="p">,</span> <span class="nx">age</span><span class="o">=</span><span class="mi">10</span><span class="p">);</span> <span class="c1">//객체의 toString()을 호출함, 문법오류</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br>
+<ul>
+<li>
+<p><strong>자바스크립트 인라인(</strong><code>th:inline=&quot;javascript&quot;</code><strong>) 사용 후</strong></p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;script&gt;</span>
+	<span class="kd">var</span> <span class="nx">username</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">userA</span><span class="dl">"</span><span class="p">;</span>
+	<span class="kd">var</span> <span class="nx">age</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+
+	<span class="c1">//자바스크립트 내추럴 템플릿</span>
+	<span class="kd">var</span> <span class="nx">username2</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">userA</span><span class="dl">"</span><span class="p">;</span>
+
+	<span class="c1">//객체</span>
+	<span class="kd">var</span> <span class="nx">user</span> <span class="o">=</span> <span class="p">{</span><span class="dl">"</span><span class="s2">username</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">userA</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">age</span><span class="dl">"</span><span class="p">:</span><span class="mi">10</span><span class="p">};</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div></div>
+</li>
+</ul>
+<p><br><br></p>
+<h2 id="section-6">상세 설명</h2>
+<h3 id="section-7">텍스트 렌더링</h3>
+<ul>
+<li><code>var username = [[${user.username}]];</code>
+<ul>
+<li>인라인 사용 전
+<ul>
+<li><code>var username = userA;</code></li>
+<li>(큰 따옴표가 없다.)</li>
+</ul>
+</li>
+<li>인라인 사용 후
+<ul>
+<li><code>var username = &quot;userA&quot;;</code></li>
+<li>(큰 따옴표가 존재한다.)</li>
+</ul>
+</li>
+<li><strong>자바스크립트 인라인 (<code>th:inline=&quot;javascript&quot;</code>) 을 적용하면, 타임리프가 자바스크립트 문법에 맞게 알아서 따옴표를 붙여준다.</strong></li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="section-8">자바스크립트 내추럴 템플릿</h3>
+<p>타임리프는 HTML 파일을 직접 열어도 동작하는 내추럴 템플릿 기능을 지원한다는 것을 다시 염두하자. 따라서, JS 코드를 작성할 때도 <strong>주석을 통해 내추럴 템플릿 기능을 유지한다.</strong></p>
+<ul>
+<li><code>var username2 = /*[[${user.username}]]*/ &quot;test username&quot;;</code>
+<ul>
+<li>인라인 사용 전
+<ul>
+<li><code>var username2 = /*userA*/ &quot;test username&quot;;</code></li>
+<li>그냥 순수하게 해석을 해버렸다.</li>
+<li>(주석처리가 되어버린다.)</li>
+</ul>
+</li>
+<li>인라인 사용 후
+<ul>
+<li><code>var username2 = &quot;userA&quot;;</code></li>
+<li>주석 부분이 제거되었다.</li>
+<li><code>[[${user.username}]]</code> 의 값이 적용되었다.</li>
+</ul>
+</li>
+<li><strong>자바스크립트 인라인 (<code>th:inline=&quot;javascript&quot;</code>) 을 적용하면, 타임리프가 주석부분을 제거하고 <code>[[...]]</code> 문법을 적용하여 값을 적용시킨다.</strong></li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="section-9">객체</h3>
+<p>타임리프의 자바스크립트 인라인 기능을 사용하면 객체를 JSON으로 자동으로 변환해준다.</p>
+<ul>
+<li><code>var user = [[${user}]];</code>
+<ul>
+<li>인라인 사용 전
+<ul>
+<li><code>var user = BasicController.User(username=userA, age=10);</code></li>
+<li>객체의 toString() 메서드가 호출된 값이다.</li>
+<li>(그저 문자열 값인데, 따옴표도 없으니 문법 오류이다.)</li>
+</ul>
+</li>
+<li>인라인 사용 후
+<ul>
+<li><code>var user = {&quot;username&quot;:&quot;userA&quot;,&quot;age&quot;:10};</code></li>
+<li>객체가 JSON 형태로 변환되어, JS의 객체로 적용된다.</li>
+</ul>
+</li>
+<li><strong>자바스크립트 인라인 (<code>th:inline=&quot;javascript&quot;</code>) 을 적용하면, 타임리프가 자바객체를 JSON으로 변환하여 적용해준다.</strong></li>
+</ul>
+</li>
+</ul>
+<p><br><br><br></p>
+<h1 id="each">자바스크립트 인라인 each</h1>
+<p>위에서 자바스크립트 인라인의 적용 예시를 살펴보았다. 그렇다면, each 문법은 어떻게 적용해야할까? 지금부터 설명하도록 하겠다.</p>
+<p><br><br></p>
+<h2 id="section-10">예시 코드</h2>
+<h3 id="section-11">컨트롤러</h3>
+<p>위에서 작성한 코드와 동일하다.</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/basic"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">BasicController</span> <span class="o">{</span>
+
+	<span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/javascript"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">String</span> <span class="nf">javascript</span><span class="o">(</span><span class="nc">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">User</span><span class="o">(</span><span class="s">"userA"</span><span class="o">,</span> <span class="mi">10</span><span class="o">));</span>
+		<span class="n">addUsers</span><span class="o">(</span><span class="n">model</span><span class="o">);</span>
+		<span class="k">return</span> <span class="s">"basic/javascript"</span><span class="o">;</span>
+	<span class="o">}</span>	
+
+	<span class="kd">private</span> <span class="kt">void</span> <span class="nf">addUsers</span><span class="o">(</span><span class="nc">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
+		<span class="nc">List</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+		<span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">User</span><span class="o">(</span><span class="s">"userA"</span><span class="o">,</span> <span class="mi">10</span><span class="o">));</span>
+		<span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">User</span><span class="o">(</span><span class="s">"userB"</span><span class="o">,</span> <span class="mi">20</span><span class="o">));</span>
+		<span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">User</span><span class="o">(</span><span class="s">"userC"</span><span class="o">,</span> <span class="mi">30</span><span class="o">));</span>
+		<span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"users"</span><span class="o">,</span> <span class="n">list</span><span class="o">);</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<br>
+<h3 id="section-12">타임리프</h3>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">xmlns:th=</span><span class="s">"http://www.thymeleaf.org"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+	<span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"UTF-8"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;title&gt;</span>Title<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+
+	<span class="c">&lt;!-- 자바스크립트 인라인 each --&gt;</span>
+	<span class="nt">&lt;script </span><span class="na">th:inline=</span><span class="s">"javascript"</span><span class="nt">&gt;</span>
+		<span class="p">[</span><span class="err">#</span> <span class="nx">th</span><span class="p">:</span><span class="nx">each</span><span class="o">=</span><span class="dl">"</span><span class="s2">user, stat : ${users}</span><span class="dl">"</span><span class="p">]</span>
+			<span class="kd">var</span> <span class="nx">user</span><span class="p">[[</span><span class="nx">$</span><span class="p">{</span><span class="nx">stat</span><span class="p">.</span><span class="nx">count</span><span class="p">}]]</span> <span class="o">=</span> <span class="p">[[</span><span class="nx">$</span><span class="p">{</span><span class="nx">user</span><span class="p">}]];</span>
+		<span class="p">[</span><span class="sr">/</span><span class="err">]
+</span>	<span class="nt">&lt;/script&gt;</span>
+
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<br>
+<h3 id="section-13">결과</h3>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;script&gt;</span>
+	<span class="kd">var</span> <span class="nx">user1</span> <span class="o">=</span> <span class="p">{</span><span class="dl">"</span><span class="s2">username</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">userA</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">age</span><span class="dl">"</span><span class="p">:</span><span class="mi">10</span><span class="p">};</span>
+	<span class="kd">var</span> <span class="nx">user2</span> <span class="o">=</span> <span class="p">{</span><span class="dl">"</span><span class="s2">username</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">userB</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">age</span><span class="dl">"</span><span class="p">:</span><span class="mi">20</span><span class="p">};</span>
+	<span class="kd">var</span> <span class="nx">user3</span> <span class="o">=</span> <span class="p">{</span><span class="dl">"</span><span class="s2">username</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">userC</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">age</span><span class="dl">"</span><span class="p">:</span><span class="mi">30</span><span class="p">};</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div></div>
+<p><br><br></p>
+<h2 id="section-14">상세 설명</h2>
+<p>자바스크립트 내부에서 타임리프의 each는 다음과 같이 사용한다.</p>
+<ul>
+<li><code>[# th:each=&quot;user, stat : ${users}&quot;] 반복내용 [/]</code>
+<ul>
+<li><a href="https://taegyunwoo.github.io/thymeleaf/THYMELEAF_Each">이전 글</a>에서 살펴본 문법과 유사하다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/YPER"><img src="/assets/img/Inflearn_Spring_MVC2/logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

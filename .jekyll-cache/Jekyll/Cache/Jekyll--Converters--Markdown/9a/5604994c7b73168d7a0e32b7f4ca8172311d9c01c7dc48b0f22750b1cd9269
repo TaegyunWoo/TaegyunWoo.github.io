@@ -1,0 +1,201 @@
+I"�-<p><br/><br/></p>
+<h1 id="section">템플릿 조각</h1>
+<h2 id="section-1">개요</h2>
+<p>웹 페이지 개발시, 공통 영역 다수 존재한다. (예를 들어, footer나 카테고리 와 같은 영역) 타임리프에서는 보다 편리하게 공통 영역을 처리하는 기능을 제공한다. 예시 코드를 통해 알아보자.</p>
+<p><br><br></p>
+<h2 id="section-2">예시 코드</h2>
+<h3 id="section-3">컨트롤러</h3>
+<blockquote>
+<p>이전에 작성한 게시글에서 사용한 <code>BasicController</code> 클래스가 아닌 새로운 클래스이다.</p>
+</blockquote>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/template"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TemplateController</span> <span class="o">{</span>
+
+	<span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/fragment"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">String</span> <span class="nf">template</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="s">"template/fragment/fragmentMain"</span><span class="o">;</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<br>
+<h3 id="html">템플릿 조각으로 사용될 HTML</h3>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">xmlns:th=</span><span class="s">"http://www.thymeleaf.org"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+	<span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"UTF-8"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;title&gt;</span>Title<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+
+	<span class="nt">&lt;footer</span> <span class="na">th:fragment=</span><span class="s">"copy"</span><span class="nt">&gt;</span>
+		푸터 자리 입니다.
+	<span class="nt">&lt;/footer&gt;</span>
+
+	<span class="nt">&lt;footer</span> <span class="na">th:fragment=</span><span class="s">"copyParam (param1, param2)"</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;p&gt;</span>파라미터 자리 입니다.<span class="nt">&lt;/p&gt;</span>
+		<span class="nt">&lt;p</span> <span class="na">th:text=</span><span class="s">"${param1}"</span><span class="nt">&gt;&lt;/p&gt;</span>
+		<span class="nt">&lt;p</span> <span class="na">th:text=</span><span class="s">"${param2}"</span><span class="nt">&gt;&lt;/p&gt;</span>
+	<span class="nt">&lt;/footer&gt;</span>
+
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<br>
+<h3 id="html-1">메인 HTML</h3>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">xmlns:th=</span><span class="s">"http://www.thymeleaf.org"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+	<span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"UTF-8"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;title&gt;</span>Title<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+
+	<span class="nt">&lt;h1&gt;</span>부분 포함<span class="nt">&lt;/h1&gt;</span>
+	<span class="nt">&lt;h2&gt;</span>부분 포함 insert<span class="nt">&lt;/h2&gt;</span>
+	<span class="nt">&lt;div</span> <span class="na">th:insert=</span><span class="s">"~{template/fragment/footer :: copy}"</span><span class="nt">&gt;&lt;/div&gt;</span>
+
+	<span class="nt">&lt;h2&gt;</span>부분 포함 replace<span class="nt">&lt;/h2&gt;</span>
+	<span class="nt">&lt;div</span> <span class="na">th:replace=</span><span class="s">"~{template/fragment/footer :: copy}"</span><span class="nt">&gt;&lt;/div&gt;</span>
+
+	<span class="nt">&lt;h2&gt;</span>부분 포함 단순 표현식<span class="nt">&lt;/h2&gt;</span>
+	<span class="nt">&lt;div</span> <span class="na">th:replace=</span><span class="s">"template/fragment/footer :: copy"</span><span class="nt">&gt;&lt;/div&gt;</span>
+
+<span class="c">&lt;!-------------------------------------------------&gt;</span>
+
+	<span class="nt">&lt;h1&gt;</span>파라미터 사용<span class="nt">&lt;/h1&gt;</span>
+	<span class="nt">&lt;div</span> <span class="na">th:replace=</span><span class="s">"~{template/fragment/footer :: copyParam ('데이터1', '데이터 2')}"</span><span class="nt">&gt;&lt;/div&gt;</span>
+
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<p>상당히 복잡해보이지만, 한번 이해하고 나면 그리 어렵지 않다. 하나씩 살펴보자.</p>
+<p><br><br></p>
+<h2 id="section-4">상세 설명</h2>
+<h3 id="html-2">템플릿 조각으로 사용될 HTML</h3>
+<ul>
+<li><code>&lt;footer th:fragment=&quot;copy&quot;&gt; ... &lt;/footer&gt;</code>
+<ul>
+<li><code>th:fragment=&quot;템플릿_조각_이름&quot;</code> 을 통해, <strong>해당 태그와 하위 태그들이 모두 템플릿 조각으로 사용될 것</strong> 임을 나타낸다. 설정한 템플릿 조각 이름을 통해, 다른 HTML에서 해당 조각을 사용할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<ul>
+<li><code>&lt;footer th:fragment=&quot;copyParam (param1, param2)&quot;&gt; ... &lt;/footer&gt;</code>
+<ul>
+<li><code>th:fragment=&quot;copyParam (param1, param2)&quot;</code> 을 사용하여, <strong>템플릿 조각으로 설정함과 동시에 ‘해당 조각을 사용할 메인HTML’으로부터 변수값을 전달받을 수 있다.</strong></li>
+<li>매개변수는 <code>(param1, param2)</code> 과 같다. 즉, 2개의 매개변수가 존재한다.</li>
+</ul>
+</li>
+</ul>
+<p>계속해서 상세히 알아보자.</p>
+<br>
+<h3 id="html-3">메인 HTML</h3>
+<ul>
+<li><code>&lt;div th:insert=&quot;~{template/fragment/footer :: copy}&quot;&gt;&lt;/div&gt;</code>
+<ul>
+<li>
+<p><code>th:insert=&quot;~{template/fragment/footer :: copy}&quot;</code> 를 통해, <strong>‘템플릿 조각이 존재하는 HTML의 경로’와 ‘전달받은 템플릿 조각의 이름’을 설정한다.</strong></p>
+</li>
+<li>
+<p>즉, <code>th:insert=&quot;~{전달받을_템플릿_경로 :: 템플릿_이름}&quot;</code> 형식으로 이해하면 된다.</p>
+<blockquote>
+<p>참고로, 상대 경로로 설정시 시작 디렉터리는 <code>src\main\resources\templates</code> 이다.</p>
+</blockquote>
+</li>
+<li>
+<p><code>th:insert</code> 는 <strong>본인 태그 내부에 템플릿을 넣을 것임</strong> 을 의미한다.</p>
+</li>
+<li>
+<p>따라서, 메인HTML의 해당부분에 대한 결과는 다음과 같다.</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;div&gt;</span>
+	<span class="nt">&lt;footer&gt;</span>
+		푸터 자리 입니다.
+	<span class="nt">&lt;/footer&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+</li>
+</ul>
+</li>
+</ul>
+<br>
+<ul>
+<li><code>&lt;div th:replace=&quot;~{template/fragment/footer :: copy}&quot;&gt;&lt;/div&gt;</code>
+<ul>
+<li>
+<p><code>th:replace=&quot;~{template/fragment/footer :: copy}&quot;</code> 를 통해, <strong>‘템플릿 조각이 존재하는 HTML의 경로’와 ‘전달받은 템플릿 조각의 이름’을 설정한다.</strong></p>
+</li>
+<li>
+<p><code>th:insert</code> 와 유사해 보이지만, <code>th:replace</code> <strong>는 본인 태그 자체와 템플릿을 교체하는 것이다.</strong></p>
+</li>
+<li>
+<p>따라서, 메인HTML의 해당부분에 대한 결과는 다음과 같다.</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;footer&gt;</span>
+푸터 자리 입니다.
+<span class="nt">&lt;/footer&gt;</span>
+</code></pre></div></div>
+</li>
+</ul>
+</li>
+</ul>
+<br>
+<ul>
+<li><code>&lt;div th:replace=&quot;template/fragment/footer :: copy&quot;&gt;&lt;/div&gt;</code>
+<ul>
+<li><code>~{...}</code> 표현식을 사용하지 않고 단순하게 경로를 표현할 수도 있다.</li>
+<li>하지만, 복잡한 경로일 때는 <code>~{...}</code> 을 사용하는 것이 좋다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<ul>
+<li><code>&lt;div th:replace=&quot;~{template/fragment/footer :: copyParam ('데이터1', '데이터 2')}&quot;&gt;&lt;/div&gt;</code>
+<ul>
+<li>
+<p><code>('데이터1', '데이터 2')</code> 에 주목해보자. 해당 소괄호 안에는 <strong>템플릿 조각에 전달할 데이터</strong> 를 넣는다.</p>
+</li>
+<li>
+<p>이 데이터를 전달받은 템플릿 조각의 상태는 아래와 같다.</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- 기존 템플릿 --&gt;</span>
+<span class="nt">&lt;footer</span> <span class="na">th:fragment=</span><span class="s">"copyParam (param1, param2)"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;p&gt;</span>파라미터 자리 입니다.<span class="nt">&lt;/p&gt;</span>
+	<span class="nt">&lt;p</span> <span class="na">th:text=</span><span class="s">"${param1}"</span><span class="nt">&gt;&lt;/p&gt;</span>
+	<span class="nt">&lt;p</span> <span class="na">th:text=</span><span class="s">"${param2}"</span><span class="nt">&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;/footer&gt;</span>
+<span class="c">&lt;!--------------------------------------------&gt;</span>
+
+<span class="c">&lt;!-- 매개변수로 데이터를 전달받은 템플릿 -------&gt;</span>
+<span class="nt">&lt;footer</span> <span class="na">th:fragment=</span><span class="s">"copyParam (param1, param2)"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;p&gt;</span>파라미터 자리 입니다.<span class="nt">&lt;/p&gt;</span>
+	<span class="nt">&lt;p</span> <span class="na">th:text=</span><span class="s">"'데이터1'"</span><span class="nt">&gt;&lt;/p&gt;</span>
+	<span class="nt">&lt;p</span> <span class="na">th:text=</span><span class="s">"데이터 2"</span><span class="nt">&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;/footer&gt;</span>
+<span class="c">&lt;!---------------------------------------------&gt;</span>
+</code></pre></div></div>
+</li>
+<li>
+<p><code>th:replace</code> 을 통해, 위와 같이 데이터를 넘겨받은 템플릿 조각이 메인HTML의 태그와 교체된다.</p>
+</li>
+<li>
+<p>따라서, 메인HTML의 해당부분에 대한 결과는 다음과 같다.</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;footer&gt;</span>
+	<span class="nt">&lt;p&gt;</span>파라미터 자리 입니다.<span class="nt">&lt;/p&gt;</span>
+	<span class="nt">&lt;p&gt;</span>데이터1<span class="nt">&lt;/p&gt;</span>
+	<span class="nt">&lt;p&gt;</span>데이터2<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/footer&gt;</span>
+</code></pre></div></div>
+</li>
+</ul>
+</li>
+</ul>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/YPER"><img src="/assets/img/Inflearn_Spring_MVC2/logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

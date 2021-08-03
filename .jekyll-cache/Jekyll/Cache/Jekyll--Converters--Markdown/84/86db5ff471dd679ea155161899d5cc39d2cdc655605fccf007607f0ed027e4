@@ -1,0 +1,289 @@
+I"H<p><br/><br/></p>
+<h1 id="springmvc-">SpringMVC 구조</h1>
+<p><img src="/assets/img/2021-07-27-SPRING_MVC_Structure/Untitled.png" alt="SpringMVC" /></p>
+<p><br><br></p>
+<h2 id="dispatcher-servlet">Dispatcher Servlet</h2>
+<ul>
+<li>스프링 MVC는 <strong>프론트 컨트롤러 패턴으로 구현</strong> 되어 있다.</li>
+<li>스프링 MVC의 <strong>프론트 컨트롤러는 디스패쳐 서블릿 (Dispatcher Servlet)</strong> 이다.</li>
+</ul>
+<blockquote>
+<p>프론트 컨트롤러 패턴?<br />
+간단히 이야기하자면, 여러가지 컨트롤러를 클라이언트(고객)이 직접 호출하지 않고, 1개의 대표 컨트롤러를 통해 호출하는 구조이다.<br />
+즉, 대표 컨트롤러가 “실제 비즈니스 로직을 호출하거나 수행하는 컨트롤러”를 호출하고, 클라이언트는 오직 대표 컨트롤러만을 통해 서비스를 받게 되는 것이다. 여기서 대표 컨트롤러가 바로 <strong>프론트 컨트롤러</strong> 이다.</p>
+</blockquote>
+<br>
+<h3 id="dispatcherservlet--">DispatcherServlet 서블릿 등록</h3>
+<ul>
+<li>
+<p>DispacherServlet은 부모 클래스에서 <code>HttpServlet</code> 을 상속 받아서 사용하고, 서블릿으로 동작한다.</p>
+</li>
+<li>
+<p>스프링 부트는 <code>DispatcherServlet</code> 을 서블릿으로 자동으로 등록하면서 <strong>모든 경로 (</strong> <code>urlPatterns=&quot;/&quot;</code> <strong>)</strong> 에 대해서 매핑한다.</p>
+</li>
+</ul>
+<br>
+<h3 id="section">요청 흐름</h3>
+<ul>
+<li>
+<p>서블릿이 호출되면 <code>HttpServlet</code> 이 제공하는 <code>service()</code> 가 호출된다.</p>
+</li>
+<li>
+<p>스프링 MVC는 <code>DispatcherServlet</code> 의 부모인 <code>FrameworkServlet</code> 에서 <code>service()</code> 를 오버라이드 해두었다.</p>
+</li>
+<li>
+<p><code>FrameworkServlet.service()</code> 를 시작으로 여러 메서드가 호출되면서 <code>DispatcherServlet.doDispatch()</code> 가 호출된다.</p>
+</li>
+<li>
+<p><code>DispatcherServlet.doDispatch()</code> 기능</p>
+<ol>
+<li>핸들러 조회</li>
+<li>핸들러 어댑터 조회 - 해당 핸들러를 처리할 수 있는 어댑터</li>
+<li>핸들러 어댑터 실행</li>
+<li>핸들러 어댑터를 통해 핸들러 실행</li>
+<li><code>ModelAndView</code> 반환</li>
+<li>뷰 리졸버를 통해서 찾기</li>
+<li><code>View</code> 반환</li>
+<li>뷰 렌더링</li>
+</ol>
+</li>
+</ul>
+<blockquote>
+<p>핸들러는 컨트롤러와 유사한 의미이다.<br />
+(핸들러의 의미가 좀 더 넓긴하다.)</p>
+</blockquote>
+<p><br><br></p>
+<h2 id="springmvc---">SpringMVC 구조와 동작 순서</h2>
+<p>위의 그림을 다시 보자.</p>
+<p><img src="/assets/img/2021-07-27-SPRING_MVC_Structure/Untitled.png" alt="SpringMVC" /></p>
+<br>
+<h3 id="section-1">핸들러</h3>
+<p>핸들러는 컨트롤러와 유사한 개념으로, 컨트롤러보다는 좀더 포괄적인 개념이다. 본 게시글에서 핸들러는 컨트롤러와 동일하다고 생각해도 문제없다.</p>
+<br>
+<h3 id="section-2">핸들러 어댑터</h3>
+<p>핸들러 어댑터는 핸들러를 일정한 (표준적인) 형태로 사용할 수 있게 해주는 것이다. 만약 핸들러의 return 타입이 String 이라면, <code>dispatcherServlet</code> 이 받을 수 있는 타입인 <code>ModelAndView</code> 로 변환시켜주는 기능을 할 수 있다.</p>
+<br>
+<h3 id="section-3">동작 순서</h3>
+<ol>
+<li><strong>핸들러 조회</strong>
+<ul>
+<li>핸들러 매핑을 통해 요청 URL에 매핑된 핸들러(컨트롤러)를 조회한다.</li>
+</ul>
+</li>
+<li><strong>핸들러 어댑터 조회</strong>
+<ul>
+<li>핸들러를 실행할 수 있는 핸들러 어댑터를 조회한다.</li>
+</ul>
+</li>
+<li><strong>핸들러 어댑터 실행</strong>
+<ul>
+<li>핸들러 어댑터를 실행한다.</li>
+</ul>
+</li>
+<li><strong>핸들러 실행</strong>
+<ul>
+<li>핸들러 어댑터가 실제 핸들러를 실행한다.</li>
+</ul>
+</li>
+<li><code>ModelAndView</code> <strong>반환</strong>
+<ul>
+<li>핸들러 어댑터는 핸들러가 반환하는 정보를 <code>ModelAndView</code> 로 변환해서 반환한다.</li>
+</ul>
+</li>
+<li><strong>viewResolver 호출</strong>
+<ul>
+<li>뷰 리졸버를 찾고 실행한다.</li>
+</ul>
+</li>
+<li><strong>View 반환</strong>
+<ul>
+<li>뷰 리졸버는 뷰의 논리 이름을 물리 이름으로 바꾸고, 렌더링 역할을 담당하는 뷰 객체를 반환한다.</li>
+</ul>
+</li>
+<li><strong>뷰 렌더링</strong>
+<ul>
+<li>뷰를 통해서 뷰를 렌더링한다.</li>
+</ul>
+</li>
+</ol>
+<p><br><br></p>
+<h2 id="section-4">핸들러 매핑과 핸들러 어댑터</h2>
+<p>핸들러 매핑과 핸들러 어댑터가 어떤 것들이 어떻게 사용되는지 예시 코드를 통해 설명하도록 하겠다.</p>
+<h3 id="section-5">초기 스프링 컨트롤러</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.springframework.stereotype.Component</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.servlet.ModelAndView</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.servlet.mvc.Controller</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletRequest</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletResponse</span><span class="o">;</span>
+<p><span class="nd">@Component</span><span class="o">(</span><span class="s">”/springmvc/old-controller”</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">OldController</span> <span class="kd">implements</span> <span class="nc">Controller</span> <span class="o">{</span></p>
+<pre><code>&lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ModelAndView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;handleRequest&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;HttpServletRequest&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;HttpServletResponse&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Exception&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;OldController.handleRequest&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//뷰 사용 X&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li><code>@Component</code>
+<ul>
+<li>이 컨트롤러는 <code>/springmvc/old-controller</code> 라는 이름의 스프링 빈으로 등록되었다.</li>
+</ul>
+</li>
+<li>빈의 이름으로 URL을 매핑할 것이다.</li>
+</ul>
+<p>그렇다면, 이 컨트롤러는 스프링이 어떻게 호출하는 것일까? 지금부터 설명하도록 하겠다.</p>
+<br>
+<h3 id="section-6">컨트롤러 호출 방식</h3>
+<p>위 컨트롤러 ( <code>OldController</code> ) 가 호출되려면 다음 2가지가 필요하다.</p>
+<ul>
+<li><strong>HandlerMapping: 핸들러 매핑</strong>
+<ul>
+<li>핸들러 매핑에서 이 컨트롤러를 찾을 수 있어야 한다.</li>
+</ul>
+</li>
+<li><strong>HandlerAdapter: 핸들러 어댑터</strong>
+<ul>
+<li>핸들러 매핑을 통해서 찾은 핸들러를 실행할 수 있는 핸들러 어댑터가 필요하다.</li>
+</ul>
+</li>
+</ul>
+<p>스프링은 이미 필요한 <strong>핸들러 매핑과 핸들러 어댑터를 대부분 구현</strong> 해두었다. 따라서, 개발자는 <code>OldController</code> 와 같은 핸들러를 만들기만 하면 된다. 즉, 스프링이 자동으로 ‘개발자가 만든 컨트롤러’를 매핑시키고, 적절한 어댑터를 사용한다.</p>
+<p>그렇다면, 스프링이 핸들러 매핑을 하는 기준과 핸들러 어댑터를 찾는 기준은 어떤 것일까. 그것은 아래와 같다.</p>
+<ul>
+<li>
+<p><strong>HandlerMapping</strong></p>
+<p><img src="/assets/img/2021-07-27-SPRING_MVC_Structure/Untitled%201.png" alt="Handler Mapping" /></p>
+<ul>
+<li>위 예시 ( <code>OldController</code> )는 스프링 빈의 이름으로 핸들러를 찾아야 하기 때문에, <code>BeanNameUrlHandlerMapping</code> 이 실행에 성공하게 된다.</li>
+</ul>
+</li>
+<li>
+<p><strong>HandlerAdapter</strong></p>
+<p><img src="/assets/img/2021-07-27-SPRING_MVC_Structure/Untitled%202.png" alt="Handler Adapter" /></p>
+<ul>
+<li>위 예시 ( <code>OldController</code> )는 <code>SimpleControllerHandlerAdapter</code> 가 적용된다. 왜냐하면, <code>Controller</code> 인터페이스를 <code>implements</code> 했기 때문이다.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>가장 앞에 위치한 숫자는 우선순위를 나타낸다.</p>
+</blockquote>
+<br>
+<p>핸들러 매핑도, 핸들러 어댑터도 모두 순서대로 찾고 만약 없으면 다음 순서로 넘어간다. 참고로 우선순위가 가장 높은 <code>RequestMappingHandlerMapping</code> 과 <code>RequestMappingHandlerAdapter</code> 가 실무에서 가장 많이 사용된다. <strong>즉,</strong> <code>@RequestMapping</code> <strong>애너테이션을 이용한 핸들러 매핑과 어댑터를 주로 사용한다.</strong></p>
+<blockquote>
+<p><code>@RequestMapping</code> 은 다음 글에서 자세히 다룬다.</p>
+</blockquote>
+<br>
+<ul>
+<li>동작 순서
+<ol>
+<li><strong>핸들러 매핑으로 핸들러 조회</strong>
+<ol>
+<li><code>HandlerMapping</code> 을 순서대로 실행해서, 핸들러를 찾는다.</li>
+<li><code>OldController</code> 예시의 경우, <code>SimpleControllerHandlerAdapter</code> 가 실행에 성공한다.</li>
+</ol>
+</li>
+<li><strong>핸들러 어댑터 조회</strong>
+<ol>
+<li><code>HandlerAdapter</code> 의 <code>supports()</code> 메서드를 순서대로 호출한다.</li>
+<li><code>OldController</code> 예시의 경우, <code>SimpleControllerHandlerAdapter</code> 가 대상이 된다.</li>
+</ol>
+</li>
+<li><strong>핸들러 어댑터 실행</strong>
+<ol>
+<li>디스패처서블릿이 조회한 <code>HttpRequestHandlerAdapter</code> 를 실행하면서, 핸들러 정보도 함께 넘겨준다.</li>
+<li><code>HttpRequestHandlerAdapter</code> 는 핸들러인 <code>MyHttpRequestHandler</code>를 내부에서 실행하고, 그 결과를 반환한다.</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+<p><br><br></p>
+<h2 id="section-7">뷰 리졸버</h2>
+<p>이번에는 뷰 리졸버에 대해 알아보자.</p>
+<h3 id="section-8">뷰 리졸버?</h3>
+<p>뷰 리졸버는 컨트롤러(핸들러)에게 전달받은 <strong>뷰의 논리적 이름을 물리적 경로로 변환</strong> 시켜준다.</p>
+<p>예를 들어, 컨트롤러가 호출하고자하는 뷰의 물리적 경로가 <code>/dir1/dir2/myView.jsp</code>이고, 컨트롤러가 반환한 뷰의 논리적 이름이 <code>myView</code> 이라고 해보자. 이때 뷰 리졸버는 <code>myView</code> 라는 논리적 이름을 정확한 경로인 <code>/dir1/dir2/myView.jsp</code> 으로 변환해준다. 따라서, 프론트 컨트롤러 ( <code>DispatcherServlet</code> )가 해당 뷰를 렌더링할 수 있게 된다.</p>
+<br>
+<h3 id="view----">초기 스프링 컨트롤러: View 조회할 수 있도록 변경</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.springframework.stereotype.Component</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.servlet.ModelAndView</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.servlet.mvc.Controller</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletRequest</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletResponse</span><span class="o">;</span>
+<p><span class="nd">@Component</span><span class="o">(</span><span class="s">”/springmvc/old-controller”</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">OldController</span> <span class="kd">implements</span> <span class="nc">Controller</span> <span class="o">{</span></p>
+<pre><code>&lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ModelAndView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;handleRequest&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;HttpServletRequest&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;HttpServletResponse&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Exception&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;OldController.handleRequest&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ModelAndView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;new-form&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//ModelAndView 반환을 통해 뷰 호출하도록 유도&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li>해당 코드를 작성한 뒤, 실행해보면 컨트롤러는 정상적으로 호출되지만, Whitelabel Error Page 오류가 발생한다.</li>
+<li>왜냐하면, 뷰 리졸버가 <code>new-form</code> 이라는 논리적 주소를 어떤 물리적 주소로 어떻게 바꿀지 모르기 때문이다.</li>
+</ul>
+<br>
+<h3 id="applicationproperties-----">application.properties 파일: 뷰 리졸버에게 정보 전달</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">spring</span><span class="o">.</span><span class="na">mvc</span><span class="o">.</span><span class="na">view</span><span class="o">.</span><span class="na">prefix</span><span class="o">=/</span><span class="no">WEB</span><span class="o">-</span><span class="no">INF</span><span class="o">/</span><span class="n">views</span><span class="o">/</span>
+<span class="n">spring</span><span class="o">.</span><span class="na">mvc</span><span class="o">.</span><span class="na">view</span><span class="o">.</span><span class="na">suffix</span><span class="o">=.</span><span class="na">jsp</span>
+</code></pre></div></div>
+<ul>
+<li>application.properties 파일에 위 내용을 추가한다.</li>
+<li>스프링 부트가 해당 정보를 사용해서 뷰 리졸버( <code>InternalResourceViewResolver</code> )를 자동으로 등록한다.</li>
+<li>즉, 뷰 리졸버에게 전달할 정보(논리적 주소를 어떻게 물리적 주소로 변환할 것인가)를 application.properties 파일에 작성하면, 스프링이 알아서 뷰 리졸버를 사용한다. (뷰 리졸버가 자체적으로 구현되어 있다.)</li>
+</ul>
+<br>
+<h3 id="section-9">뷰 리졸버 동작 방식</h3>
+<p><img src="/assets/img/2021-07-27-SPRING_MVC_Structure/Untitled.png" alt="MVC" /></p>
+<ul>
+<li>
+<p>뷰 리졸버</p>
+<p><img src="/assets/img/2021-07-27-SPRING_MVC_Structure/Untitled%203.png" alt="뷰 리졸버" /></p>
+</li>
+<li>
+<p>동작 순서</p>
+<ol>
+<li><strong>핸들러 어댑터 호출</strong>
+<ol>
+<li>핸들러 어댑터를 통해 <code>new-form</code> 이라는 논리 뷰 이름을 획득한다.</li>
+</ol>
+</li>
+<li><strong>ViewResolver 호출</strong>
+<ol>
+<li><code>new-form</code> 이라는 뷰 이름으로 viewResolver를 순서대로 호출한다.</li>
+<li><code>BeanNameViewResolver</code> 는 <code>new-form</code> 이라는 이름의 스프링 빈으로 등록된 뷰를 찾아야 하는데 없다.</li>
+<li>따라서, <code>InternalResourceViewResolver</code> 가 호출된다.</li>
+</ol>
+</li>
+<li><strong>InternalResourceViewResolver</strong>
+<ol>
+<li>이 뷰 리졸버는 <code>InternalResourceView</code> 를 반환한다.</li>
+</ol>
+</li>
+<li><strong>뷰 - InternalResourceView</strong>
+<ol>
+<li><code>InternalResourceView</code> 는 JSP처럼 포워드 <code>forward()</code> 를 호출해서 처리할 수 있는 경우에 사용한다.</li>
+</ol>
+</li>
+<li><strong>view.render()</strong>
+<ol>
+<li><code>view.render()</code> 가 호출되고 <code>InternalResourceView</code> 는 <code>forward()</code> 를 사용해서 JSP를 실행한다.</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/RfTn"><img src="/assets/img/Inflearn_Spring_MVC1/Logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

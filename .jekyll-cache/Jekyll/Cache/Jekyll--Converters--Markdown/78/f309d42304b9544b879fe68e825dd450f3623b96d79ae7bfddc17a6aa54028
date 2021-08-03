@@ -1,0 +1,239 @@
+I""H<p><br/><br/></p>
+<h1 id="section">들어가며..</h1>
+<p>스프링의 핵심적인 개념은 바로 <strong>OCP(개방-폐쇄 원칙)</strong> 와 <strong>DIP(의존 역전 원칙)</strong> 그리고 <strong>SRP(단일 책임 원칙)</strong> 이다. 이들은 모두 객체지향 설계 원칙인 SOLID의 일부이다. 해당 원칙들을 지키기 위해 만들어진 것이 바로 스프링 프레임워크이다. 따라서, 스프링을 본격적으로 공부하기 전에 해당 개념들을 정리하고자 한다.</p>
+<p>간단한 회원 도메인을 통해 이러한 개념들을 익힐 수 있도록 한다.</p>
+<p><br><br></p>
+<h1 id="section-1">회원 도메인 설계</h1>
+<h2 id="section-2">도메인 요구사항</h2>
+<ul>
+<li>회원을 가입하고 조회할 수 있다.</li>
+<li>회원은 일반과 VIP 두 가지 등급이 있다.</li>
+<li><strong>회원 데이터는 자체 DB를 구축할 수 있고, 외부 시스템과 연동할 수 있다. (미확정)</strong></li>
+</ul>
+<h2 id="section-3">클래스 다이어그램</h2>
+<p><img src="/assets/img/2021-07-23-SPRING_OCP_DIP/Untitled.png" alt="기본 클래스 다이어그램" /></p>
+<br>
+<ul>
+<li>MemberRepository 인터페이스의 구현체가 총 2개인데, 이들 중 어느것이라도 <strong>SOLID원칙을 지키며 언제든 교체 가능</strong>하도록 해야한다는 것이 핵심이다.</li>
+</ul>
+<br>
+<h2 id="section-4">도메인 개발</h2>
+<h3 id="section-5">회원 등급</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">hello.core.member</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kd">enum</span> <span class="nc">Grade</span> <span class="o">{</span>
+	<span class="no">BASIC</span><span class="o">,</span>
+	<span class="no">VIP</span> 
+<span class="o">}</span>
+</code></pre></div></div>
+<br>
+<h3 id="section-6">회원 엔티티</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">hello.core.member</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="nc">Grade</span> <span class="n">grade</span><span class="o">;</span>
+	<span class="kd">public</span> <span class="nf">Member</span><span class="o">(</span><span class="nc">Long</span> <span class="n">id</span><span class="o">,</span> <span class="nc">String</span> <span class="n">name</span><span class="o">,</span> <span class="nc">Grade</span> <span class="n">grade</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">grade</span> <span class="o">=</span> <span class="n">grade</span><span class="o">;</span>
+	<span class="o">}</span>
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<br>
+<h3 id="section-7">회원 저장소 인터페이스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">hello.core.member</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">MemberRepository</span> <span class="o">{</span>
+	<span class="kt">void</span> <span class="nf">save</span><span class="o">(</span><span class="nc">Member</span> <span class="n">member</span><span class="o">);</span>
+	<span class="nc">Member</span> <span class="nf">findById</span><span class="o">(</span><span class="nc">Long</span> <span class="n">memberId</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<br>
+<h3 id="section-8">메모리 회원 저장소 구현체</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">hello.core.member</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MemoryMemberRepository</span> <span class="kd">implements</span> <span class="nc">MemberRepository</span> <span class="o">{</span> 
+	
+	<span class="kd">private</span> <span class="kd">static</span> <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">Long</span><span class="o">,</span> <span class="nc">Member</span><span class="o">&gt;</span> <span class="n">store</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;&gt;();</span> <span class="nd">@Override</span>
+
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">save</span><span class="o">(</span><span class="nc">Member</span> <span class="n">member</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">store</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">member</span><span class="o">.</span><span class="na">getId</span><span class="o">(),</span> <span class="n">member</span><span class="o">);</span>
+	<span class="o">}</span>
+
+	<span class="nd">@Override</span>
+	<span class="kd">public</span> <span class="nc">Member</span> <span class="nf">findById</span><span class="o">(</span><span class="nc">Long</span> <span class="n">memberId</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="n">store</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">memberId</span><span class="o">);</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<br>
+<h3 id="section-9">회원 서비스 인터페이스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">hello.core.member</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">MemberService</span> <span class="o">{</span>
+	<span class="kt">void</span> <span class="nf">join</span><span class="o">(</span><span class="nc">Member</span> <span class="n">member</span><span class="o">);</span>
+	<span class="nc">Member</span> <span class="nf">findMember</span><span class="o">(</span><span class="nc">Long</span> <span class="n">memberId</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<br>
+<h3 id="section-10">회원 서비스 구현체</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">hello.core.member</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MemberServiceImpl</span> <span class="kd">implements</span> <span class="nc">MemberService</span> <span class="o">{</span>
+	<span class="kd">private</span> <span class="kd">final</span> <span class="nc">MemberRepository</span> <span class="n">memberRepository</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MemoryMemberRepository</span><span class="o">();</span>
+
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">join</span><span class="o">(</span><span class="nc">Member</span> <span class="n">member</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">memberRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">member</span><span class="o">);</span>
+	<span class="o">}</span>
+	
+	<span class="kd">public</span> <span class="nc">Member</span> <span class="nf">findMember</span><span class="o">(</span><span class="nc">Long</span> <span class="n">memberId</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="n">memberRepository</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="n">memberId</span><span class="o">);</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<br>
+<h2 id="section-11">도메인 설계의 문제점</h2>
+<ul>
+<li>
+<p>만약 MemberRepository 인터페이스의 구현체를 바꿔야한다면 OCP를 위배한다.</p>
+<ul>
+<li><code>MemberServiceImpl</code>클래스의 <code>private final MemberRepository memberRepository = new MemoryMemberRepository();</code>를 <code>private final MemberRepository memberRepository = new DbMemberRepository();</code>로 <strong>수정해야하기 때문</strong>이다.</li>
+<li>즉, <code>MemberServiceImpl</code>클래스의 변경이 불가피하므로 OCP를 위배한다.</li>
+</ul>
+</li>
+<li>
+<p>위 설계는 DIP와 SRP 원칙을 위배한다.</p>
+<ul>
+<li><code>MemberRepository</code>인터페이스와 이에 대한 구체화 클래스 <code>MemoryMemberRepository</code> 모두 종속되기 때문이다.
+(<code>private final MemberRepository memberRepository = new MemoryMemberRepository();</code>)</li>
+<li>즉, 인터페이스와 구체화 클래스가 모두 한 클래스 내에서 호출되기에 DIP와 SRP를 위배한다.</li>
+<li>DIP와 SRP를 만족하려면 추상(인터페이스)에만 의존해야한다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<h2 id="section-12">해결방법</h2>
+<h3 id="section-13">관심사 분리</h3>
+<p>기존의 <code>MemberServiceImpl</code>클래스는 “객체 실행”, “객체 생성&amp;연결” 두가지의 역할을 모두 가지고 있었다 ( <code>private final MemberRepository memberRepository = new MemoryMemberRepository();</code> ). 이러한 역할을 다음과 같이 나누어 DIP와 OCP를 지킬 수 있다.</p>
+<ul>
+<li>객체를 실행하는 것에만 집중하는 클래스</li>
+<li>객체를 생성하고 연결하는 것에만 집중하는 클래스</li>
+</ul>
+<p>위와 같이 클래스의 역할을 나누면 아래 클래스다이어그램처럼 변화한다.</p>
+<br>
+<p><img src="/assets/img/2021-07-23-SPRING_OCP_DIP/Untitled%201.png" alt="분할된 클래스 다이어그램" /></p>
+<br>
+<ul>
+<li>MemberServiceImpl 클래스
+<ul>
+<li><strong>객체 실행</strong> 에 집중하는 클래스</li>
+</ul>
+</li>
+<li>AppConfig 클래스
+<ul>
+<li><strong>객체 생성 및 연결</strong> 에 집중하는 클래스</li>
+</ul>
+</li>
+</ul>
+<p>이것을 코드화한다면 다음과 같다.</p>
+<ul>
+<li>
+<p>기존의 MemberServiceImpl 클래스</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//기존의 MemberServiceImpl 클래스</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MemberServiceImpl</span> <span class="kd">implements</span> <span class="nc">MemberService</span> <span class="o">{</span>
+	<span class="kd">private</span> <span class="kd">final</span> <span class="nc">MemberRepository</span> <span class="n">memberRepository</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MemoryMemberRepository</span><span class="o">();</span>
+
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">join</span><span class="o">(</span><span class="nc">Member</span> <span class="n">member</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">memberRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">member</span><span class="o">);</span>
+	<span class="o">}</span>
+	
+	<span class="kd">public</span> <span class="nc">Member</span> <span class="nf">findMember</span><span class="o">(</span><span class="nc">Long</span> <span class="n">memberId</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="n">memberRepository</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="n">memberId</span><span class="o">);</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+  <br>
+</li>
+<li>
+<p>객체 실행에 집중하는 MemberServiceImpl 클래스</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//실행에 집중하는 MemberServiceImpl 클래스</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MemberServiceImpl</span> <span class="kd">implements</span> <span class="nc">MemberService</span> <span class="o">{</span>
+	
+	<span class="c1">//이제 객체를 생성하고 연결하는 역할이 사라졌다.</span>
+	<span class="kd">private</span> <span class="kd">final</span> <span class="nc">MemberRepository</span> <span class="n">memberRepository</span><span class="o">;</span>
+	
+	<span class="c1">//생성자를 통해 MemberRepository 인터페이스의 구현 객체를 외부로부터 주입받는다.</span>
+	<span class="c1">//이것을 생성자 주입이라고 한다.</span>
+	<span class="kd">public</span> <span class="nf">MemberServiceImpl</span><span class="o">(</span><span class="nc">MemberRepository</span> <span class="n">memberRepository</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">memberRepository</span> <span class="o">=</span> <span class="n">memberRepository</span><span class="o">;</span>
+	<span class="o">}</span>
+
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">join</span><span class="o">(</span><span class="nc">Member</span> <span class="n">member</span><span class="o">)</span> <span class="o">{</span>
+		<span class="c1">//기존 코드와 동일</span>
+		<span class="n">memberRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">member</span><span class="o">);</span>
+	<span class="o">}</span>
+
+	<span class="kd">public</span> <span class="nc">Member</span> <span class="nf">findMember</span><span class="o">(</span><span class="nc">Long</span> <span class="n">memberId</span><span class="o">)</span> <span class="o">{</span>
+		<span class="c1">//기존 코드와 동일</span>
+		<span class="k">return</span> <span class="n">memberRepository</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="n">memberId</span><span class="o">);</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>객체 생성 및 연결에 집중하는 AppConfig 클래스</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//객체 생성 및 연결에 집중하는 AppConfig 클래스</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AppConfig</span> <span class="o">{</span>
+
+	<span class="c1">//MemberServiceImpl 객체에 MemberRepository 인터페이스의 구현 객체를 주입해준다.</span>
+	<span class="c1">//이것을 의존성 주입이라고 한다. (DI: Dependency Injection)</span>
+	<span class="kd">public</span> <span class="nc">MemberService</span> <span class="nf">memberService</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="nf">MemberServiceImpl</span><span class="o">(</span><span class="k">new</span> <span class="nc">MemoryMemberRepository</span><span class="o">());</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+<p>이와 같이 설계를 변경하면, <code>MemberServiceImpl</code> 클래스는 <code>MemoryMemberRepository</code> 구체 클래스를 의존하지 않게 된다. 단지, <code>MemberRepository</code> 인터페이스만 의존하게 된다. 따라서, <code>MemberServiceImpl</code> 클래스는 <strong>실행</strong> 에만 집중하면 된다. 어떤 구체 클래스의 객체를 주입할 것인지는 <code>AppConfig</code> 클래스가 담당하게 된다. 즉, <strong>DIP를 만족</strong> 한다.</p>
+<p>또한, <code>MemberRepository</code> 의 구현 객체를 <code>MemoryMemberRepository</code> 가 아닌 <code>DbMemberRepository</code> 로 바꾼다고 했을 때 <code>MemberServiceImpl</code> 클래스를 수정할 필요가 없다. 단지, <code>AppConfig</code> 클래스의 <code>memberService</code> 메서드를 수정하면 된다. 이를 통해 Dependency Injection (의존성 주입) 을 수행한다. 따라서, <strong>OCP를 만족</strong> 한다.</p>
+<h1 id="section-14">정리</h1>
+<ul>
+<li>
+<p><strong>역할과 구현의 분리</strong></p>
+<ul>
+<li>역할: 인터페이스</li>
+<li>구현: 구체 클래스</li>
+<li>단적인 예로, 인터페이스 타입으로 구체화 객체를 담는 것을 말할 수 있다.</li>
+<li>예) <code>private final MemberRepository memberRepository = new MemoryMemberRepository();</code></li>
+</ul>
+</li>
+<li>
+<p><strong>관심사 분리</strong></p>
+<ul>
+<li>한 클래스가 ‘객체생성’, ‘객체연결’, ‘객체실행’ 을 모두 실행하게 된다면, OCP와 DIP 그리고 SRP를 위배하게 된다.</li>
+<li>따라서, 관심사 분리가 필요하다.</li>
+</ul>
+</li>
+<li>
+<p><strong>생성자 주입을 통한 OCP, DIP, SRP 만족</strong></p>
+</li>
+</ul>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/pcN8"><img src="/assets/img/Inflearn_Spring_SpringCore/Logo.png" width="400px" height="250px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

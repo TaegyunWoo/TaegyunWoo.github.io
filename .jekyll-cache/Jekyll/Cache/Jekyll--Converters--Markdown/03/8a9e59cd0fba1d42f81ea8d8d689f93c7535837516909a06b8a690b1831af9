@@ -1,0 +1,162 @@
+I"B#<p><br/><br/></p>
+<h1 id="section">개요</h1>
+<h2 id="section-1">응답 데이터의 종류</h2>
+<ul>
+<li><strong>정적 리소스</strong>
+<ul>
+<li>HTML, CSS, JS</li>
+</ul>
+</li>
+<li><strong>뷰 템플릿 사용</strong>
+<ul>
+<li>동적인 HTML</li>
+</ul>
+</li>
+<li><strong>HTTP 메시지 사용</strong>
+<ul>
+<li>HTTP API를 제공하는 경우, JSON과 같은 형식</li>
+</ul>
+</li>
+</ul>
+<p>서버에서 응답 데이터를 만드는 방법은 위와 같이 크게 3가지가 존재한다. 본 게시글에서는 정적 리소스와 뷰 템플릿으로 응답하는 방법을 살펴본다.</p>
+<p><br><br><br></p>
+<h1 id="section-2">정적 리소스</h1>
+<h2 id="section-3">정적 리소스 디렉터리 종류</h2>
+<ul>
+<li><code>/static</code></li>
+<li><code>/public</code></li>
+<li><code>/resource</code></li>
+<li><code>/META-INF/resources</code></li>
+</ul>
+<p>스프링 부트는 위 4개의 디렉터리에 있는 정적 리소스를 제공한다.</p>
+<p><br><br></p>
+<h2 id="codesrcmainresourcescode-"><code>src/main/resources</code> 디렉터리</h2>
+<p><code>src/main/resources</code> 는 리소스를 보관하는 곳이며, 클래스패스의 시작경로이다. 따라서, 해당 디렉터리에 리소스를 넣어두면 스프링 부트가 정적 리소스로 서비스를 제공한다.</p>
+<br>
+<h3 id="section-4">정적 리소스 경로</h3>
+<p><code>src/main/resources</code> 는 정적 리소스 경로이다. <code>src/main/resources/static/basic/hello-form.html</code> 파일을 웹 브라우저에서 호출하려면 <code>http://localhost:8080/basic/hello-form.html</code> 으로 요청하면 된다.</p>
+<p><br><br><br></p>
+<h1 id="section-5">뷰 템플릿</h1>
+<p>뷰 템플릿을 거쳐서 HTML이 생성되고, 뷰가 응답을 만들어서 전달한다.</p>
+<p><br><br></p>
+<h2 id="codesrcmainresourcestemplatescode-"><code>src/main/resources/templates</code> 디렉터리</h2>
+<p><code>src/main/resources/templates</code> 는 뷰 템플릿 파일을 저장하는 디렉터리이다. 뷰 템플릿을 호출해서 응답하는 방법을 설명하도록 하겠다.</p>
+<p><br><br></p>
+<h2 id="section-6">뷰 템플릿 호출</h2>
+<h3 id="section-7">뷰 템플릿 생성</h3>
+<p><code>src/main/resources/templates/response/hello.html</code> 파일</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">xmlns:th=</span><span class="s">"http://www.thymeleaf.org"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+	<span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"UTF-8"</span><span class="nt">&gt;</span> <span class="nt">&lt;title&gt;</span>Title<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+	<span class="nt">&lt;p</span> <span class="na">th:text=</span><span class="s">"${data}"</span><span class="nt">&gt;</span>empty<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<ul>
+<li>
+<p><code>th:text=&quot;${data}&quot;</code></p>
+<ul>
+<li>해당 태그 (p 태그)의 text 부분을 data라는 바인딩 된 애트리뷰트의 값으로 치환한다.</li>
+</ul>
+<blockquote>
+<p>뷰템플릿에 대한 자세한 설명은 따로 정리하도록 하겠다.</p>
+</blockquote>
+</li>
+</ul>
+<br>
+<h3 id="section-8">뷰 템플릿을 호출하는 컨트롤러</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.springframework.stereotype.Controller</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.ui.Model</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.RequestMapping</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.servlet.ModelAndView</span><span class="o">;</span>
+
+<span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ResponseViewController</span> <span class="o">{</span>
+
+	<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/response-view-v1"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">ModelAndView</span> <span class="nf">responseViewV1</span><span class="o">()</span> <span class="o">{</span>
+		<span class="nc">ModelAndView</span> <span class="n">mav</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ModelAndView</span><span class="o">(</span><span class="s">"response/hello"</span><span class="o">).</span><span class="na">addObject</span><span class="o">(</span><span class="s">"data"</span><span class="o">,</span> <span class="s">"hello!"</span><span class="o">);</span>
+		<span class="k">return</span> <span class="n">mav</span><span class="o">;</span>
+	<span class="o">}</span>
+
+	<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/response-view-v2"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">String</span> <span class="nf">responseViewV2</span><span class="o">(</span><span class="nc">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"data"</span><span class="o">,</span> <span class="s">"hello!!"</span><span class="o">);</span>
+		<span class="k">return</span> <span class="s">"response/hello"</span><span class="o">;</span>
+	<span class="o">}</span>
+
+	<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/response/hello"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">responseViewV3</span><span class="o">(</span><span class="nc">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"data"</span><span class="o">,</span> <span class="s">"hello!!"</span><span class="o">);</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li><code>responseViewV1</code> 메서드
+<ul>
+<li><code>ModelAndView(&quot;response/hello&quot;)</code>
+<ul>
+<li>뷰의 논리 이름인 <code>&quot;response/hello&quot;</code> 를 넘겨준다.</li>
+</ul>
+</li>
+<li><code>addObject(&quot;data&quot;, &quot;hello!&quot;)</code>
+<ul>
+<li>뷰로 설정될 파일에 <code>data=hello!</code> 를 바인딩한다.</li>
+</ul>
+</li>
+<li><code>return mav;</code>
+<ul>
+<li>ModelAndView 객체를 통해 뷰를 호출할 수 있도록 한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br>
+<ul>
+<li><code>responseViewV2</code> 메서드
+<ul>
+<li><code>model.addAttribute(&quot;data&quot;, &quot;hello!!&quot;)</code>
+<ul>
+<li><code>data=hello!</code> 를 바인딩한다.</li>
+</ul>
+</li>
+<li><code>return &quot;response/hello&quot;;</code>
+<ul>
+<li>뷰의 논리이름인 <code>&quot;response/hello&quot;</code> 를 스프링에게 전달하여 뷰를 호출할 수 있도록 한다.</li>
+<li>참고로, 뷰 리졸버를 통해 실제 물리 경로로 변환된다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br>
+<ul>
+<li><code>responseViewV3</code>
+<ul>
+<li>리턴 값이 없고, <code>@Controller</code> 를 사용하고, HTTP 메시지 바디를 처리하는 파라미터가 없다.
+<ul>
+<li>따라서, <code>@RequestMapping(&quot;/response/hello&quot;)</code> 의 url인 <code>/response/hello</code> 를 논리 경로로 하는 뷰를 호출한다.</li>
+</ul>
+</li>
+<li>비추천 방식이다.</li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="section-9">뷰의 논리이름을 실제 물리 경로로 변환하기</h3>
+<p>메서드의 리턴 타입이 String 라면, <strong>반환된 문자열을 뷰의 논리이름으로 설정</strong> 한다는 것이다. 그렇다면 뷰 리졸버는 이것을 어떻게 물리 경로로 변환하는 것일까?</p>
+<p><strong>뷰 리졸버는</strong> <code>application.properties</code> <strong>파일에 설정되어있는 값을 토대로 물리 경로로 변환</strong> 한다. 그리고 <strong>스프링에 설정되어 있는 기본 값이 바로</strong> <code>templates/논리이름.html</code> <strong>이다.</strong> 따라서, 자동적으로 변환할 수 있는 것이다.</p>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/RfTn"><img src="/assets/img/Inflearn_Spring_MVC1/Logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET
