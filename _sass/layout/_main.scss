@@ -1,5 +1,13 @@
+@font-face {
+    font-family: 'RIDIBatang';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 #l-main {
     article {
+        font-family: RIDIBatang;
         background: white;
         padding-right: 3rem;
         margin-top: 5rem;
@@ -34,7 +42,7 @@
 
         .title {
             font: normal bold 4rem Georgia, serif;
-            font-family: 微软雅黑, Helvetica;
+            font-family: RIDIBatang, Helvetica;
             margin-bottom: 0.4rem;
             /*text-shadow: 2px 3px 0px #C1C1C1;*/
 
@@ -49,7 +57,7 @@
 
         .excerpt {
             font-size: 2rem;
-            font-family: 微软雅黑, Helvetica;
+            font-family: RIDIBatang, Helvetica;
             letter-spacing: 0.2px;
             text-align: justify;
         }
@@ -227,7 +235,7 @@ ul.tags {
 }
 
 #post-meta {
-    font-style: italic;
+    // font-style: italic;
 }
 
 #group-list {
