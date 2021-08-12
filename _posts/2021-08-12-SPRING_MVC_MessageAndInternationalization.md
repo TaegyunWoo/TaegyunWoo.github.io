@@ -89,7 +89,7 @@ public MessageSource messageSource() {
 - 따라서, 메시지 소스에 대한 세부 설정은 `application.properties` 에 작성하면 된다.
 - 스프링 부트에서 `MessageSource` 를 스프링 빈으로 따로 등록하지 않고, 스프링 부트와 관련된 별도의 설정 ( `application.properties` 파일에 설정 )을 하지 않으면, **`messages` 라는 이름이 기본적으로 등록된다.**
 
-```java
+```html
 #application.properties 파일
 
 spring.messages.basename=myMessages
@@ -108,7 +108,7 @@ spring.messages.basename=myMessages
 
 ### `messages.properties` 메시지 파일
 
-```java
+```html
 hello=안녕
 hello.name=안녕 {0}
 ```
@@ -121,7 +121,7 @@ hello.name=안녕 {0}
 
 ### `messages_en.properties` 메시지 파일
 
-```java
+```html
 hello=hi
 hello.name=hi {0}
 ```
