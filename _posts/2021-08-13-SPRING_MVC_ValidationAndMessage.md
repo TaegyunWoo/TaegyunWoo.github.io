@@ -169,7 +169,6 @@ public String validationWithRejectValue(@ModelAttribute("item") Item item, Bindi
 
     //검증 성공시 로직...
 
-    return "index.html";
 }
 ```
 
