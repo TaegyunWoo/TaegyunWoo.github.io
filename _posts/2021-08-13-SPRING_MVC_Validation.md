@@ -438,7 +438,7 @@ public String validationWithWrongValue(@ModelAttribute Item item, BindingResult 
 
 ### 스프링의 바인딩 오류 처리
 
-- **타입 오류와 같이 바인딩에 실패하는 상황시, 스프링은 자동으로 `FieldError` 객체를 생성하고 사용자가 입력한 값을 넣어둔다.**
+- **타입 오류와 같이 바인딩에 실패하는 상황시, 스프링은 자동으로 `FieldError` 객체를 생성하고 사용자가 입력한 값을 `rejectedValue`에 넣어둔다.**
 - **그리고 해당 `FieldError` 객체를 `BindingResult` 에 담아서 컨트롤러(메서드)를 호출한다.**
 - 따라서, 타입 오류가 발생하여 바인딩에 실패하더라도, 오류를 정상적으로 해결할 수 있다.
 
