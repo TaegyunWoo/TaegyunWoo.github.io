@@ -1,5 +1,19 @@
 ---
 ---
+
+@font-face {
+    font-family: 'RIDIBatang';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'D2Coding';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_three@1.0/D2Coding.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 *{margin:0;padding:0;}
 #markdown-container{
     margin:5rem auto 2.5rem auto;
@@ -8,15 +22,16 @@
     box-shadow:0 0 10px #999;
     padding:2em;
     line-height:1.4em;
-    font:16px helvetica,arial,freesans,clean,sans-serif;
+    font:16px RIDIBatang,helvetica,arial,freesans,clean,sans-serif;
     color:black;
 }
 #markdown-container table{
-    font:13.34px helvetica,arial,freesans,clean,sans-serif;
+    font:13.34px RIDIBatang,helvetica,arial,freesans,clean,sans-serif;
     color:black;
 }
 #markdown-container p {
     margin:1em 0;
+    font-family: RIDIBatang;
     line-height:1.5em;
 }
 
@@ -37,11 +52,13 @@
     border: 1px solid #ddd;
     padding: 1px;
     margin: 0;
+    font-family: D2Coding;
     background-color: rgba(0,0,0,0.08);
     border-radius: 3px;
 }
 #markdown-container pre code {
     background-color: transparent;
+    font-family: D2Coding;
     font-size: 100%;
 }
 #markdown-container h2,h3{margin:1em 0;}

@@ -3,6 +3,13 @@
  * Header style
  * ----------------------------------------------------------------------------------------
  */
+ @font-face {
+    font-family: 'RIDIBatang';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 #l-header {
     background-color: rgb(28, 51, 64);
     color: white;
@@ -16,7 +23,7 @@
     }
 
     p {
-        font: normal bold 3rem/1.5rem "verdana",sans-serif;
+        font: normal bold 3rem/1.5rem RIDIBatang,"verdana",sans-serif;
         margin-top: 3.5rem;
         margin-right: -1.8rem;
         text-align: right;
@@ -46,6 +53,7 @@
         // height: 5rem;
         float: left;
         text-align: center;
+        font-family: RIDIBatang;
         font-size: 2rem;
         line-height: 5rem;
         border-right: 1px solid #e0e0e0;
