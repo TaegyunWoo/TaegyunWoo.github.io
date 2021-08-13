@@ -1,7 +1,7 @@
 ---
 category: Spring-MVC
 tags: [스프링, MVC, 검증]
-title: "[스프링 - MVC] 검증-기초"
+title: "[스프링 - MVC] 검증 - 기초"
 date:   2021-08-13 16:00:00 
 lastmod : 2021-08-13 16:00:00
 sitemap :
