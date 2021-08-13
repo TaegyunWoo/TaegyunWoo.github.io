@@ -132,7 +132,10 @@ sitemap :
     			String itemName = item.getItemName();
     			int itemQuantity = item.getItemQuantity();
 
-    			return itemName.equals("Apple") && itemQuantity>5;
+                if (!itemName.equals("Apple")) {
+                    return true;
+                }
+    			return itemQuantity>5;
     		}
     }
     ```
