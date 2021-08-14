@@ -335,3 +335,14 @@ public class ProductController {
 
 - 필드에러 처리: BeanValidation
 - 오브젝트에러 처리: 컨트롤러
+
+<br>
+
+---
+
+<br>
+
+<a href="https://inf.run/YPER"><img src="/assets/img/Inflearn_Spring_MVC2/logo.png" width="400px" height="300px"></a>
+
+- *본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.*
+- *더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.*
