@@ -299,11 +299,11 @@ public class ItemController {
 
 <br/><br/>
 
-## `WebDataBinder` 와 `@Validator`
+## `WebDataBinder` 와 `@Validated`
 
 위에서 설명한 방법으로 검증기를 충분히 분리할 수 있지만, 좀 더 편리한 방법이 있다.
 
-`WebDataBinder` 와 `@Validator` 를 활용하면 된다.
+`WebDataBinder` 와 `@Validated` 를 활용하면 된다.
 
 <br/>
 
@@ -314,7 +314,7 @@ public class ItemController {
 
 <br/>
 
-### `@Validator`
+### `@Validated`
 
 - `WebDataBinder` 에 등록한 검증기를 편리하게 사용할 수 있게 해주는 애너테이션이다.
 - `ItemValidator` 와 같은 검증기를 직접 호출하지 않고, 사용할 수 있게 해준다.
@@ -322,7 +322,7 @@ public class ItemController {
 
 <br/>
 
-### `WebDataBinder` 와 `@Validator` 를 적용한 컨트롤러
+### `WebDataBinder` 와 `@Validated` 를 적용한 컨트롤러
 
 ```java
 package prac.myPrac.controller;
@@ -354,10 +354,10 @@ public class ItemController {
     }
 
 		/**
-		 * 매개변수에 @Validator가 추가되었다.
+		 * 매개변수에 @Validated가 추가되었다.
 		 */
     @PostMapping("/item")
-    public String validationWithRejectValue(@Validator @ModelAttribute("item") Item item, BindingResult bindingResult) {
+    public String validationWithRejectValue(@Validated @ModelAttribute("item") Item item, BindingResult bindingResult) {
 
         //검증 실패시
         if (bindingResult.hasErrors()) {
