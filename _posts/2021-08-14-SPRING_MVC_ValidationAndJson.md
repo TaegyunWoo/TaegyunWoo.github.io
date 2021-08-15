@@ -12,11 +12,11 @@ sitemap :
 <br/><br/>
 
 - 이전 게시글
-  - [검증 - 기초](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_Validation)
-  - [검증 - 오류코드와 메시지처리](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ValidationAndMessage)
-  - [검증 - 검증 로직과 컨트롤러 분리](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ValidationAndController)
-  - [검증 - Bean Validation](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_BeanValidation)
-  - [검증 - Form 전송 객체의 분리](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_FormAndValidation)
+  1. [검증 - 기초](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_Validation)
+  2. [검증 - 오류코드와 메시지처리](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ValidationAndMessage)
+  3. [검증 - 검증 로직과 컨트롤러 분리](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ValidationAndController)
+  4. [검증 - Bean Validation](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_BeanValidation)
+  5. [검증 - Form 전송 객체의 분리](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_FormAndValidation)
 
 <br/><br/>
 

@@ -12,7 +12,7 @@ sitemap :
 <br/><br/>
 
 - 이전 게시글
-  - [검증 - 기초](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_Validation)
+  1. [검증 - 기초](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_Validation)
 
 <br/><br/>
 

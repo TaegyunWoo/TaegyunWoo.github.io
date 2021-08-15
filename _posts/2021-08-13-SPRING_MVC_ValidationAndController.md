@@ -12,8 +12,8 @@ sitemap :
 <br/><br/>
 
 - 이전 게시글
-  - [검증 - 기초](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_Validation)
-  - [검증 - 오류코드와 메시지처리](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ValidationAndMessage)
+  1. [검증 - 기초](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_Validation)
+  2. [검증 - 오류코드와 메시지처리](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ValidationAndMessage)
 
 <br/><br/>
 
