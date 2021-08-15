@@ -1,6 +1,6 @@
 ---
 category: Spring-MVC
-tags: [스프링, MVC, 검증]
+tags: [스프링, MVC, 로그인]
 title: "[스프링 - MVC] 로그인처리 - 기본 프로젝트 설정"
 date:   2021-08-15 13:30:00 
 lastmod : 2021-08-15 13:30:00
