@@ -11,7 +11,8 @@ sitemap :
 
 <br/><br/>
 
-- 이전 게시글: [로그인처리 - 기본 프로젝트 설정](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_LoginBasicProject)
+- 이전 게시글
+  - [로그인처리 - 기본 프로젝트 설정](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_LoginBasicProject)
 
 <br/><br/>
 
