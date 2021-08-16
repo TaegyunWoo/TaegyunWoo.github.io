@@ -14,7 +14,7 @@ sitemap :
 - 이전 게시글
     1. [예외처리 - 서블릿 예외 처리](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionServlet)
     2. [예외처리 - 스프링 오류 페이지](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionSpring)
-    3. [예외처리 - BasicErrorController](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionAPIAndBasicController)
+    3. [예외처리 - API 예외처리와 BasicErrorController](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionAPIAndBasicController)
 
 <br/><br/>
 
