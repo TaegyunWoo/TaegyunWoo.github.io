@@ -31,7 +31,7 @@ sitemap :
 - 기본 오류 페이지 경로: `templates/error` , `static/error`
     - 상태코드와 예외를 설정하지 않으면 기본 오류 페이지로 사용된다.
     - **서블릿 밖으로 예외가 발생하거나, `response.sendError()` 가 호출되면 모든 오류는 `/error` 를 호출하게 된다.**
-- `BasicErrorController` 라는 스프링 컨트롤러를 자동으로 등록한다.
+- **`BasicErrorController` 라는 스프링 컨트롤러를 자동으로 등록한다.**
     - `ErrorPage` 에서 등록한 `/error` 를 매핑해서 처리하는 컨트롤러이다.
 - **따라서 개발자는 오류 페이지만 등록하면 된다.**
 
