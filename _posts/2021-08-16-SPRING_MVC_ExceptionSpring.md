@@ -1,6 +1,6 @@
 ---
 category: Spring-MVC
-tags: [스프링, MVC, 로그인]
+tags: [스프링, MVC, 예외처리]
 title: "[스프링 - MVC] 예외처리 - 스프링 오류 페이지"
 date:   2021-08-16 17:00:00 
 lastmod : 2021-08-16 17:00:00

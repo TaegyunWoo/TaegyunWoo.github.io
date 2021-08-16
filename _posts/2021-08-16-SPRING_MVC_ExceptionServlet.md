@@ -1,6 +1,6 @@
 ---
 category: Spring-MVC
-tags: [스프링, MVC, 로그인]
+tags: [스프링, MVC, 예외처리]
 title: "[스프링 - MVC] 예외처리 - 서블릿 예외 처리"
 date:   2021-08-16 16:30:00 
 lastmod : 2021-08-16 16:30:00
