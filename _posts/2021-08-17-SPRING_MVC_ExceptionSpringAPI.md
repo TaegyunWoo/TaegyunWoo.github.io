@@ -17,6 +17,8 @@ sitemap :
     3. [예외처리 - BasicErrorController](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionAPIAndBasicController)
     4. [예외처리 - API 예외처리와 HandlerExceptionResolver](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionAPIAndHandlerExceptionResolver)
 
+<br/><br/>
+
 # 스프링의 HandlerExceptionResolver
 
 ## 개요
