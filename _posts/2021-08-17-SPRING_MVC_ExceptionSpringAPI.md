@@ -1,7 +1,7 @@
 ---
 category: Spring-MVC
 tags: [스프링, MVC, 예외처리]
-title: "[스프링 - MVC] 예외처리 - ExceptionHandlerExceptionResolver"
+title: "[스프링 - MVC] 예외처리 - API 예외처리와 ExceptionHandlerExceptionResolver"
 date:   2021-08-17 14:00:00 
 lastmod : 2021-08-17 14:00:00
 sitemap :
