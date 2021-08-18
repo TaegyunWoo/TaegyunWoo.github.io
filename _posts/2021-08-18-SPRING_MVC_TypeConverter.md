@@ -281,7 +281,7 @@ public class ConversionController {
 
 ## 뷰 템플릿에 컨버터 적용
 
-- 타임리프에서 `$\{\{..\}\}` 을 사용하면, 컨버터를 사용할 수 있다.
+- 타임리프에서 `${ {...} }` 을 사용하면, 컨버터를 사용할 수 있다.
 - 예시 코드로 알아보자.
 
 <br/>
@@ -315,8 +315,8 @@ public class ConversionController {
     <title>Title</title>
 </head>
 <body>
-		<!-- $\{\{...\}\} 문법 적용 -->
-    <p th:text="$\{\{ipPort\}\}">ipPort</p>
+		<!-- ${ {...} } 문법 적용 -->
+    <p th:text="${ {ipPort} }">ipPort</p>
 </body>
 </html>
 ```
