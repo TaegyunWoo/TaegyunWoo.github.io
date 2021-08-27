@@ -1,5 +1,7 @@
 ---
 title: "프로젝트 계획서"
+date:   2021-08-27 12:30:00
+lastmod : 2021-08-27 12:30:00
 sitemap :
   changefreq : daily
   priority : 1.0
@@ -50,15 +52,15 @@ sitemap :
 
 ### 인프라 구성도
 
-![Untitled](/_CRUD_Web/img/Untitled.png)
+![Untitled](/assets/img/Series-CRUD_Web/Untitled.png)
 
 ### SW 구성도
 
-![Untitled](/_CRUD_Web/img/Untitled%201.png)
+![Untitled](/assets/img/Series-CRUD_Web/Untitled%201.png)
 
 ### 적용 기술
 
-![Untitled](/_CRUD_Web/img/Untitled%203.png)
+![Untitled](/assets/img/Series-CRUD_Web/Untitled%203.png)
 
 <br/><br/>
 
@@ -73,7 +75,7 @@ sitemap :
 
 ## 시스템 WorkFlow
 
-![Untitled](/_CRUD_Web/img/Untitled%202.png)
+![Untitled](/assets/img/Series-CRUD_Web/Untitled%202.png)
 
 <br/>
 
