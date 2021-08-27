@@ -1,3 +1,12 @@
+---
+title: "프로젝트 계획서"
+sitemap :
+  changefreq : daily
+  priority : 1.0
+---
+
+<br/><br/>
+
 # 학습 개요
 
 ## 학습 목표
