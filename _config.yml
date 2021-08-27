@@ -36,9 +36,7 @@ google_analytics:
   id: "G-9MJ75JCT4K" # Required if you use google analytics. Replace with your tracking id here
 
 collections: # Define post series here
-  demo_series:
-    output: true
-  demo_series_2:
+  Basic_CRUD_Web:
     output: true
 
 defaults:
