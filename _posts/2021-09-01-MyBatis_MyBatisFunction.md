@@ -49,8 +49,11 @@ sitemap :
 - 사용 예시
 
     ```java
+
     @Insert("INSERT INTO user(email, name, password) VALUES (#{user.email}, #{user.name}, #{user.password})")
     int insert(@Param("user") User user);
+
+
     ```
 
 <br/>
@@ -72,6 +75,8 @@ sitemap :
 - 사용 예시
 
     ```java
+
+
     //-----------조건 없이 SELECT-------------
     @Select("SELECT * FROM user")
     @Results(id="myResultId", value = {
@@ -86,6 +91,8 @@ sitemap :
     @Select("SELECT * FROM user WHERE dbid=#{id}")
     @ResultMap("myResultId") //매핑정보 재활용
     User getById(@Param("id") Long id);
+
+
     ```
 
 <br/>
@@ -98,8 +105,12 @@ sitemap :
 - 사용 예시
 
     ```java
+
+
     @Update("update user set name=#{user.name}, password=#{user.password} where dbid=#{user.dbid}")
     int updateById(@Param("user") User user);
+
+
     ```
 
 <br/>
@@ -112,8 +123,12 @@ sitemap :
 - 사용 예시
 
     ```java
+
+
     @Delete("delete from membertab where dbid=#{dbid}")
     int deleteById(@Param("dbid") Long id);
+
+
     ```
 
 <br/>
@@ -125,9 +140,13 @@ sitemap :
     - 사용 예시
 
         ```java
+
+
         @Insert("INSERT INTO user(email, name, password) VALUES (#{user.email}, #{user.name}, #{user.password})")
         @Options(useGeneratedKeys = true, keyProperty = "dbid") //SQL이 생성한 KEY 값을 매핑된 객체의 dbid 필드에도 담아주겠다.
         int insert(@Param("user") User user);
+
+        
         ```
 
 <br/>
