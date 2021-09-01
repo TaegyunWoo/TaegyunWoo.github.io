@@ -49,7 +49,7 @@ sitemap :
 
 ### MyBatis-Spring 구조
 
-![MyBatis-Spring 구조](/assets/img/2021-09-01-MyBatis_MyBatisStructure/Untitled%203.png)
+![MyBatis-Spring 구조](/assets/img/2021-09-01-MyBatis_MyBatisStructure/Untitled%202.png)
 
 - **`SqlSessionFactoryBean`**
     - 개발자가 직접 Spring Bean으로 등록해야한다.
