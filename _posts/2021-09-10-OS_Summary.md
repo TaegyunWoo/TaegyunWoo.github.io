@@ -2,8 +2,8 @@
 category: OS
 tags: [OS, 개요]
 title: "[OS] 운영체제 개요"
-date:   2021-07-31 13:30:00 
-lastmod : 2021-07-31 13:30:00
+date:   2021-09-10 15:30:00 
+lastmod : 2021-09-10 15:30:00
 sitemap :
   changefreq : daily
   priority : 1.0
