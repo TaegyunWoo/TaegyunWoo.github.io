@@ -1,0 +1,40 @@
+I"�<p><br/><br/></p>
+<ul>
+<li>문제 발생 개발기록
+<ul>
+<li><a href="https://taegyunwoo.github.io/CRUD_Web/2021-08-29">CRUD Web 개발일지: 2021-08-29</a></li>
+</ul>
+</li>
+</ul>
+<br/>
+<h1 id="section">문제 배경</h1>
+<ul>
+<li>DB 설정 관련 내용을 <code>application.properties</code> 가 아닌, 다른 파일에 작성하고 싶다.</li>
+<li>DB 관련 설정은 보안에 민감한 사항이기 때문에, 관련 내용을 다른 파일로 관리하고 해당 파일이 푸쉬되지 않도록 <code>.gitignore</code> 에 등록하고 싶다.</li>
+<li><strong>따라서, <code>application-testdb.properties</code> 라는 파일을 새로 생성하여 작성했으나, 해당 파일이 적용되지 않았다.</strong></li>
+</ul>
+<p><br><br></p>
+<h1 id="section-1">문제 해결 탐색과정</h1>
+<ul>
+<li>이전 강의에서 다뤘었던 주제로 기억하여, 이전 강의자료를 찾아보았다.</li>
+<li>추가적으로 구글링을 통해 원인을 조사하고 문제를 해결하였다.</li>
+</ul>
+<p><br><br></p>
+<h1 id="section-2">문제 해결</h1>
+<h2 id="section-3">문제 원인</h2>
+<ul>
+<li><strong><code>application.properties</code> 에 분리된 <code>properties</code> 파일을 알려주어야한다.</strong></li>
+<li>필자가 과거에 관련 내용을 공부할 때, 단순히 <code>application-{설정이름}.properties</code> 라는 이름 형식을 갖는 파일을 스프링부트가 자동으로 등록한다고 기억했다.</li>
+<li>하지만 그것 뿐만 아니라, <code>application.properties</code> 에 해당 설정파일을 알려주어야 한다.</li>
+</ul>
+<p><br><br></p>
+<h2 id="section-4">해결방법</h2>
+<ol>
+<li><code>src/main/resources</code> 경로에 <code>application-임의이름.properties</code> 파일을 생성한다.</li>
+<li><code>application-임의이름.properties</code> 파일에 원하는 설정 내용을 작성한다.</li>
+<li><code>application.properties</code> 파일에 아래 내용을 작성한다.
+<div class="language-properties highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">spring.profiles.active</span><span class="p">=</span><span class="s">임의이름</span>
+</code></pre></div></div>
+</li>
+</ol>
+:ET

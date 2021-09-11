@@ -1,0 +1,128 @@
+I"+<p><br/><br/></p>
+<ul>
+<li>이전 게시글
+<ol>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionServlet">예외처리 - 서블릿 예외 처리</a></li>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionSpring">예외처리 - 스프링 오류 페이지</a></li>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionAPIAndBasicController">예외처리 - API 예외처리와 BasicErrorController</a></li>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionAPIAndHandlerExceptionResolver">예외처리 - API 예외처리와 HandlerExceptionResolver</a></li>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionSpringAPI">예외처리 - API 예외처리와 ExceptionHandlerExceptionResolver</a></li>
+</ol>
+</li>
+</ul>
+<p><br/><br/></p>
+<h1 id="controlleradvice">@ControllerAdvice</h1>
+<h2 id="section">개요</h2>
+<ul>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionSpringAPI#10">이전 글</a>에서 ExceptionHandlerExceptionResolver 를 활용해서 API 예외처리를 하는 방법에 대해 알아보았다.</li>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionSpringAPI#14">해당 글에서 작성한 컨트롤러</a> ( <code>ExceptionHandlerController</code> 클래스 )의 문제점은 <strong>정상코드와 예외처리 코드가 하나의 컨트롤러에 섞여있다는 것이다.</strong></li>
+<li>따라서, 정상코드와 예외처리코드를 분리해보자.</li>
+</ul>
+<br/>
+<h3 id="section-1">목표</h3>
+<ul>
+<li>정상로직를 수행하는 컨트롤러와 예외처리 컨트롤러를 분리한다.</li>
+</ul>
+<br/>
+<h2 id="section-2">예시 코드</h2>
+<blockquote>
+<p><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionSpringAPI#12">이전에 작성한 코드</a>를 그대로 사용하여 분리한다.</p>
+</blockquote>
+<br/>
+<h3 id="codeexcontrolleradvicecode-">예외 처리 코드: <code>ExControllerAdvice</code> 클래스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">example.exception</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.springframework.http.HttpStatus</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.http.ResponseEntity</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.*</span><span class="o">;</span>
+
+<span class="nd">@RestControllerAdvice</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExControllerAdvice</span> <span class="o">{</span>
+
+  <span class="nd">@ResponseStatus</span><span class="o">(</span><span class="nc">HttpStatus</span><span class="o">.</span><span class="na">BAD_REQUEST</span><span class="o">)</span>
+  <span class="nd">@ExceptionHandler</span><span class="o">(</span><span class="nc">IllegalArgumentException</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="nc">ErrorItem</span> <span class="nf">illegalExHandle</span><span class="o">(</span><span class="nc">IllegalArgumentException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">ErrorItem</span><span class="o">(</span><span class="s">"BAD"</span><span class="o">,</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+  <span class="o">}</span>
+
+  <span class="nd">@ExceptionHandler</span><span class="o">(</span><span class="nc">MyException</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="nc">ResponseEntity</span><span class="o">&lt;</span><span class="nc">ErrorItem</span><span class="o">&gt;</span> <span class="nf">myExHandler</span><span class="o">(</span><span class="nc">MyException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nc">ErrorItem</span> <span class="n">errorItem</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ErrorItem</span><span class="o">(</span><span class="s">"MY-EX"</span><span class="o">,</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nc">ResponseEntity</span><span class="o">&lt;&gt;(</span><span class="n">errorItem</span><span class="o">,</span> <span class="nc">HttpStatus</span><span class="o">.</span><span class="na">BAD_REQUEST</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="nd">@ResponseStatus</span><span class="o">(</span><span class="nc">HttpStatus</span><span class="o">.</span><span class="na">INTERNAL_SERVER_ERROR</span><span class="o">)</span>
+  <span class="nd">@ExceptionHandler</span>
+  <span class="kd">public</span> <span class="nc">ErrorItem</span> <span class="nf">runtimeExHandle</span><span class="o">(</span><span class="nc">RuntimeException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">ErrorItem</span><span class="o">(</span><span class="s">"EX"</span><span class="o">,</span> <span class="s">"내부오류"</span><span class="o">);</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li><code>@RestControllerAdvice</code>
+<ul>
+<li>해당 애너테이션을 활용하여 예외처리 전용 클래스를 작성하였다.</li>
+<li>요청 및 결과는 이전 게시글의 내용과 동일하게 작동한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="codeexceptionhandlercontrollercode-">예외 발생 컨트롤러: <code>ExceptionHandlerController</code> 클래스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">example.exception</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">...</span>
+
+<span class="nd">@RestController</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExceptionHandlerController</span> <span class="o">{</span>
+
+    <span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/ex/{exName}"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">throwExceptions</span><span class="o">(</span><span class="nd">@PathVariable</span> <span class="nc">String</span> <span class="n">exName</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">exName</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">"illegal"</span><span class="o">))</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">IllegalArgumentException</span><span class="o">(</span><span class="s">"IllegalArgument 예외!"</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">exName</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">"my"</span><span class="o">))</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">MyException</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">exName</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">"runtime"</span><span class="o">))</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">();</span>
+        <span class="o">}</span>
+
+        <span class="k">return</span> <span class="s">"ok"</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>예외 처리 코드가 삭제되었다.</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="codecontrolleradvicecode-"><code>@ControllerAdvice</code> 상세설명</h2>
+<h3 id="section-3">기본 원리</h3>
+<ul>
+<li><code>@ControllerAdvice</code> 는 대상으로 지정한 여러 컨트롤러에 <code>@ExceptionHandler</code> , <code>@InitBinder</code> 기능을 부여해주는 역할을 한다.</li>
+<li><strong>대상을 지정하지 않으면 모든 컨트롤러에 적용된다. (글로벌 적용)</strong></li>
+<li><code>@RestControllerAdvice</code> 는 <code>@ControllerAdvice</code> 와 같고, <code>@ResponseBody</code> 가 추가되어 있다.</li>
+</ul>
+<br/>
+<h3 id="section-4">대상 컨트롤러 지정 방법</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// @RestController 에만 적용한다.</span>
+<span class="nd">@ControllerAdvice</span><span class="o">(</span><span class="n">annotations</span> <span class="o">=</span> <span class="nc">RestController</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExampleAdvice1</span> <span class="o">{}</span>
+
+<span class="c1">// 해당 패키지의 모든 컨트롤러에 적용한다.</span>
+<span class="nd">@ControllerAdvice</span><span class="o">(</span><span class="s">"org.example.controllers"</span><span class="o">)</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExampleAdvice2</span> <span class="o">{}</span>
+
+<span class="c1">// 부모클래스나 자식클래스의 컨트롤러에 적용한다.</span>
+<span class="nd">@ControllerAdvice</span><span class="o">(</span><span class="n">assignableTypes</span> <span class="o">=</span> <span class="o">{</span><span class="nc">ControllerInterface</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="nc">AbstractController</span><span class="o">.</span><span class="na">class</span><span class="o">})</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExampleAdvice3</span> <span class="o">{}</span>
+</code></pre></div></div>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/YPER"><img src="/assets/img/Inflearn_Spring_MVC2/logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

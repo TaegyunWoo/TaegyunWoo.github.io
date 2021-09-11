@@ -1,0 +1,560 @@
+I"0�<p><br/><br/></p>
+<ul>
+<li>이전 게시글
+<ol>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_LoginBasicProject">로그인처리 - 기본 프로젝트 설정</a></li>
+</ol>
+</li>
+</ul>
+<p><br/><br/></p>
+<h1 id="section">쿠키</h1>
+<h2 id="section-1">개요</h2>
+<ul>
+<li>로그인 기능을 구현할 때, 쿠키를 사용할 수 있다.</li>
+<li>쿠키를 사용하면, 사용자의 로그인 상태를 지속적으로 유지할 수 있다.</li>
+</ul>
+<br/>
+<h3 id="section-2">목표</h3>
+<ul>
+<li>사용자가 로그인을 하면, 로그인 상태가 유지된다.</li>
+<li>로그인 직후, 회원 전용 페이지로 리다이렉션된다.</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-3">쿠키 동작 원리</h2>
+<ul>
+<li>
+<p><strong>쿠키 생성</strong></p>
+<p><img src="/assets/img/2021-08-15-SPRING_MVC_LoginSession/Untitled%2029.png" alt="쿠키 생성" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>클라이언트 요청</strong></p>
+<p><img src="/assets/img/2021-08-15-SPRING_MVC_LoginSession/Untitled%2030.png" alt="클라이언트 요청" /></p>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-4">쿠키의 종류</h2>
+<p>쿠키의 종류는 아래와 같다.</p>
+<ul>
+<li><strong>영속 쿠키</strong>
+<ul>
+<li>만료 날짜를 입력하면 해당 날짜까지 유지된다.</li>
+</ul>
+</li>
+<li><strong>세션 쿠키</strong>
+<ul>
+<li>만료 날짜를 생략하면 브라우저 종료시 까지만 유지된다.</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-5">쿠키와 보안 문제</h2>
+<p>쿠키를 사용해서 로그인 Id를 서버에 전달하면, 로그인을 유지할 수 있다. 하지만, 여기에는 보안 문제가 있다.</p>
+<br/>
+<h3 id="section-6">보안 문제</h3>
+<ul>
+<li><strong>쿠키 값이 임의로 변경될 수 있다.</strong>
+<ul>
+<li>클라이언트가 쿠키를 강제로 변경하면 다른 사용자가 된다.</li>
+</ul>
+</li>
+<li><strong>쿠키에 보관된 정보는 훔쳐갈 수 있다.</strong>
+<ul>
+<li>클라이언트의 PC가 털려서, 쿠키 정보를 가져갈 수 있다.</li>
+</ul>
+</li>
+<li><strong>해커가 쿠키를 한번 훔치면 평생 사용할 수 있다.</strong>
+<ul>
+<li>쿠키에 저장된 사용자 정보를 해커가 계속해서 사용할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-7">대안</h3>
+<ul>
+<li><strong>쿠키에 중요한 값(사용자 정보 등)을 노출하지 않는다. 사용자 별로 예측 불가능한 임의의 토큰을 노출시킨 후, 서버에서 토큰과 사용자 id를 매핑해서 인식한다.</strong></li>
+<li><strong>토큰은 해커가 임의의 값을 넣어도 찾을 수 없도록 예상 불가능 해야 한다.</strong>
+<ul>
+<li>(문제 예. “토큰=1”일때, “토큰=2”를 넣으면 다른 사용자의 계정에 접근할 수 있겠다! )</li>
+</ul>
+</li>
+<li><strong>토큰 만료시간을 짧게 유지하여, 해커가 털어가도 시간이 지나면 사용할 수 없도록 한다.</strong></li>
+</ul>
+<p><br/><br/><br/></p>
+<h1 id="section-8">세션</h1>
+<h2 id="section-9">개요</h2>
+<ul>
+<li>쿠키를 사용하여 로그인 기능을 구현하면, 심각한 보안 문제가 발생한다.</li>
+<li>세션을 사용하여 해결할 수 있다.</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-10">세션 동작 원리</h2>
+<ul>
+<li>
+<p><strong>로그인</strong></p>
+<p><img src="/assets/img/2021-08-15-SPRING_MVC_LoginSession/Untitled%2031.png" alt="로그인" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>세션 생성</strong></p>
+<p><img src="/assets/img/2021-08-15-SPRING_MVC_LoginSession/Untitled%2032.png" alt="세션 생성" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>세션 id를 쿠키로 전달 (클라이언트 측에 전달)</strong></p>
+<p><img src="/assets/img/2021-08-15-SPRING_MVC_LoginSession/Untitled%2033.png" alt="클라이언트측전달" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>세션 id를 쿠키에서 전달 (서버 측에 전달)</strong></p>
+<p><img src="/assets/img/2021-08-15-SPRING_MVC_LoginSession/Untitled%2034.png" alt="서버측전달" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-11">주요 포인트</h3>
+<ul>
+<li><strong>회원 관련 정보는 전혀 클라이언트에 전달하지 않고, 오직 서버에서만 관리한다.</strong>
+<ul>
+<li>클라이언트 측 쿠키가 털려도, 거기에는 중요한 정보가 없다.</li>
+</ul>
+</li>
+<li><strong>추정 불가능한 세션 id만 쿠키를 통해 클라이언트에 전달한다.</strong>
+<ul>
+<li>하나의 세션 id을 통해, 다른 사용자의 세션 id를 유추할 수 없다.</li>
+</ul>
+</li>
+<li><strong>세션의 만료시간을 짧게 유지한다.</strong>
+<ul>
+<li>세션 id가 털려도, 시간이 지나면 사용할 수 없다.</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-12">로그인 처리: 세션 직접 구현</h2>
+<blockquote>
+<p><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_LoginBasicProject#1">이전에 작성해둔 프로젝트</a>를 기반으로 진행한다.</p>
+</blockquote>
+<p>먼저 세션을 직접 구현해보고, 그 다음 자바와 스프링이 제공하는 세션을 사용해보자.</p>
+<br/>
+<h3 id="section-13">구현할 기능</h3>
+<ul>
+<li><strong>세션 생성</strong>
+<ul>
+<li>sessionId 생성 (임의의 추정 불가능한 랜덤 값)</li>
+<li>세션 저장소에 sessionId와 보관할 값 저장</li>
+<li>응답쿠키를 생성해서 sessionId 값을 클라이언트에 전달</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>세션 조회</strong>
+<ul>
+<li>클라이언트가 요청(전송)한 sessionId 쿠키의 값으로, 세션 저장소에 보관한 값 조회</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>세션 만료</strong>
+<ul>
+<li>클라이언트가 요청한 sessionId 쿠키의 값으로, 세션 저장소에 보관한 sessionId와 값 제거</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="codesessionmanagercode-">세션 기능 구현: <code>SessionManager</code> 클래스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">...</span>
+<p><span class="nd">@Component</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SessionManager</span> <span class="o">{</span></p>
+<p><span class="c1">//클라이언트에 전달할 세션 id 값의 Key 값</span>
+<span class="c1">//(mySessionId, 세선id)</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">String</span> <span class="no">SESSION_COOKIE_NAME</span> <span class="o">=</span> <span class="s">“mySessionId”</span><span class="o">;</span></p>
+<p><span class="c1">//세션 저장소</span>
+<span class="c1">//CocurrentHashMap =&gt; 동시성 문제 해결</span>
+<span class="kd">private</span> <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Object</span><span class="o">&gt;</span> <span class="n">sessionStorage</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ConcurrentHashMap</span><span class="o">&lt;&gt;();</span></p>
+<p><span class="cm">/*
+세션 생성
+*/</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">createSession</span><span class="o">(</span><span class="nc">Object</span> <span class="n">value</span><span class="o">,</span> <span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
+<span class="nc">String</span> <span class="n">sessionId</span> <span class="o">=</span> <span class="no">UUID</span><span class="o">.</span><span class="na">randomUUID</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span></p>
+<pre><code>  &lt;span class=&quot;c1&quot;&gt;//세션 저장소에 저장&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;sessionStorage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;put&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sessionId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;//세션 id를 쿠키로 응답&lt;/span&gt;
+  &lt;span class=&quot;nc&quot;&gt;Cookie&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cookie&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Cookie&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;SESSION_COOKIE_NAME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sessionId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;cookie&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setPath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//경로 설정&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addCookie&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cookie&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span></p>
+<p><span class="cm">/*
+세션 조회
+*/</span>
+<span class="kd">public</span> <span class="nc">Object</span> <span class="nf">getSession</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">)</span> <span class="o">{</span>
+<span class="nc">Cookie</span><span class="o">[]</span> <span class="n">cookies</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="na">getCookies</span><span class="o">();</span>
+<span class="nc">Cookie</span> <span class="n">sessionIdCookie</span> <span class="o">=</span> <span class="n">findSessionIdCookie</span><span class="o">(</span><span class="n">cookies</span><span class="o">,</span> <span class="no">SESSION_COOKIE_NAME</span><span class="o">);</span></p>
+<pre><code>  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sessionIdCookie&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sessionStorage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sessionIdCookie&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getValue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span></p>
+<p><span class="cm">/*
+세션 만료
+*/</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">expire</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">)</span> <span class="o">{</span>
+<span class="nc">Cookie</span> <span class="n">sessionIdCookie</span> <span class="o">=</span> <span class="n">findSessionIdCookie</span><span class="o">(</span><span class="n">request</span><span class="o">.</span><span class="na">getCookies</span><span class="o">(),</span> <span class="no">SESSION_COOKIE_NAME</span><span class="o">);</span>
+<span class="k">if</span> <span class="o">(</span><span class="n">sessionIdCookie</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="n">sessionStorage</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">sessionIdCookie</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
+<span class="o">}</span>
+<span class="o">}</span></p>
+<p><span class="cm">/**</p>
+<ul>
+<li>@return 해당 cookie이름을 찾으면 cookie, 못찾으면 null
+*/</span>
+<span class="kd">private</span> <span class="nc">Cookie</span> <span class="nf">findSessionIdCookie</span><span class="o">(</span><span class="nc">Cookie</span><span class="o">[]</span> <span class="n">cookies</span><span class="o">,</span> <span class="nc">String</span> <span class="n">cookieName</span><span class="o">)</span> <span class="o">{</span>
+<span class="k">for</span> <span class="o">(</span><span class="nc">Cookie</span> <span class="n">cookie</span> <span class="o">:</span> <span class="n">cookies</span><span class="o">)</span> <span class="o">{</span>
+<span class="k">if</span> <span class="o">(</span><span class="n">cookie</span><span class="o">.</span><span class="na">getName</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="n">cookieName</span><span class="o">))</span> <span class="o">{</span>
+<span class="k">return</span> <span class="n">cookie</span><span class="o">;</span>
+<span class="o">}</span>
+<span class="o">}</span>
+<span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="o">}</span></li>
+</ul>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li>쿠키를 클라이언트에게 줄때, <code>setPath()</code> 를 통해 경로를 지정해야 정상적으로 작동한다.</li>
+</ul>
+<br/>
+<h3 id="codelogincontrollercode-">세션 적용: <code>LoginController</code> 클래스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/**
+ * 로그인
+ */</span>
+<span class="nd">@PostMapping</span><span class="o">(</span><span class="s">"/login"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nc">String</span> <span class="nf">login</span><span class="o">(</span><span class="nd">@Validated</span> <span class="nd">@ModelAttribute</span><span class="o">(</span><span class="s">"user"</span><span class="o">)</span> <span class="nc">LoginUserForm</span> <span class="n">form</span><span class="o">,</span>
+                    <span class="nc">BindingResult</span> <span class="n">bindingResult</span><span class="o">,</span>
+                    <span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;c1&quot;&gt;//검증 오류시&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bindingResult&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;hasErrors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;login&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//로그인 실행&lt;/span&gt;
+&lt;span class=&quot;nc&quot;&gt;User&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;loginService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;login&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;form&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;form&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getPassword&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//로그인 실패시, 오브젝트 에러&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;bindingResult&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;reject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;wrongUser&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;아이디나 비밀번호를 확인하세요.&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;login&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//로그인 성공시&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//세션 생성&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;sessionManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;createSession&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;redirect:/&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span></p>
+<p><span class="cm">/**</p>
+<ul>
+<li>
+<p>로그아웃
+*/</span>
+<span class="nd">@PostMapping</span><span class="o">(</span><span class="s">”/logout”</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nc">String</span> <span class="nf">logout</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">)</span> <span class="o">{</span></p>
+<p><span class="c1">//세션 종료</span>
+<span class="n">sessionManager</span><span class="o">.</span><span class="na">expire</span><span class="o">(</span><span class="n">request</span><span class="o">);</span></p>
+<p><span class="k">return</span> <span class="s">“redirect:/”</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div></p>
+</li>
+</ul>
+<br/>
+<h3 id="codehomecontrollercode-">세션 활용: <code>HomeController</code> 클래스</h3>
+<ul>
+<li>로그인된 사용자 ⇒ 사용자 정보 페이지</li>
+<li>로그인 안된 사용자 ⇒ 기본 home 페이지</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">...</span>
+<p><span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">HomeController</span> <span class="o">{</span></p>
+<pre><code>&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;SessionManager&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sessionManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;nd&quot;&gt;@Autowired&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;HomeController&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;SessionManager&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sessionManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;sessionManager&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sessionManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nd&quot;&gt;@GetMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;home&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;HttpServletRequest&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Model&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nc&quot;&gt;User&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sessionManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getSession&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;//로그인 X 일때, 기본 홈페이지로&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;home&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addAttribute&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;user&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;//로그인 O 일때, 사용자 정보 페이지로&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;userPage&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div>
+<br/></p>
+<h3 id="section-14">결과</h3>
+<ul>
+<li>
+<p><strong>첫 접속 (로그인 X일때)</strong></p>
+<p><img src="/assets/img/2021-08-15-SPRING_MVC_LoginSession/Untitled%2035.png" alt="첫 접속" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>로그인</strong></p>
+<p><img src="/assets/img/2021-08-15-SPRING_MVC_LoginSession/Untitled%2036.png" alt="로그인" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>로그인 성공</strong></p>
+<p><img src="/assets/img/2021-08-15-SPRING_MVC_LoginSession/Untitled%2037.png" alt="로그인 성공" /></p>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-15">로그인 처리: 서블릿이 제공하는 세션</h2>
+<ul>
+<li>서블릿은 <code>HttpSession</code> 이라는 기능을 통해 세션을 지원한다.</li>
+</ul>
+<br/>
+<h3 id="codehttpsessioncode-"><code>HttpSession</code> 이란?</h3>
+<ul>
+<li><code>HttpSession</code> 도 위에서 구현한 것처럼 동작한다.</li>
+<li>서블릿을 통해 <code>HttpSession</code> 을 생성하면 다음과 같은 쿠키를 생성한다.
+<ul>
+<li><code>JSESSIONID=추정불가능한값</code></li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="codelogincontrollercode--1">세션 적용: <code>LoginController</code> 클래스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">...</span>
+<p><span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">”/member”</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">LoginController</span> <span class="o">{</span></p>
+<p><span class="kd">private</span> <span class="kd">final</span> <span class="nc">LoginService</span> <span class="n">loginService</span><span class="o">;</span></p>
+<p><span class="nd">@Autowired</span>
+<span class="kd">public</span> <span class="nf">LoginController</span><span class="o">(</span><span class="nc">LoginService</span> <span class="n">loginService</span><span class="o">,</span> <span class="nc">SessionManager</span> <span class="n">sessionManager</span><span class="o">)</span> <span class="o">{</span>
+<span class="k">this</span><span class="o">.</span><span class="na">loginService</span> <span class="o">=</span> <span class="n">loginService</span><span class="o">;</span>
+<span class="k">this</span><span class="o">.</span><span class="na">sessionManager</span> <span class="o">=</span> <span class="n">sessionManager</span><span class="o">;</span>
+<span class="o">}</span></p>
+<p><span class="nd">@GetMapping</span><span class="o">(</span><span class="s">”/login”</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nc">String</span> <span class="nf">viewUserLoginForm</span><span class="o">(</span><span class="nd">@ModelAttribute</span> <span class="nc">User</span> <span class="n">user</span><span class="o">)</span> <span class="o">{</span>
+<span class="k">return</span> <span class="s">“login”</span><span class="o">;</span>
+<span class="o">}</span></p>
+<p><span class="nd">@PostMapping</span><span class="o">(</span><span class="s">”/login”</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nc">String</span> <span class="nf">login</span><span class="o">(</span><span class="nd">@Validated</span> <span class="nd">@ModelAttribute</span><span class="o">(</span><span class="s">“user”</span><span class="o">)</span> <span class="nc">LoginUserForm</span> <span class="n">form</span><span class="o">,</span>
+<span class="nc">BindingResult</span> <span class="n">bindingResult</span><span class="o">,</span>
+<span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">)</span> <span class="o">{</span></p>
+<pre><code>  &lt;span class=&quot;c1&quot;&gt;//검증 오류시&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bindingResult&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;hasErrors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;login&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;//로그인 실행&lt;/span&gt;
+  &lt;span class=&quot;nc&quot;&gt;User&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;loginService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;login&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;form&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;form&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getPassword&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;//로그인 실패시, 오브젝트 에러&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;bindingResult&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;reject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;wrongUser&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;아이디나 비밀번호를 확인하세요.&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;login&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;//로그인 성공시&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;//세션 생성 후, 값 추가&lt;/span&gt;
+  &lt;span class=&quot;nc&quot;&gt;HttpSession&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;session&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getSession&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setAttribute&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;loginUser&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;redirect:/&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span></p>
+<p><span class="cm">/**</p>
+<ul>
+<li>
+<p>로그아웃
+*/</span>
+<span class="nd">@GetMapping</span><span class="o">(</span><span class="s">”/logout”</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nc">String</span> <span class="nf">logout</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">)</span> <span class="o">{</span></p>
+<p><span class="c1">//세션 삭제</span>
+<span class="k">if</span> <span class="o">(</span><span class="n">request</span><span class="o">.</span><span class="na">getSession</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="n">request</span><span class="o">.</span><span class="na">getSession</span><span class="o">().</span><span class="na">invalidate</span><span class="o">();</span>
+<span class="o">}</span></p>
+<p><span class="k">return</span> <span class="s">“redirect:/”</span><span class="o">;</span>
+<span class="o">}</span></p>
+</li>
+</ul>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li><strong><code>request.getSession(true)</code> , <code>request.getSession()</code></strong>
+<ul>
+<li>
+<p>세션이 있으면 기존 세션을 반환한다.</p>
+<blockquote>
+<p><strong>세션</strong>: 이전에 구현해본 <code>sessionStorage</code> 와 유사한 개념</p>
+</blockquote>
+</li>
+<li>
+<p><strong>세션은 사용자별로 생성된다.</strong></p>
+</li>
+<li>
+<p>세션이 없으면 새로운 세션을 생성해서 반환한다.</p>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong><code>request.getSession(false)</code></strong>
+<ul>
+<li>세션이 있으면 기존 세션을 반환한다.</li>
+<li>세션이 없으면 세션을 생성하지 않고, null을 반환한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong><code>HttpSession</code> 원리</strong></p>
+<p><img src="/assets/img/2021-08-15-SPRING_MVC_LoginSession/Untitled%2038.png" alt="HttpSession" /></p>
+<ul>
+<li>하나의 세션에 여러가지 값을 저장할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="codehomecontrollercode--1">세션 활용: <code>HomeController</code> 클래스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">prac.myPrac.controller</span><span class="o">;</span>
+<p><span class="kn">import</span> <span class="nn">…</span></p>
+<p><span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">HomeController</span> <span class="o">{</span></p>
+<p><span class="kd">private</span> <span class="kd">final</span> <span class="nc">SessionManager</span> <span class="n">sessionManager</span><span class="o">;</span></p>
+<p><span class="nd">@Autowired</span>
+<span class="kd">public</span> <span class="nf">HomeController</span><span class="o">(</span><span class="nc">SessionManager</span> <span class="n">sessionManager</span><span class="o">)</span> <span class="o">{</span>
+<span class="k">this</span><span class="o">.</span><span class="na">sessionManager</span> <span class="o">=</span> <span class="n">sessionManager</span><span class="o">;</span>
+<span class="o">}</span></p>
+<pre><code>&lt;span class=&quot;cm&quot;&gt;/**
+ * @SessionAttribute 를 통해 세션에 접근
+ */&lt;/span&gt;
+</code></pre>
+<p><span class="nd">@GetMapping</span><span class="o">(</span><span class="s">”/”</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nc">String</span> <span class="nf">home</span><span class="o">(</span>
+<span class="nd">@SessionAttribute</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">“loginUser”</span><span class="o">,</span> <span class="n">required</span> <span class="o">=</span> <span class="kc">false</span><span class="o">)</span> <span class="nc">User</span> <span class="n">user</span><span class="o">,</span>
+<span class="nc">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span></p>
+<pre><code>  &lt;span class=&quot;c1&quot;&gt;//로그인 X 일때, 기본 홈페이지로&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;home&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addAttribute&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;user&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;//로그인 O 일때, 사용자 정보 페이지로&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;userPage&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li><code>@SessionAttribute(name = &quot;loginUser&quot; , required = false)</code>
+<ul>
+<li><code>request.getSession(false).getAttribute(&quot;loginUser&quot;)</code> 와 동일한 기능을 한다.</li>
+<li><code>@SessionAttribute</code> 는 세션을 생성하지 않는다.</li>
+<li><code>required = false</code> 는 <code>user</code> 객체에 값을 필수적으로 받지 않아도 된다는 뜻이다.</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-16">세션의 부가기능</h2>
+<h3 id="trackingmodes">TrackingModes</h3>
+<ul>
+<li>로그인을 처음 시도하면 URL이 <code>jsessionid</code> 값을 포함하고 있다.
+<ul>
+<li>예시) <code>http://localhost:8080/;jsessionid=F26137183SASD23</code></li>
+</ul>
+</li>
+<li>이것은 웹 브라우저가 쿠키를 지원하지 않을 때에 대비하여 작성된 URL이다.</li>
+<li>해당 기능이 바로 TrackingModes 이다.</li>
+<li>해당 기능을 끄는 것을 권장한다.
+<ul>
+<li><code>application.properties</code> 파일에 작성
+<ul>
+<li><code>server.servlet.session.tracking-modes=cookie</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-17">세션 정보 확인</h3>
+<ul>
+<li><code>session.getId()</code>
+<ul>
+<li>세션Id, 즉 <code>jsessionid</code> 값이다.</li>
+</ul>
+</li>
+<li><code>session.getMaxInactiveInterval()</code>
+<ul>
+<li>세션의 유효 시간 (초 단위)</li>
+</ul>
+</li>
+<li><code>session.getCreationTime()</code>
+<ul>
+<li>세션 생성일시</li>
+<li>java.util.Date 타입 반환</li>
+</ul>
+</li>
+<li><code>session.getLastAccessedTime()</code>
+<ul>
+<li>세션과 연결된 사용자가 최근에 서버에 접근한 시간</li>
+<li>java.util.Date 타입 반환</li>
+</ul>
+</li>
+<li><code>session.isNew()</code>
+<ul>
+<li>새로 생성된 세션인지, 아닌지</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-18">세션 기본 종료 시점</h3>
+<ul>
+<li><strong>세션은 사용자가 서버에 최근에 요청한 시간을 기준으로 30분 정도를 유지한다.</strong>
+<ul>
+<li>세션유지 시간 = <code>session.getLastAccessedTime()</code> + 30분</li>
+</ul>
+</li>
+</ul>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/YPER"><img src="/assets/img/Inflearn_Spring_MVC2/logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

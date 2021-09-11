@@ -1,0 +1,122 @@
+I"m<p><br/><br/></p>
+<h1 id="h2-">스프링부트와 H2 데이터베이스</h1>
+<h2 id="section">개요</h2>
+<ul>
+<li>본 게시글은 개발용으로 자주 사용되는 H2 DB를 스프링부트와 연동하는 방법에 대해서 다룬다.</li>
+</ul>
+<br/>
+<h2 id="h2--1">H2 작동방식</h2>
+<h3 id="embedded-">Embedded 모드</h3>
+<ul>
+<li>H2 데이터베이스를 JVM 위에서 구동시킨다.</li>
+<li>Application (JVM)이 종료되면, 저장 혹은 수정한 데이터가 모두 날라간다.</li>
+<li>즉, 휘발성을 갖는다.</li>
+<li>DB 접근 속도가 빠르다.</li>
+</ul>
+<h3 id="server-">Server 모드</h3>
+<ul>
+<li>별도의 프로세스를 가지고, Application과 독립적으로 작동한다.</li>
+<li>즉, 데이터베이스 서버를 설치한 것과 동일한 개념이다.</li>
+<li>Application과 TCP/IP 통신을 통해 데이터를 주고 받는다.</li>
+<li>DB 접근 속도가 비교적 느리다.</li>
+</ul>
+<h3 id="section-1">추천 모드</h3>
+<ul>
+<li>프로젝트 개발단계에서 Embedded 모드를 사용하는 것이 편리하다.</li>
+<li>왜냐하면, 테스팅에 사용되는 더미 데이터가 저장되지 않고(휘발) 반응 속도가 비교적 빠르기 때문이다.</li>
+</ul>
+<br/>
+<h2 id="section-2">연동 방법</h2>
+<h3 id="buildgradle--">1. build.gradle 파일 작성</h3>
+<ul>
+<li>H2를 사용하기 위해, dependencies 설정을 해야한다.</li>
+</ul>
+<div class="language-gradle highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">implementation</span> <span class="s1">'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'</span>
+	<span class="n">implementation</span> <span class="s1">'org.springframework.boot:spring-boot-starter-data-jdbc'</span>
+	<span class="n">runtimeOnly</span> <span class="s1">'com.h2database:h2'</span>
+</code></pre></div></div>
+<ul>
+<li><code>implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'</code>
+<ul>
+<li>MyBatis 프레임워크를 사용한다면, 추가한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="applicationproperties--">2. application.properties 파일 작성</h3>
+<div class="language-properties highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">spring.h2.console.enabled</span><span class="p">=</span><span class="s">true</span>
+<span class="py">spring.h2.console.path</span><span class="p">=</span><span class="s">/h2-console</span>
+
+<span class="py">spring.datasource.url</span><span class="p">=</span><span class="s">jdbc:h2:mem:testdb;</span>
+<span class="py">spring.datasource.driverClassName</span><span class="p">=</span><span class="s">org.h2.Driver</span>
+<span class="py">spring.datasource.username</span><span class="p">=</span><span class="s">sa</span>
+<span class="py">spring.datasource.password</span><span class="p">=</span>
+<span class="py">spring.jpa.database-platform</span><span class="p">=</span><span class="s">org.hibernate.dialect.H2Dialect</span>
+</code></pre></div></div>
+<ul>
+<li>
+<p><code>jdbc:h2:mem:testdb</code></p>
+<ul>
+<li>In-Memory 주소이다.</li>
+<li>해당 주소(mem)로 설정해야 In-Memory DB를 사용할 수 있다.</li>
+<li>만약 In-Memory가 아닌 영속성을 갖는 H2 DB를 사용하려면 아래 주소를 입력하면 된다.
+<ul>
+<li><code>jdbc:h2:~/test</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><code>spring.h2.console.enabled=true</code></p>
+<ul>
+<li>in-memory 방식을 사용하는 경우, H2 콘솔을 사용할 것인지의 유무이다.</li>
+</ul>
+</li>
+<li>
+<p><strong>In-Memory 모드이기 때문에 Application이 시작될 때마다, 전체 DB가 초기화된다.</strong></p>
+</li>
+<li>
+<p><strong>따라서 Application이 시작될 때마다, 테이블과 데이터(튜플)을 생성해주어야 한다.</strong></p>
+<ul>
+<li>schema.sql 과 data.sql 파일을 통해 해결한다.</li>
+<li>Application 실행시, schema.sql 과 data.sql 파일에 작성한 내용을 자동적으로 수행해준다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="schemasql--">3. schema.sql 파일 작성</h3>
+<ul>
+<li>파일 경로
+<ul>
+<li><code>루트/src/main/resources/schema.sql</code></li>
+</ul>
+</li>
+<li><strong>해당 파일에는 보통 테이블 생성, 수정 등의 DDL 스크립트를 작성한다.</strong></li>
+<li>대체로 사용할 테이블을 생성하는 쿼리문을 작성하면 된다.</li>
+<li>예시
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">member</span> <span class="p">(</span>
+      <span class="n">id</span> <span class="nb">BIGINT</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="n">AUTO_INCREMENT</span><span class="p">,</span>
+      <span class="n">email</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+      <span class="n">name</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+      <span class="n">password</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+      <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span>
+  <span class="p">);</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<h3 id="datasql--">4. data.sql 파일 작성</h3>
+<ul>
+<li>파일 경로
+<ul>
+<li><code>루트/src/main/resources/data.sql</code></li>
+</ul>
+</li>
+<li><strong>해당 파일에는 보통 레코드(튜플) 추가, 수정 등의 DML 스크립트를 작성한다.</strong></li>
+<li>대체로 테스트용으로 사용할 더미데이터를 추가하는 쿼리문을 작성하면 된다.</li>
+<li>예시
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">member</span> <span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">'test@test.com'</span><span class="p">,</span> <span class="s1">'test'</span><span class="p">,</span> <span class="s1">'123test!'</span><span class="p">);</span>
+</code></pre></div></div>
+</li>
+</ul>
+:ET

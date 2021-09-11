@@ -1,0 +1,282 @@
+I"/_<p><br/><br/></p>
+<ul>
+<li>이전 게시글
+<ol>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionServlet">예외처리 - 서블릿 예외 처리</a></li>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionSpring">예외처리 - 스프링 오류 페이지</a></li>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionAPIAndBasicController">예외처리 - API 예외처리와 BasicErrorController</a></li>
+</ol>
+</li>
+</ul>
+<p><br/><br/></p>
+<h1 id="handlerexceptionresolver-">HandlerExceptionResolver 기초</h1>
+<h2 id="section">개요</h2>
+<ul>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionAPIAndBasicController">이전 게시글</a>에서 오류 API를 <code>BasicErrorController</code> 를 통해 처리하는 방법에 대해 알아보았다.</li>
+<li>하지만 이 방법은 한계가 분명히 있다.</li>
+<li><code>HandlerExceptionResolver</code> 를 통해, 문제를 해결할 수 있다.</li>
+</ul>
+<br/>
+<h3 id="section-1">목표</h3>
+<ul>
+<li>예외가 발생해서 WAS까지 예외가 전달되면 HTTP 상태코드가 500으로 처리된다. <strong>발생하는 예외에 따라서 다른 상태코드로 처리될 수 있게 한다.</strong></li>
+<li>오류 메시지, 형식 등을 API마다 다르게 처리할 수 있게 한다.</li>
+</ul>
+<br/>
+<h3 id="handlerexceptionresolver--1">HandlerExceptionResolver 란?</h3>
+<ul>
+<li>스프링은 컨트롤러(핸들러) 밖으로 예외가 던져진 경우 예외를 해결하고, 동작을 새로 정의할 수 있는 방법을 제공한다.</li>
+<li>컨트롤러 밖으로 던져진 예외를 해결하고, 동작 방식을 변경하고 싶으면 <code>HandlerExceptionResolver</code> 를 사용하면 된다.</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="codehandlerexceptionresolvercode-"><code>HandlerExceptionResolver</code> 원리</h2>
+<h3 id="codehandlerexceptionresolvercode--"><code>HandlerExceptionResolver</code> 적용 전</h3>
+<p><img src="/assets/img/2021-08-16-SPRING_MVC_ExceptionAPIAndHandlerExceptionResolver/Untitled%2014.png" alt="Untitled" /></p>
+<br/>
+<h3 id="codehandlerexceptionresolvercode---1"><code>HandlerExceptionResolver</code> 적용 후</h3>
+<p><img src="/assets/img/2021-08-16-SPRING_MVC_ExceptionAPIAndHandlerExceptionResolver/Untitled%2015.png" alt="Untitled" /></p>
+<ol>
+<li>
+<p>컨트롤러에서 예외 발생시, 디스패쳐 서블릿에 예외가 전달된다.</p>
+</li>
+<li>
+<p>인터셉터의 <code>postHandle</code> 은 호출되지 않는다.</p>
+</li>
+<li>
+<p><strong>디스패쳐 서블릿이 <code>HandlerExceptionResolver</code> 를 통해 예외를 해결하고자 한다.</strong></p>
+</li>
+<li>
+<p><strong><code>HandlerExceptionResolver</code> 의 예외 처리 시도</strong></p>
+<ol>
+<li><strong>예외를 처리하고, 디스패쳐 서블릿이 예외 대신 <code>ModelAndView</code> 객체를 전달받는다.</strong></li>
+<li><strong>예외를 처리하고, 디스패쳐 서블릿이 예외나 에러응답을 전달받는다.</strong></li>
+</ol>
+<blockquote>
+<p><strong>즉, 예외를 무조건 처리하지는 않는다.</strong></p>
+</blockquote>
+</li>
+<li>
+<p>이후 동작</p>
+<ol>
+<li><code>ModelAndView</code> 객체를 전달받았다면, 정상적으로 동작한다.</li>
+<li>예외나 에러응답을 전달받았다면, 내부요청을 진행한다.</li>
+</ol>
+</li>
+</ol>
+<p><br/><br/></p>
+<h2 id="codehandlerexceptionresolvercode--1"><code>HandlerExceptionResolver</code> 인터페이스</h2>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">HandlerExceptionResolver</span> <span class="o">{</span>
+	<span class="nc">ModelAndView</span> <span class="nf">resolveException</span><span class="o">(</span> <span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span>
+					<span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">,</span> 
+					<span class="nc">Object</span> <span class="n">handler</span><span class="o">,</span> <span class="nc">Exception</span> <span class="n">ex</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<br/>
+<h3 id="section-2">매개변수 설명</h3>
+<ul>
+<li><code>Object handler</code>
+<ul>
+<li>핸들러(컨트롤러) 정보</li>
+</ul>
+</li>
+<li><code>Exception ex</code>
+<ul>
+<li>핸들러(컨트롤러)에서 발생한 예외</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="codehandlerexceptionresolvercode--2"><code>HandlerExceptionResolver</code> 적용</h2>
+<h3 id="codehandlerexceptionresolvercode--codemyhandlerexceptionresolvercode-"><code>HandlerExceptionResolver</code> 구현: <code>MyHandlerExceptionResolver</code> 클래스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">example.exception</span><span class="o">;</span>
+<p><span class="kn">import</span> <span class="nn">org.springframework.http.HttpStatus</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.servlet.HandlerExceptionResolver</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.servlet.ModelAndView</span><span class="o">;</span></p>
+<p><span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletRequest</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletResponse</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span></p>
+<p><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyHandlerExceptionResolver</span> <span class="kd">implements</span> <span class="nc">HandlerExceptionResolver</span> <span class="o">{</span>
+<span class="nd">@Override</span>
+<span class="kd">public</span> <span class="nc">ModelAndView</span> <span class="nf">resolveException</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">,</span> <span class="nc">Object</span> <span class="n">handler</span><span class="o">,</span> <span class="nc">Exception</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span></p>
+<pre><code>&lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ex&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;instanceof&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;IllegalArgumentException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;sendError&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;HttpServletResponse&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;SC_BAD_REQUEST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ex&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getMessage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ModelAndView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;IOException&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;printStackTrace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li>위 예시 코드의 목적
+<ul>
+<li><code>IllegalArgumentException</code> 과 같은 예외는 대부분 사용자가 값을 잘못 넘긴 경우에 발생한다.</li>
+<li>해당 예외가 WAS까지 전달되면, 스프링은 500 코드로 응답한다. 하지만, 사용자 잘못이므로 400대 코드로 응답해야한다.</li>
+</ul>
+</li>
+<li><code>IllegalArgumentException</code> 이 발생하면, <code>response.sendError(400)</code> 이 호출되며 HTTP 상태 코드를 400으로 지정하고, 비어있는 <code>ModelAndView</code> 객체를 반환한다.</li>
+</ul>
+<br/>
+<h3 id="section-3">반환 값에 따른 동작 방식</h3>
+<ul>
+<li>
+<p><strong>빈 ModelAndView</strong></p>
+<ul>
+<li>뷰를 렌더링하지 않는다.</li>
+<li>정상 흐름으로 서블릿이 리턴된다.</li>
+<li>즉, 디스패처 서블릿이 정상작동임을 알 수 있게 ModelAndView를 반환해준다.</li>
+</ul>
+<blockquote>
+<p><strong>하지만, 위 예시에선 <code>sendError()</code> 를 호출하여, 다시 내부호출이 되기는 한다.</strong></p>
+</blockquote>
+</li>
+<li>
+<p><strong>ModelAndView 지정</strong></p>
+<ul>
+<li>뷰를 렌더링한다.</li>
+</ul>
+</li>
+<li>
+<p><strong>null</strong></p>
+<ul>
+<li>다음 <code>HandlerExceptionResolver</code> 를 찾아서 실행한다.</li>
+<li><strong>만약, 처리할 수 있는 <code>HandlerExceptionResolver</code> 가 없으면 예외 처리가 안되고, 기존에 발생한 예외를 서블릿 밖으로 던진다.</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="codemyhandlerexceptionresolvercode--codewebconfigcode-"><code>MyHandlerExceptionResolver</code> 등록: <code>WebConfig</code> 클래스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">...</span>
+<p><span class="nd">@Configuration</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebConfig</span> <span class="kd">implements</span> <span class="nc">WebMvcConfigurer</span> <span class="o">{</span></p>
+<pre><code>&lt;span class=&quot;cm&quot;&gt;/**
+ * HandlerExceptionResolver 의 구현체 등록
+ * (스프링이 기본적으로 등록하는 ExceptionResolver 가 유지되도록 extend 처리)
+ */&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;extendHandlerExceptionResolvers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;HandlerExceptionResolver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;resolvers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;resolvers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MyHandlerExceptionResolver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<p><br/><br/><br/></p>
+<h1 id="handlerexceptionresolver--2">HandlerExceptionResolver 활용</h1>
+<h2 id="section-4">예외 마무리하기</h2>
+<h3 id="section-5">개요</h3>
+<ul>
+<li>예외 발생시 WAS까지 예외가 던져지고, 다시 <code>/error</code> 를 내부호출하는 과정은 너무 복잡하다.</li>
+<li><code>HandlerExceptionResolver</code> 에서 직접 정상적인 응답을 한다면, 해결되는 문제이다.</li>
+</ul>
+<br/>
+<h3 id="codehandlerexceptionresolvercode----codemyhandlerexceptionresolvercode--"><code>HandlerExceptionResolver</code> 에서 정상 응답하기: <code>MyHandlerExceptionResolver</code> 클래스 수정</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">example.exception</span><span class="o">;</span>
+<p><span class="kn">import</span> <span class="nn">…</span></p>
+<p><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyHandlerExceptionResolver</span> <span class="kd">implements</span> <span class="nc">HandlerExceptionResolver</span> <span class="o">{</span></p>
+<pre><code>&lt;span class=&quot;c1&quot;&gt;//JACKSON 라이브러리&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ObjectMapper&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;objectMapper&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ObjectMapper&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+&lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ModelAndView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;resolveException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;HttpServletRequest&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;HttpServletResponse&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;handler&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Exception&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ex&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ex&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;instanceof&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;IllegalArgumentException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;//일단 상태 코드는 400으로 설정&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setStatus&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;400&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            
+            &lt;span class=&quot;c1&quot;&gt;//요청 헤더 accept 값 확인&lt;/span&gt;
+            &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;acceptHeader&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getHeader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;accept&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+            &lt;span class=&quot;c1&quot;&gt;//만약 json 형식의 응답을 원한다면&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;acceptHeader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;equals&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;application/json&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;nc&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Object&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;errorResult&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;HashMap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;errorResult&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;put&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ex&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ex&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getClass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;errorResult&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;put&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;message&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ex&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getMessage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+                
+                &lt;span class=&quot;c1&quot;&gt;//JSON으로 응답하기 위해 문자열로 변환 (Jackson 라이브러리)&lt;/span&gt;
+                &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;objectMapper&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;writeValueAsString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;errorResult&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                
+                &lt;span class=&quot;c1&quot;&gt;//정상 응답하기&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setContentType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;application/json&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setCharacterEncoding&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;utf-8&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getWriter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;write&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+                &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ModelAndView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;IOException&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;printStackTrace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div>
+<br/></p>
+<h3 id="illegalargumentexception--codeexceptioncontrollercode-">IllegalArgumentException 던지기: <code>ExceptionController</code> 클래스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">...</span>
+<p><span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExceptionController</span> <span class="o">{</span>
+<span class="nd">@GetMapping</span><span class="o">(</span><span class="s">”/illegal”</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">sendIllegalError</span><span class="o">(</span><span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
+<span class="k">throw</span> <span class="k">new</span> <span class="nf">IllegalArgumentException</span><span class="o">(</span><span class="s">“Illegal예외 발생!”</span><span class="o">);</span>
+<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<br/></p>
+<h3 id="section-6">결과</h3>
+<ul>
+<li>
+<p>요청</p>
+<p><img src="/assets/img/2021-08-16-SPRING_MVC_ExceptionAPIAndHandlerExceptionResolver/Untitled%2016.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>결과</p>
+<p><img src="/assets/img/2021-08-16-SPRING_MVC_ExceptionAPIAndHandlerExceptionResolver/Untitled%2017.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-7">정리</h3>
+<ul>
+<li>
+<p><code>HandlerExceptionResolver</code> 를 구현하여, 컨트롤러에서 예외가 발생해도 <code>HandlerExceptionResovler</code> 에서 예외를 처리해버린다.</p>
+<ul>
+<li><code>return ModelAndView()</code> 를 통해 정상흐름 유지</li>
+<li><code>response.getWriter().write(result)</code> 를 통해 정상응답</li>
+</ul>
+<blockquote>
+<p>위 예시의 경우, <code>sendError()</code> 를 사용하지 않았다. 그러므로, 내부요청은 수행되지 않는다.</p>
+</blockquote>
+</li>
+</ul>
+<br/>
+<ul>
+<li>따라서 결과적으로 WAS 입장에서는 정상 처리가 되었다.
+<ul>
+<li>내부 요청 로직이 수행되지 않아, 깔끔해졌다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>하지만, 상당히 복잡하다. 다음 게시글에서 보다 간편하게 예외를 처리하는 방법에 대해 설명하겠다.</strong></li>
+</ul>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/YPER"><img src="/assets/img/Inflearn_Spring_MVC2/logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

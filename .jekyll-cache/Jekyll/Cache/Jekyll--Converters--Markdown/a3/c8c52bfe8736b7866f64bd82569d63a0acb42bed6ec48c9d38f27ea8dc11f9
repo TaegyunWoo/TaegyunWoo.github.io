@@ -1,0 +1,23 @@
+I"�<h1 id="section">2021-08-29</h1>
+<h2 id="section-1">프로젝트</h2>
+<h3 id="section-2">당일 목표</h3>
+<ul>
+<li>h2 jdbc 설정</li>
+<li>회원DB 설정</li>
+<li>로그인 정보와 DB 정보 매칭</li>
+</ul>
+<br/>
+<h3 id="section-3">수행한 주요 작업</h3>
+<ul>
+<li>h2 DB 연결</li>
+</ul>
+<br/>
+<h3 id="section-4">다음에 수행할 주요 작업</h3>
+<ul>
+<li>회원DB 설정</li>
+<li>회원가입 기능 추가</li>
+<li>로그인 세션 기능 추가</li>
+</ul>
+<h2 id="amp-">문제 &amp; 해결</h2>
+<p>트러블슈팅 포스팅 글 참고 - <a href="https://taegyunwoo.github.io/ts/TroubleShooting_ApplicationProperties">스프팅부트에서 application.properties 파일을 나눠서 관리하기</a></p>
+:ET

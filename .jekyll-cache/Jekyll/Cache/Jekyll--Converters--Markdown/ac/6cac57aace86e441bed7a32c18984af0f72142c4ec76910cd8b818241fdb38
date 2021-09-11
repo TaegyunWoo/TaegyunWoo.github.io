@@ -1,0 +1,358 @@
+I"�t<p><br/><br/></p>
+<ul>
+<li>이전 게시글
+<ol>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_Validation">검증 - 기초</a></li>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ValidationAndMessage">검증 - 오류코드와 메시지처리</a></li>
+</ol>
+</li>
+</ul>
+<p><br/><br/></p>
+<h1 id="section">검증로직과 컨트롤러 분리</h1>
+<h2 id="section-1">개요</h2>
+<p><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ValidationAndMessage">이전 글</a>에서 작성한 컨트롤러를 보자. 검증 관련 로직이 상당히 복잡한 것을 알 수 있다. 이번 게시글에서는 이런 복잡한 검증 로직을 따로 떼어내어내는 방법을 설명할 것이다.</p>
+<br/>
+<h3 id="section-2">목표</h3>
+<ul>
+<li>복잡한 검증 로직을 별도로 분리한다.</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="codevalidatorcode-"><code>Validator</code> 인터페이스</h2>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Validator</span> <span class="o">{</span>
+	<span class="kt">boolean</span> <span class="nf">supports</span><span class="o">(</span><span class="nc">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">);</span>
+	<span class="kt">void</span> <span class="nf">validate</span><span class="o">(</span><span class="nc">Object</span> <span class="n">target</span><span class="o">,</span> <span class="nc">Errors</span> <span class="n">errors</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>스프링이 제공하는 <code>Validator</code> 인터페이스는 검증을 체계적으로 제공하기 위한 것이다.</li>
+<li><code>Validator</code> 인터페이스를 구현하여, 검증로직을 컨트롤러에서 따로 떼어낼 수 있다.</li>
+</ul>
+<br/>
+<h3 id="section-3">메서드 설명</h3>
+<ul>
+<li><code>supports()</code>
+<ul>
+<li>해당 검증기를 지원하는 여부를 확인하는 메서드</li>
+</ul>
+</li>
+<li><code>validator()</code>
+<ul>
+<li>검증 대상 객체와 <code>BindingResult</code></li>
+</ul>
+</li>
+</ul>
+<p>예시를 통해 알아보자.</p>
+<p><br/><br/></p>
+<h2 id="section-4">기존 코드</h2>
+<p>기존 코드는 <a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ValidationAndMessage">이전 글</a>에서 사용한 것을 이용한다. 참고하자.</p>
+<br/>
+<h3 id="codeapplicationpropertiescode-"><code>application.properties</code> 파일</h3>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>spring.messages.basename=messages,errors
+</code></pre></div></div>
+<br/>
+<h3 id="codeerrorspropertiescode-"><code>errors.properties</code> 파일</h3>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>required.item.itemName=아이템 이름은 필수로 입력해야합니다.
+colored.item.itemColor=아이템 색상은 {0} 이어야 합니다.
+appleAndQuantity=사과는 수량이 {0}보다 커야합니다. 현재 수량은 {1} 입니다.
+</code></pre></div></div>
+<br/>
+<h3 id="section-5">컨트롤러</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">prac.myPrac.controller</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">...</span>
+
+<span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ItemController</span> <span class="o">{</span>
+
+    <span class="c1">//사용자에게 view를 제공</span>
+    <span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/item"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">viewItemForm</span><span class="o">(</span><span class="nd">@ModelAttribute</span> <span class="nc">Item</span> <span class="n">item</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="s">"itemform"</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@PostMapping</span><span class="o">(</span><span class="s">"/item"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">validationWithRejectValue</span><span class="o">(</span><span class="nd">@ModelAttribute</span><span class="o">(</span><span class="s">"item"</span><span class="o">)</span> <span class="nc">Item</span> <span class="n">item</span><span class="o">,</span> <span class="nc">BindingResult</span> <span class="n">bindingResult</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="c1">//첫 번째 검증 조건 (FieldError)</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="nc">StringUtils</span><span class="o">.</span><span class="na">hasText</span><span class="o">(</span><span class="n">item</span><span class="o">.</span><span class="na">getItemName</span><span class="o">()))</span> <span class="o">{</span>
+            <span class="n">bindingResult</span><span class="o">.</span><span class="na">rejectValue</span><span class="o">(</span><span class="s">"itemName"</span><span class="o">,</span> <span class="s">"required"</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="c1">//두 번째 검증 조건 (FieldError)</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">item</span><span class="o">.</span><span class="na">getItemColor</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">"GREEN"</span><span class="o">))</span> <span class="o">{</span>
+            <span class="nc">Object</span><span class="o">[]</span> <span class="n">param</span> <span class="o">=</span> <span class="o">{</span><span class="s">"GREEN"</span><span class="o">};</span>
+            <span class="n">bindingResult</span><span class="o">.</span><span class="na">rejectValue</span><span class="o">(</span><span class="s">"itemColor"</span><span class="o">,</span> <span class="s">"colored"</span><span class="o">,</span> <span class="n">param</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="c1">//세 번째 검증 조건 (ObjectError)</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">isAppleOver5</span><span class="o">(</span><span class="n">item</span><span class="o">))</span> <span class="o">{</span>
+            <span class="nc">Object</span><span class="o">[]</span> <span class="n">param</span> <span class="o">=</span> <span class="o">{</span><span class="mi">5</span><span class="o">,</span> <span class="n">item</span><span class="o">.</span><span class="na">getItemQuantity</span><span class="o">()};</span>
+            <span class="n">bindingResult</span><span class="o">.</span><span class="na">reject</span><span class="o">(</span><span class="s">"appleAndQuantity"</span><span class="o">,</span> <span class="n">param</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="c1">//검증 실패시</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">bindingResult</span><span class="o">.</span><span class="na">hasErrors</span><span class="o">())</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="s">"itemform"</span><span class="o">;</span> <span class="c1">//다시 Item 입력 폼으로</span>
+        <span class="o">}</span>
+
+        <span class="c1">//검증 성공시 로직...</span>
+
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">isAppleOver5</span><span class="o">(</span><span class="nc">Item</span> <span class="n">item</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">String</span> <span class="n">itemName</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="na">getItemName</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">itemQuantity</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="na">getItemQuantity</span><span class="o">();</span>
+
+        <span class="k">if</span> <span class="o">(!</span><span class="n">itemName</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">"Apple"</span><span class="o">))</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="k">return</span> <span class="n">itemQuantity</span><span class="o">&gt;</span><span class="mi">5</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<br/>
+<h3 id="codeitemformhtmlcode">뷰 템플릿 (<code>itemform.html</code>)</h3>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">xmlns:th=</span><span class="s">"http://www.thymeleaf.org"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;style&gt;</span>
+        <span class="nc">.error-class</span> <span class="p">{</span>
+            <span class="nl">background-color</span><span class="p">:</span> <span class="no">red</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="nt">&lt;/style&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+<span class="nt">&lt;h1&gt;</span>아이템 입력 폼<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;form</span> <span class="na">th:object=</span><span class="s">"${item}"</span> <span class="na">method=</span><span class="s">"post"</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;div</span> <span class="na">th:if=</span><span class="s">"${#fields.hasGlobalErrors()}"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;p</span> <span class="na">th:each=</span><span class="s">"error : ${#fields.globalErrors()}"</span> <span class="na">th:text=</span><span class="s">"${error}"</span><span class="nt">&gt;</span>
+            글로벌 오류 (오브젝트 오류)시, 출력되는 태그
+        <span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">th:field=</span><span class="s">"*{itemName}"</span> <span class="na">placeholder=</span><span class="s">"아이템이름"</span> <span class="na">th:errorclass=</span><span class="s">"error-class"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">th:errors=</span><span class="s">"*{itemName}"</span><span class="nt">&gt;</span>
+        아이템 이름 오류시, 출력되는 태그
+    <span class="nt">&lt;/div&gt;</span> <span class="nt">&lt;br/&gt;</span>
+
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">th:field=</span><span class="s">"*{itemColor}"</span> <span class="na">placeholder=</span><span class="s">"아이템색상"</span> <span class="na">th:errorclass=</span><span class="s">"error-class"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">th:errors=</span><span class="s">"*{itemColor}"</span><span class="nt">&gt;</span>
+        아이템 색상 오류시, 출력되는 태그
+    <span class="nt">&lt;/div&gt;</span> <span class="nt">&lt;br/&gt;</span>
+
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">th:field=</span><span class="s">"*{itemQuantity}"</span> <span class="na">placeholder=</span><span class="s">"아이템개수"</span> <span class="na">th:errorclass=</span><span class="s">"error-class"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"submit"</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<br/>
+<h2 id="section-6">검증 로직 분리하기</h2>
+<p>이제 본격적으로 검증 관련 로직을 떼어내보자.</p>
+<br/>
+<h3 id="codevalidatorcode---codeitemvalidatorcode-"><code>Validator</code> 인터페이스 구현 (<code>ItemValidator</code> 클래스)</h3>
+<p>참고로 검증 조건은 다음과 같다.</p>
+<ul>
+<li><strong>itemName의 값은 빈 문자열이 올 수 없다.</strong></li>
+<li><strong>itemColor의 값은 “GREEN” 이어야 한다.</strong></li>
+<li><strong>만약 itemName이 “Apple”이라면, itemQuantity의 값은 5보다 커야한다.</strong></li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">prac.myPrac.controller</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">...</span>
+
+<span class="nd">@Component</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ItemValidator</span> <span class="kd">implements</span> <span class="nc">Validator</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">supports</span><span class="o">(</span><span class="nc">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="nc">Item</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">isAssignableFrom</span><span class="o">(</span><span class="n">clazz</span><span class="o">);</span> <span class="c1">//Item 객체와 clazz 객체의 타입이 같느냐? (자식포함)</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+     * supports() 메서드가 true이면 호출될 메서드
+		 * 실제 검증 로직을 작성한다.
+     */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">validate</span><span class="o">(</span><span class="nc">Object</span> <span class="n">target</span><span class="o">,</span> <span class="nc">Errors</span> <span class="n">errors</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Item</span> <span class="n">item</span> <span class="o">=</span> <span class="o">(</span><span class="nc">Item</span><span class="o">)</span> <span class="n">target</span><span class="o">;</span>
+
+        <span class="c1">//첫 번째 검증 조건 (FieldError)</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="nc">StringUtils</span><span class="o">.</span><span class="na">hasText</span><span class="o">(</span><span class="n">item</span><span class="o">.</span><span class="na">getItemName</span><span class="o">()))</span> <span class="o">{</span>
+            <span class="n">errors</span><span class="o">.</span><span class="na">rejectValue</span><span class="o">(</span><span class="s">"itemName"</span><span class="o">,</span> <span class="s">"required"</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="c1">//두 번째 검증 조건 (FieldError)</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">item</span><span class="o">.</span><span class="na">getItemColor</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">"GREEN"</span><span class="o">))</span> <span class="o">{</span>
+            <span class="nc">Object</span><span class="o">[]</span> <span class="n">param</span> <span class="o">=</span> <span class="o">{</span><span class="s">"GREEN"</span><span class="o">};</span>
+            <span class="n">errors</span><span class="o">.</span><span class="na">rejectValue</span><span class="o">(</span><span class="s">"itemColor"</span><span class="o">,</span> <span class="s">"colored"</span><span class="o">,</span> <span class="n">param</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="c1">//세 번째 검증 조건 (ObjectError)</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">isAppleOver5</span><span class="o">(</span><span class="n">item</span><span class="o">))</span> <span class="o">{</span>
+            <span class="nc">Object</span><span class="o">[]</span> <span class="n">param</span> <span class="o">=</span> <span class="o">{</span><span class="mi">5</span><span class="o">,</span> <span class="n">item</span><span class="o">.</span><span class="na">getItemQuantity</span><span class="o">()};</span>
+            <span class="n">errors</span><span class="o">.</span><span class="na">reject</span><span class="o">(</span><span class="s">"appleAndQuantity"</span><span class="o">,</span> <span class="n">param</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">isAppleOver5</span><span class="o">(</span><span class="nc">Item</span> <span class="n">item</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">String</span> <span class="n">itemName</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="na">getItemName</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">itemQuantity</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="na">getItemQuantity</span><span class="o">();</span>
+
+        <span class="k">if</span> <span class="o">(!</span><span class="n">itemName</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">"Apple"</span><span class="o">))</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="k">return</span> <span class="n">itemQuantity</span><span class="o">&gt;</span><span class="mi">5</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li><strong><code>validate()</code> 메서드 내부에 작성된 코드가 기존 컨트롤러의 검증부분과 거의 같다는 것을 알 수 있다.</strong></li>
+<li><code>@Component</code> 을 통해 빈 등록을 해야, 컨트롤러가 주입받을 수 있다.</li>
+</ul>
+<br/>
+<h3 id="section-7">검증로직이 분리된 컨트롤러</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">prac.myPrac.controller</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">...</span>
+
+<span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ItemController</span> <span class="o">{</span>
+
+	<span class="kd">private</span> <span class="kd">final</span> <span class="nc">ItemValidator</span> <span class="n">itemValidator</span><span class="o">;</span> <span class="c1">//의존관계 주입</span>
+
+  <span class="nd">@Autowired</span>
+  <span class="kd">public</span> <span class="nf">ItemController</span><span class="o">(</span><span class="nc">ItemValidator</span> <span class="n">itemValidator</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">this</span><span class="o">.</span><span class="na">itemValidator</span> <span class="o">=</span> <span class="n">itemValidator</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="c1">//사용자에게 view를 제공</span>
+  <span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/item"</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="nc">String</span> <span class="nf">viewItemForm</span><span class="o">(</span><span class="nd">@ModelAttribute</span> <span class="nc">Item</span> <span class="n">item</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">return</span> <span class="s">"itemform"</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="nd">@PostMapping</span><span class="o">(</span><span class="s">"/item"</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="nc">String</span> <span class="nf">validationWithRejectValue</span><span class="o">(</span><span class="nd">@ModelAttribute</span><span class="o">(</span><span class="s">"item"</span><span class="o">)</span> <span class="nc">Item</span> <span class="n">item</span><span class="o">,</span> <span class="nc">BindingResult</span> <span class="n">bindingResult</span><span class="o">)</span> <span class="o">{</span>
+
+		<span class="cm">/*
+		 * 검증 로직 삭제
+		 */</span>
+
+      <span class="n">itemValidator</span><span class="o">.</span><span class="na">validate</span><span class="o">(</span><span class="n">item</span><span class="o">,</span> <span class="n">bindingResult</span><span class="o">);</span>
+
+      <span class="c1">//검증 실패시</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">bindingResult</span><span class="o">.</span><span class="na">hasErrors</span><span class="o">())</span> <span class="o">{</span>
+          <span class="k">return</span> <span class="s">"itemform"</span><span class="o">;</span> <span class="c1">//다시 Item 입력 폼으로</span>
+      <span class="o">}</span>
+
+      <span class="c1">//검증 성공시 로직...</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li><code>ItemValidator</code> 를 스프링 빈으로 주입 받아서 직접 호출했다.</li>
+<li><code>ItemValidator</code> 를 통해 검증을 수행했다.</li>
+<li><strong>결과적으로, 검증 로직과 컨트롤러가 분리되었다.</strong></li>
+</ul>
+<p><br/><br/></p>
+<h2 id="codewebdatabindercode--codevalidatedcode"><code>WebDataBinder</code> 와 <code>@Validated</code></h2>
+<p>위에서 설명한 방법으로 검증기를 충분히 분리할 수 있지만, 좀 더 편리한 방법이 있다.</p>
+<p><code>WebDataBinder</code> 와 <code>@Validated</code> 를 활용하면 된다.</p>
+<br/>
+<h3 id="codewebdatabindercode"><code>WebDataBinder</code></h3>
+<ul>
+<li><code>@InitBinder</code> 를 통해 검증기 (<code>ItemValidator</code> 와 같은) 를 <code>WebDataBinder</code> 에 등록하면, 해당 컨트롤러에서 검증기를 자동으로 적용할 수 있다.</li>
+<li><code>@InitBinder</code> 는 해당 컨트롤러에서만 적용된다.</li>
+</ul>
+<br/>
+<h3 id="codevalidatedcode"><code>@Validated</code></h3>
+<ul>
+<li><code>WebDataBinder</code> 에 등록한 검증기를 편리하게 사용할 수 있게 해주는 애너테이션이다.</li>
+<li><code>ItemValidator</code> 와 같은 검증기를 직접 호출하지 않고, 사용할 수 있게 해준다.</li>
+<li>구체적인 사용방법은 아래에서 설명한다.</li>
+</ul>
+<br/>
+<h3 id="codewebdatabindercode--codevalidatedcode---"><code>WebDataBinder</code> 와 <code>@Validated</code> 를 적용한 컨트롤러</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">prac.myPrac.controller</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">...</span>
+
+<span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ItemController</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">ItemValidator</span> <span class="n">itemValidator</span><span class="o">;</span>
+
+    <span class="nd">@Autowired</span>
+    <span class="kd">public</span> <span class="nf">ItemController</span><span class="o">(</span><span class="nc">ItemValidator</span> <span class="n">itemValidator</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">itemValidator</span> <span class="o">=</span> <span class="n">itemValidator</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+     * dataBinder 는 매 요청마다 생성된다.
+     */</span>
+    <span class="nd">@InitBinder</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">(</span><span class="nc">WebDataBinder</span> <span class="n">dataBinder</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">dataBinder</span><span class="o">.</span><span class="na">addValidators</span><span class="o">(</span><span class="n">itemValidator</span><span class="o">);</span> <span class="c1">//검증기 등록</span>
+    <span class="o">}</span>
+
+    <span class="c1">//사용자에게 view를 제공</span>
+    <span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/item"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">viewItemForm</span><span class="o">(</span><span class="nd">@ModelAttribute</span> <span class="nc">Item</span> <span class="n">item</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="s">"itemform"</span><span class="o">;</span>
+    <span class="o">}</span>
+
+		<span class="cm">/**
+		 * 매개변수에 @Validated가 추가되었다.
+		 */</span>
+    <span class="nd">@PostMapping</span><span class="o">(</span><span class="s">"/item"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">validationWithRejectValue</span><span class="o">(</span><span class="nd">@Validated</span> <span class="nd">@ModelAttribute</span><span class="o">(</span><span class="s">"item"</span><span class="o">)</span> <span class="nc">Item</span> <span class="n">item</span><span class="o">,</span> <span class="nc">BindingResult</span> <span class="n">bindingResult</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="c1">//검증 실패시</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">bindingResult</span><span class="o">.</span><span class="na">hasErrors</span><span class="o">())</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="s">"itemform"</span><span class="o">;</span> <span class="c1">//다시 Item 입력 폼으로</span>
+        <span class="o">}</span>
+
+        <span class="c1">//검증 성공시 로직...</span>
+
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">isAppleOver5</span><span class="o">(</span><span class="nc">Item</span> <span class="n">item</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">String</span> <span class="n">itemName</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="na">getItemName</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">itemQuantity</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="na">getItemQuantity</span><span class="o">();</span>
+
+        <span class="k">if</span> <span class="o">(!</span><span class="n">itemName</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">"Apple"</span><span class="o">))</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="k">return</span> <span class="n">itemQuantity</span><span class="o">&gt;</span><span class="mi">5</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<br/>
+<h3 id="section-8">동작 방식</h3>
+<ol>
+<li><code>@Validated</code> 는 검증기를 실행하라는 애노테이션이다.</li>
+<li>어떤 검증기를 실행할지 선택하는 기준이 바로 <code>supports()</code> 이다.</li>
+<li>위 컨트롤러 예시에서는 <code>supports(Item.class)</code> 가 호출되고, 결과가 <code>true</code> 이다.</li>
+<li>따라서, <code>ItemValidator</code> 의 <code>validate()</code> 가 호출된다.</li>
+</ol>
+<br/>
+<h3 id="section-9">참고</h3>
+<ul>
+<li><code>@Validated</code> 와 <code>@Valid</code> 모두 사용 가능하다.</li>
+<li><code>@Validated</code> 은 스프링 전용 검증 애노테이션이다.</li>
+<li><code>@Valid</code> 은 자바 표준 검증 애노테이션이다.</li>
+</ul>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/YPER"><img src="/assets/img/Inflearn_Spring_MVC2/logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

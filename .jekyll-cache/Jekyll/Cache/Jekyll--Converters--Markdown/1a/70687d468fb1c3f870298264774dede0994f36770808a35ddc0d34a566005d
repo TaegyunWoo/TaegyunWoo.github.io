@@ -1,0 +1,323 @@
+I"jZ<p><br/><br/></p>
+<ul>
+<li>이전 게시글
+<ol>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_TypeConverter">[스프링 - MVC] 스프링 타입 컨버터</a></li>
+</ol>
+</li>
+</ul>
+<p><br/><br/></p>
+<h1 id="section">포맷터</h1>
+<h2 id="section-1">개요</h2>
+<ul>
+<li>이전 게시글에서 스프링이 제공하는 <code>Converter</code> 인터페이스를 구현하여 타입을 변환하는 방법에 대해 알아보았다.</li>
+<li><code>Converter</code> 는 입력과 출력 타입에 제한이 없는 범용 타입 변환 기능을 제공한다.</li>
+<li>하지만, 대부분의 상황에서 필요한 것은 <strong>“문자→다른타입” 이나 “다른타입→문자” 로 변환하는 것이다.</strong></li>
+<li><strong>포맷터는 객체를 특정한 포멧에 맞추어 문자로 출력하거나 또는 그 반대의 역할을 하는 것에 특화된 기능이다.</strong></li>
+</ul>
+<blockquote>
+<p>포맷터는 컨버터의 특별한 버전으로 이해하면 된다.</p>
+</blockquote>
+<br/>
+<h3 id="converter-vs-formatter">Converter VS Formatter</h3>
+<ul>
+<li><code>Converter</code>
+<ul>
+<li>범용 타입 변환</li>
+<li>객체 → 객체</li>
+</ul>
+</li>
+<li><code>Formatter</code>
+<ul>
+<li>문자에 특화</li>
+<li>객체 → 문자</li>
+<li>문자 → 객체</li>
+<li>현지화(Locale)</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-2">포맷터</h2>
+<ul>
+<li>일반 컨버전 서비스(<code>ConversionService</code>)는 <strong>컨버터만 등록</strong>할 수 있고, 포맷터를 등록할 수 는 없다.</li>
+<li><strong>따라서 포맷터를 지원하는 컨버전 서비스를 사용해야 포맷터를 등록할 수 있다.</strong>
+<ul>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_TypeConverter#7">이전 게시글</a>에서 살펴본, <code>DefaultConversionService</code> 구현체는 포맷터를 등록할 수 없다.</li>
+<li><code>FormattingConversionService</code> 의 구현체인 <code>DefaultFormattingConversionService</code> 를 통해 포맷터를 등록할 수 있다.</li>
+<li><code>FormattingConversionService</code> 은 <code>ConversionService</code> 를 상속받았기 때문에, 컨버터 역시 등록할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-3">포맷터 구현</h2>
+<h3 id="codeformattercode-"><code>Formatter</code> 인터페이스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Printer</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="o">{</span>
+	<span class="nc">String</span> <span class="nf">print</span><span class="o">(</span><span class="no">T</span> <span class="n">object</span><span class="o">,</span> <span class="nc">Locale</span> <span class="n">locale</span><span class="o">);</span>
+<span class="o">}</span>
+<p><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="o">{</span>
+<span class="no">T</span> <span class="nf">parse</span><span class="o">(</span><span class="nc">String</span> <span class="n">text</span><span class="o">,</span> <span class="nc">Locale</span> <span class="n">locale</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">ParseException</span><span class="o">;</span>
+<span class="o">}</span></p>
+<p><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Formatter</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="nc">Printer</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;,</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="o">{</span> <span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li><code>String print(T object, Locale locale)</code>
+<ul>
+<li>객체를 문자로 변경한다.</li>
+</ul>
+</li>
+<li><code>T parse(String text, Locale locale)</code>
+<ul>
+<li>문자를 객체로 변경한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="codemynumberformattercode-">포맷터 구현: <code>MyNumberFormatter</code> 클래스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.springframework.format.Formatter</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.text.NumberFormat</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.text.ParseException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Locale</span><span class="o">;</span>
+<p><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyNumberFormatter</span> <span class="kd">implements</span> <span class="nc">Formatter</span><span class="o">&lt;</span><span class="nc">Number</span><span class="o">&gt;</span> <span class="o">{</span></p>
+<p><span class="c1">//Number는 Integer, Long, Double 등의 부모 클래스이다.</span></p>
+<p><span class="cm">/**</p>
+<ul>
+<li>문자를 객체(Number)로 변환</li>
+<li>쉼표가 있는 숫자 문자열을 Number 객체로 변환
+*/</span>
+<span class="nd">@Override</span>
+<span class="kd">public</span> <span class="nc">Number</span> <span class="nf">parse</span><span class="o">(</span><span class="nc">String</span> <span class="n">text</span><span class="o">,</span> <span class="nc">Locale</span> <span class="n">locale</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">ParseException</span> <span class="o">{</span>
+<span class="nc">NumberFormat</span> <span class="n">format</span> <span class="o">=</span> <span class="nc">NumberFormat</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">locale</span><span class="o">);</span>
+<span class="k">return</span> <span class="n">format</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="n">text</span><span class="o">);</span>
+<span class="o">}</span></li>
+</ul>
+<p><span class="cm">/**</p>
+<ul>
+<li>객체(Number)를 문자로 변환</li>
+<li>Number 객체를 쉼표가 적용된 문자열로 변환
+*/</span>
+<span class="nd">@Override</span>
+<span class="kd">public</span> <span class="nc">String</span> <span class="nf">print</span><span class="o">(</span><span class="nc">Number</span> <span class="n">object</span><span class="o">,</span> <span class="nc">Locale</span> <span class="n">locale</span><span class="o">)</span> <span class="o">{</span>
+<span class="k">return</span> <span class="nc">NumberFormat</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">locale</span><span class="o">).</span><span class="na">format</span><span class="o">(</span><span class="n">object</span><span class="o">);</span>
+<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div></li>
+</ul>
+<ul>
+<li>
+<p><code>NumberFormat</code></p>
+<ul>
+<li>“1,000” 처럼 숫자 중간의 쉼표를 적용하려면, 자바가 기본으로 제공하는 <code>NumberFormat</code> 객체를 사용하면 된다.</li>
+<li>이 객체는 <code>Locale</code> 정보를 활용해서 나라별로 다른 숫자 포맷을 만들어준다.</li>
+</ul>
+</li>
+<li>
+<p><code>parse()</code></p>
+<ul>
+<li>문자를 객체(숫자)로 변환한다.</li>
+<li>참고로 <code>Number</code> 타입은 <code>Integer, Long</code> 과 같은 숫자 타입의 부모 클래스이다.</li>
+</ul>
+</li>
+<li>
+<p><code>print()</code></p>
+<ul>
+<li>객체(숫자)를 문자로 변환한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="codewebconfigcode-">포맷터 등록: <code>WebConfig</code> 클래스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">example.exception</span><span class="o">;</span>
+<p><span class="kn">import</span> <span class="nn">…</span></p>
+<p><span class="nd">@Configuration</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebConfig</span> <span class="kd">implements</span> <span class="nc">WebMvcConfigurer</span> <span class="o">{</span></p>
+<pre><code>&lt;span class=&quot;cm&quot;&gt;/**
+ * 컨버터 등록
+ */&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;addFormatters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;FormatterRegistry&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;//-------- 컨버터 등록(이전 게시글에서 작성했던 코드) --------&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addConverter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;IpPortToStringConverter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addConverter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;StringToIpPortConverter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;//--------------------------------------------------------&lt;/span&gt;
+    
+    &lt;span class=&quot;c1&quot;&gt;//-------- 포맷터 등록 --------&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addFormatter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MyNumberFormatter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div>
+<br/></p>
+<h3 id="codeformattercontrollercode-">컨트롤러: <code>FormatterController</code> 클래스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">...</span>
+<p><span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">FormatterController</span> <span class="o">{</span></p>
+<pre><code>&lt;span class=&quot;cm&quot;&gt;/**
+ * 쉼표가 포함된 String을 일반 숫자로
+ */&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@ResponseBody&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@GetMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/toNum&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Number&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;toNum&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nd&quot;&gt;@RequestParam&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Number&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;cm&quot;&gt;/**
+ * 일반 숫자를 쉼표가 포함된 String으로
+ */&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@GetMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/toStr&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;toStr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Model&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addAttribute&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;number&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100000L&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;toStr&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div>
+<br/></p>
+<h3 id="codetostrhtmlcode">뷰 템플릿: <code>toStr.html</code></h3>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">xmlns:th=</span><span class="s">"http://www.thymeleaf.org"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"UTF-8"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Title<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;p</span> <span class="na">th:text=</span><span class="s">"${ {number} }"</span><span class="nt">&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<br/>
+<h3 id="codetonumcode">요청 결과: <code>/toNum</code></h3>
+<ul>
+<li>
+<p><strong>결과</strong></p>
+<p><img src="/assets/img/2021-08-18-SPRING_MVC_Formatter/Untitled%2034.png" alt="Untitled" /></p>
+</li>
+<li>
+<p><strong>설명</strong></p>
+<ul>
+<li>쿼리 스트링으로 넘긴 값 <code>10,000</code> 을 정상적으로 숫자로 변환하여 출력하였다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="codetostrcode">요청 결과: <code>/toStr</code></h3>
+<ul>
+<li>
+<p><strong>결과</strong></p>
+<p><img src="/assets/img/2021-08-18-SPRING_MVC_Formatter/Untitled%2035.png" alt="Untitled" /></p>
+</li>
+<li>
+<p><strong>설명</strong></p>
+<ul>
+<li><code>100000</code> 을 정상적으로 문자로 변환하여 출력하였다.</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-4">스프링이 제공하는 기본 포맷터</h2>
+<ul>
+<li>스프링은 자바에서 기본으로 제공하는 타입들에 대해 수 많은 포맷터를 기본으로 제공한다.</li>
+<li><strong>스프링은 애노테이션 기반으로 원하는 형식을 지정해서 사용할 수 있는 두 가지 포맷터를 기본으로 제공한다.</strong></li>
+</ul>
+<br/>
+<h3 id="section-5">애너테이션과 기본 포맷터 종류</h3>
+<ul>
+<li><code>@NumberFormat</code>
+<ul>
+<li>숫자 관련 형식 지정 포맷터를 사용하는 애너테이션</li>
+<li>사용되는 포맷터: <code>NumberFormatAnnotationFormatterFactory</code></li>
+</ul>
+</li>
+<li><code>@DateTimeFormat</code>
+<ul>
+<li>날짜 관련 형식 지정 포맷터를 사용하는 애너테이션</li>
+<li>사용되는 포맷터: <code>Jsr310DateTimeFormatAnnotationFormatterFactory</code></li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-6">사용 예시</h3>
+<ul>
+<li>
+<p><strong>컨트롤러: <code>FormatterController</code> 클래스</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">...</span>
+<p><span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">FormatterController</span> <span class="o">{</span></p>
+<pre><code>&lt;span class=&quot;nd&quot;&gt;@GetMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/formatter&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;formatterForm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Model&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nc&quot;&gt;Form&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;form&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Form&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;form&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setNumber&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10000&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;form&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setLocalDateTime&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;LocalDateTime&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addAttribute&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;form&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;formatter-form&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nd&quot;&gt;@Data&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Form&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@NumberFormat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pattern&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;###,###&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Integer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@DateTimeFormat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pattern&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;yyyy-MM-dd HH:mm:ss&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;LocalDateTime&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;localDateTime&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>뷰 템플릿</strong></p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">xmlns:th=</span><span class="s">"http://www.thymeleaf.org"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"UTF-8"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Title<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;form</span> <span class="na">th:object=</span><span class="s">"${form}"</span> <span class="na">method=</span><span class="s">"post"</span><span class="nt">&gt;</span>
+    number = <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">th:field=</span><span class="s">"*{number}"</span><span class="nt">&gt;</span>
+    localDateTime = <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">th:field=</span><span class="s">"*{localDateTime}"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;/form&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<blockquote>
+<p>폼이 아닌 뷰에서 출력할 때는 <code>${ {...} }</code> 을 사용하면 된다.</p>
+</blockquote>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>결과</strong></p>
+<p><img src="/assets/img/2021-08-18-SPRING_MVC_Formatter/Untitled%2036.png" alt="Untitled" /></p>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="http----">HTTP 메시지 컨버터와 컨버전 서비스</h2>
+<ul>
+<li>HTTP 메시지 컨버터 (<a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_HTTPMessageConverter">이전 게시글 참고</a>) 에는 컨버전 서비스가 적용되지 않는다.</li>
+<li>HTTP 메시지 컨버터와 컨버전 서비스는 전혀 관계가 없다.</li>
+<li><strong>HTTP 메시지 컨버터의 역할</strong>
+<ul>
+<li>HTTP 메시지 바디의 내용을 객체로 변환</li>
+<li>객체를 HTTP 메시지 바디에 입력</li>
+</ul>
+</li>
+<li><strong>컨버전 서비스의 역할</strong>
+<ul>
+<li><code>@RequestParam</code> , <code>@ModelAttribute</code> , <code>@PathVariable</code> , 뷰 템플릿 등에서 타입 변환</li>
+</ul>
+</li>
+</ul>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/YPER"><img src="/assets/img/Inflearn_Spring_MVC2/logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

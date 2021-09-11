@@ -1,0 +1,499 @@
+I"i�<p><br/><br/></p>
+<ul>
+<li>이전 게시글
+<ol>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionServlet">예외처리 - 서블릿 예외 처리</a></li>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionSpring">예외처리 - 스프링 오류 페이지</a></li>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionAPIAndBasicController">예외처리 - API 예외처리와 BasicErrorController</a></li>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionAPIAndHandlerExceptionResolver">예외처리 - API 예외처리와 HandlerExceptionResolver</a></li>
+</ol>
+</li>
+</ul>
+<p><br/><br/></p>
+<h1 id="handlerexceptionresolver">스프링의 HandlerExceptionResolver</h1>
+<h2 id="section">개요</h2>
+<ul>
+<li><code>HandlerExceptionResolver</code> 는 API 예외 처리에 주로 사용된다.</li>
+<li>스프링 부트가 기본적으로 제공하는 <code>HandlerExceptionResolver</code> 가 존재한다.</li>
+<li>즉, 스프링이 <code>HandlerExceptionResolver</code> 의 구현체를 제공한다.</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="handlerexceptionresolver-">스프링이 제공하는 HandlerExceptionResolver 종류</h2>
+<ul>
+<li><strong>ExceptionHandlerExceptionResolver</strong></li>
+<li><strong>ResponseStatusExceptionResolver</strong></li>
+<li><strong>DefaultHandlerExceptionResolver</strong></li>
+</ul>
+<p>하나씩 알아보자.</p>
+<p><br/><br/></p>
+<h2 id="strongexceptionhandlerexceptionresolverstrong"><strong>ExceptionHandlerExceptionResolver</strong></h2>
+<ul>
+<li>주요 사용되는 기능으로, 가장 마지막에 설명하도록 하겠다.</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="responsestatusexceptionresolver">ResponseStatusExceptionResolver</h2>
+<ul>
+<li>예외에 따라서 HTTP 상태코드를 지정해주는 역할을 한다.</li>
+<li>예) <code>@ResponseStatus(value = HttpStatus.NOT_FOUND)</code></li>
+<li>HTTP 상태코드를 지정하고, <strong><code>sendError(상태코드)</code> 를 호출한다.</strong>
+<ul>
+<li><strong>즉, WAS에서 다시 오류 페이지 ( <code>/error</code> )를 내부호출한다.</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-1">처리하는 예외</h3>
+<ul>
+<li><code>@ResponseStatus</code> 가 달려있는 예외
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@ResponseStatus</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">"상태코드"</span> <span class="o">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="s">"메시지소스에 작성된 메시지코드"</span><span class="o">)</span><span class="err">```</span>
+</code></pre></div></div>
+</li>
+<li><code>ResponseStatusException</code> 예외
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">throw</span> <span class="k">new</span> <span class="nc">ResponseStatusException</span><span class="o">(</span><span class="s">"상태코드"</span><span class="o">,</span> <span class="s">"메시지소스에 작성된 메시지코드"</span><span class="o">,</span> <span class="n">예외종류</span><span class="o">)</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<h3 id="coderesponsestatuscode">사용 예시: <code>@ResponseStatus</code></h3>
+<ul>
+<li>ResponseStatusExceptionResolver 는 기본적으로 스프링에 적용되어 있기 때문에 따로 구현할 것이 없다.</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong><code>MyException</code> 클래스</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">...</span>
+<p><span class="cm">/**</p>
+<ul>
+<li>사용자 예외
+*/</span>
+<span class="nd">@ResponseStatus</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="nc">HttpStatus</span><span class="o">.</span><span class="na">BAD_REQUEST</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyException</span> <span class="kd">extends</span> <span class="nc">RuntimeException</span> <span class="o">{</span> <span class="o">}</span>
+</code></pre></div></div></li>
+</ul>
+<ul>
+<li>해당 예외가 컨트롤러 밖으로 넘어가면 <code>ResponseStatusExceptionResolver</code> 예외가 해당 애너테이션을 확인해서 오류 코드를 <code>BAD_REQUEST</code> (400)으로 변경하고, 메시지도 담는다.</li>
+<li><code>sendError(400)</code> 을 호출하여, 내부호출이 진행된다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong><code>ExceptionController</code> 클래스</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">...</span>
+<p><span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExceptionController</span> <span class="o">{</span></p>
+<p><span class="nd">@GetMapping</span><span class="o">(</span><span class="s">”/myException”</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">throwMyException</span><span class="o">()</span> <span class="o">{</span>
+<span class="k">throw</span> <span class="k">new</span> <span class="nf">MyException</span><span class="o">();</span>
+<span class="o">}</span></p>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>요청</p>
+<p><img src="/assets/img/2021-08-17-SPRING_MVC_ExceptionSpringAPI/Untitled%2018.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>결과</p>
+<p><img src="/assets/img/2021-08-17-SPRING_MVC_ExceptionSpringAPI/Untitled%2019.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>정리</strong>
+<ul>
+<li><code>ResponseStatusExceptionResolver</code> 는 <code>@ResponseStatus</code> 애너테이션을 확인하고, 해당 예외를 처리한다.</li>
+<li><code>ResponseStatusExceptionResolver</code> 는 <code>response.sendError()</code> 를 통해 오류 응답을 한다.</li>
+<li>따라서, 디스패처 서블릿이 <code>sendError()</code> 를 확인하고 <code>/error</code> 를 내부요청하는데, 이때 <code>BasicErrorController</code> 가 호출되며 내부호출을 처리한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="coderesponsestatusexceptioncode">사용 예시: <code>ResponseStatusException</code></h3>
+<ul>
+<li><code>@ResponseStatus</code> 는 개발자가 직접 변경할 수 없는 예외에는 적용할 수 없다.</li>
+<li>이때 <code>ResponseStatusException</code> 예외를 사용한다.</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong><code>ExceptionController</code> 클래스</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">...</span>
+<p><span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExceptionController</span> <span class="o">{</span></p>
+<pre><code>&lt;span class=&quot;nd&quot;&gt;@GetMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/responseException&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;throwResponseStatusException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ResponseStatusException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;HttpStatus&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;NOT_FOUND&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;error.bad&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;IllegalArgumentException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span></p>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>요청</p>
+<p><img src="/assets/img/2021-08-17-SPRING_MVC_ExceptionSpringAPI/Untitled%2020.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>결과</p>
+<p><img src="/assets/img/2021-08-17-SPRING_MVC_ExceptionSpringAPI/Untitled%2021.png" alt="Untitled" /></p>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="defaulthandlerexceptionresolver">DefaultHandlerExceptionResolver</h2>
+<ul>
+<li>DefaultHandlerExceptionResolver 는 스프링 내부에서 발생하는 스프링 예외를 해결한다.</li>
+</ul>
+<br/>
+<ul>
+<li><strong>예시: DefaultHandlerExceptionResolver가 적용되지 않는다면</strong>
+<ol>
+<li>파라미터 바인딩 시점에 타입이 맞지 않아, <code>TypeMismatch</code> 예외 발생</li>
+<li>예외가 WAS까지 전달되어, <code>/error</code> 내부호출</li>
+<li><strong><code>BasicErrorController</code> 가 상태코드 500으로 응답</strong></li>
+</ol>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>예시: DefaultHandlerExceptionResolver가 적용된다면</strong>
+<ol>
+<li>파라미터 바인딩 시점에 타입이 맞지 않아, <code>TypeMismatch</code> 예외 발생</li>
+<li>예외를 DefaultHandlerExceptionResolver 가 처리하고, <strong>상태코드 400으로 오류응답 전달</strong></li>
+<li>WAS가 <code>sendError()</code> 호출을 확인하고, <code>/error</code> 내부호출</li>
+<li><strong><code>BasicErrorController</code> 가 상태코드 400으로 응답</strong></li>
+</ol>
+</li>
+</ul>
+<br/>
+<h3 id="section-2">사용예시</h3>
+<ul>
+<li>DefaultHandlerExceptionResolver 는 기본적으로 스프링에 적용되어 있기 때문에 따로 구현할 것이 없다.</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong><code>ExceptionController</code> 클래스</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">...</span>
+<p><span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExceptionController</span> <span class="o">{</span></p>
+<pre><code>&lt;span class=&quot;nd&quot;&gt;@GetMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/defaultResolver&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+</code></pre>
+<p><span class="kd">public</span> <span class="nc">String</span> <span class="nf">useDefaultHandlerExceptionResolver</span><span class="o">(</span><span class="nd">@RequestParam</span> <span class="nc">Integer</span> <span class="n">data</span><span class="o">)</span> <span class="o">{</span>
+<span class="k">return</span> <span class="s">“ok”</span><span class="o">;</span>
+<span class="o">}</span></p>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>요청</p>
+<p><img src="/assets/img/2021-08-17-SPRING_MVC_ExceptionSpringAPI/Untitled%2022.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>결과</p>
+<p><img src="/assets/img/2021-08-17-SPRING_MVC_ExceptionSpringAPI/Untitled%2023.png" alt="Untitled" /></p>
+</li>
+</ul>
+<p><br/><br/><br/></p>
+<h1 id="strongexceptionhandlerexceptionresolverstrong-1"><strong>ExceptionHandlerExceptionResolver</strong></h1>
+<h2 id="section-3">개요</h2>
+<ul>
+<li>HTML 오류 응답을 할 때는 단순히 <code>BasicErrorController</code> 를 사용하면 된다.</li>
+<li>하지만, API 예외 처리를 해결하기 위해서는 <code>ExceptionHandlerExceptionResolver</code> 를 사용해야 한다.
+<ul>
+<li>왜냐하면, 세밀한 제어가 가능하기 때문이다.</li>
+</ul>
+</li>
+<li><code>@ExceptionHandler</code> 애너테이션을 통해, 예외처리를 수행한다.</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-4">사용 예시</h2>
+<ul>
+<li>사용 예시를 먼저 살펴보고, 자세한 설명을 하도록 하겠다.</li>
+</ul>
+<br/>
+<h3 id="api---codeerroritemcode-">예외 발생시 API 응답될 객체: <code>ErrorItem</code> 클래스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">lombok.AllArgsConstructor</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">lombok.Data</span><span class="o">;</span>
+<p><span class="nd">@Data</span>
+<span class="nd">@AllArgsConstructor</span> <span class="c1">//모든 private 필드에 대해 생성자를 생성해준다.</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ErrorItem</span> <span class="o">{</span>
+<span class="kd">private</span> <span class="nc">String</span> <span class="nc">StatusCode</span><span class="o">;</span>
+<span class="kd">private</span> <span class="nc">String</span> <span class="nc">Errormessage</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<br/></p>
+<h3 id="codeexceptionhandlercontrollercode-">예외 처리 컨트롤러: <code>ExceptionHandlerController</code> 클래스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">...</span>
+<p><span class="nd">@RestController</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExceptionHandlerController</span> <span class="o">{</span></p>
+<pre><code>&lt;span class=&quot;cm&quot;&gt;/**
+ * 상태코드를 BAD_REQUEST 로 설정한다.
+ * IllegalArgumentException 발생시, 호출된다.
+ * @param e 컨트롤러에서 발생한 예외 객체를 담는다.
+ * @return 예외 전용 객체를 응답 데이터로서 반환한다.
+ */&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@ResponseStatus&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;HttpStatus&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;BAD_REQUEST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@ExceptionHandler&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;IllegalArgumentException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ErrorItem&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;illegalExHandle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;IllegalArgumentException&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ErrorItem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;BAD&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getMessage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;cm&quot;&gt;/**
+ * MyException 발생시, 호출된다.
+ * @param e 컨트롤러에서 발생한 예외 객체를 담는다.
+ * @return 예외 전용 객체를 응답 바디에 담고, 상태코드를 BAD_REQUEST 로 설정하여 응답한다.
+ */&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@ExceptionHandler&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;MyException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ResponseEntity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;ErrorItem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;myExHandler&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;MyException&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nc&quot;&gt;ErrorItem&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;errorItem&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ErrorItem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;MY-EX&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getMessage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ResponseEntity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;errorItem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;HttpStatus&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;BAD_REQUEST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;cm&quot;&gt;/**
+ * 상태코드를 400으로 설정한다.
+ * RuntimeException 발생시, 호출된다.
+ * @ExceptionHandler 에서 매핑할 예외가 생략되면 파라미터의 타입으로 매핑한다.
+ * @param e 컨트롤러에서 발생한 예외 객체를 담는다.
+ * @return 예외 전용 객체를 응답 데이터로서 반환한다.
+ */&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@ResponseStatus&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;HttpStatus&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;INTERNAL_SERVER_ERROR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@ExceptionHandler&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ErrorItem&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;runtimeExHandle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;RuntimeException&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ErrorItem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;EX&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;내부오류&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nd&quot;&gt;@GetMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/ex/{exName}&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;throwExceptions&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nd&quot;&gt;@PathVariable&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;exName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;equals&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;illegal&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;IllegalArgumentException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;IllegalArgument 예외!&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;equals&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;my&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;MyException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;equals&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;runtime&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;RuntimeException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;ok&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div>
+<br/></p>
+<h3 id="codeillegalargumentexceptioncode-">요청결과: <code>IllegalArgumentException</code> 발생시</h3>
+<ul>
+<li>
+<p>요청</p>
+<p><img src="/assets/img/2021-08-17-SPRING_MVC_ExceptionSpringAPI/Untitled%2024.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>응답</p>
+<p><img src="/assets/img/2021-08-17-SPRING_MVC_ExceptionSpringAPI/Untitled%2025.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>실행 흐름
+<ol>
+<li>컨트롤러를 호출한 결과 <code>IllegalArgumentException</code> 예외가 컨트롤러 밖으로 던져진다.</li>
+<li>예외가 발생했으므로 <code>HandlerExceptionResolver</code> 가 작동한다.
+<ul>
+<li>그리고 그 중 가장 우선순위가 높은 <code>ExceptionHandlerExceptionResolver</code> 가 실행된다.</li>
+</ul>
+</li>
+<li><code>ExceptionHandlerExceptionResolver</code> 는 해당 컨트롤러(예외가 발생한 컨트롤러)에 <code>IllegalArgumentException</code> 을 처리할 수 있는 <code>@ExceptionHandler</code> 가 있는지 확인한다.</li>
+<li><code>illegalExHandler()</code> 를 실행한다. <code>@RestController</code> 이므로 <code>illegalExHandler()</code> 에도 <code>@ResponseBody</code> 가 적용된다. 따라서 HTTP 컨버터가 사용되고, 응답이 JSON으로 반환된다.</li>
+<li><code>@ResponseStatus(HttpStatus.BAD_REQUEST)</code> 를 지정했으므로, HTTP 상태 코드 400으로 응답한다.</li>
+</ol>
+</li>
+</ul>
+<br/>
+<h3 id="codemyexceptioncode-">요청결과: <code>MyException</code> 발생시</h3>
+<ul>
+<li>
+<p>요청</p>
+<p><img src="/assets/img/2021-08-17-SPRING_MVC_ExceptionSpringAPI/Untitled%2026.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>응답</p>
+<p><img src="/assets/img/2021-08-17-SPRING_MVC_ExceptionSpringAPI/Untitled%2027.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>실행 흐름
+<ol>
+<li>컨트롤러를 호출한 결과 <code>MyException</code> 예외가 컨트롤러 밖으로 던져진다.</li>
+<li>예외가 발생했으므로 <code>HandlerExceptionResolver</code> 가 작동한다.
+<ul>
+<li>그리고 그 중 가장 우선순위가 높은 <code>ExceptionHandlerExceptionResolver</code> 가 실행된다.</li>
+</ul>
+</li>
+<li><code>ExceptionHandlerExceptionResolver</code> 는 해당 컨트롤러(예외가 발생한 컨트롤러)에 <code>MyException</code> 을 처리할 수 있는 <code>@ExceptionHandler</code> 가 있는지 확인한다.</li>
+<li><code>myExHandler()</code> 를 실행한다. <code>@RestController</code> 이므로 <code>myExHandler()</code> 에도 <code>@ResponseBody</code> 가 적용된다. HTTP 컨버터가 사용되고, 응답이 HTTP 응답 바디에 직접 입력된다.( <code>ResponseEntity&lt;&gt;</code> 를 반환하므로 )</li>
+<li><code>@ResponseStatus(HttpStatus.BAD_REQUEST)</code> 를 지정했으므로, HTTP 상태 코드 400으로 응답한다.</li>
+</ol>
+</li>
+</ul>
+<br/>
+<h3 id="coderuntimeexceptioncode-">요청결과: <code>RuntimeException</code> 발생시</h3>
+<ul>
+<li>
+<p>요청</p>
+<p><img src="/assets/img/2021-08-17-SPRING_MVC_ExceptionSpringAPI/Untitled%2028.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>응답</p>
+<p><img src="/assets/img/2021-08-17-SPRING_MVC_ExceptionSpringAPI/Untitled%2029.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-5">상세설명</h3>
+<ul>
+<li><code>@ResponseStatus</code>
+<ul>
+<li>만약 해당 애너테이션 없이, <code>@ExceptionHandler</code> 만 사용한다면 <strong>상태코드가 200으로 정상응답될 것이다.</strong>
+<ul>
+<li>왜냐하면, <code>ExceptionHandlerController</code> 가 예외를 처리하여, 정상적으로 <code>ErrorItem</code> 객체를 JSON으로 반환했다. 따라서 WAS 입장에서는 정상적으로 모든 과정이 수행되었다고 인식할 수 밖에 없다.</li>
+<li>따라서, <code>@ResponseStatus</code> 를 통해 상태코드를 알려주어야 한다. 참고로, 응답 자체는 정상 응답이다. 단지, 상태코드가 200이 아닐 뿐이다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><code>@ExceptionHandler</code>
+<ul>
+<li><code>@ExceptionHandler(매핑될 예외)</code>
+<ul>
+<li>속성으로 작성한 예외가 발생했을 때, 해당 메서드가 매핑되어 호출된다.</li>
+</ul>
+</li>
+<li><code>@ExceptionHandler</code>
+<ul>
+<li>속성으로 매핑할 예외가 생략되었다면, 해당 메서드의 <strong>매개변수 타입으로 매핑</strong>한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><code>return ErrorItem(..)</code>
+<ul>
+<li>
+<p>해당 객체를 응답데이터로서 반환한다.</p>
+</li>
+<li>
+<p>이때, JACKSON 라이브러리의 HTTPMessageConvertor가 응답 메시지 바디에 JSON 형태로 넣어준다.</p>
+<blockquote>
+<p>HTTPMessageConvertor 는 <a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_HTTPMessageConverter">이전 게시글</a>을 참고하자.</p>
+</blockquote>
+</li>
+<li>
+<p>WAS는 여기서 반환되어 변환된 JSON 데이터를 정상적으로 응답한다.</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="codeexceptionhandlercode-"><code>@ExceptionHandler</code> 상세설명</h2>
+<h3 id="section-6">예외 처리 방법</h3>
+<ul>
+<li>
+<p><code>@ExceptionHandler</code> 애너테이션으로 처리하고 싶은 예외를 지정해주면 된다.</p>
+</li>
+<li>
+<p>해당 컨트롤러에서 예외가 발생하면 이 메서드가 호출된다.</p>
+</li>
+<li>
+<p><strong>지정한 예외와 자식 클래스까지 잡을 수 있다.</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@ExceptionHandler</span><span class="o">(</span><span class="n">부모클래스</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nc">String</span> <span class="n">부모예외처리</span><span class="o">()</span> <span class="o">{</span> <span class="o">..</span> <span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>자식클래스(예외) 발생시 ⇒ 부모예외처리() 호출</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-7">우선순위</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@ExceptionHandler</span><span class="o">(</span><span class="n">부모클래스</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nc">String</span> <span class="n">부모예외처리</span><span class="o">()</span> <span class="o">{</span> <span class="o">..</span> <span class="o">}</span>
+<p><span class="nd">@ExceptionHandler</span><span class="o">(</span><span class="n">자식클래스</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nc">String</span> <span class="n">자식예외처리</span><span class="o">()</span> <span class="o">{</span> <span class="o">..</span> <span class="o">}</span>
+</code></pre></div></div></p>
+<p>위와 같이, 예외 처리 메서드를 작성했다면 어떻게 선택될까?</p>
+<ul>
+<li>자식클래스(예외) 발생시 ⇒ 자식예외처리() 호출</li>
+<li>부모클래스(예외) 발생시 ⇒ 부모예외처리() 호출</li>
+</ul>
+<br/>
+<h3 id="section-8">다양한 예외 처리</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@ExceptionHandler</span><span class="o">(</span><span class="n">예외A</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">예외B</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nc">String</span> <span class="nf">ex</span><span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span> <span class="o">..</span> <span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>위와 같이, 여러 예외를 한번에 처리할 수 있다.</li>
+</ul>
+<br/>
+<h3 id="section-9">예외 생략</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@ExceptionHandler</span>
+<span class="kd">public</span> <span class="nc">String</span> <span class="nf">ex</span><span class="o">(</span><span class="nc">MyException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span> <span class="o">..</span> <span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>위와 같이, 예외를 생략하면 매개변수의 타입(<code>MyException</code>)으로 매핑한다.</li>
+</ul>
+<br/>
+<h3 id="section-10">파라미터와 응답</h3>
+<p><code>@ExceptionHandler</code> 가 적용된 메서드로 받을 수 있는 매개변수와 반환 가능한 타입은 아래 링크를 참고하자.</p>
+<p><a href="https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-exceptionhandler-args">https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-exceptionhandler-args</a></p>
+<br/>
+<h3 id="html---">HTML 오류 화면 응답</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@ExceptionHandler</span>
+<span class="kd">public</span> <span class="nc">ModelAndView</span> <span class="nf">ex</span><span class="o">(</span><span class="nc">MyException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span> 
+	<span class="k">return</span> <span class="k">new</span> <span class="nf">ModelAndView</span><span class="o">(</span><span class="s">"error"</span><span class="o">);</span>
+ <span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>위 코드처럼, <code>ModelAndView</code> 를 반환하여 HTML 오류 화면으로 응답할 수도 있다.</li>
+</ul>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/YPER"><img src="/assets/img/Inflearn_Spring_MVC2/logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

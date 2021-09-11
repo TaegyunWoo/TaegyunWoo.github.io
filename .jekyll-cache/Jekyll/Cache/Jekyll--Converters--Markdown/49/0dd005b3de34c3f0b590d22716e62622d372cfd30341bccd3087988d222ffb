@@ -1,0 +1,97 @@
+I"<<p><br/><br/></p>
+<ul>
+<li>문제 발생 개발기록
+<ul>
+<li><a href="https://taegyunwoo.github.io/CRUD_Web/2021-09-04">CRUD Web 개발일지: 2021-09-04</a></li>
+</ul>
+</li>
+</ul>
+<br/>
+<h1 id="section">문제 배경</h1>
+<ul>
+<li>로그아웃시, 세션이 만료되도록 코드를 작성했다.</li>
+<li>그리고 로그아웃 후 로그인 페이지로 Redirect 되도록 하였다.</li>
+<li><strong>하지만 로그아웃을 하고난 후, 뒤로가기를 누르면 로그인시에만 접근할 수 있는 페이지가 그대로 나타났다.</strong></li>
+</ul>
+<p><br><br></p>
+<h1 id="section-1">문제 해결 탐색과정</h1>
+<ul>
+<li>뒤로가기를 누르면 비정상적으로 페이지가 출력되지만, 해당 페이지에서 새로고침을 통해 재요청을 하면 로그인 인증 인터셉터가 정상적으로 동작하여, 홈화면으로 Redirect 되는 것에 주목하였다.</li>
+<li>즉, 브라우저의 캐시 기능이 이와 같은 문제를 만든다고 의심하여 관련 자료를 찾아보았다.</li>
+<li>HTTP와 캐시 관련 자료를 조사하였다.</li>
+<li>HTTP 헤더를 통해 캐시를 조작할 수 있음을 확인하였다.</li>
+</ul>
+<p><br><br></p>
+<h1 id="section-2">문제 해결</h1>
+<h2 id="section-3">문제 원인</h2>
+<ul>
+<li>뒤로가기를 눌렀을 때, 사용자의 브라우저는 Cache된 페이지를 보여주기 때문에 발생하는 문제이다.</li>
+<li>요청과 응답의 흐름
+<ol>
+<li>로그인 요청(POST): <code>/login</code></li>
+<li>로그인 성공 응답: <code>redirect:/board</code></li>
+<li>302 리다이렉션 요청(GET): <code>/board</code></li>
+<li>서버의 응답: 응답메시지(<code>board.html</code>)</li>
+<li><strong>해당 응답을 캐시에 저장</strong></li>
+<li>로그아웃 요청(GET): <code>/logout</code></li>
+<li>로그아웃 응답: <code>redirect:/home</code></li>
+<li>뒤로가기: <code>/board</code> 요청</li>
+<li><strong>캐싱된 응답을 브라우저가 가져옴</strong></li>
+</ol>
+</li>
+</ul>
+<p><br><br></p>
+<h2 id="section-4">해결방법</h2>
+<ul>
+<li>사용자가 로그인에 성공하여 <code>/board</code> 로 Redirect될 때, 해당 응답를 캐싱할 수 없도록 한다.</li>
+<li><strong>로그인 처리 컨트롤러 호출시 로그인에 성공한다면, <code>redirect:/board</code> 로 응답하게 된다. 이때 응답헤더를 통해 해당 응답을 캐싱하지 않도록 설정한다.</strong>
+<ul>
+<li>Interceptor를 통해 구현할 수 있다. (postHandle 메서드 활용)</li>
+</ul>
+</li>
+<li>이를 통해 캐싱된 응답이 존재하지 않을 때, <code>/board</code>를 한번 더 요청(뒤로가기)하면 서버에게 다시 요청해야한다.</li>
+</ul>
+<br/>
+<h3 id="section-5">해결순서</h3>
+<ol>
+<li>
+<p>인터셉터를 아래와 같이 작성한다.</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LogoutInterceptor</span> <span class="kd">implements</span> <span class="nc">HandlerInterceptor</span> <span class="o">{</span>
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">postHandle</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">,</span> <span class="nc">Object</span> <span class="n">handler</span><span class="o">,</span> <span class="nc">ModelAndView</span> <span class="n">modelAndView</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+      <span class="n">response</span><span class="o">.</span><span class="na">setHeader</span><span class="o">(</span><span class="s">"Pragma"</span><span class="o">,</span> <span class="s">"no-cache"</span><span class="o">);</span>
+      <span class="n">response</span><span class="o">.</span><span class="na">setHeader</span><span class="o">(</span><span class="s">"Cache-Control"</span><span class="o">,</span> <span class="s">"no-cache"</span><span class="o">);</span>
+      <span class="n">response</span><span class="o">.</span><span class="na">setHeader</span><span class="o">(</span><span class="s">"Cache-Control"</span><span class="o">,</span> <span class="s">"no-store"</span><span class="o">);</span>
+      <span class="n">response</span><span class="o">.</span><span class="na">setDateHeader</span><span class="o">(</span><span class="s">"Expires"</span><span class="o">,</span> <span class="mi">0L</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>스프링이 제공하는 인터셉터 기능을 통해, 응답 헤더를 설정할 수 있다.</li>
+<li><code>postHandle</code> 메서드는 핸들러가 호출된 후, 호출되는 메서드이므로 여기서 응답헤더를 설정한다.</li>
+</ul>
+</li>
+<li>
+<p>인터셉터를 등록한다.</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Configuration</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebConfig</span> <span class="kd">implements</span> <span class="nc">WebMvcConfigurer</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">addInterceptors</span><span class="o">(</span><span class="nc">InterceptorRegistry</span> <span class="n">registry</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">registry</span><span class="o">.</span><span class="na">addInterceptor</span><span class="o">(</span><span class="k">new</span> <span class="nc">LogoutInterceptor</span><span class="o">())</span>
+                <span class="o">.</span><span class="na">order</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">addPathPatterns</span><span class="o">(</span><span class="s">"/board"</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>인터셉터를 적용할 요청URL은 <code>/board</code>이다.
+<ul>
+<li>로그인 핸들러(컨트롤러)가 로그인 성공시 <code>redirect:/board</code> 를 반환하여 <code>/board</code>를 클라이언트가 다시 요청(응답상태가 302이므로)하게 한다.</li>
+<li>클라이언트가 <code>/board</code>를 다시 요청할 때, 적용되는 인터셉터이므로 <code>/board</code>와 매칭해야한다.</li>
+<li>즉, 클라이언트가 <code>/board</code>를 요청하고 이에 대한 응답을 서버가 하게될 때, 해당 응답을 캐싱하지 않도록 헤더로 설정한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+:ET

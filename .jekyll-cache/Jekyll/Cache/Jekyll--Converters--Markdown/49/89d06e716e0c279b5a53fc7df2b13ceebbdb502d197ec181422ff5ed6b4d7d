@@ -1,0 +1,74 @@
+I"�<h1 id="section">2021-08-28</h1>
+<h2 id="section-1">프로젝트</h2>
+<h3 id="section-2">당일 목표</h3>
+<ul>
+<li>로그인, 게시판 템플릿 이식</li>
+<li>로그인 기능 완성</li>
+</ul>
+<br/>
+<h3 id="section-3">수행한 주요 작업</h3>
+<ul>
+<li>프로젝트 초기화</li>
+<li>HTML 템플릿 이식
+<ul>
+<li>로그인겸 index 페이지
+<ul>
+<li><a href="https://startbootstrap.com/snippets/sign-in-split">https://startbootstrap.com/snippets/sign-in-split</a></li>
+</ul>
+</li>
+<li>게시판 페이지
+<ul>
+<li><a href="https://startbootstrap.com/snippets/portfolio-one-column">https://startbootstrap.com/snippets/portfolio-one-column</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>로그인 검증 기능 추가</li>
+</ul>
+<br/>
+<h3 id="section-4">다음에 수행할 주요 작업</h3>
+<ul>
+<li>jdbc 설정</li>
+<li>회원DB 설정</li>
+<li>회원가입 기능 추가</li>
+<li>로그인 세션 기능 추가</li>
+</ul>
+<br/>
+<h3 id="point">주요 학습 Point</h3>
+<ul>
+<li><code>return &quot;redirect:...&quot;</code> 의 사용법
+<ul>
+<li><code>return &quot;redirect: 리다이렉트할_URL주소&quot;</code></li>
+<li><code>redirect:</code> 없이 <code>return</code> 할 때는 <code>return &quot;뷰이름&quot;</code> 이다.</li>
+<li><strong>즉, <code>redirect:</code> 를 사용할 때는 뷰이름을 반환하는 것이 아니라, URL주소를 반환해야한다!</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>Bean Validation
+<ul>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_BeanValidation">관련 포스팅</a></li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>타임리프 - 체크박스 처리하기
+<ul>
+<li><a href="https://taegyunwoo.github.io/thymeleaf/THYMELEAF_CheckBox">관련 포스팅</a></li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>타임리프 - 오류코드와 메시지소스
+<ul>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ValidationAndMessage">관련 포스팅</a></li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="amp-">문제 &amp; 해결</h2>
+<p>트러블슈팅 포스팅 글 참고 - <a href="https://taegyunwoo.github.io/ts/TroubleShooting_EmailFormatAlarm">이메일 주소에 ’@’를 포함해 주세요. 메시지 출력 문제</a></p>
+:ET

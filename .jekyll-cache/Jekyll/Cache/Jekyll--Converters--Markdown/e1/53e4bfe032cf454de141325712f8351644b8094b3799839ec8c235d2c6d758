@@ -1,0 +1,423 @@
+I"��<p><br/><br/></p>
+<h1 id="mybatis-springboot">MyBatis와 SpringBoot</h1>
+<p><a href="https://github.com/TaegyunWoo/TaegyunWoo.github.io/blob/master/ExampleProjects/mybatis.zip">예제 프로젝트 다운로드</a></p>
+<p><br/><br/></p>
+<h2 id="section">개요</h2>
+<ul>
+<li>스프링부트, 마이바티스, H2 DB 를 이용한다.</li>
+<li>예시 프로젝트는 어노테이션 기반으로 작성되었다.</li>
+</ul>
+<h2 id="mybatis-">MyBatis 사용</h2>
+<h3 id="mapper">Mapper란?</h3>
+<ul>
+<li>sql과 매핑하는 기능이다.</li>
+<li>인터페이스에 <code>@Mapper</code> 로 명시한다.</li>
+</ul>
+<br/>
+<h3 id="codeinsertcode--codeparamcode"><code>@Insert</code> 와 <code>@Param</code></h3>
+<ul>
+<li><code>@Param(&quot;쿼리로 전달할 파라미터 이름&quot;)</code>
+<ul>
+<li><code>쿼리로 전달할 파라미터 이름</code>: 해당 이름의 파라미터를 <code>#{}</code> 으로 사용할 수 있다.</li>
+<li>메서드의 파라미터 레벨에 작성한다.</li>
+<li>해당 파라미터를 쿼리문에서 사용할 수 있게 해준다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><code>@Insert(&quot;INSERT 쿼리&quot;)</code>
+<ul>
+<li>반환값은 int이어야한다.</li>
+<li>반환값: 삽입에 성공한 튜플의 개수</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>사용 예시</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="nd">@Insert</span><span class="o">(</span><span class="s">"INSERT INTO user(email, name, password) VALUES (#{user.email}, #{user.name}, #{user.password})"</span><span class="o">)</span>
+<span class="kt">int</span> <span class="nf">insert</span><span class="o">(</span><span class="nd">@Param</span><span class="o">(</span><span class="s">"user"</span><span class="o">)</span> <span class="nc">User</span> <span class="n">user</span><span class="o">);</span>
+
+
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<h3 id="codeselectcode--coderesultscode"><code>@Select()</code> 와 <code>@Results</code></h3>
+<ul>
+<li><code>@Select(&quot;SELECT 쿼리&quot;)</code></li>
+</ul>
+<br/>
+<ul>
+<li><code>@Result( id=&quot;맵id&quot;, value={ @Result(property=&quot;매핑할_필드명&quot;, column=&quot;매핑할_칼럼명&quot;), ... } )</code>
+<ul>
+<li>id 속성을 통해, 다른 메서드에서 매핑정보를 재활용할 수 있다.</li>
+<li><code>@Select</code> 경우, <code>@Results</code> 와 <code>@Result</code> 를 통해 칼럼과 필드 간의 매핑을 진행해야한다.</li>
+<li><code>@Insert</code> 경우, <code>#{}</code> 를 통해 매핑한다.</li>
+<li><strong>칼럼명과 필드명이 같다면 <code>@Results</code> 를 생략할 수 있다.</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>사용 예시</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+
+<span class="c1">//-----------조건 없이 SELECT-------------</span>
+<span class="nd">@Select</span><span class="o">(</span><span class="s">"SELECT * FROM user"</span><span class="o">)</span>
+<span class="nd">@Results</span><span class="o">(</span><span class="n">id</span><span class="o">=</span><span class="s">"myResultId"</span><span class="o">,</span> <span class="n">value</span> <span class="o">=</span> <span class="o">{</span>
+        <span class="nd">@Result</span><span class="o">(</span><span class="n">property</span> <span class="o">=</span> <span class="s">"dbid"</span><span class="o">,</span> <span class="n">column</span> <span class="o">=</span> <span class="s">"dbid"</span><span class="o">),</span>
+        <span class="nd">@Result</span><span class="o">(</span><span class="n">property</span> <span class="o">=</span> <span class="s">"email"</span><span class="o">,</span> <span class="n">column</span> <span class="o">=</span> <span class="s">"email"</span><span class="o">),</span>
+        <span class="nd">@Result</span><span class="o">(</span><span class="n">property</span> <span class="o">=</span> <span class="s">"name"</span><span class="o">,</span> <span class="n">column</span> <span class="o">=</span> <span class="s">"name"</span><span class="o">),</span>
+        <span class="nd">@Result</span><span class="o">(</span><span class="n">property</span> <span class="o">=</span> <span class="s">"password"</span><span class="o">,</span> <span class="n">column</span> <span class="o">=</span> <span class="s">"password"</span><span class="o">)</span>
+<span class="o">})</span> <span class="c1">//필드명과 컬럼명이 같으면 @Results 는 필요없다.</span>
+<span class="nc">List</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">&gt;</span> <span class="nf">getAll</span><span class="o">();</span>
+
+<span class="c1">//-----------조건과 함께 SELECT-------------</span>
+<span class="nd">@Select</span><span class="o">(</span><span class="s">"SELECT * FROM user WHERE dbid=#{id}"</span><span class="o">)</span>
+<span class="nd">@ResultMap</span><span class="o">(</span><span class="s">"myResultId"</span><span class="o">)</span> <span class="c1">//매핑정보 재활용</span>
+<span class="nc">User</span> <span class="nf">getById</span><span class="o">(</span><span class="nd">@Param</span><span class="o">(</span><span class="s">"id"</span><span class="o">)</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">);</span>
+
+
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<h3 id="codeupdatecode"><code>@Update()</code></h3>
+<ul>
+<li>
+<p><code>@Update(&quot;UPDATE 쿼리&quot;)</code></p>
+<ul>
+<li>반환값은 int형이다.</li>
+<li>수정된 튜플의 개수를 반환한다.</li>
+</ul>
+</li>
+<li>
+<p>사용 예시</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+
+<span class="nd">@Update</span><span class="o">(</span><span class="s">"update user set name=#{user.name}, password=#{user.password} where dbid=#{user.dbid}"</span><span class="o">)</span>
+<span class="kt">int</span> <span class="nf">updateById</span><span class="o">(</span><span class="nd">@Param</span><span class="o">(</span><span class="s">"user"</span><span class="o">)</span> <span class="nc">User</span> <span class="n">user</span><span class="o">);</span>
+
+
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<h3 id="codedeletecode"><code>@Delete</code></h3>
+<ul>
+<li>
+<p><code>@Delete(&quot;DELETE 쿼리&quot;)</code></p>
+<ul>
+<li>반환값은 int형이다.</li>
+<li>삭제된 튜플의 개수를 반환한다.</li>
+</ul>
+</li>
+<li>
+<p>사용 예시</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+
+<span class="nd">@Delete</span><span class="o">(</span><span class="s">"delete from membertab where dbid=#{dbid}"</span><span class="o">)</span>
+<span class="kt">int</span> <span class="nf">deleteById</span><span class="o">(</span><span class="nd">@Param</span><span class="o">(</span><span class="s">"dbid"</span><span class="o">)</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">);</span>
+
+
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<h3 id="codeoptionscode"><code>@Options</code></h3>
+<ul>
+<li><code>@Options( userGeneratedKeys=true, keyProperty=&quot;키_필드&quot; )</code>
+<ul>
+<li>
+<p>위와 같이 작성하면, <strong>SQL에서 생성된 값(AUTO_INCREMENT 등)이 매핑된 객체의 필드에 역으로 바인딩된다.</strong></p>
+</li>
+<li>
+<p>사용 예시</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+
+<span class="nd">@Insert</span><span class="o">(</span><span class="s">"INSERT INTO user(email, name, password) VALUES (#{user.email}, #{user.name}, #{user.password})"</span><span class="o">)</span>
+<span class="nd">@Options</span><span class="o">(</span><span class="n">useGeneratedKeys</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span> <span class="n">keyProperty</span> <span class="o">=</span> <span class="s">"dbid"</span><span class="o">)</span> <span class="c1">//SQL이 생성한 KEY 값을 매핑된 객체의 dbid 필드에도 담아주겠다.</span>
+<span class="kt">int</span> <span class="nf">insert</span><span class="o">(</span><span class="nd">@Param</span><span class="o">(</span><span class="s">"user"</span><span class="o">)</span> <span class="nc">User</span> <span class="n">user</span><span class="o">);</span>
+
+
+</code></pre></div></div>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="codetransactionalcode"><code>@Transactional</code></h3>
+<ul>
+<li>해당 메서드를 하나의 DB 작업단위(트랜잭션)로 지정한다.</li>
+<li><strong>해당 애너테이션이 붙은 메서드 (보통 서비스 클래스의 메서드)에서 예외가 발생하면, 해당 메서드가 작업한 트랜잭션 (매퍼를 통해 수행한 DB 작업)은 모두 롤백된다.</strong></li>
+<li>롤백할 예외 설정
+<ul>
+<li><code>@Transactional(rollbackFor=설정할_예외.class)</code></li>
+<li>해당 예외와 자식 예외까지 처리한다.</li>
+<li>처리할 예외의 Default값 = <code>RuntimeException.class</code></li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="codemanycode">1대다 관계 처리: <code>@Many</code></h2>
+<h3 id="erd">예시 ERD</h3>
+<p><img src="/assets/img/2021-09-01-MyBatis_MyBatisFunction/Untitled%203.png" alt="Untitled" /></p>
+<br/>
+<h3 id="user-">User 클래스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">lombok.Data</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">lombok.Getter</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">lombok.NoArgsConstructor</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="cm">/**
+ * 사용자 정보 도메인
+ */</span>
+<span class="nd">@Data</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">User</span> <span class="o">{</span>
+
+  <span class="kd">private</span> <span class="nc">Long</span> <span class="n">dbid</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="nc">String</span> <span class="n">email</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="nc">String</span> <span class="n">password</span><span class="o">;</span>
+
+  <span class="c1">//1대다 관계 설정 (1: User, 다: Phone)</span>
+  <span class="c1">//테이블에 해당 컬럼은 존재하지 않는다.</span>
+  <span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Phone</span><span class="o">&gt;</span> <span class="n">phoneList</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<br/>
+<h3 id="phone-">Phone 클래스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">lombok.Data</span><span class="o">;</span>
+
+<span class="cm">/**
+ * 핸드폰 정보 도메인
+ */</span>
+<span class="nd">@Data</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Phone</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">Long</span> <span class="n">dbid</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">number</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<br/>
+<h3 id="phonemapper-">PhoneMapper 인터페이스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Select</span><span class="o">(</span><span class="s">"SELECT * FROM phone WHERE id=#{id}"</span><span class="o">)</span>
+<span class="c1">//@Results 생략</span>
+<span class="nc">List</span><span class="o">&lt;</span><span class="nc">Phone</span><span class="o">&gt;</span> <span class="nf">getByUserDbId</span><span class="o">(</span><span class="nd">@Param</span><span class="o">(</span><span class="s">"id"</span><span class="o">)</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">);</span>
+</code></pre></div></div>
+<br/>
+<h3 id="usermapper-">UserMapper 인터페이스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Select</span><span class="o">(</span><span class="s">"SELECT * FROM user"</span><span class="o">)</span>
+<span class="nd">@Results</span><span class="o">(</span><span class="nd">@Result</span><span class="o">(</span><span class="n">property</span><span class="o">=</span><span class="s">"phoneList"</span><span class="o">,</span> <span class="n">column</span><span class="o">=</span><span class="s">"dbid"</span><span class="o">,</span> <span class="n">many</span><span class="o">=</span><span class="nd">@Many</span><span class="o">(</span><span class="n">select</span><span class="o">=</span><span class="s">"패키지명.Phone.getByUserDbId"</span><span class="o">)))</span>
+<span class="nc">List</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">&gt;</span> <span class="nf">getAll</span><span class="o">();</span>
+</code></pre></div></div>
+<ul>
+<li><code>property=&quot;phoneList&quot;</code>
+<ul>
+<li>User.phoneList 필드에 저장하겠다.</li>
+</ul>
+</li>
+<li><code>column=&quot;dbid&quot;</code>
+<ul>
+<li>“User 테이블의 dbid 칼럼의 값”을 “<code>@Many</code> 로 지정한 메서드의 파라미터”로 전달하겠다.</li>
+</ul>
+</li>
+<li><code>many=@Many(select=&quot;패키지명.매퍼_인터페이스명.메서드명&quot;)</code>
+<ul>
+<li>해당 매퍼의 메서드를 호출하겠다.</li>
+<li>그리고 그 결과를 User.phoneList 필드에 저장하겠다.</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-1">활용 예시</h2>
+<h3 id="erd-1">ERD</h3>
+<p><img src="/assets/img/2021-09-01-MyBatis_MyBatisFunction/Untitled%203.png" alt="Untitled" /></p>
+<br/>
+<h3 id="data--codeusercode">Data 객체: <code>User</code></h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">lombok.Data</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">lombok.Getter</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">lombok.NoArgsConstructor</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="cm">/**
+ * 사용자 정보 도메인
+ */</span>
+<span class="nd">@Data</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">User</span> <span class="o">{</span>
+
+  <span class="kd">private</span> <span class="nc">Long</span> <span class="n">dbid</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="nc">String</span> <span class="n">email</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="nc">String</span> <span class="n">password</span><span class="o">;</span>
+
+  <span class="c1">//1대다 관계 설정 (1: User, 다: Phone)</span>
+  <span class="c1">//테이블에 해당 컬럼은 존재하지 않는다.</span>
+  <span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Phone</span><span class="o">&gt;</span> <span class="n">phoneList</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<br/>
+<h3 id="mapper-codeusermappercode">Mapper: <code>UserMapper</code></h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.apache.ibatis.annotations.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="nd">@Mapper</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">UserMapper</span> <span class="o">{</span>
+
+  <span class="c1">//Create</span>
+  <span class="nd">@Insert</span><span class="o">(</span><span class="s">"INSERT INTO user(email, name, password) VALUES (#{user.email}, #{user.name}, #{user.password})"</span><span class="o">)</span>
+  <span class="nd">@Options</span><span class="o">(</span><span class="n">useGeneratedKeys</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span> <span class="n">keyProperty</span> <span class="o">=</span> <span class="s">"dbid"</span><span class="o">)</span> <span class="c1">//SQL이 생성한 KEY 값을 매핑된 객체의 dbid 필드에도 담아주겠다.</span>
+  <span class="kt">int</span> <span class="nf">insert</span><span class="o">(</span><span class="nd">@Param</span><span class="o">(</span><span class="s">"user"</span><span class="o">)</span> <span class="nc">User</span> <span class="n">user</span><span class="o">);</span>
+
+  <span class="c1">//Read - 1</span>
+  <span class="nd">@Select</span><span class="o">(</span><span class="s">"SELECT * FROM user"</span><span class="o">)</span>
+  <span class="nd">@Results</span><span class="o">(</span><span class="n">id</span><span class="o">=</span><span class="s">"myResultId"</span><span class="o">,</span> <span class="n">value</span> <span class="o">=</span> <span class="o">{</span>
+          <span class="nd">@Result</span><span class="o">(</span><span class="n">property</span> <span class="o">=</span> <span class="s">"dbid"</span><span class="o">,</span> <span class="n">column</span> <span class="o">=</span> <span class="s">"dbid"</span><span class="o">),</span>
+          <span class="nd">@Result</span><span class="o">(</span><span class="n">property</span> <span class="o">=</span> <span class="s">"email"</span><span class="o">,</span> <span class="n">column</span> <span class="o">=</span> <span class="s">"email"</span><span class="o">),</span>
+          <span class="nd">@Result</span><span class="o">(</span><span class="n">property</span> <span class="o">=</span> <span class="s">"name"</span><span class="o">,</span> <span class="n">column</span> <span class="o">=</span> <span class="s">"name"</span><span class="o">),</span>
+          <span class="nd">@Result</span><span class="o">(</span><span class="n">property</span> <span class="o">=</span> <span class="s">"password"</span><span class="o">,</span> <span class="n">column</span> <span class="o">=</span> <span class="s">"password"</span><span class="o">),</span>
+          <span class="nd">@Result</span><span class="o">(</span><span class="n">property</span> <span class="o">=</span> <span class="s">"phoneList"</span><span class="o">,</span> <span class="n">column</span> <span class="o">=</span> <span class="s">"dbid"</span><span class="o">,</span> <span class="n">many</span> <span class="o">=</span> <span class="nd">@Many</span><span class="o">(</span><span class="n">select</span> <span class="o">=</span> <span class="s">"test.mybatis.domain.PhoneMapper.getByUserId"</span><span class="o">))</span>
+  <span class="o">})</span> <span class="c1">//필드명과 컬럼명이 같으면 @Results 는 필요없다.</span>
+  <span class="nc">List</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">&gt;</span> <span class="nf">getAll</span><span class="o">();</span>
+
+  <span class="c1">//Read - 2</span>
+  <span class="c1">//@Results 재활용</span>
+  <span class="nd">@Select</span><span class="o">(</span><span class="s">"SELECT * FROM user WHERE dbid=#{id}"</span><span class="o">)</span>
+  <span class="nd">@ResultMap</span><span class="o">(</span><span class="s">"myResultId"</span><span class="o">)</span>
+  <span class="nc">User</span> <span class="nf">getById</span><span class="o">(</span><span class="nd">@Param</span><span class="o">(</span><span class="s">"id"</span><span class="o">)</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<br/>
+<h3 id="data--codephonecode">Data 객체: <code>Phone</code></h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">lombok.Data</span><span class="o">;</span>
+
+<span class="cm">/**
+ * 핸드폰 정보 도메인
+ */</span>
+<span class="nd">@Data</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Phone</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">Long</span> <span class="n">dbid</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">number</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<br/>
+<h3 id="mapper-codephonemappercode">Mapper: <code>PhoneMapper</code></h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.apache.ibatis.annotations.*</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="nd">@Mapper</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">PhoneMapper</span> <span class="o">{</span>
+    <span class="c1">//Create</span>
+    <span class="nd">@Insert</span><span class="o">(</span><span class="s">"INSERT INTO phone(number, dbid) VALUES (#{phone.number}, #{phone.dbid})"</span><span class="o">)</span>
+    <span class="nd">@Options</span><span class="o">(</span><span class="n">useGeneratedKeys</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span> <span class="n">keyProperty</span> <span class="o">=</span> <span class="s">"id"</span><span class="o">)</span> <span class="c1">//SQL이 생성한 KEY 값을 매핑된 객체의 dbid 필드에도 담아주겠다.</span>
+    <span class="kt">int</span> <span class="nf">insert</span><span class="o">(</span><span class="nd">@Param</span><span class="o">(</span><span class="s">"phone"</span><span class="o">)</span> <span class="nc">Phone</span> <span class="n">phone</span><span class="o">);</span>
+
+    <span class="c1">//Read - 1</span>
+    <span class="nd">@Select</span><span class="o">(</span><span class="s">"SELECT * FROM phone"</span><span class="o">)</span>
+    <span class="nd">@Results</span><span class="o">(</span><span class="n">id</span><span class="o">=</span><span class="s">"phoneId"</span><span class="o">,</span> <span class="n">value</span> <span class="o">=</span> <span class="o">{</span>
+            <span class="nd">@Result</span><span class="o">(</span><span class="n">property</span> <span class="o">=</span> <span class="s">"id"</span><span class="o">,</span> <span class="n">column</span> <span class="o">=</span> <span class="s">"id"</span><span class="o">),</span>
+            <span class="nd">@Result</span><span class="o">(</span><span class="n">property</span> <span class="o">=</span> <span class="s">"number"</span><span class="o">,</span> <span class="n">column</span> <span class="o">=</span> <span class="s">"number"</span><span class="o">),</span>
+            <span class="nd">@Result</span><span class="o">(</span><span class="n">property</span> <span class="o">=</span> <span class="s">"dbid"</span><span class="o">,</span> <span class="n">column</span> <span class="o">=</span> <span class="s">"dbid"</span><span class="o">)</span>
+    <span class="o">})</span> <span class="c1">//필드명과 컬럼명이 같으면 @Results 는 필요없다.</span>
+    <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Phone</span><span class="o">&gt;</span> <span class="nf">getAll</span><span class="o">();</span>
+
+    <span class="c1">//Read - 2</span>
+    <span class="c1">//@Results 재활용</span>
+    <span class="nd">@Select</span><span class="o">(</span><span class="s">"SELECT * FROM phone WHERE id=#{id}"</span><span class="o">)</span>
+    <span class="nd">@ResultMap</span><span class="o">(</span><span class="s">"phoneId"</span><span class="o">)</span>
+    <span class="nc">Phone</span> <span class="nf">getById</span><span class="o">(</span><span class="nd">@Param</span><span class="o">(</span><span class="s">"id"</span><span class="o">)</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">);</span>
+
+    <span class="nd">@Select</span><span class="o">(</span><span class="s">"SELECT * FROM phone WHERE dbid=#{dbid}"</span><span class="o">)</span>
+    <span class="nd">@ResultMap</span><span class="o">(</span><span class="s">"phoneId"</span><span class="o">)</span>
+    <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Phone</span><span class="o">&gt;</span> <span class="nf">getByUserId</span><span class="o">(</span><span class="nd">@Param</span><span class="o">(</span><span class="s">"dbid"</span><span class="o">)</span> <span class="nc">Long</span> <span class="n">dbid</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<br/>
+<h3 id="codeusercontrollercode">컨트롤러: <code>UserController</code></h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">lombok.RequiredArgsConstructor</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.http.ResponseEntity</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">test.mybatis.domain.User</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">test.mybatis.domain.UserMapper</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">test.mybatis.service.UserService</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="nd">@RestController</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/user"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserController</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">UserMapper</span> <span class="n">userMapper</span><span class="o">;</span>
+
+    <span class="nd">@PostMapping</span><span class="o">(</span><span class="s">"/insert"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="nc">User</span> <span class="nf">insertUser</span><span class="o">(</span><span class="nd">@RequestBody</span> <span class="nc">User</span> <span class="n">user</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">userMapper</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="n">user</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">user</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/selectAll"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">&gt;</span> <span class="nf">selectAllUser</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">userMapper</span><span class="o">.</span><span class="na">getAll</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/selectById/{id}"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="nc">User</span> <span class="nf">selectById</span><span class="o">(</span><span class="nd">@PathVariable</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">userMapper</span><span class="o">.</span><span class="na">getById</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<br/>
+<h3 id="codephonecontrollercode">컨트롤러: <code>PhoneController</code></h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">lombok.RequiredArgsConstructor</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">test.mybatis.domain.Phone</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">test.mybatis.domain.PhoneMapper</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">test.mybatis.domain.User</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">test.mybatis.domain.UserMapper</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="nd">@RestController</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/phone"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">PhoneController</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">PhoneMapper</span> <span class="n">phoneMapper</span><span class="o">;</span>
+
+    <span class="nd">@PostMapping</span><span class="o">(</span><span class="s">"/insert"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="nc">Phone</span> <span class="nf">insertPhone</span><span class="o">(</span><span class="nd">@RequestBody</span> <span class="nc">Phone</span> <span class="n">phone</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">phoneMapper</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="n">phone</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">phone</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/selectAll"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Phone</span><span class="o">&gt;</span> <span class="nf">selectAllPhone</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">phoneMapper</span><span class="o">.</span><span class="na">getAll</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/selectById/{id}"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="nc">Phone</span> <span class="nf">selectById</span><span class="o">(</span><span class="nd">@PathVariable</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">phoneMapper</span><span class="o">.</span><span class="na">getById</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br/><br/></p>
+<h2 id="section-2">로깅하기</h2>
+<h3 id="codeapplicationpropertiescode-"><code>application.properties</code> 파일</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logging</span><span class="o">.</span><span class="na">level</span><span class="o">.</span><span class="na">패키지명</span><span class="o">.</span><span class="na">매퍼_인터페이스명</span><span class="o">=</span><span class="no">TRACE</span>
+</code></pre></div></div>
+<ul>
+<li>SQL 쿼리문과 결과값이 로깅된다.</li>
+</ul>
+:ET

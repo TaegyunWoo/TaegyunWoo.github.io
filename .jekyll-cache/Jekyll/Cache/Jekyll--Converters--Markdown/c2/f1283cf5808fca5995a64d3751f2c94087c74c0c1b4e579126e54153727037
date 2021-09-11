@@ -1,0 +1,130 @@
+I"D<p><br/><br/></p>
+<ul>
+<li>이전 게시글
+<ol>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionServlet">예외처리 - 서블릿 예외 처리</a></li>
+</ol>
+</li>
+</ul>
+<p><br/><br/></p>
+<h1 id="section">스프링 오류 페이지</h1>
+<h2 id="section-1">개요</h2>
+<ul>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionServlet">이전 게시글</a>에서 서블릿에서 예외를 처리하는 방법에 대해 알아보았다.</li>
+<li>스프링은 이러한 과정을 모두 기본으로 제공한다.</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-2">스프링이 제공하는 오류 페이지 처리 기능</h2>
+<ul>
+<li><code>ErrorPage</code> 를 자동으로 등록한다.</li>
+<li>기본 오류 페이지 경로: <code>templates/error</code> , <code>static/error</code>
+<ul>
+<li>상태코드와 예외를 설정하지 않으면 기본 오류 페이지로 사용된다.</li>
+<li><strong>서블릿 밖으로 예외가 발생하거나, <code>response.sendError()</code> 가 호출되면 모든 오류는 <code>/error</code> 를 호출하게 된다.</strong></li>
+<li><strong>그리고 <code>BasicErrorController</code> 가 <code>/error</code> 요청을 처리한다.</strong></li>
+</ul>
+</li>
+<li><strong><code>BasicErrorController</code> 라는 스프링 컨트롤러를 자동으로 등록한다.</strong>
+<ul>
+<li><code>ErrorPage</code> 에서 등록한 <code>/error</code> 를 매핑해서 처리하는 컨트롤러이다.</li>
+</ul>
+</li>
+<li><strong>따라서 개발자는 오류 페이지만 등록하면 된다.</strong></li>
+</ul>
+<br/>
+<h3 id="codebasicerrorcontrollercode----"><code>BasicErrorController</code> 의 뷰 선택 우선순위</h3>
+<ol>
+<li><strong>뷰 템플릿</strong>
+<ul>
+<li><code>resource/templates/error/500.html</code></li>
+<li><code>resource/templates/error/5xx.html</code></li>
+</ul>
+</li>
+<li><strong>정적 리소스</strong>
+<ul>
+<li><code>resource/static/error/400.html</code></li>
+<li><code>resource/static/error/4xx.html</code></li>
+</ul>
+</li>
+<li><strong>적용 대상이 없을 때 뷰 이름 ( <code>error</code> )</strong>
+<ul>
+<li><code>/resources/templates/error.html</code></li>
+</ul>
+</li>
+</ol>
+<br/>
+<h3 id="codebasicerrorcontrollercode-----1"><code>BasicErrorController</code> 의 뷰 선택 규칙</h3>
+<ul>
+<li>해당 경로 위치에 HTTP 상태 코드 이름의 뷰 파일을 넣어두면 된다.</li>
+<li>뷰 템플릿이 정적 리소스보다 우선순위가 높다.</li>
+<li>400, 500 처럼 구체적인 것이 5xx처럼 덜 구체적인 것보다 우선순위가 높다.</li>
+<li>4xx, 5xx 라고 하면 500대, 400대 오류를 처리해준다.</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-3">스프링 오류 처리 예시</h2>
+<blockquote>
+<p>예시코드 실습을 위해, <a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionServlet#14">이전 게시글</a>에서 작성한 <code>WebServerCustomizer</code> 클래스에서 <code>@Component</code> 애너테이션을 주석처리하자.</p>
+</blockquote>
+<br/>
+<h3 id="coderesourcestemplateserror4xxhtmlcode">오류 뷰 템플릿 1: <code>resources/templates/error/4xx.html</code></h3>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"UTF-8"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Title<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>BasicErrorController 가 호출해준 오류 페이지<span class="nt">&lt;/h1&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>400대 에러를 처리한다.<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<br/>
+<h3 id="coderesourcestemplateserror404htmlcode">오류 뷰 템플릿 2: <code>resources/templates/error/404.html</code></h3>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"UTF-8"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Title<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>BasicErrorController 가 호출해준 오류 페이지<span class="nt">&lt;/h1&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>404 에러를 처리한다.<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<br/>
+<h3 id="coderesourcestemplateserror500htmlcode">오류 뷰 템플릿 3: <code>resources/templates/error/500.html</code></h3>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"UTF-8"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Title<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>BasicErrorController 가 호출해준 오류 페이지<span class="nt">&lt;/h1&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>500 에러를 처리한다.<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<br/>
+<h3 id="section-4">결과</h3>
+<ul>
+<li>
+<p>호출: <code>http://localhost:8080/sendError</code></p>
+<p><img src="/assets/img/2021-08-16-SPRING_MVC_ExceptionSpring/Untitled%2010.png" alt="Untitled" /></p>
+</li>
+<li>
+<p>호출: <code>http://localhost:8080/존재하지않는경로</code></p>
+<p><img src="/assets/img/2021-08-16-SPRING_MVC_ExceptionSpring/Untitled%2011.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/YPER"><img src="/assets/img/Inflearn_Spring_MVC2/logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET
