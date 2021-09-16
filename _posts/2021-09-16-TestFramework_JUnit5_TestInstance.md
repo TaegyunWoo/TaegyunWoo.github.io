@@ -1,6 +1,6 @@
 ---
 category: Test-Framework
-tags: [JUnit5, Tag]
+tags: [JUnit5]
 title: "[JUnit 5] 테스트 인스턴스"
 date:   2021-09-16 22:30:00 
 lastmod : 2021-09-16 22:30:00
