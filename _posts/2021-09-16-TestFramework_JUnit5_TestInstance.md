@@ -2,8 +2,8 @@
 category: Test-Framework
 tags: [JUnit5, Tag]
 title: "[JUnit 5] 테스트 인스턴스"
-date:   2021-09-16 16:30:00 
-lastmod : 2021-09-16 16:30:00
+date:   2021-09-16 20:30:00 
+lastmod : 2021-09-16 20:30:00
 sitemap :
   changefreq : daily
   priority : 1.0
