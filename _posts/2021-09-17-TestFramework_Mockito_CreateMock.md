@@ -149,12 +149,12 @@ import static org.mockito.Mockito.*;
 
 class StudyServiceTest {
 
-	/**
+  /**
    * @Mock 애너테이션으로 mock 객체 만들기
    */
   @Test
   void createStudyServiceWithAnnotaion(@Mock MemberService memberServiceWithAnno,
-									@Mock StudyRepository studyRepositoryWithAnno
+					@Mock StudyRepository studyRepositoryWithAnno
 									) {
 
     /*
@@ -163,7 +163,7 @@ class StudyServiceTest {
      현재 인터페이스만 존재하는 상황이다.
      따라서, mock 객체를 통해 StudyService 객체를 생성할 수 있다.
      */
-		//Mock 객체로 의존성이 주입되었다.
+	//Mock 객체로 의존성이 주입되었다.
     StudyService studyService = new StudyService(memberServiceWithAnno, studyRepositoryWithAnno);
     assertNotNull(studyService);
 	}
