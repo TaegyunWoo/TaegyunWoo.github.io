@@ -74,18 +74,18 @@ sitemap :
 
       @Test
       void test(@Mock MemberService memberService,
-    					@Mock StudyRepository studyRepository
-    					) {
+                @Mock StudyRepository studyRepository
+                ) {
         StudyService studyService = new StudyService(memberService, studyRepository);
-    		Study study = new Study(10, "java");
-    		Member member = new Member();
-    		member.setId(1L);
-    		member.setEmail("test@test.com");
+        Study study = new Study(10, "java");
+        Member member = new Member();
+        member.setId(1L);
+        member.setEmail("test@test.com");
 
-    		//행동 정의
-    		when(memberService.findById(1L)).thenReturn(Optional.of(member)); //findByID 메서드의 인수가 1L일 때만 동작
-    		
-    		studyService.createNewStudy(1L, study);
+        //행동 정의
+        when(memberService.findById(1L)).thenReturn(Optional.of(member)); //findByID 메서드의 인수가 1L일 때만 동작
+        
+        studyService.createNewStudy(1L, study);
     	}
 
     }
@@ -121,19 +121,19 @@ sitemap :
 
       @Test
       void test(@Mock MemberService memberService,
-    					@Mock StudyRepository studyRepository
-    					) {
+                @Mock StudyRepository studyRepository
+                ) {
         StudyService studyService = new StudyService(memberService, studyRepository);
-    		Study study = new Study(10, "java");
-    		Member member = new Member();
-    		member.setId(1L);
-    		member.setEmail("test@test.com");
+        Study study = new Study(10, "java");
+        Member member = new Member();
+        member.setId(1L);
+        member.setEmail("test@test.com");
 
-    		//행동 정의
-    		when(memberService.findById(any())).thenReturn(Optional.of(member)); //findByID 메서드의 인수에 관계없이 동작
-    		
-    		studyService.createNewStudy(1L, study);
-    	}
+        //행동 정의
+        when(memberService.findById(any())).thenReturn(Optional.of(member)); //findByID 메서드의 인수에 관계없이 동작
+        
+        studyService.createNewStudy(1L, study);
+        }
 
     }
     ```
@@ -169,18 +169,18 @@ sitemap :
 
       @Test
       void test(@Mock MemberService memberService,
-    					@Mock StudyRepository studyRepository
-    					) {
+                @Mock StudyRepository studyRepository
+                ) {
         StudyService studyService = new StudyService(memberService, studyRepository);
-    		Study study = new Study(10, "java");
-    		Member member = new Member();
-    		member.setId(1L);
-    		member.setEmail("test@test.com");
+        Study study = new Study(10, "java");
+        Member member = new Member();
+        member.setId(1L);
+        member.setEmail("test@test.com");
 
-    		//행동 정의
-    		when(memberService.findById(1L)).thenThrow(new RuntimeException()); //findByID 메서드의 인수가 1L일 때만 RuntimeException 던지기
-    		
-    		studyService.createNewStudy(1L, study); //이 코드는 예외가 발생한다.
+        //행동 정의
+        when(memberService.findById(1L)).thenThrow(new RuntimeException()); //findByID 메서드의 인수가 1L일 때만 RuntimeException 던지기
+        
+        studyService.createNewStudy(1L, study); //이 코드는 예외가 발생한다.
     	}
 
     }
@@ -220,19 +220,19 @@ sitemap :
 
       @Test
       void test(@Mock MemberService memberService,
-    					@Mock StudyRepository studyRepository
-    					) {
+                @Mock StudyRepository studyRepository
+                ) {
         StudyService studyService = new StudyService(memberService, studyRepository);
-    		Study study = new Study(10, "java");
-    		Member member = new Member();
-    		member.setId(1L);
-    		member.setEmail("test@test.com");
-    		when(memberService.findById(1L)).thenReturn(Optional.of(member)); //createNewStudy() 를 수행하기 위해 필요
+        Study study = new Study(10, "java");
+        Member member = new Member();
+        member.setId(1L);
+        member.setEmail("test@test.com");
+        when(memberService.findById(1L)).thenReturn(Optional.of(member)); //createNewStudy() 를 수행하기 위해 필요
 
-    		//행동 정의
-    		doThrow(new RuntimeException()).when(memberService).notify(any()); //notify 메서드의 인수에 상관없이 동작
-    		
-    		studyService.createNewStudy(1L, study); //이 코드는 예외가 발생한다.
+        //행동 정의
+        doThrow(new RuntimeException()).when(memberService).notify(any()); //notify 메서드의 인수에 상관없이 동작
+        
+        studyService.createNewStudy(1L, study); //이 코드는 예외가 발생한다.
     	}
 
     }
@@ -274,23 +274,23 @@ sitemap :
 
       @Test
       void test(@Mock MemberService memberService,
-    					@Mock StudyRepository studyRepository
-    					) {
+                @Mock StudyRepository studyRepository
+                ) {
         StudyService studyService = new StudyService(memberService, studyRepository);
-    		Study study = new Study(10, "java");
-    		Member member1 = new Member();
-    		member.setId(1L);
-    		member.setEmail("test1@test.com");
-    		Member member2 = new Member();
-    		member.setId(2L);
-    		member.setEmail("test2@test.com");
+        Study study = new Study(10, "java");
+        Member member1 = new Member();
+        member.setId(1L);
+        member.setEmail("test1@test.com");
+        Member member2 = new Member();
+        member.setId(2L);
+        member.setEmail("test2@test.com");
 
-    		//행동 정의
-    		when(memberService.findById(1L)).thenReturn(Optional.of(member1)) //첫번째 호출시 동작
-    					.thenReturn(Optional.of(member2)) //두번째 호출시 동작
-    					.thenThrow(new RuntimeException()); //세번째 호출시 동작
+        //행동 정의
+        when(memberService.findById(1L)).thenReturn(Optional.of(member1)) //첫번째 호출시 동작
+                    .thenReturn(Optional.of(member2)) //두번째 호출시 동작
+                    .thenThrow(new RuntimeException()); //세번째 호출시 동작
 
-    		studyService.createNewStudy(1L, study); //1번째 동작
+        studyService.createNewStudy(1L, study); //1번째 동작
         studyService.createNewStudy(1L, study); //2번째 동작
         studyService.createNewStudy(1L, study); //3번째 동작 => 예외발생
     	}
