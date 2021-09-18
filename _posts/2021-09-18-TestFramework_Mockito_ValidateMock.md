@@ -18,6 +18,7 @@ sitemap :
 - 이전 게시글
     - [[Mockito] Mockito 개요](https://taegyunwoo.github.io/test-framework/TestFramework_Mockito_Summary)
     - [[Mockito] Mock 객체 만들기](https://taegyunwoo.github.io/test-framework/TestFramework_Mockito_CreateMock)
+    - [[Mockito] Mock 객체 행동 정의](https://taegyunwoo.github.io/test-framework/TestFramework_Mockito_Stubbing)
 
 <br/><br/>
 
