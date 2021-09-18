@@ -189,7 +189,7 @@ verifyNoMoreInteractions(확인할_mock객체); //기준 시점 이후 검증
         Study newStudy = studyService.createNewStudy(1L, study);
 
         // ----------- ***행동 검증*** -----------
-    	verify(memberService).notify(any()); //기준 시점 = notify()가 호출된 시점
+        verify(memberService).notify(any()); //기준 시점 = notify()가 호출된 시점
         verifyNoMoreInteractions(memberService); //기준 시점 이후에, memberService 객체(mock)가 사용되지 않았나?
 
         // ----------- 테스트 검증 -----------
@@ -225,7 +225,7 @@ verifyNoMoreInteractions(확인할_mock객체); //기준 시점 이후 검증
         Study newStudy = studyService.createNewStudy(1L, study);
 
         // ----------- ***행동 검증*** -----------
-    	verify(memberService).findById(any()); //기준 시점 = findById()가 호출된 시점
+        verify(memberService).findById(any()); //기준 시점 = findById()가 호출된 시점
         verifyNoMoreInteractions(memberService); //기준 시점 이후에, memberService 객체(mock)가 사용되지 않았나?
 
         // ----------- 테스트 검증 -----------
