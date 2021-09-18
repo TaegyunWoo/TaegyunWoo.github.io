@@ -100,10 +100,10 @@ class StudyServiceTest {
     studyService.createNewStudy(1L, study);
 
     //------------- then -------------
-	assertEquals(study, newStudy);
+  assertEquals(study, newStudy);
 
-	//행동 검증(차후 설명)
-	verify(memberService, times(1)).findById(1L);
+  //행동 검증(차후 설명)
+  verify(memberService, times(1)).findById(1L);
   }
 
 }
@@ -160,10 +160,10 @@ class StudyServiceTest {
     studyService.createNewStudy(1L, study);
 
     //------------- then -------------
-	assertEquals(study, newStudy);
+  assertEquals(study, newStudy);
 
-	//행동 검증
-	then(memberService).should(times(1)).findById(1L);
+  //행동 검증
+  then(memberService).should(times(1)).findById(1L);
   }
 
 }
