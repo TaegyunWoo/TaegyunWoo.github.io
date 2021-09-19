@@ -135,7 +135,7 @@ sitemap :
 
 ### `@Options`
 
-- `@Options( userGeneratedKeys=true, keyProperty="키_필드" )`
+- `@Options( userGeneratedKeys=true, keyProperty="키_필드", keyColumn="키_애트리뷰트" )`
     - 위와 같이 작성하면, **SQL에서 생성된 값(AUTO_INCREMENT 등)이 매핑된 객체의 필드에 역으로 바인딩된다.**
     - 사용 예시
 
@@ -143,7 +143,7 @@ sitemap :
 
 
         @Insert("INSERT INTO user(email, name, password) VALUES (#{user.email}, #{user.name}, #{user.password})")
-        @Options(useGeneratedKeys = true, keyProperty = "dbid") //SQL이 생성한 KEY 값을 매핑된 객체의 dbid 필드에도 담아주겠다.
+        @Options(useGeneratedKeys = true, keyProperty = "dbid", keyColumn="dbid") //SQL이 생성한 KEY 값을 매핑된 객체의 dbid 필드에도 담아주겠다.
         int insert(@Param("user") User user);
 
         
