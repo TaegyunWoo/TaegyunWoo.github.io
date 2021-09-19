@@ -53,7 +53,7 @@ sitemap :
 	}
 )
 public class Test {
-	@Value("${my.value}")
+  @Value("${my.value}")
   private String a; // => MY_VALUE
 
   @Value("${test}")
@@ -77,8 +77,8 @@ public class Test {
 
 ```java
 @SpringBootTest(
-	properties = {
-		"spring.config.location=classpath:application-test.properties"
+  properties = {
+    "spring.config.location=classpath:application-test.properties"
 	}
 )
 public class Test {
@@ -190,7 +190,7 @@ class ArticleMapperTest {
     article.setDateTime(LocalDateTime.now());
     article.setWriter(1L);
     article.setContent("Test Content");
-    int i = articleMapper.insertArticle(article);
+    articleMapper.insertArticle(article);
 
     Article selectArticle = articleMapper.getById(article.getId());
 
