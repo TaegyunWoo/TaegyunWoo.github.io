@@ -144,7 +144,7 @@ dependencies {
     //import 생략
 
     @AutoConfigureMybatis // 마이바티스
-    @WebMvcTest(BoardController.class)
+    @SpringBootTest
     class BoardControllerTest {
         @Autowired
         private ArticleMapper articleMapper;
