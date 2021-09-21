@@ -1,5 +1,5 @@
 ---
-category: Test-Code
+category: Test-Framework
 tags: [Test]
 title: "[테스트] 통합테스트: @SpringBootTest"
 date:   2021-09-19 19:30:00 

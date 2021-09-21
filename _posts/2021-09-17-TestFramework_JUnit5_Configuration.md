@@ -1,5 +1,5 @@
 ---
-category: Test-Code
+category: Test-Framework
 tags: [JUnit5]
 title: "[JUnit 5] JUnit 설정 파일"
 date:   2021-09-17 15:30:00 

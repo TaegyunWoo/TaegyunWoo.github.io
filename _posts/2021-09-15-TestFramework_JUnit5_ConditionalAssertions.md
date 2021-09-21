@@ -1,5 +1,5 @@
 ---
-category: Test-Code
+category: Test-Framework
 tags: [JUnit5]
 title: "[JUnit 5] 조건에 따른 테스트"
 date:   2021-09-15 17:30:00 

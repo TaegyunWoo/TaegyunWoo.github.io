@@ -1,5 +1,5 @@
 ---
-category: Test-Code
+category: Test-Framework
 tags: [JUnit5, Tag]
 title: "[JUnit 5] 태깅과 필터링"
 date:   2021-09-16 16:30:00 

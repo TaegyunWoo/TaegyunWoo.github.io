@@ -1,5 +1,5 @@
 ---
-category: Test-Code
+category: Test-Framework
 tags: [JUnit5]
 title: "[JUnit 5] 테스트 순서"
 date:   2021-09-16 22:40:00 
