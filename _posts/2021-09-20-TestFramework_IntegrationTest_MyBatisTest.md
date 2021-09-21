@@ -133,7 +133,6 @@ dependencies {
 ### 특징
 
 - **`@AutoConfigureMyBatis` 는 `@WebMvcTest`, `@SpringBootTest` 와 같은 다른 `@~Test` 애너테이션과 함께 사용할 때 사용한다.**
-- **즉, `@MyBatisTest` 는 오직 Mapper에 대한 유닛 테스트를 수행할 때 사용한다.**
 
 <br/>
 
