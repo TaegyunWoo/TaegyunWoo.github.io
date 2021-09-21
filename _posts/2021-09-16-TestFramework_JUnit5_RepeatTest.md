@@ -1,5 +1,5 @@
 ---
-category: Test-Framework
+category: Test-Code
 tags: [JUnit5, 테스트반복]
 title: "[JUnit 5] 테스트 반복"
 date:   2021-09-16 22:00:00 

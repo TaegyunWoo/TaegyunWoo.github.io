@@ -1,5 +1,5 @@
 ---
-category: Test-Framework
+category: Test-Code
 tags: [Mockito]
 title: "[Mockito] Mock 객체 행동 검증"
 date:   2021-09-18 19:00:00 

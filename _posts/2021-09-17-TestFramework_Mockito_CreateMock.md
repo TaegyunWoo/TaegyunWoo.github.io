@@ -1,5 +1,5 @@
 ---
-category: Test-Framework
+category: Test-Code
 tags: [Mockito]
 title: "[Mockito] Mock 객체 만들기"
 date:   2021-09-17 17:30:00 

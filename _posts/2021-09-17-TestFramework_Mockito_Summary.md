@@ -1,5 +1,5 @@
 ---
-category: Test-Framework
+category: Test-Code
 tags: [Mockito, 개요]
 title: "[Mockito] Mockito 개요"
 date:   2021-09-17 17:00:00 

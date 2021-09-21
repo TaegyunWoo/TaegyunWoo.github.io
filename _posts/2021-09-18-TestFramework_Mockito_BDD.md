@@ -1,5 +1,5 @@
 ---
-category: Test-Framework
+category: Test-Code
 tags: [Mockito]
 title: "[Mockito] BDD 스타일 API 작성"
 date:   2021-09-18 20:30:00 

@@ -1,5 +1,5 @@
 ---
-category: Test-Framework
+category: Test-Code
 tags: [Test]
 title: "[테스트] MyBatis 테스트"
 date:   2021-09-20 10:30:00 

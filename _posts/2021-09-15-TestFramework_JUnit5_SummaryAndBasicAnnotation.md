@@ -1,5 +1,5 @@
 ---
-category: Test-Framework
+category: Test-Code
 tags: [JUnit5, 개요]
 title: "[JUnit 5] 개요 및 기본 애너테이션"
 date:   2021-09-15 15:30:00 

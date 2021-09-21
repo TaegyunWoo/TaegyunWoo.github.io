@@ -1,5 +1,5 @@
 ---
-category: Test-Framework
+category: Test-Code
 tags: [JUnit5, Tag]
 title: "[JUnit 5] 커스텀 태그"
 date:   2021-09-16 16:40:00 

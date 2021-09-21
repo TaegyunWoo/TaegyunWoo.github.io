@@ -1,5 +1,5 @@
 ---
-category: Test-Framework
+category: Test-Code
 tags: [JUnit5, Extension]
 title: "[JUnit 5] 확장 모델"
 date:   2021-09-17 16:30:00 
