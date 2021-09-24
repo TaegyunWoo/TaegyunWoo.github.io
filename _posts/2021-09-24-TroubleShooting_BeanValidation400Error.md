@@ -25,8 +25,8 @@ sitemap :
   ```java
   @PostMapping("/new-article")
   public String addArticle(@Validated @ModelAttribute("article") NewArticleForm form,
-            @SessionAttribute("loginUser") User user,
-            BindingResult bindingResult) {
+                          @SessionAttribute("loginUser") User user,
+                          BindingResult bindingResult) {
 
     if (bindingResult.hasErrors()) {
       return "add-article";
@@ -109,8 +109,8 @@ sitemap :
   ```java
   @PostMapping("/new-article")
   public String addArticle(@Validated @ModelAttribute("article") NewArticleForm form,
-            @SessionAttribute("loginUser") User user,
-            BindingResult bindingResult) {
+                          @SessionAttribute("loginUser") User user,
+                          BindingResult bindingResult) {
 
     if (bindingResult.hasErrors()) {
       return "add-article";
@@ -135,8 +135,8 @@ sitemap :
   ```java
   @PostMapping("/new-article")
   public String addArticle(@SessionAttribute("loginUser") User user,
-            @Validated @ModelAttribute("article") NewArticleForm form,
-            BindingResult bindingResult) {
+                          @Validated @ModelAttribute("article") NewArticleForm form,
+                          BindingResult bindingResult) {
 
     if (bindingResult.hasErrors()) {
       return "add-article";
