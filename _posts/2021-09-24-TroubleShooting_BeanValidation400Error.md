@@ -1,6 +1,6 @@
 ---
 category: TS
-tags: [트러블슈팅, ViewResolver]
+tags: [트러블슈팅, BeanValidation]
 title: "Bean Validation과 400 오류"
 date:   2021-09-24 17:30:00 
 lastmod : 2021-09-24 17:30:00
