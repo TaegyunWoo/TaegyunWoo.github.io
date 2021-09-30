@@ -106,7 +106,7 @@ sitemap :
 
 ### Access Method: 데이터 접근 방식
 
-![Untitled](/assets/img/2021-09-30-ComputerStructure_Memory/Untitled%2048)
+![Untitled](/assets/img/2021-09-30-ComputerStructure_Memory/Untitled%2048.png)
 
 <br/>
 
