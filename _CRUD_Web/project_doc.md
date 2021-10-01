@@ -50,10 +50,6 @@ sitemap :
 
 ## 시스템 구성도
 
-### 인프라 구성도
-
-![Untitled](/assets/img/Series-CRUD_Web/Untitled.png)
-
 ### SW 구성도
 
 ![Untitled](/assets/img/Series-CRUD_Web/Untitled%201.png)
