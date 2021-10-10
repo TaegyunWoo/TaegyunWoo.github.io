@@ -1,7 +1,7 @@
 ---
 title: "프로젝트 계획서"
 date:   2021-10-01 18:30:00
-lastmod : 2021-10-01 18:30:00
+lastmod : 2021-10-10 10:08:00
 sitemap :
   changefreq : daily
   priority : 1.0
@@ -22,6 +22,7 @@ sitemap :
 - 스프링부트를 활용하여 백엔드를 구현한다.
 - 타임리프를 활용하여 페이지를 구성한다.
 - MyBatis를 통해 DB에 접근한다.
+- **추후에 JPA로 변경한다.**
 - JUnit5, Mockito를 사용하여 테스트코드를 작성한다.
 - 서버단 구축에 집중한다.
 
@@ -33,6 +34,7 @@ sitemap :
 - 이전에 구현한 Basic Web CRUD 프로젝트에서 더 발전할 수 있다.
 - 스프링의 개념과 원리에 대해, 다시 곱씹어볼 수 있다.
 - 테스트 코드 작성법을 복습한다.
+- MyBatis와 JPA를 직접 프로젝트에 적용해서, 각 개념을 직접 느낀다.
 
 <br/><br/>
 
@@ -63,7 +65,7 @@ sitemap :
 |----|--------|
 |**Front**|Free Template|
 |**Back**|Spring Boot|
-|**DB**|H2, MyBatis|
+|**DB**|H2(개발), MariaDB(배포)|
 |**Version Controll**|Git|
 |**Template Engine**|Thymleaf|
 
@@ -85,8 +87,23 @@ sitemap :
 <br/>
 
 ## 시스템 WorkFlow
+### 회원가입
+![회원가입-workflow](/assets/img/Series-Employee_Management_System/회원가입-WorkFlow.drawio.png)
 
-![Untitled](/assets/img/Series-CRUD_Web/Untitled%202.png)
+<br/>
+
+### 로그인
+![로그인-workflow](/assets/img/Series-Employee_Management_System/로그인-WorkFlow.drawio.png)
+
+<br/>
+
+### 직원정보
+![직원정보-workflow](/assets/img/Series-Employee_Management_System/직원정보-WorkFlow.drawio.png)
+
+<br/>
+
+### 직원등록
+![직원등록-workflow](/assets/img/Series-Employee_Management_System/직원등록-WorkFlow.drawio.png)
 
 <br/>
 
@@ -197,7 +214,6 @@ sitemap :
 ### 12. 페이징
 
 - 사원 목록을 페이징할 수 있는 기능을 구현한다.
-- DB의 페이징 기능을 사용한다.
 
 ### 13. 정렬
 
