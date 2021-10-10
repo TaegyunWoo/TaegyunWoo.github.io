@@ -38,7 +38,7 @@ google_analytics:
 collections: # Define post series here
   CRUD_Web:
     output: true
-  Employee_Management_System:
+  EMS:
     output: true
 
 defaults:
