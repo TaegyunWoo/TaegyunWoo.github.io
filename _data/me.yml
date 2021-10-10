@@ -6,18 +6,18 @@ job: "Back-end Programmer"
 hi: "안녕하세요.<br/>모두 환영합니다!"
 avatar_img: "/assets/img/me.png" # path to your avatar
 intro:
-  - "항상 성장하고싶은 백엔드 프로그래머입니다."
-  - "좋은 프로그래머가 무엇인지 항상 고민합니다."
+  - "항상 성장하고자 하는 백엔드 프로그래머입니다."
+  - "좋은 프로그래머란 무엇인지 항상 고민합니다."
 skills:
   - name: "Programming"
     icon-class: "fa fa-terminal"
-    list: ["Java", "Servlet/JSP", "MySQL", "HTML", "CSS"]
+    list: ["Java", "Servlet/JSP", "MySQL"]
   - name: "Framework"
     icon-class: "fa fa-th-list"
-    list: ["Spring", "JPA"]
+    list: ["Spring-Boot", "JPA", "Thymeleaf"]
   - name: "Tools"
     icon-class: "fa fa-cogs"
-    list: ["Linux", "Docker", "Git"]
+    list: ["Linux", "Git"]
 
 display_name: "WooTaegyun"
 contact:
