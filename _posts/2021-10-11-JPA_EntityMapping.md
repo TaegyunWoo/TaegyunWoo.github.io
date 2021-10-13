@@ -75,7 +75,7 @@ sitemap :
 
 [@Table 속성 정리](https://www.notion.so/faf0fc7178104a3c8171ba0db019bb40)
 
-- `@Table` 속성 정리
+- `@Table` 속성 정리  
   |속성|기능|기본값|
   |----|----|------|
   |name|- 매핑할 테이블의 이름|엔티티(클래스)이름 사용|
@@ -197,7 +197,7 @@ public enum RoleType {
 
 위 코드에서 `value` 의 값을 변경하여 다양한 옵션을 적용할 수 있다.
 
-- hibernate.hbm2ddl.auto 속성
+- hibernate.hbm2ddl.auto 속성  
   |옵션|설명|
   |----|----|
   |create|- 기존 테이블이 존재한다면, 해당 테이블을 삭제하고 새로 생성한다.<br/> - DROP+CREATE|
