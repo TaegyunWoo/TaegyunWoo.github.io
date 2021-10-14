@@ -198,13 +198,13 @@ sitemap :
 ### 직접 사상: 예시 문제
 
 - 데이터 크기와 이진수
-    - KBytes = ![MOD](https://latex.codecogs.com/svg.image?2^{10})
-    - MBytes = ![MOD](https://latex.codecogs.com/svg.image?2^{10}*2^{10}=2^{20})
+    - KBits = ![MOD](https://latex.codecogs.com/svg.image?2^{10})
+    - MBits = ![MOD](https://latex.codecogs.com/svg.image?2^{10}*2^{10}=2^{20})
 - 가정
-    - Cache 크기 = 64KB
-    - Main Memory 크기 = 16MB
-    - Word 크기 = 1B
-    - Block 크기 = 4B
+    - Cache 크기 = 64KBits
+    - Main Memory 크기 = 16MBits
+    - Word 크기 = 1Bits
+    - Block 크기 = 4Bits
 
 - 문제
     - **이때, M.M (Main Memory)의 주소의 비트수는?**
@@ -215,7 +215,7 @@ sitemap :
     <br/>
 
     - **블록 집합의 개수는?**
-        - 블록집합 개수 = M.M크기/Cache크기 = 16MB/64KB = ![MOD](https://latex.codecogs.com/svg.image?2^{24}/2^{16}=2^8=256)개
+        - 블록집합 개수 = M.M크기/Cache크기 = 16MBits/64KBits = ![MOD](https://latex.codecogs.com/svg.image?2^{24}/2^{16}=2^8=256)개
     
     <br/>
 
@@ -460,7 +460,7 @@ sitemap :
 - 블록의 수가 감소하면, Word가 인출된 직후에 다른 블록과 다시 교체된다.
 - 블록이 커질수록, 원하는 단어로부터 멀리 떨어져있는 단어들도 같이 읽혀오며, 그들이 가까운 미래에 사용될 가능성은 낮다.
     - 지역성의 원리가 적용되지 않는 범위까지 가져와버리기 때문이다.
-- 따라서, 8~64Bytes 가 캐시 크기의 최적이다.
+- 따라서, 8~64Bits 가 캐시 크기의 최적이다.
 
 <br/><br/>
 
