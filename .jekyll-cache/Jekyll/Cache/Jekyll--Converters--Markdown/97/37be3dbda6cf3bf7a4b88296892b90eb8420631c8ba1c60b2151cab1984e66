@@ -1,0 +1,296 @@
+I"i<p><br/><br/></p>
+<ul>
+<li><strong><a href="https://github.com/TaegyunWoo/Spring-Test-Code-Example">예시 프로젝트 다운로드</a></strong></li>
+</ul>
+<blockquote>
+<p>위 프로젝트를 참고하여 기본적인 웹 애플리케이션 코드를 꼭 확인하자!</p>
+</blockquote>
+<ul>
+<li>이전 게시글
+<ul>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_Mockito_Summary">[Mockito] Mockito 개요</a></li>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_Mockito_CreateMock">[Mockito] Mock 객체 만들기</a></li>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_Mockito_Stubbing">[Mockito] Mock 객체 행동 정의</a></li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h1 id="mock---">Mock 객체의 행동 검증하기</h1>
+<h2 id="section">개요</h2>
+<h3 id="mock----1">Mock 객체 행동 검증이란?</h3>
+<ul>
+<li>Mock 객체가 어떻게 사용이 됐는지 확인하는 것이다.</li>
+<li>즉, 우리가 정의한 Mock 객체의 행동을 검증하여 어떻게 작동했는지 알 수 있다.</li>
+</ul>
+<br/>
+<h3 id="mock--------">Mock 객체의 행동 검증을 통해 확인할 수 있는 내용</h3>
+<p>Mock 객체가 어떻게 행동을 했는지 확인할 수 있는 내용은 아래와 같다.</p>
+<ul>
+<li>특정 메서드가 특정 매개변수로 <strong>몇 번 호출되었는지 확인</strong> 할 수 있다.</li>
+<li><strong>특정 시점 이후에 아무일도 벌어지지 않았는지 확인</strong> 할 수 있다.</li>
+</ul>
+<blockquote>
+<p>이외에도 특정시간에 따라 검증, 순서에 따라 검증할 수 있지만, 본 포스팅에선 다루지 않는다.  (사용하는 경우가 거의 없다고 한다.)</p>
+</blockquote>
+<p><br/><br/></p>
+<h2 id="section-1">특정 메서드가 특정 매개변수로 몇번 호출되었는지 검증</h2>
+<ul>
+<li>특정 메서드가 특정 매개변수로 <strong>몇 번 호출되었는지 확인</strong> 할 수 있다.</li>
+<li><code>verify()</code> 메서드를 통해 검증한다.</li>
+</ul>
+<br/>
+<h3 id="section-2">형식</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">verify</span><span class="o">(</span><span class="n">확인할_mock객체</span><span class="o">,</span> <span class="n">times</span><span class="o">(</span><span class="n">호출될_횟수</span><span class="o">)).</span><span class="na">mock객체의_메서드</span><span class="o">(</span><span class="n">매개변수</span><span class="o">)</span>
+</code></pre></div></div>
+<ul>
+<li><strong>해당 mock 객체의 메서드가 해당 매개변수로 몇번 호출되었는지 확인한다.</strong>
+<ul>
+<li>물론 <code>any()</code> 를 <code>mock객체의_메서드</code> 의 매개변수 전달하여 매개변수에 상관없이 검증할 수 있다.</li>
+</ul>
+</li>
+<li><code>times(횟수)</code> 대신 다양한 값이 들어갈 수 있다.
+<ul>
+<li>한번도 호출되지 않았는가? ⇒ <code>never()</code></li>
+<li>정확히 2번 호출되었는가? ⇒ <code>times(2)</code></li>
+<li>2번 이상으로 호출되었는가?(2 포함) ⇒ <code>atLeast(2)</code></li>
+<li>2번 이하로 호출되었는가?(2 포함) ⇒ <code>atMost(2)</code></li>
+</ul>
+</li>
+<li><strong><code>호출될_횟수</code> 가 정확히 맞아떨어져야 테스트에 성공한다.</strong></li>
+<li><code>호출될_횟수</code> != <code>실제로_호출된_횟수</code> 라면, 테스트에 실패한다.</li>
+</ul>
+<br/>
+<h3 id="section-3">예시 코드</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">mockito</span><span class="o">.</span><span class="na">Mockito</span><span class="o">.*;</span>
+<span class="c1">//나머지 import 생략</span>
+<p><span class="kd">class</span> <span class="nc">StudyServiceTest</span> <span class="o">{</span></p>
+<p><span class="nd">@DisplayName</span><span class="o">(</span><span class="s">“행동 검증”</span><span class="o">)</span>
+<span class="nd">@Test</span>
+<span class="kt">void</span> <span class="nf">testValidation</span><span class="o">(</span><span class="nd">@Mock</span> <span class="nc">MemberService</span> <span class="n">memberService</span><span class="o">,</span>
+<span class="nd">@Mock</span> <span class="nc">StudyRepository</span> <span class="n">studyRepository</span><span class="o">)</span> <span class="o">{</span>
+<span class="nc">StudyService</span> <span class="n">studyService</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StudyService</span><span class="o">(</span><span class="n">memberService</span><span class="o">,</span> <span class="n">studyRepository</span><span class="o">);</span>
+<span class="nc">Study</span> <span class="n">study</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Study</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="s">“java”</span><span class="o">);</span>
+<span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">();</span>
+<span class="n">member</span><span class="o">.</span><span class="na">setId</span><span class="o">(</span><span class="mi">1L</span><span class="o">);</span>
+<span class="n">member</span><span class="o">.</span><span class="na">setEmail</span><span class="o">(</span><span class="s">“<a href="mailto:test@test.com">test@test.com</a>”</span><span class="o">);</span></p>
+<pre><code>&lt;span class=&quot;c1&quot;&gt;// ----------- 행동 정의 -----------&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;memberService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;findById&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1L&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;thenReturn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Optional&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;member&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;studyRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;study&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;thenReturn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;study&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// ----------- 행동 호출 -----------&lt;/span&gt;
+&lt;span class=&quot;nc&quot;&gt;Study&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newStudy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;studyService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;createNewStudy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1L&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;study&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//1번만 호출됨&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// ----------- ***행동 검증*** -----------&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;verify&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;memberService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;times&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;findById&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1L&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// ----------- 테스트 검증 -----------&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;assertEquals&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;study&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newStudy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span></p>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<h3 id="section-4">흐름</h3>
+<ol>
+<li>
+<p><strong>mock 객체를 주입받은 객체 <code>StudyService</code> 의 메서드 호출</strong></p>
+<p><img src="/assets/img/2021-09-18-TestFramework_Mockito_ValidateMock/Untitled%202.png" alt="Untitled" /></p>
+</li>
+<li>
+<p><strong><code>StudyService</code> 의 <code>createNewStudy()</code> 메서드</strong></p>
+<p><img src="/assets/img/2021-09-18-TestFramework_Mockito_ValidateMock/Untitled%204.png" alt="Untitled" /></p>
+<ul>
+<li><code>memberService</code> , <code>repository</code> 는 mock객체이다.</li>
+<li>따라서, 정의된대로 행동한다.</li>
+</ul>
+</li>
+<li>
+<p><strong><code>memberService</code> 객체의 <code>findById()</code> 메서드가 한번만 호출되었다.</strong></p>
+</li>
+<li>
+<p><strong>행동 검증: 1번만 수행되었는가?</strong></p>
+<p><img src="/assets/img/2021-09-18-TestFramework_Mockito_ValidateMock/Untitled%205.png" alt="Untitled" /></p>
+</li>
+<li>
+<p><strong>테스트 성공!</strong></p>
+</li>
+</ol>
+<br/>
+<h3 id="section-5">결과</h3>
+<ul>
+<li>
+<p>성공시</p>
+<p><img src="/assets/img/2021-09-18-TestFramework_Mockito_ValidateMock/Untitled%206.png" alt="Untitled" /></p>
+</li>
+<li>
+<p>실패시</p>
+<p><img src="/assets/img/2021-09-18-TestFramework_Mockito_ValidateMock/Untitled%207.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-6">주의사항</h3>
+<ul>
+<li><strong>mock 객체를 검증하는 코드는 반드시 mock 객체의 행동을 호출한 뒤에 작성해야한다.</strong></li>
+<li>예시) <code>studyService.createNewStudy(1L, study)</code> 호출 후, <code>verify()</code> 를 호출하였다.</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-7">특정 시점 이후에 아무 일이 없는지 검증</h2>
+<ul>
+<li>특정 메서드가 <strong>특정 시점 이후에 호출되지 않았는지 검증</strong>할 수 있다.</li>
+<li><code>verify()</code> 메서드와 <code>verifyNoMoreInteractions()</code> 메서드를 통해 검증한다.</li>
+</ul>
+<h3 id="section-8">형식</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">verify</span><span class="o">(</span><span class="n">확인할_mock객체</span><span class="o">).</span><span class="na">mock객체의_메서드</span><span class="o">(</span><span class="n">매개변수</span><span class="o">);</span> <span class="c1">//기준 시점 설정</span>
+<span class="n">verifyNoMoreInteractions</span><span class="o">(</span><span class="n">확인할_mock객체</span><span class="o">);</span> <span class="c1">//기준 시점 이후 검증</span>
+</code></pre></div></div>
+<ul>
+<li>해당 mock 객체의 메서드가 기준 시점 이후에도 호출되었는지 확인한다.</li>
+<li><strong><code>verify()</code> 메서드로 설정한 ‘mock객체의 메서드’가 호출된 시점을 기준으로, mock객체가 사용되었다면 테스트에 실패한다.</strong></li>
+</ul>
+<br/>
+<h3 id="section-9">예시 코드</h3>
+<ul>
+<li>
+<p><strong>성공 예시</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">mockito</span><span class="o">.</span><span class="na">Mockito</span><span class="o">.*;</span>
+<span class="c1">//나머지 import 생략</span>
+<p><span class="kd">class</span> <span class="nc">StudyServiceTest</span> <span class="o">{</span></p>
+<p><span class="nd">@DisplayName</span><span class="o">(</span><span class="s">“행동 검증”</span><span class="o">)</span>
+<span class="nd">@Test</span>
+<span class="kt">void</span> <span class="nf">testValidation</span><span class="o">(</span><span class="nd">@Mock</span> <span class="nc">MemberService</span> <span class="n">memberService</span><span class="o">,</span>
+<span class="nd">@Mock</span> <span class="nc">StudyRepository</span> <span class="n">studyRepository</span><span class="o">)</span> <span class="o">{</span>
+<span class="nc">StudyService</span> <span class="n">studyService</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StudyService</span><span class="o">(</span><span class="n">memberService</span><span class="o">,</span> <span class="n">studyRepository</span><span class="o">);</span>
+<span class="nc">Study</span> <span class="n">study</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Study</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="s">“java”</span><span class="o">);</span>
+<span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">();</span>
+<span class="n">member</span><span class="o">.</span><span class="na">setId</span><span class="o">(</span><span class="mi">1L</span><span class="o">);</span>
+<span class="n">member</span><span class="o">.</span><span class="na">setEmail</span><span class="o">(</span><span class="s">“<a href="mailto:test@test.com">test@test.com</a>”</span><span class="o">);</span></p>
+<pre><code>&lt;span class=&quot;c1&quot;&gt;// ----------- 행동 정의 -----------&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;memberService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;findById&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1L&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;thenReturn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Optional&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;member&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;studyRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;study&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;thenReturn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;study&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// ----------- 행동 호출 -----------&lt;/span&gt;
+&lt;span class=&quot;nc&quot;&gt;Study&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newStudy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;studyService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;createNewStudy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1L&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;study&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// ----------- ***행동 검증*** -----------&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;verify&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;memberService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;notify&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;any&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//기준 시점 = notify()가 호출된 시점&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;verifyNoMoreInteractions&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;memberService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//기준 시점 이후에, memberService 객체(mock)가 사용되지 않았나?&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// ----------- 테스트 검증 -----------&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;assertEquals&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;study&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newStudy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span></p>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+</li>
+<li>
+<p><strong>실패 예시</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">mockito</span><span class="o">.</span><span class="na">Mockito</span><span class="o">.*;</span>
+<span class="c1">//나머지 import 생략</span>
+<p><span class="kd">class</span> <span class="nc">StudyServiceTest</span> <span class="o">{</span></p>
+<p><span class="nd">@DisplayName</span><span class="o">(</span><span class="s">“행동 검증”</span><span class="o">)</span>
+<span class="nd">@Test</span>
+<span class="kt">void</span> <span class="nf">testValidation</span><span class="o">(</span><span class="nd">@Mock</span> <span class="nc">MemberService</span> <span class="n">memberService</span><span class="o">,</span>
+<span class="nd">@Mock</span> <span class="nc">StudyRepository</span> <span class="n">studyRepository</span><span class="o">)</span> <span class="o">{</span>
+<span class="nc">StudyService</span> <span class="n">studyService</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StudyService</span><span class="o">(</span><span class="n">memberService</span><span class="o">,</span> <span class="n">studyRepository</span><span class="o">);</span>
+<span class="nc">Study</span> <span class="n">study</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Study</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="s">“java”</span><span class="o">);</span>
+<span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">();</span>
+<span class="n">member</span><span class="o">.</span><span class="na">setId</span><span class="o">(</span><span class="mi">1L</span><span class="o">);</span>
+<span class="n">member</span><span class="o">.</span><span class="na">setEmail</span><span class="o">(</span><span class="s">“<a href="mailto:test@test.com">test@test.com</a>”</span><span class="o">);</span></p>
+<pre><code>&lt;span class=&quot;c1&quot;&gt;// ----------- 행동 정의 -----------&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;memberService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;findById&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1L&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;thenReturn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Optional&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;member&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;studyRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;study&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;thenReturn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;study&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// ----------- 행동 호출 -----------&lt;/span&gt;
+&lt;span class=&quot;nc&quot;&gt;Study&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newStudy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;studyService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;createNewStudy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1L&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;study&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// ----------- ***행동 검증*** -----------&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;verify&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;memberService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;findById&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;any&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//기준 시점 = findById()가 호출된 시점&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;verifyNoMoreInteractions&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;memberService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//기준 시점 이후에, memberService 객체(mock)가 사용되지 않았나?&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// ----------- 테스트 검증 -----------&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;assertEquals&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;study&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newStudy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span></p>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+</li>
+</ul>
+<h3 id="section-10">흐름: 성공 예시</h3>
+<ol>
+<li>
+<p><strong>mock 객체를 주입받은 객체 <code>StudyService</code> 의 메서드 호출</strong></p>
+<p><img src="/assets/img/2021-09-18-TestFramework_Mockito_ValidateMock/Untitled%208.png" alt="Untitled" /></p>
+</li>
+<li>
+<p><strong><code>StudyService</code> 의 <code>createNewStudy()</code> 메서드</strong></p>
+<p><img src="/assets/img/2021-09-18-TestFramework_Mockito_ValidateMock/Untitled%209.png" alt="Untitled" /></p>
+<ul>
+<li><code>memberService</code> , <code>repository</code> 는 mock객체이다.</li>
+<li>따라서, 정의된대로 행동한다.</li>
+</ul>
+</li>
+<li>
+<p><strong><code>memberService</code> 객체(mock)의 <code>notify()</code> 메서드 이후로, <code>memberService</code> 객체에 접근한 적이 없는가?</strong></p>
+<p><img src="/assets/img/2021-09-18-TestFramework_Mockito_ValidateMock/Untitled%2010.png" alt="Untitled" /></p>
+</li>
+<li>
+<p><strong>기준시점 계산</strong></p>
+<p><img src="/assets/img/2021-09-18-TestFramework_Mockito_ValidateMock/Untitled%2011.png" alt="Untitled" /></p>
+</li>
+<li>
+<p><strong>해당 기준 시점 이후에, <code>memberService</code> 객체에 접근한 적이 없다.</strong></p>
+</li>
+<li>
+<p><strong>테스트 성공!</strong></p>
+</li>
+</ol>
+<br/>
+<h3 id="section-11">흐름: 실패 예시</h3>
+<ol>
+<li>
+<p><strong>mock 객체를 주입받은 객체 <code>StudyService</code> 의 메서드 호출</strong></p>
+<p><img src="/assets/img/2021-09-18-TestFramework_Mockito_ValidateMock/Untitled%2012.png" alt="Untitled" /></p>
+</li>
+<li>
+<p><strong><code>StudyService</code> 의 <code>createNewStudy()</code> 메서드</strong></p>
+<p><img src="/assets/img/2021-09-18-TestFramework_Mockito_ValidateMock/Untitled%209.png" alt="Untitled" /></p>
+<ul>
+<li><code>memberService</code> , <code>repository</code> 는 mock객체이다.</li>
+<li>따라서, 정의된대로 행동한다.</li>
+</ul>
+</li>
+<li>
+<p><strong><code>memberService</code> 객체(mock)의 <code>findById()</code> 메서드 이후로, <code>memberService</code> 객체에 접근한 적이 없는가?</strong></p>
+<p><img src="/assets/img/2021-09-18-TestFramework_Mockito_ValidateMock/Untitled%2013.png" alt="Untitled" /></p>
+</li>
+<li>
+<p><strong>기준시점 계산</strong></p>
+<p><img src="/assets/img/2021-09-18-TestFramework_Mockito_ValidateMock/Untitled%2014.png" alt="Untitled" /></p>
+</li>
+<li>
+<p><strong>해당 기준 시점 이후에, <code>memberService</code> 객체에 접근한 적이 있다.</strong></p>
+</li>
+<li>
+<p><strong>테스트 실패!</strong></p>
+</li>
+</ol>
+<br/>
+<h3 id="section-12">결과</h3>
+<ul>
+<li>
+<p>성공시</p>
+<p><img src="/assets/img/2021-09-18-TestFramework_Mockito_ValidateMock/Untitled%206.png" alt="Untitled" /></p>
+</li>
+<li>
+<p>실패시</p>
+<p><img src="/assets/img/2021-09-18-TestFramework_Mockito_ValidateMock/Untitled%2015.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/htNB"><img src="/assets/img/Inflearn_Java_Test/logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 백기선님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

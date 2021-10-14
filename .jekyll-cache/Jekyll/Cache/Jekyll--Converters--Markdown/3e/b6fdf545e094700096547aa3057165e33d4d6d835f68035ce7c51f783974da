@@ -1,0 +1,155 @@
+I"Z/<p><br/><br/></p>
+<ul>
+<li>문제 발생 개발기록
+<ul>
+<li><a href="https://taegyunwoo.github.io/CRUD_Web/2021-09-24">CRUD Web 개발일지: 2021-09-24</a></li>
+</ul>
+</li>
+</ul>
+<br/>
+<h1 id="section">문제 배경</h1>
+<ul>
+<li><code>BoardController</code> 컨트롤러에 대한 테스트 코드를 작성하던 중, 에러가 발생했다.</li>
+<li><code>BoardController</code> 클래스의 <code>addArticle</code> 메서드에 대한 테스트 작성하던 상태다.</li>
+<li>테스트 코드 작성 완료 후 실행을 했는데, 400 오류가 반환되었다.</li>
+<li><code>BoardController</code> 클래스의 <code>addArticle</code> 메서드
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@PostMapping</span><span class="o">(</span><span class="s">"/new-article"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nc">String</span> <span class="nf">addArticle</span><span class="o">(</span><span class="nd">@Validated</span> <span class="nd">@ModelAttribute</span><span class="o">(</span><span class="s">"article"</span><span class="o">)</span> <span class="nc">NewArticleForm</span> <span class="n">form</span><span class="o">,</span>
+                        <span class="nd">@SessionAttribute</span><span class="o">(</span><span class="s">"loginUser"</span><span class="o">)</span> <span class="nc">User</span> <span class="n">user</span><span class="o">,</span>
+                        <span class="nc">BindingResult</span> <span class="n">bindingResult</span><span class="o">)</span> <span class="o">{</span>
+
+  <span class="k">if</span> <span class="o">(</span><span class="n">bindingResult</span><span class="o">.</span><span class="na">hasErrors</span><span class="o">())</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="s">"add-article"</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="c1">//로직...</span>
+
+  <span class="k">return</span> <span class="s">"redirect:/board/1"</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li><code>BoardControllerTest</code> 테스트 클래스의 <code>addArticleTest</code> 메서드
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@DisplayName</span><span class="o">(</span><span class="s">"게시글 추가"</span><span class="o">)</span>
+<span class="nd">@Test</span>
+<span class="kt">void</span> <span class="nf">addArticleTest</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+  <span class="c1">//given</span>
+  <span class="nc">NewArticleForm</span> <span class="n">wrongForm</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">NewArticleForm</span><span class="o">();</span>
+  <span class="nc">User</span> <span class="n">loginUser</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">User</span><span class="o">();</span>
+  <span class="nc">MockHttpSession</span> <span class="n">session</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MockHttpSession</span><span class="o">();</span>
+
+  <span class="n">wrongForm</span><span class="o">.</span><span class="na">setTitle</span><span class="o">(</span><span class="s">""</span><span class="o">);</span>
+  <span class="n">wrongForm</span><span class="o">.</span><span class="na">setContent</span><span class="o">(</span><span class="s">""</span><span class="o">);</span>
+  <span class="n">loginUser</span><span class="o">.</span><span class="na">setId</span><span class="o">(</span><span class="mi">5L</span><span class="o">);</span>
+  <span class="n">loginUser</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">"BoardTestUser"</span><span class="o">);</span>
+  <span class="n">loginUser</span><span class="o">.</span><span class="na">setEmail</span><span class="o">(</span><span class="s">"BoardTestUser@test.com"</span><span class="o">);</span>
+  <span class="n">loginUser</span><span class="o">.</span><span class="na">setPassword</span><span class="o">(</span><span class="s">"123test!"</span><span class="o">);</span>
+  <span class="n">session</span><span class="o">.</span><span class="na">setAttribute</span><span class="o">(</span><span class="s">"loginUser"</span><span class="o">,</span> <span class="n">loginUser</span><span class="o">);</span>
+
+  <span class="n">given</span><span class="o">(</span><span class="n">boardService</span><span class="o">.</span><span class="na">addNewArticle</span><span class="o">(</span><span class="n">any</span><span class="o">())).</span><span class="na">willReturn</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+
+
+  <span class="c1">//when</span>
+  <span class="nc">ResultActions</span> <span class="n">wrongPerform</span> <span class="o">=</span> <span class="n">mockMvc</span><span class="o">.</span><span class="na">perform</span><span class="o">(</span>
+      <span class="n">post</span><span class="o">(</span><span class="s">"/board/new-article"</span><span class="o">)</span>
+          <span class="o">.</span><span class="na">param</span><span class="o">(</span><span class="s">"title"</span><span class="o">,</span> <span class="n">wrongForm</span><span class="o">.</span><span class="na">getTitle</span><span class="o">())</span>
+          <span class="o">.</span><span class="na">param</span><span class="o">(</span><span class="s">"content"</span><span class="o">,</span> <span class="n">wrongForm</span><span class="o">.</span><span class="na">getContent</span><span class="o">())</span>
+          <span class="o">.</span><span class="na">session</span><span class="o">(</span><span class="n">session</span><span class="o">)</span>
+  <span class="o">);</span>
+
+  <span class="c1">//then</span>
+  <span class="n">wrongPerform</span><span class="o">.</span><span class="na">andExpect</span><span class="o">(</span><span class="n">status</span><span class="o">().</span><span class="na">isOk</span><span class="o">()).</span><span class="na">andExpect</span><span class="o">(</span><span class="n">view</span><span class="o">().</span><span class="na">name</span><span class="o">(</span><span class="s">"add-article"</span><span class="o">));</span> <span class="c1">//validation 실패시 기대 결과</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>의도적으로 Bean Validation에 실패하는 요청을 테스트했다.</li>
+<li><code>addArticle</code> 메서드에서 Bean Validation에 실패시, <code>add-article</code> 뷰를 응답하도록 로직 작성하였다.</li>
+<li>하지만, 400 오류가 발생하고 테스트에 실패했다.</li>
+</ul>
+<blockquote>
+<p>Bean Validation에 실패하더라도 200 코드로 <code>add-article</code> 뷰를 응답하도록 작성했는대도 말이다.</p>
+</blockquote>
+</li>
+</ul>
+<br/>
+<ul>
+<li>발생 오류
+<img src="/assets/img/2021-09-24-TroubleShooting_BeanValidation400Error/Untitled.png" alt="Untitled" /></li>
+</ul>
+<p><br><br></p>
+<h1 id="section-1">문제 해결 탐색과정</h1>
+<ul>
+<li><code>@WebMvcTest</code>를 통해, 유닛 테스트를 진행하였다. 그에 따라, 테스트 과정에서 Bean Validation이 제대로 적용되는지 확인하였다.
+<ul>
+<li>그 결과, Bean Validation은 정상 작동한다는 사실을 알았다.</li>
+</ul>
+</li>
+<li>실제 로컬에 Web App 실행하여 확인해본 결과, Bean Validation 조건에 일치하지 않는 요청시, 로컬에서도 동일하게 400 오류가 발생했다.</li>
+<li>따라서, 컨트롤러 메서드의 매개변수 순서가 의심되었다.</li>
+</ul>
+<p><br><br></p>
+<h1 id="section-2">문제 해결</h1>
+<h2 id="section-3">문제 원인</h2>
+<ul>
+<li><code>BoardController</code> 컨트롤러 클래스의 <code>addArticle</code> 메서드의 매개변수가 문제였다.</li>
+<li>해당 메서드의 매개변수 순서는 다음과 같다.
+<ol>
+<li><code>@Validated @ModelAttribute(&quot;article&quot;) NewArticleForm form</code></li>
+<li><code>@SessionAttribute(&quot;loginUser&quot;) User user</code></li>
+<li><code>BindingResult bindingResult</code></li>
+</ol>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>위 순서와 같이 “<code>@Validated</code> 가 적용된 매개변수”와 “BindingResult 매개변수”가 떨어져서 작성되어 발생하는 문제였다.</strong></li>
+</ul>
+<br/>
+<ul>
+<li><code>BoardController</code> 클래스의 <code>addArticle</code> 메서드
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@PostMapping</span><span class="o">(</span><span class="s">"/new-article"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nc">String</span> <span class="nf">addArticle</span><span class="o">(</span><span class="nd">@Validated</span> <span class="nd">@ModelAttribute</span><span class="o">(</span><span class="s">"article"</span><span class="o">)</span> <span class="nc">NewArticleForm</span> <span class="n">form</span><span class="o">,</span>
+                        <span class="nd">@SessionAttribute</span><span class="o">(</span><span class="s">"loginUser"</span><span class="o">)</span> <span class="nc">User</span> <span class="n">user</span><span class="o">,</span>
+                        <span class="nc">BindingResult</span> <span class="n">bindingResult</span><span class="o">)</span> <span class="o">{</span>
+
+  <span class="k">if</span> <span class="o">(</span><span class="n">bindingResult</span><span class="o">.</span><span class="na">hasErrors</span><span class="o">())</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="s">"add-article"</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="c1">//로직...</span>
+
+  <span class="k">return</span> <span class="s">"redirect:/board/1"</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+<p><br><br></p>
+<h2 id="section-4">해결방법</h2>
+<ul>
+<li><code>@Validated</code> 매개변수와 <code>BindingResult</code> 매개변수를 아래 순서와 같이 작성한다.
+<ol>
+<li><code>@Validated</code> 매개변수</li>
+<li><code>BindingResult</code> 매개변수</li>
+</ol>
+</li>
+<li><strong>항상 <code>@Validated</code> 바로 뒤에 <code>BindingResult</code> 매개변수가 와야한다.</strong></li>
+<li>예시
+<ul>
+<li><code>BoardController</code> 클래스의 <code>addArticle</code> 메서드</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@PostMapping</span><span class="o">(</span><span class="s">"/new-article"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nc">String</span> <span class="nf">addArticle</span><span class="o">(</span><span class="nd">@SessionAttribute</span><span class="o">(</span><span class="s">"loginUser"</span><span class="o">)</span> <span class="nc">User</span> <span class="n">user</span><span class="o">,</span>
+                        <span class="nd">@Validated</span> <span class="nd">@ModelAttribute</span><span class="o">(</span><span class="s">"article"</span><span class="o">)</span> <span class="nc">NewArticleForm</span> <span class="n">form</span><span class="o">,</span>
+                        <span class="nc">BindingResult</span> <span class="n">bindingResult</span><span class="o">)</span> <span class="o">{</span>
+
+  <span class="k">if</span> <span class="o">(</span><span class="n">bindingResult</span><span class="o">.</span><span class="na">hasErrors</span><span class="o">())</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="s">"add-article"</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="c1">//로직...</span>
+
+  <span class="k">return</span> <span class="s">"redirect:/board/1"</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+:ET

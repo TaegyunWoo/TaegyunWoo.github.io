@@ -1,0 +1,512 @@
+I"@<p><br/><br/></p>
+<h1 id="section">운영체제 구조</h1>
+<h2 id="section-1">운영체제 서비스</h2>
+<h3 id="section-2">개요</h3>
+<ul>
+<li>운영체제는 사용자(or 프로그램)에게 프로그램의 실행 환경을 제공한다.</li>
+</ul>
+<p><img src="/assets/img/2021-09-28-OS_Structure/Untitled%2028.png" alt="Untitled" /></p>
+<ul>
+<li><strong>user interfaces</strong>
+<ul>
+<li>사용자 인터페이스</li>
+<li>GUI, batch파일, command line 모두 user interface에 해당된다.</li>
+</ul>
+</li>
+<li><strong>system calls</strong>
+<ul>
+<li>운영체제의 커널모드로 동작하는 중개자(관리자)역할을 수행한다.</li>
+</ul>
+</li>
+<li><strong>services</strong>
+<ul>
+<li>프로그램 개발과 실행에 대해 편리한 환경을 제공한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h2 id="section-3">운영체제 서비스: 사용자 업무 서비스</h2>
+<h3 id="section-4">개요</h3>
+<ul>
+<li>사용자 업무를 수행하는 데 필요한 기능을 제공하는 운영체제 서비스에 대해 설명하도록 하겠다.</li>
+</ul>
+<br/>
+<h3 id="section-5">사용자 인터페이스</h3>
+<ul>
+<li><strong>명령어 라인 인터페이스 (CLI: Command Line Interface)</strong></li>
+<li><strong>배치 인터페이스</strong></li>
+<li><strong>GUI</strong></li>
+</ul>
+<br/>
+<h3 id="section-6">프로그램 실행</h3>
+<ul>
+<li>Program Execute</li>
+<li>프로그램을 메모리에 적재, 실행, 실행 종료하는 서비스이다.</li>
+</ul>
+<br/>
+<h3 id="section-7">입출력 연산</h3>
+<ul>
+<li>프로그램 실행에서 요구하는 파일 또는 입출력 장치 등의 입출력 서비스이다.</li>
+</ul>
+<br/>
+<h3 id="section-8">파일 시스템</h3>
+<ul>
+<li>파일 조작, 관리를 수행하는 서비스이다.</li>
+</ul>
+<br/>
+<h3 id="section-9">통신</h3>
+<ul>
+<li>동일한 컴퓨터 또는 네트워크로 연결된 컴퓨터에 있는 <strong>프로세스 간 정보 교환</strong>을 수행한다.</li>
+<li><strong>통신 기법</strong>
+<ul>
+<li>
+<p>메시지 전달 기법</p>
+<ul>
+<li>운영체제(Kernel)이 관여한다.</li>
+</ul>
+<p><img src="/assets/img/2021-09-28-OS_Structure/Untitled%2029.png" alt="Untitled" /></p>
+</li>
+<li>
+<p><strong>공유 메모리 기법</strong></p>
+<ul>
+<li>공유 메모리 기법 == 생산자/소비자 모델</li>
+<li>버퍼 관리를 잘 해주어야 한다.</li>
+</ul>
+<p><img src="/assets/img/2021-09-28-OS_Structure/Untitled%2030.png" alt="Untitled" /></p>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-10">오류 탐지</h3>
+<ul>
+<li>운영체제는 가능한 모든 오류를 인지하고 있어야 한다.</li>
+</ul>
+<blockquote>
+<p>하지만, 모든 오류를 인지하기란 어렵다.</p>
+</blockquote>
+<p><br/><br/></p>
+<h2 id="section-11">운영체제 서비스: 시스템 자원 서비스</h2>
+<h3 id="section-12">개요</h3>
+<ul>
+<li>시스템의 자원을 공유하여 시스템의 효율적인 운영을 보장하는 서비스</li>
+</ul>
+<br/>
+<h3 id="section-13">자원 할당</h3>
+<ul>
+<li>다수의 사용자나 다수의 작업들이 동시에 실행될 때 각각에 자원을 할당해주는 서비스이다.</li>
+<li>자원의 종류
+<ul>
+<li>CPU cycles</li>
+<li>main memory</li>
+<li>file storage</li>
+<li>I/O devices</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-14">회계</h3>
+<ul>
+<li>어떤 사용자가 어떤 자원을 얼마나 사용하는지 기록하고 관리하는 서비스이다.</li>
+</ul>
+<br/>
+<h3 id="section-15">보호와 보안</h3>
+<ul>
+<li><strong>보호</strong>
+<ul>
+<li>시스템 자원에 대한 모든 접근이 통제되도록 보장하는 서비스이다.</li>
+<li>즉, 파일에 대한 접근 권한 권리를 뜻한다.</li>
+</ul>
+</li>
+<li><strong>보안</strong>
+<ul>
+<li>외부로부터 시스템 보안을 유지하기 위해 사용자 인증, 부적합한 접근 방지 등을 수행하는 서비스이다.</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-16">사용자 인터페이스</h2>
+<h3 id="section-17">사용자 인터페이스 종류</h3>
+<ul>
+<li><strong>명령어 라인 인터페이스 (CLI: Command Line Interface)</strong></li>
+<li><strong>배치 인터페이스</strong></li>
+<li><strong>GUI</strong></li>
+</ul>
+<br/>
+<h3 id="command-line-interface-cli">Command Line Interface (CLI)</h3>
+<ul>
+<li>
+<p>CLI나 명령어 해석기를 통해 명령어를 직접 입력한다.</p>
+</li>
+<li>
+<p>CLI는 커널이나 시스템 프로그램으로 구현된다.</p>
+</li>
+<li>
+<p>선택 가능한 여러 개의 명령어 해석기를 제공한다.</p>
+<ul>
+<li>ex) 리눅스의 본쉘, c쉘 등</li>
+</ul>
+</li>
+<li>
+<p><strong>명령어 해석기</strong></p>
+<ul>
+<li>역할
+<ul>
+<li>사용자의 명령어를 가져와 실행한다.</li>
+</ul>
+</li>
+<li>명령어 해석기의 종류
+<ul>
+<li>
+<p><strong>명령어 해석기가 명령어 코드를 포함하는 경우</strong></p>
+<ul>
+<li>이때, 명령어의 개수가 명령어 해석기의 크기를 결정한다.</li>
+</ul>
+<p><img src="/assets/img/2021-09-28-OS_Structure/Untitled%2031.png" alt="Untitled" /></p>
+</li>
+<li>
+<p><strong>명령어 해석기가 명령어 목록만 가지고 있는 경우</strong></p>
+<ul>
+<li>명령어 해석기의 크기가 작아진다.</li>
+</ul>
+<p><img src="/assets/img/2021-09-28-OS_Structure/Untitled%2032.png" alt="Untitled" /></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="gui">GUI</h3>
+<ul>
+<li>사용자 친화적인 상징 인터페이스이다.</li>
+<li>많은 시스템들이 CLI와 GUI 인터페이스를 모두 지원한다.
+<ul>
+<li>Microsoft Windows
+<ul>
+<li>CLI 명령어 셸을 가지고 있는 GUI이다.</li>
+</ul>
+</li>
+<li>Apple Mac OS
+<ul>
+<li>UNIX 커널과 셸을 가지고 있는 Aqua GUI이다.</li>
+</ul>
+</li>
+<li>Unix, Linux
+<ul>
+<li>선택적인 GUI를 가진 CLI이다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-18">시스템 콜</h2>
+<h3 id="section-19">시스템 콜이란?</h3>
+<ul>
+<li>
+<p>시스템 콜은 <strong>‘운영체제가 제공하는 서비스에 대한 인터페이스’를 사용자에게 제공</strong>한다.</p>
+</li>
+<li>
+<p>일반적으로 고급 언어 (c , c++)로 작성된 루틴 형태로 제공된다.</p>
+</li>
+<li>
+<p>대부분의 경우, ‘직접적인 시스템 콜 사용’ 대신 ’API(Application Program Interface)’를 통해 접근한다.</p>
+<ul>
+<li>사용자 프로그램이 운영체제가 제공하는 서비스에 접근하고자 한다. ⇒ 이때, API를 사용한다. ⇒ API를 통해, 시스템 콜을 요청하여 운영체제 서비스의 기능을 수행하도록 할 수 있다.</li>
+</ul>
+<blockquote>
+<p>이때 API는 시스템 콜을 사용할 수 있도록 하는 API를 뜻한다.</p>
+</blockquote>
+</li>
+</ul>
+<p><img src="/assets/img/2021-09-28-OS_Structure/Untitled%2033.png" alt="Untitled" /></p>
+<br/>
+<h3 id="api--">시스템 콜 API의 대표 종류</h3>
+<ul>
+<li>Windows
+<ul>
+<li>Win32 API</li>
+</ul>
+</li>
+<li>UNIX, LINUX, Mac OS
+<ul>
+<li>POSIX API</li>
+</ul>
+</li>
+<li>Java Virtual Machine
+<ul>
+<li>Java API</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>POSIX: Portable Operating System Interface (이식 가능 운영체제 인터페이스)</p>
+</blockquote>
+<br/>
+<h3 id="section-20">시스템 콜 예시</h3>
+<p>아래 그림은 <code>cp in.txt out.txt</code> 명령(파일 복사 명령어)에 대한 시스템 콜 API 호출 순서에 대한 예시이다.</p>
+<p><img src="/assets/img/2021-09-28-OS_Structure/Untitled%2034.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-21">시스템 콜 구현</h3>
+<ul>
+<li><strong>각 시스템 콜에 대해, 숫자(index)가 부여된다.</strong></li>
+<li><strong>시스템 콜 인터페이스가 ‘시스템 콜 테이블’을 관리한다.</strong></li>
+<li>시스템 콜 인터페이스
+<ul>
+<li>운영체제 커널 내에 있는 요청된 시스템 콜을 요청한다.</li>
+<li>시스템 콜의 반환 상태와 해당 반환 값을 반환한다.</li>
+</ul>
+</li>
+</ul>
+<p><img src="/assets/img/2021-09-28-OS_Structure/Untitled%2035.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-22">시스템 콜 특징</h3>
+<ul>
+<li><strong>개발자는 시스템 콜이 어떻게 구현되는지 알 필요가 없다.</strong>
+<ul>
+<li>개발자는 API를 제대로 사용하고, 운영체제가 시스템 콜의 결과로 무슨 일을 하는지만 알면 된다.</li>
+<li>운영체제 인터페이스의 구현부는 API에 의해 숨겨진다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-23">시스템 콜 유형(종류)</h3>
+<ul>
+<li>프로세서 제어</li>
+<li>파일 관리</li>
+<li>장치 관리</li>
+<li>정보 관리</li>
+<li>통신</li>
+<li>보호</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-24">시스템 콜에 파라미터 전달하기</h2>
+<h3 id="section-25">운영체제에 매개변수를 전달하는 방법의 종류</h3>
+<ul>
+<li>매개변수를 레지스터에 전달하는 방법</li>
+<li><strong>매개변수를 메모리의 블럭, 테이블에 저장하는 방법</strong></li>
+<li>프로그램이 매개변수를 스택에 넣는 방법</li>
+</ul>
+<br/>
+<h3 id="section-26">매개변수를 레지스터에 전달하기</h3>
+<ul>
+<li>가장 단순한 방법이다.</li>
+<li>하지만, 레지스터 개수보다 더 많은 매개변수가 있는 경우, 한계가 있다.</li>
+</ul>
+<br/>
+<h3 id="section-27">매개변수를 메모리의 블럭, 테이블에 저장하는 방법</h3>
+<ul>
+<li>블럭의 <strong>메모리 주소</strong>가 레지스터에 매개변수로 전달된다.</li>
+</ul>
+<p><img src="/assets/img/2021-09-28-OS_Structure/Untitled%2036.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-28">프로그램이 매개변수를 스택에 넣는 방법</h3>
+<ul>
+<li>운영체제가 스택으로부터 매개변수를 꺼낸다.</li>
+<li><strong>위에서 설명한 블럭 방식과 스택 방식은 매개변수의 개수나 길이에 제약을 받지 않는다.</strong></li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-29">시스템 프로그램</h2>
+<h3 id="section-30">시스템 프로그램이란?</h3>
+<ul>
+<li>시스템 프로그램은 프로그램 개발과 실행에 편리한 환경을 제공한다.</li>
+<li>운영체제에 대한 대부분 사용자의 인식은 시스템 콜보다는 시스템 프로그램에 의해 결정된다.</li>
+</ul>
+<p><img src="/assets/img/2021-09-28-OS_Structure/Untitled%2037.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-31">시스템 프로그램의 종류</h3>
+<ul>
+<li>파일 관리</li>
+<li>상태 정보</li>
+<li>프로그래밍 언어 지원</li>
+<li>프로그램 적재와 실행</li>
+<li>통신</li>
+<li>백그라운드 서비스
+<ul>
+<li>부팅시 살아나는 서비스</li>
+<li>백그라운드 서비스의 종류
+<ul>
+<li>시스템 시작시 실행됐다가 다시 종료되는 서비스</li>
+<li>시스템 시작해서 종료시까지 살아있는 서비스</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-32">운영체제 설계 및 구현</h2>
+<h3 id="section-33">개요</h3>
+<ul>
+<li>정형화된 해결책은 존재하지 않는다. 하지만 성공적인 접근 방법들이 존재한다.</li>
+<li>운영체제 별로 내부 구조는 매우 다르다.</li>
+<li>운영체제 설계 내용은 <strong>하드웨어</strong>와 <strong>시스템 타입</strong>에 따라 달라진다.</li>
+</ul>
+<br/>
+<h3 id="section-34">정책과 기법</h3>
+<ul>
+<li>중요한 원칙
+<ul>
+<li><strong>‘정책’과 ‘메커니즘’의 분리가 필수이다.</strong></li>
+<li><strong>정책</strong>
+<ul>
+<li>무엇을 할 것인가?</li>
+</ul>
+</li>
+<li><strong>기법</strong>
+<ul>
+<li>어떻게 할 것인가?</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>정책과 기법을 분리해야한다.</strong>
+<ul>
+<li>그래야 나중에 정책이 변경될 때 최대한의 융통성이 생긴다.</li>
+<li>예시
+<ul>
+<li>기법: CPU를 계속 점유하는 것을 방지하기 위해 Timer 사용한다.</li>
+<li>정책: 특정 사용자에게 타이머를 얼마나 오랫동안 설정할 것인지 결정한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-35">구현</h3>
+<ul>
+<li>다양성
+<ul>
+<li>초기: 어셈블리어</li>
+<li>현재: C, C++ 사용</li>
+</ul>
+</li>
+<li>언어 혼합 사용
+<ul>
+<li>하위 수준: 어셈블리어</li>
+<li>중요 부분: C</li>
+<li>시스템 프로그램: C, C++, PERL, Python과 같은 스크립트 언어</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-36">운영체제 구조</h2>
+<h3 id="section-37">개요</h3>
+<ul>
+<li>범용 운영체제는 매우 큰 프로그램이다.</li>
+<li>다양한 방법으로 운영체제의 구성을 할 수 있다.</li>
+</ul>
+<br/>
+<h3 id="ms-dos">MS-DOS</h3>
+<ul>
+<li>최소의 공간에 최대의 기능을 제공하도록 작성되어있다.</li>
+<li>특징
+<ul>
+<li>모듈로 제대로 분할되지 않았다.</li>
+<li>인터페이스와 기능 계층이 잘 분리되지 않았다.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>BIOS: Basic Input/Output System<br />
+UEFI: Unified Extensible Firmware Interface (BIOS 대체제)</p>
+</blockquote>
+<br/>
+<h3 id="unix">UNIX</h3>
+<ul>
+<li>UNIX는 아래 두 가지 부분으로 분리되어있다.
+<ul>
+<li>시스템 프로그램</li>
+<li>커널 (Kernel)</li>
+</ul>
+</li>
+<li>특징
+<ul>
+<li>단순하지도 않지만 계층 구조도 없는 형태이다. (초기 UNIX)</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-38">계층적 접근</h3>
+<ul>
+<li>운영체제는 여러 갱의 계층으로 구분된다.</li>
+<li>각 계층은 하위 계층 위에 만들어진다.</li>
+<li>최하위 계층: 하드웨어</li>
+<li>최상위 계층: 사용자 인터페이스</li>
+</ul>
+<p><img src="/assets/img/2021-09-28-OS_Structure/Untitled%2038.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-39">마이크로 커널 시스템 구조</h3>
+<ul>
+<li>커널이 커져서 관리가 어려워졌다.
+<ul>
+<li>따라서, ‘가능한 많은 기능’을 커널에서 사용자 공간으로 옮겨 커널을 최소화한다.</li>
+</ul>
+</li>
+<li>사용자 모듈 간의 통신은 <strong>message passing</strong>을 사용한다.</li>
+<li><strong>Mach</strong> : 첫 마이크로 커널</li>
+<li>장점
+<ul>
+<li>마이크로커널은 확장하기 좋다.</li>
+<li>새로운 하드웨어에 이식이 쉽다.</li>
+<li>신뢰성 향상 (커널 모드가 작다.)</li>
+<li>보안성 향상</li>
+</ul>
+</li>
+<li>단점
+<ul>
+<li>사용자와 커널 간의 통신으로 인한 성능 오버헤드 발생(지연)</li>
+</ul>
+</li>
+</ul>
+<p><img src="/assets/img/2021-09-28-OS_Structure/Untitled%2039.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-40">모듈</h3>
+<ul>
+<li>
+<p>대부분의 현대 운영체제 시스템은 적재 가능한 모듈로 구현된다.</p>
+<ul>
+<li>핵심(core)커널이 다른 모듈의 기능을 필요로 할 때, 해당 모듈과 연결하여 기능을 사용한다.</li>
+</ul>
+<p><img src="/assets/img/2021-09-28-OS_Structure/Untitled%2040.png" alt="Untitled" /></p>
+</li>
+<li>
+<p>LKM: Loadable Kernel Modules</p>
+</li>
+<li>
+<p>모듈은 객체 지향 기법이다.</p>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-41">하이브리드 시스템</h2>
+<h3 id="section-42">개요</h3>
+<ul>
+<li>대부분의 현대 운영체제는 오직 한가지 모델만을 사용하지 않는다.</li>
+<li>Linux, Solaris의 커널은 단일구조이지만, 함수의 동적 적재는 모듈화 기법을 사용한다.</li>
+<li>윈도우도 대부분이 단일구조이지만, 다른 서브시스템의 특징에 따라 마이크로커널을 채택한다.</li>
+</ul>
+<br/>
+<h3 id="mac-os-">Mac OS 구조</h3>
+<p><img src="/assets/img/2021-09-28-OS_Structure/Untitled%2041.png" alt="Untitled" /></p>
+<p><br/><br/></p>
+<h2 id="section-43">운영체제 디버깅</h2>
+<ul>
+<li>운영체제는 오류 정보를 포함하는 log file을 생성한다.</li>
+<li>애플리케이션이 죽으면 프로세스의 메모리를 캡처한 코어 덤프를 생성한다.</li>
+<li><strong>운영체제가 죽으면 커널 메모리를 캡처한 “비정상 종료 덤프”를 생성한다.</strong>
+<ul>
+<li>해당 덤프를 통하여, 운영체제가 죽은 원인을 분석한다.</li>
+</ul>
+</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>성결대학교 컴퓨터 공학과 강영명 교수님 (2021)</li>
+    <li>Siberschatz et. al., 『Operating System Concepts 10th Ed.』</li>
+  </ul>
+  본 게시글은 위 강의 및 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

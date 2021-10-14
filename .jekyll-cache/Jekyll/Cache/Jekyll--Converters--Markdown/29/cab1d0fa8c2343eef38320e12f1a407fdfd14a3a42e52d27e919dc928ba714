@@ -1,0 +1,93 @@
+I"�<p><br/><br/></p>
+<ul>
+<li><strong><a href="https://github.com/TaegyunWoo/Spring-Test-Code-Example">예시 프로젝트 다운로드</a></strong></li>
+<li>이전 게시글
+<ul>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_JUnit5_SummaryAndBasicAnnotation">[JUnit 5] 개요 및 기본 애너테이션</a></li>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_JUnit5_BasicAssertions">[JUnit 5] 기본 Assertions</a></li>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_JUnit5_TimeAssertions">[JUnit 5] 시간에 따른 테스트</a></li>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_JUnit5_ConditionalAssertions">[JUnit 5] 조건에 따른 테스트</a></li>
+</ul>
+</li>
+</ul>
+<br/>
+<h1 id="section">태깅과 필터링 활용</h1>
+<h2 id="section-1">개요</h2>
+<h3 id="section-2">태깅이란?</h3>
+<ul>
+<li>테스트 그룹을 만드는 것이다.</li>
+</ul>
+<br/>
+<h3 id="section-3">필터링이란?</h3>
+<ul>
+<li>태깅을 통해 만든 테스트 그룹을 특정하여 테스트를 실행하는 것이다.</li>
+</ul>
+<br/>
+<h2 id="codetagcode-"><code>@Tag</code> 애너테이션</h2>
+<h3 id="section-4">애너테이션 형식</h3>
+<p><code>@Tag(&quot;태그명&quot;)</code></p>
+<br/>
+<h3 id="section-5">기능</h3>
+<ul>
+<li>테스트 메서드에 해당 태그를 설정한다.</li>
+</ul>
+<br/>
+<h3 id="section-6">예시 코드</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//import 생략</span>
+
+<span class="kd">class</span> <span class="nc">StudyTest</span> <span class="o">{</span>
+	
+	<span class="nd">@Tag</span><span class="o">(</span><span class="s">"myTag"</span><span class="o">)</span>
+	<span class="nd">@Test</span>
+  <span class="kt">void</span> <span class="nf">create</span><span class="o">()</span> <span class="o">{</span>
+		<span class="c1">//테스트 코드</span>
+	<span class="o">}</span>
+ 
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br/><br/></p>
+<h2 id="intellij--">IntelliJ에서 필터링 하기</h2>
+<ul>
+<li>Gradle 사용시 JUnit 항목이 나타나지 않는 경우가 있다.</li>
+<li>따라서 직접 만들어야한다. 만드는 방법은 아래와 같다.</li>
+</ul>
+<br/>
+<h3 id="edit-configurations">1. Edit Configurations</h3>
+<p><img src="/assets/img/2021-09-16-TestFramework_JUnit5_Tagging/Untitled%201.png" alt="Untitled" /></p>
+<ul>
+<li>위 그림처럼 Edit Configurations 항목을 클릭한다.</li>
+</ul>
+<br/>
+<h3 id="junit--">2. JUnit 항목 추가</h3>
+<p><img src="/assets/img/2021-09-16-TestFramework_JUnit5_Tagging/Untitled%202.png" alt="Untitled" /></p>
+<ul>
+<li>위 사진처럼 JUnit 항목이 존재하지 않는다.</li>
+<li>따라서, 따로 생성해주어야 한다.</li>
+</ul>
+<p><img src="/assets/img/2021-09-16-TestFramework_JUnit5_Tagging/Untitled%203.png" alt="Untitled" /></p>
+<ul>
+<li>JUnit을 추가한다.</li>
+</ul>
+<br/>
+<h3 id="module--cp-">3. 이름, Module, -cp 설정</h3>
+<p><img src="/assets/img/2021-09-16-TestFramework_JUnit5_Tagging/Untitled%204.png" alt="Untitled" /></p>
+<ul>
+<li>해당 항목들을 참고하여 설정한다.</li>
+<li>설정 후, OK를 클릭하여 적용한다.</li>
+</ul>
+<br/>
+<h3 id="section-7">4. 특정 태그 테스트만 실행하기</h3>
+<p><img src="/assets/img/2021-09-16-TestFramework_JUnit5_Tagging/Untitled%205.png" alt="Untitled" /></p>
+<ul>
+<li>위 그림처럼, 우리가 설정한 이름이 출력된다.</li>
+<li>해당 항목을 선택한 상태로 Run하게 되면, 해당 태그의 테스트만 실행된다.</li>
+</ul>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/htNB"><img src="/assets/img/Inflearn_Java_Test/logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 백기선님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

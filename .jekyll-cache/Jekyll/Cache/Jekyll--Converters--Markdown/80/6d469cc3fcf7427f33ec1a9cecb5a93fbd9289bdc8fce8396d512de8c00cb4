@@ -1,0 +1,72 @@
+I"�<p><br/><br/></p>
+<ul>
+<li><strong><a href="https://github.com/TaegyunWoo/Spring-Test-Code-Example">예시 프로젝트 다운로드</a></strong></li>
+<li>이전 게시글
+<ul>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_JUnit5_SummaryAndBasicAnnotation">[JUnit 5] 개요 및 기본 애너테이션</a></li>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_JUnit5_BasicAssertions">[JUnit 5] 기본 Assertions</a></li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h1 id="section">시간 측정 테스트하기</h1>
+<h2 id="codeasserttimeoutcode-"><code>assertTimeout</code> 메서드</h2>
+<h3 id="section-1">메서드 형식</h3>
+<p><code>assertTimeout( Duration.ofMillis(밀리초), () - {측정할 코드})</code></p>
+<br/>
+<h3 id="section-2">기능</h3>
+<ul>
+<li>해당 람다식이 모두 끝난 후, 수행시간이 <code>Duration.ofMillis(밀리초)</code> 보다 길다면 테스트에 실패한다.</li>
+<li><strong>설정한 시간이 지나도 람다식에 작성한 코드가 모두 완료될 때까지 기다린다.</strong></li>
+</ul>
+<br/>
+<h3 id="section-3">예시 코드</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//import 생략</span>
+<p><span class="kd">class</span> <span class="nc">StudyTest</span> <span class="o">{</span></p>
+<pre><code>&lt;span class=&quot;nd&quot;&gt;@Test&lt;/span&gt;
+</code></pre>
+<p><span class="kt">void</span> <span class="nf">create</span><span class="o">()</span> <span class="o">{</span>
+<span class="nc">Study</span> <span class="n">study</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Study</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span></p>
+<pre><code>	&lt;span class=&quot;n&quot;&gt;assertTimeout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Duration&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;ofMillis&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;c1&quot;&gt;//시간을 측정할 코드&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<p><br/><br/></p>
+<h2 id="codeasserttimeoutpreemptivelycode-"><code>assertTimeoutPreemptively</code> 메서드</h2>
+<h3 id="section-4">메서드 형식</h3>
+<p><code>assertTimeoutPreemptively( Duration.ofMillis(밀리초), () - {측정할 코드})</code></p>
+<br/>
+<h3 id="section-5">기능</h3>
+<ul>
+<li>해당 람다식이 모두 끝난 후, 수행시간이 <code>Duration.ofMillis(밀리초)</code> 보다 길다면 테스트에 실패한다.</li>
+<li><strong>설정한 시간이 지나면, 람다식에 작성한 코드가 완료되지 않아도 종료된 후 테스트가 중단된다.</strong></li>
+</ul>
+<br/>
+<h3 id="section-6">예시 코드</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//import 생략</span>
+<p><span class="kd">class</span> <span class="nc">StudyTest</span> <span class="o">{</span></p>
+<pre><code>&lt;span class=&quot;nd&quot;&gt;@Test&lt;/span&gt;
+</code></pre>
+<p><span class="kt">void</span> <span class="nf">create</span><span class="o">()</span> <span class="o">{</span>
+<span class="nc">Study</span> <span class="n">study</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Study</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span></p>
+<pre><code>	&lt;span class=&quot;n&quot;&gt;assertTimeoutPreemptively&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Duration&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;ofMillis&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;c1&quot;&gt;//시간을 측정할 코드&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div>
+<br></p>
+<hr />
+<br>
+<p><a href="https://inf.run/htNB"><img src="/assets/img/Inflearn_Java_Test/logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 백기선님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

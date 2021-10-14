@@ -1,0 +1,130 @@
+I"k<p><br/><br/></p>
+<ul>
+<li><strong><a href="https://github.com/TaegyunWoo/Spring-Test-Code-Example">예시 프로젝트 다운로드</a></strong></li>
+<li>이전 게시글
+<ul>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_JUnit5_SummaryAndBasicAnnotation">[JUnit 5] 개요 및 기본 애너테이션</a></li>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_JUnit5_BasicAssertions">[JUnit 5] 기본 Assertions</a></li>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_JUnit5_TimeAssertions">[JUnit 5] 시간에 따른 테스트</a></li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h1 id="section">조건에 따라 테스트 실행하기</h1>
+<h2 id="codeasserttruecode-"><code>assertTrue</code> 메서드</h2>
+<h3 id="section-1">메서드 형식</h3>
+<p><code>assertTrue(조건식)</code></p>
+<br/>
+<h3 id="section-2">기능</h3>
+<ul>
+<li>조건이 true면, 테스트에 성공한다.</li>
+<li>조건이 false라면, 테스트에 실패한다.</li>
+</ul>
+<br/>
+<h3 id="section-3">예시 코드</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//import 생략</span>
+
+<span class="kd">class</span> <span class="nc">StudyTest</span> <span class="o">{</span>
+	
+	<span class="nd">@Test</span>
+  <span class="kt">void</span> <span class="nf">create</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nc">Study</span> <span class="n">study</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Study</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span>
+		<span class="n">assertTrue</span><span class="o">(</span><span class="n">study</span><span class="o">.</span><span class="na">getLimit</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">);</span>
+		<span class="c1">// 나머지 테스트 코드</span>
+	<span class="o">}</span>
+ 
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br/><br/></p>
+<h2 id="codeassumingthatcode-"><code>assumingThat</code> 메서드</h2>
+<h3 id="section-4">메서드 형식</h3>
+<p><code>assumingThat(조건식, 테스트람다식)</code></p>
+<br/>
+<h3 id="section-5">기능</h3>
+<ul>
+<li>조건이 true면, 람다식(테스트)를 수행한다.</li>
+<li>조건이 false라면, 람다식(테스트)를 수행하지 않는다. <strong>(테스트에 실패하지는 않는다.)</strong></li>
+</ul>
+<br/>
+<h3 id="section-6">예시 코드</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//import 생략</span>
+
+<span class="kd">class</span> <span class="nc">StudyTest</span> <span class="o">{</span>
+	
+	<span class="nd">@Test</span>
+  <span class="kt">void</span> <span class="nf">create</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nc">Study</span> <span class="n">study</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Study</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span>
+		<span class="n">assumingThat</span><span class="o">(</span><span class="n">study</span><span class="o">.</span><span class="na">getLimit</span><span class="o">()&gt;</span><span class="mi">0</span><span class="o">,</span> <span class="o">()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+			<span class="c1">//조건 만족시 수행할 테스트 코드</span>
+		<span class="o">});</span>
+	<span class="o">}</span>
+ 
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br/><br/></p>
+<h2 id="codeenabledonoscode-"><code>@EnabledOnOS</code> 애너테이션</h2>
+<h3 id="section-7">애너테이션 형식</h3>
+<p><code>@EnabledOnOs(OS.WINDOWS)</code></p>
+<br/>
+<h3 id="section-8">기능</h3>
+<ul>
+<li>속성으로 전달한 해당 OS에서 테스트를 실행할때, 테스트 메서드를 수행한다.</li>
+<li>해당 OS가 아닌 경우, 테스트 메서드를 수행하지 않는다.</li>
+</ul>
+<br/>
+<h3 id="codedisabledonoscode-"><code>@DisabledOnOS</code> 애너테이션</h3>
+<ul>
+<li>말 그대로, <code>@EnabledOnOS</code> 의 반대 개념이다.</li>
+</ul>
+<br/>
+<h3 id="section-9">예시 코드</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//import 생략</span>
+
+<span class="kd">class</span> <span class="nc">StudyTest</span> <span class="o">{</span>
+	
+	<span class="nd">@EnabledOnOS</span><span class="o">(</span><span class="no">OS</span><span class="o">.</span><span class="na">WINDOWS</span><span class="o">)</span>
+	<span class="nd">@Test</span>
+  <span class="kt">void</span> <span class="nf">create</span><span class="o">()</span> <span class="o">{</span>
+		<span class="c1">//테스트 코드</span>
+	<span class="o">}</span>
+ 
+<span class="o">}</span>
+</code></pre></div></div>
+<br/>
+<h2 id="codeenabledonjrecode-"><code>@EnabledOnJre</code> 애너테이션</h2>
+<h3 id="section-10">애너테이션 형식</h3>
+<p><code>@EnabledOnJre({JRE.JAVA_8, JRE.JAVA_11, ... })</code></p>
+<br/>
+<h3 id="section-11">기능</h3>
+<ul>
+<li>속성으로 전달한 해당 자바 버전에서 테스트를 실행할때, 테스트 메서드를 수행한다.</li>
+<li>해당 자바 버전이 아닌 경우, 테스트 메서드를 수행하지 않는다.</li>
+</ul>
+<br/>
+<h3 id="codedisabledonjrecode-"><code>@DisabledOnJre</code> 애너테이션</h3>
+<ul>
+<li>말 그대로, <code>@EnabledOnJre</code> 의 반대 개념이다.</li>
+</ul>
+<br/>
+<h3 id="section-12">예시 코드</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//import 생략</span>
+
+<span class="kd">class</span> <span class="nc">StudyTest</span> <span class="o">{</span>
+	
+	<span class="nd">@EnabledOnJre</span><span class="o">({</span><span class="no">JRE</span><span class="o">.</span><span class="na">JAVA_8</span><span class="o">,</span> <span class="no">JRE</span><span class="o">.</span><span class="na">JAVA_11</span><span class="o">})</span>
+	<span class="nd">@Test</span>
+  <span class="kt">void</span> <span class="nf">create</span><span class="o">()</span> <span class="o">{</span>
+		<span class="c1">//테스트 코드</span>
+	<span class="o">}</span>
+ 
+<span class="o">}</span>
+</code></pre></div></div>
+<br>
+<hr />
+<br>
+<p><a href="https://inf.run/htNB"><img src="/assets/img/Inflearn_Java_Test/logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 백기선님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

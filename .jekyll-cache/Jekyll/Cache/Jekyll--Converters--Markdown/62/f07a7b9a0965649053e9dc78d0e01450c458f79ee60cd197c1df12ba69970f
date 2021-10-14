@@ -1,0 +1,427 @@
+I"n5<p><br/><br/></p>
+<h1 id="section">프로세스</h1>
+<h2 id="section-1">개요</h2>
+<h3 id="section-2">프로세스 개념</h3>
+<ul>
+<li>프로세스는 과거와 현재에 따라, 용어의 차이가 존재한다.</li>
+<li>과거
+<ul>
+<li>일괄처리 시스템: 한번에 하나의 프로세스 밖에 안된다.</li>
+<li>프로세스 = Job</li>
+</ul>
+</li>
+<li>현재
+<ul>
+<li>시분할 시스템</li>
+<li>프로세스 = Task</li>
+</ul>
+</li>
+<li>프로세스와 Job, Task 를 동일한 개념으로 사용한다.</li>
+</ul>
+<br/>
+<h3 id="vs-">프로그램 vs 프로세스</h3>
+<ul>
+<li>
+<p>프로그램</p>
+<ul>
+<li>수동적</li>
+</ul>
+</li>
+<li>
+<p>프로세스</p>
+<ul>
+<li>능동적</li>
+<li>실행 가능 파일(프로그램)이 메모리에 올라가면 프로세스가 된다.</li>
+</ul>
+</li>
+<li>
+<p>한 프로그램은 여러 프로세스가 될 수 있다.</p>
+<ul>
+<li>어떤 프로세스의 공유 가능한 부분을 여러 사용자가 사용시, 여러 프로세스가 된다.</li>
+</ul>
+<p><img src="/assets/img/2021-10-05-OS_Process/Untitled%2042.png" alt="Untitled" /></p>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-3">프로세스와 메모리</h2>
+<h3 id="section-4">프로세스 구성요소</h3>
+<ul>
+<li><strong>PC (Program Counter)</strong>
+<ul>
+<li>다음에 수행할 명령어를 가리킨다.</li>
+</ul>
+</li>
+<li><strong>Registers</strong>
+<ul>
+<li>추후에 자세히 설명한다.</li>
+</ul>
+</li>
+<li><strong>stack</strong>
+<ul>
+<li>임시자료 저장</li>
+<li>Ex) 함수 콜스택 등</li>
+</ul>
+</li>
+<li><strong>heap</strong>
+<ul>
+<li>동적으로 할당되는 메모리</li>
+<li>자바의 <strong>new</strong></li>
+<li>C의 <strong>malloc()</strong></li>
+</ul>
+</li>
+<li><strong>data</strong>
+<ul>
+<li>전역변수</li>
+</ul>
+</li>
+<li><strong>text (code)</strong>
+<ul>
+<li>프로그램 코드</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-5">메모리에 프로세스가 배치된 형태</h3>
+<p><img src="/assets/img/2021-10-05-OS_Process/Untitled%2043.png" alt="Untitled" /></p>
+<ul>
+<li><strong>stack</strong>
+<ul>
+<li>임시자료 저장</li>
+<li>Ex) 함수 콜스택 등</li>
+</ul>
+</li>
+<li><strong>heap</strong>
+<ul>
+<li>동적으로 할당되는 메모리</li>
+<li>자바의 <strong>new</strong></li>
+<li>C의 <strong>malloc()</strong></li>
+</ul>
+</li>
+<li><strong>data</strong>
+<ul>
+<li>전역변수</li>
+</ul>
+</li>
+<li><strong>text (code)</strong>
+<ul>
+<li>프로그램 코드</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-6">프로세스 상태</h2>
+<h3 id="section-7">프로세스 상태 종류</h3>
+<ul>
+<li><strong>new</strong>
+<ul>
+<li>프로세스 생성 상태</li>
+</ul>
+</li>
+<li><strong>running</strong>
+<ul>
+<li>프로세스 실행 상태</li>
+</ul>
+</li>
+<li><strong>waiting</strong>
+<ul>
+<li>프로세스 대기 상태</li>
+<li>어떤 이벤트가 발생할 때까지 대기한다.</li>
+</ul>
+</li>
+<li><strong>ready</strong>
+<ul>
+<li>프로세스 준비 상태</li>
+<li>실행 준비 완료 상태이다.</li>
+<li><strong>무조건 프로세스 실행 전에 거쳐야 하는 단계이다.</strong></li>
+<li><strong>즉 이 상태를 건너뛰고, 다른 상태에서 바로 running 상태가 될 수 없다.</strong></li>
+</ul>
+</li>
+<li><strong>terminated</strong>
+<ul>
+<li>프로세스 종료 상태</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-8">프로세스 상태도</h3>
+<p><img src="/assets/img/2021-10-05-OS_Process/Untitled%2044.png" alt="Untitled" /></p>
+<ul>
+<li><strong>반드시 ready 상태에서만 running 상태로 변경될 수 있다.</strong></li>
+<li>아래 그림은 보다 보기 쉽게 번역한 것이다.</li>
+</ul>
+<p><img src="/assets/img/2021-10-05-OS_Process/Untitled%2045.png" alt="Untitled" /></p>
+<p><br/><br/></p>
+<h2 id="pcb">프로세스 제어 블록 (PCB)</h2>
+<h3 id="section-9">프로세스 제어 블록이란?</h3>
+<ul>
+<li><strong>프로세스 제어 블록 = PCB(Process Control Block)</strong></li>
+<li>PCB는 프로세스의 정보를 담고있다.</li>
+<li>개별 프로세스마다 PCB가 존재한다.</li>
+</ul>
+<br/>
+<h3 id="pcb-">PCB 구조</h3>
+<p><img src="/assets/img/2021-10-05-OS_Process/Untitled%2046.png" alt="Untitled" /></p>
+<br/>
+<h3 id="cpu-">프로세스간 CPU 전환</h3>
+<p><img src="/assets/img/2021-10-05-OS_Process/Untitled%2047.png" alt="Untitled" /></p>
+<p><br/><br/></p>
+<h2 id="section-10">쓰레드</h2>
+<h3 id="section-11">쓰레드란?</h3>
+<ul>
+<li>쓰레드는 <strong>프로세스보다 작은 독립된 실행 단위</strong>이다.</li>
+<li>프로세스가 한 개 이상의 쓰레드를 갖을 수 있다.</li>
+<li>여러 쓰레드를 가진 프로세스는 한 순간에 하나 이상의 일을 할 수 있다.</li>
+<li>현대의 운영체제
+<ul>
+<li>PCB가 확장되어 쓰레드에 관한 정보를 포함한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-12">쓰레드 예시</h3>
+<ul>
+<li>자동 오타 검사 기능 ⇒ 쓰레드 1</li>
+<li>자동 저장 기능 ⇒ 쓰레드 2</li>
+</ul>
+<p>위 두 가지를 동시에 수행하는 문서편집 프로세스</p>
+<br/>
+<h3 id="section-13">쓰레드 구조</h3>
+<ul>
+<li>
+<p>싱글 쓰레드</p>
+<p><img src="/assets/img/2021-10-05-OS_Process/Untitled%2048.png" alt="Untitled" /></p>
+</li>
+<li>
+<p>멀티 쓰레드</p>
+<p><img src="/assets/img/2021-10-05-OS_Process/Untitled%2049.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h2 id="section-14">프로세스 스케줄링</h2>
+<h3 id="section-15">개요</h3>
+<ul>
+<li>다중 프로그래밍의 목적은 프로세스를 항상 실행하여, CPU 이용을 최대화하는 것이다.</li>
+<li>따라서, 프로세스 스케줄링을 통해 적절히 프로세스를 실행한다.</li>
+</ul>
+<br/>
+<h3 id="section-16">프로세스 스케줄러</h3>
+<ul>
+<li><strong>프로세스 스케줄러는 ‘ready’ 상태인 여러 프로세스 중에서 CPU에 다음 실행할 프로세스를 선택한다.</strong></li>
+</ul>
+<br/>
+<h3 id="section-17">스케줄링 큐</h3>
+<ul>
+<li><strong>Job Queue</strong>
+<ul>
+<li>모든 프로세스에 대한 큐</li>
+</ul>
+</li>
+<li><strong>Ready Queue</strong>
+<ul>
+<li>메인 메모리에 있고, ready 상태인 프로세스에 대한 큐</li>
+</ul>
+</li>
+<li><strong>Device Queue</strong>
+<ul>
+<li>I/O 장치에 대한 큐</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="ready-queue">Ready Queue</h3>
+<ul>
+<li>연결 리스트 구조를 갖는다.</li>
+</ul>
+<p><img src="/assets/img/2021-10-05-OS_Process/Untitled%2050.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-18">프로세스 스케줄링 과정</h3>
+<p><img src="/assets/img/2021-10-05-OS_Process/Untitled%2051.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-19">스케줄러 종류</h3>
+<ul>
+<li><strong>Short-term scheduler</strong>
+<ul>
+<li>CPU scheduler 와 동일한 것이다.</li>
+<li><strong>다음에 실행할 프로세스를 선택하고 CPU를 할당한다.</strong></li>
+<li><strong>따라서, “ready 상태에서 running 상태”로 변경될 때 사용된다.</strong></li>
+</ul>
+</li>
+<li><strong>Long-term scheduler</strong>
+<ul>
+<li>Job scheduler 와 동일한 것이다.</li>
+<li><strong>준비완료 큐에 넣을 프로세스를 선택한다.</strong></li>
+<li><strong>따라서, “new 상태에서 ready 상태”로 변경될 때 사용된다.</strong></li>
+<li>동시에 실행가능한 프로세스의 개수를 제한할 수 있다.</li>
+</ul>
+</li>
+<li><strong>Medium-term scheduler</strong>
+<ul>
+<li>하이브리드 시스템에서 사용된다.</li>
+<li>일종의 Job scheduler이다.</li>
+<li>스와핑 기법을 사용한다.
+<ul>
+<li>메인 메모리에 너무 많은 프로세스가 있을 때 사용되는 기법</li>
+<li>일부 프로세스를 메인 메모리에서 해제하고, 하드디스크에 넣는다. ⇒ <strong>Swap in</strong></li>
+<li>하드디스크에 있는 프로세스가 필요할 땐, 다시 메인 메모리에 로드한다. ⇒ <strong>Swap out</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-20">문맥 교환</h2>
+<h3 id="section-21">문맥 교환이란?</h3>
+<ul>
+<li>CPU가 다른 프로세스로 전환되려면, 시스템은 현재 프로세스의 상태를 저장(백업)해야한다.</li>
+<li>그리고 전환하려고 하는 새로운 프로세스를 찾아서 로딩해야한다.</li>
+<li><strong>즉 PCB 저장 및 로드 과정이 필요하다.</strong></li>
+<li><strong>이러한 과정을 문맥 교환이라고 한다.</strong></li>
+</ul>
+<p><img src="/assets/img/2021-10-05-OS_Process/Untitled%2052.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-22">문맥교환 오버헤드</h3>
+<ul>
+<li>문맥 교환을 진행하는 동안은 일을 안하는 것과 같다. 즉, 오버헤드가 발생한다.</li>
+</ul>
+<p><img src="/assets/img/2021-10-05-OS_Process/Untitled%2053.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-23">문맥 교환 원리</h3>
+<ul>
+<li>문맥 교환은 H/W를 통해 수행된다.
+<ul>
+<li>왜냐하면, S/W보다 H/W가 더 빠르기 때문이다.</li>
+</ul>
+</li>
+<li><strong>문맥 교환은 현행 레지스터 집합에 대한 포인터를 변경하는 것을 의미한다.</strong>
+<ul>
+<li><strong>하지만 레지스터 집합보다 활성 프로세스가 많다면, 레지스터 자료를 메모리에 복사해야 한다.</strong></li>
+</ul>
+</li>
+</ul>
+<p><img src="/assets/img/2021-10-05-OS_Process/Untitled%2054.png" alt="Untitled" /></p>
+<p><br/><br/></p>
+<h2 id="section-24">프로세스에 대한 연산</h2>
+<p>프로세스 생성 연산을 집중적으로 알아보자.</p>
+<h3 id="section-25">프로세스 생성 연산</h3>
+<ul>
+<li>
+<p>부모 프로세스가 자식 프로세스를 만드는 연산이다.</p>
+</li>
+<li>
+<p>이러한 과정으로 다른 프로세서를 생성하면서 프로세스의 트리를 만든다.</p>
+</li>
+<li>
+<p>프로세스 트리</p>
+<p><img src="/assets/img/2021-10-05-OS_Process/Untitled%2055.png" alt="Untitled" /></p>
+<blockquote>
+<p>최상단 init 프로세스의 pid는 항상 1이다.</p>
+</blockquote>
+</li>
+</ul>
+<br/>
+<h3 id="section-26">상세 설명</h3>
+<ul>
+<li>일반적으로 Process ID (PID)를 통해, 프로세스를 식별하고 관리한다.</li>
+<li>부모, 자식 프로세스 간의 자원 공유 방법
+<ul>
+<li><strong>모두 공유</strong></li>
+<li><strong>부분 공유</strong></li>
+<li><strong>공유 안함</strong></li>
+</ul>
+</li>
+<li>부모, 자식 프로세스 실행 유형
+<ul>
+<li><strong>병행 수행</strong>
+<ul>
+<li>부모 프로세스와 자식 프로세스가 동시에 독립적으로 실행된다.</li>
+</ul>
+</li>
+<li><strong>부모가 자식이 종료될 때 까지 기다림</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-27">프로세스에 생성</h3>
+<ul>
+<li>새로운 프로세스의 Address space (주소공간) 사용방법 종류
+<ul>
+<li>자식이 부모와 동일한 프로그램과 데이터를 사용하는 방법</li>
+<li>자식이 새 프로그램으로 로드되는 방법</li>
+</ul>
+</li>
+<li>Unix 예시
+<ul>
+<li>부모와 자식 프로세스는 ‘fork’ 명령문에서부터 실행된다.</li>
+<li>해당 명령문(<code>fork()</code>)을 호출한 프로세스가 부모 프로세스가 되고, 새로운 자식 프로세스를 생성한다.</li>
+<li>fork 함수에 의해 생성된 자식 프로세스는 부모 프로세스의 메모리를 그대로 복사하여 갖는다.</li>
+<li>fork 함수 호출 이후 코드부터 각자의 메모리를 사용하여 실행한다.</li>
+<li><strong>‘fork’ 명령문의 반환값</strong>
+<ul>
+<li>fork() ⇒ 본인의 자식 PID를 반환한다.</li>
+<li>fork() 의 반환값이 0일 땐, 이미 본인이 자식 프로세스인 경우이다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/assets/img/2021-10-05-OS_Process/Untitled%2056.png" alt="Untitled" /></p>
+<ul>
+<li>
+<p>예시</p>
+<p><img src="/assets/img/2021-10-05-OS_Process/Untitled%2057.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-28">프로세스 종료</h3>
+<ul>
+<li>
+<p>프로세스 종료( <strong>exit()</strong> ) 시, 자식에게서 부모로 상태 데이터(실행 결과)가 반환된다.</p>
+</li>
+<li>
+<p>운영체제가 자원을 회수한다.</p>
+</li>
+<li>
+<p>부모가 자식을 강제 종료하는 경우들 ( <strong>abort()</strong> )</p>
+<ul>
+<li><strong>자식이 할당받은 자원을 초과 사용하려는 경우</strong></li>
+<li><strong>자식에게 할당한 Task가 더 이상 필요하지 않을 경우</strong></li>
+<li><strong>부모가 먼저 exit할 경우</strong>
+<ul>
+<li>부모가 exit시 나머지 자식들은 모두 exit된다. ⇒ 연쇄 종료</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>좀비 프로세스</strong></p>
+<ul>
+<li>자식 종료 후, 부모가 wait를 불러주지 않아, 리소스가 반환되지 않는 경우</li>
+<li>자식 종료 후, 부모가 wait를 부르는 시간 동안 자식은 좀비 상태가 된다.</li>
+</ul>
+<p><img src="/assets/img/2021-10-05-OS_Process/Untitled%2058.png" alt="Untitled" /></p>
+</li>
+<li>
+<p><strong>고아 프로세스</strong></p>
+<ul>
+<li>부모가 먼저 exit되어, wait를 부르지 못하여 자식처리가 불가한 상황에 자식이 고아 프로세스가 된다.</li>
+</ul>
+</li>
+<li>
+<p><strong>부모의 wait란?</strong></p>
+<ul>
+<li>자식이 종료된 후, 호출되는 것이다.</li>
+<li>자식의 자원 반환, 리턴값 가져오기 등을 수행한다.</li>
+</ul>
+</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>성결대학교 컴퓨터 공학과 강영명 교수님 (2021)</li>
+    <li>Siberschatz et. al., 『Operating System Concepts 10th Ed.』</li>
+  </ul>
+  본 게시글은 위 강의 및 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

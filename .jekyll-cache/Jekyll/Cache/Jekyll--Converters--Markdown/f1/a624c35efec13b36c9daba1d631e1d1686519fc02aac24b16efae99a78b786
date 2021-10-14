@@ -1,0 +1,664 @@
+I"�g<p><br/><br/></p>
+<h1 id="section">캐시 기억장치</h1>
+<h2 id="section-1">개요</h2>
+<h3 id="section-2">캐시 기억장치란?</h3>
+<ul>
+<li>기억장치 속도가 가장 빠른 기억장치의 속도에 근접하도록 한다.</li>
+<li>저렴한 반도체 기억장치의 가격으로 큰 기억장치 용량을 가지도록 한다.</li>
+<li>주기억 장치 내용의 일부분을 복사하여 저장한다.</li>
+</ul>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2042.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-3">캐시 기억장치의 기본 동작</h3>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2043.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-4">캐시와 주기억장치 조직</h3>
+<ul>
+<li>
+<p>Main Memory</p>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2044.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>캐시</p>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2045.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>Main Memory vs Cache</strong></p>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2046.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-5">전형적인 캐시 조직</h3>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2047.png" alt="Untitled" /></p>
+<p><br/><br/></p>
+<h2 id="section-6">캐시 설계 요소들</h2>
+<h3 id="section-7">설계 요소 종류</h3>
+<p>캐시를 설계하는데 고려해야하는 요소들은 아래와 같다.</p>
+<ul>
+<li><strong>캐시 주소</strong></li>
+<li><strong>캐시 크기</strong></li>
+<li><strong>매핑 함수</strong></li>
+<li><strong>교체 알고리즘</strong></li>
+<li><strong>쓰기 정책</strong></li>
+<li><strong>라인 크기</strong></li>
+<li><strong>캐시 개수</strong></li>
+</ul>
+<p>지금부터 하나씩 알아보자.</p>
+<p><br/><br/></p>
+<h2 id="section-8">캐시 주소</h2>
+<h3 id="section-9">논리적 캐시 (가상 캐시)</h3>
+<ul>
+<li>가상 기억장치
+<ul>
+<li>주기억장치의 크기와 상관없이 논리적인 관점으로 기억장치의 위치를 지정해준다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>논리적 캐시</p>
+<ul>
+<li>논리적 캐시는 가상 주소를 이용하여 데이터를 저장한다.</li>
+<li><strong>만약 논리적 캐시에서 hit 한다면, MMU를 통하지 않고 캐시를 직접 액세스한다.</strong></li>
+<li><strong>MMU</strong>
+<ul>
+<li>Memory Management Unit</li>
+<li>기억장치 관리 유닛</li>
+<li><strong>프로세서가 가상주소를 참조하면 MMU가 물리주소로 변환해준다.</strong></li>
+</ul>
+</li>
+</ul>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2048.png" alt="Untitled" /></p>
+<ul>
+<li>
+<p><strong>Processor와 MMU 사이에 캐시가 존재한다면, 그것은 논리적 캐시이다.</strong></p>
+<ul>
+<li>그렇기 때문에 가상 주소를 갖는 데이터가 논리적 캐시에 존재하면, MMU를 거치지 않아도 된다.</li>
+</ul>
+</li>
+<li>
+<p>장점</p>
+<ul>
+<li>물리적 캐시보다 빠르다.</li>
+</ul>
+</li>
+<li>
+<p>단점</p>
+<ul>
+<li>논리적으로 동일한 주소를 갖더라도, 실제 물리적 주소는 다를 수 있다.</li>
+</ul>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2049.png" alt="Untitled" /></p>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-10">물리적 캐시</h3>
+<ul>
+<li><strong>MMU와 Main Memory 사이에 캐시가 존재한다면, 그것은 물리적 캐시이다.</strong></li>
+</ul>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2050.png" alt="Untitled" /></p>
+<ul>
+<li>물리적 주소는 실제 Main Memory의 주소를 의미한다.</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-11">캐시 크기</h2>
+<h3 id="section-12">캐시 크기 목표</h3>
+<ul>
+<li>전체적으로 비트당 평균 비용이 “주기억 장치만의 평균비용”과 비슷해질만큼 충분히 작아야한다.</li>
+<li>전체 평균 액세스 시간이 “캐시의 액세스 시간”에 접근할 만큼 충분히 커야한다.</li>
+<li><strong>즉, 캐시 크기를 최소화 해야 한다.</strong></li>
+</ul>
+<br/>
+<h3 id="section-13">캐시 크기의 최소화 이유</h3>
+<ul>
+<li><strong>캐시의 용량이 커질수록 속도가 느려진다.</strong></li>
+<li><strong>칩과 보드상의 공간에 제약을 받는다.</strong></li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-14">캐시와 주기억장치 간의 주소 매핑</h2>
+<h3 id="section-15">사상 함수</h3>
+<ul>
+<li>
+<p>사상 함수란?</p>
+<ul>
+<li>‘주기억장치의 Block’을 ‘캐시의 Line’으로 사상(매핑)해주는 알고리즘이다.</li>
+</ul>
+</li>
+<li>
+<p>사상 함수 필요성</p>
+<ul>
+<li>캐시의 Line 수는 주기억장치의 Block 수보다 적으므로, 이들을 어떻게 매핑할 것인가가 중요하다.</li>
+</ul>
+</li>
+<li>
+<p>사상 함수의 종류</p>
+<ul>
+<li>직접 사상</li>
+<li>연관 사상</li>
+<li>세트 연관 사상</li>
+</ul>
+</li>
+<li>
+<p>매핑 구조</p>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2051.png" alt="Untitled" /></p>
+</li>
+</ul>
+<p>지금부터 여러 사상 함수의 종류에 대해 알아보자.</p>
+<br/>
+<h3 id="section-16">직접 사상</h3>
+<ul>
+<li>주기억 장치의 각 Block을 한 개의 캐시 Line으로만 사상(매핑)한다.</li>
+<li><strong>즉, Block들은 각자 지정된 Line으로 매핑된다.</strong></li>
+<li>매핑시 사용되는 함수
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?i=jMODm" alt="i=jMODm" /></li>
+<li><img src="https://latex.codecogs.com/svg.image?i" alt="i" /> : 매핑할 캐시 Line 번호</li>
+<li><img src="https://latex.codecogs.com/svg.image?j" alt="j" /> : 매핑될 주기억장치 Block 번호</li>
+<li><img src="https://latex.codecogs.com/svg.image?m" alt="m" /> : 캐시 내의 총 Line 개수</li>
+<li><img src="https://latex.codecogs.com/svg.image?MOD" alt="MOD" /> : 나머지 연산자</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>원리</p>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2052.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>Cache와 Main Memory 관계</p>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2053.png" alt="Untitled" /></p>
+<ul>
+<li><strong>각 블록집합은 서로 같은 위치에 존재하는 블록끼리 캐시 Line을 경합하게 된다.</strong></li>
+<li>만약, 위 그림에서 ‘13579246’ 데이터와 ‘77777777’ 데이터를 프로세서가 필요해하면, 캐시에서 교체가 이루어진다.
+<ul>
+<li>왜냐하면, ‘13579246’ 데이터와 ‘77777777’ 데이터가 서로 같은 Line 위치를 사용하기 때문에 공존할 수 없다.</li>
+</ul>
+</li>
+<li><strong>Main Memory의 주소는 ‘Tag’, ‘Line주소’, ‘Word주소’로 이루어진다.</strong>
+<ul>
+<li><strong>Tag</strong>: 각 블록 집합을 구분한다.</li>
+<li><strong>Line 주소</strong>: Tag로 블록 집합 내에서 어떤 블록인지 구분한다.</li>
+<li><strong>Word 주소</strong>: Line 주소로 특정된 블록 내에서 어떤 워드인지 구분한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>직접 사상 방식의 장단점
+<ul>
+<li>장점
+<ul>
+<li>간단하고 구현 비용이 적게든다.</li>
+</ul>
+</li>
+<li>단점
+<ul>
+<li><strong>어떤 블록이 들어갈 수 있는 캐시 위치가 고정되어, 적중률이 낮다.</strong></li>
+<li><strong>캐시에 빈공간이 있어도, 지정된 위치가 있기 때문에 miss가 발생할 가능성이 높다.</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-17">직접 사상: 예시 문제</h3>
+<ul>
+<li>
+<p>데이터 크기와 이진수</p>
+<ul>
+<li>KBits = <img src="https://latex.codecogs.com/svg.image?2%5E%7B10%7D" alt="MOD" /></li>
+<li>MBits = <img src="https://latex.codecogs.com/svg.image?2%5E%7B10%7D*2%5E%7B10%7D=2%5E%7B20%7D" alt="MOD" /></li>
+</ul>
+</li>
+<li>
+<p>가정</p>
+<ul>
+<li>Cache 크기 = 64KBits</li>
+<li>Main Memory 크기 = 16MBits</li>
+<li>Word 크기 = 1Bits</li>
+<li>Block 크기 = 4Bits</li>
+</ul>
+</li>
+<li>
+<p>문제</p>
+<ul>
+<li>
+<p><strong>이때, M.M (Main Memory)의 주소의 비트수는?</strong></p>
+<ul>
+<li>M.M의 주소 비트수 = <img src="https://latex.codecogs.com/svg.image?log_2" alt="MOD" />(M.M의 크기/Word의 크기) = <img src="https://latex.codecogs.com/svg.image?log_2(16M)=log_2%7B2%5E%7B24%7D%7D=24" alt="MOD" />비트</li>
+</ul>
+<blockquote>
+<p>n개의 비트로 표현할 수 있는 2진수 개수 = <img src="https://latex.codecogs.com/svg.image?2%5En" alt="MOD" /></p>
+</blockquote>
+</li>
+</ul>
+  <br/>
+<ul>
+<li><strong>블록 집합의 개수는?</strong>
+<ul>
+<li>블록집합 개수 = M.M크기/Cache크기 = 16MBits/64KBits = <img src="https://latex.codecogs.com/svg.image?2%5E%7B24%7D/2%5E%7B16%7D=2%5E8=256" alt="MOD" />개</li>
+</ul>
+</li>
+</ul>
+  <br/>
+<ul>
+<li><strong>Main Memory의 주소에서 Tag의 비트수는?</strong>
+<ul>
+<li>Tag는 각 블록 집합을 구분하는 구분자이다. 따라서, 블록집합의 개수만큼 표현할 수 있는 비트 개수가 필요하다.</li>
+<li>Tag 비트수 = <img src="https://latex.codecogs.com/svg.image?log_2" alt="MOD" />(블록집합 개수) = <img src="https://latex.codecogs.com/svg.image?log_2(2%5E8)=8" alt="MOD" />비트</li>
+</ul>
+</li>
+</ul>
+  <br/>
+<ul>
+<li><strong>Main Memory의 주소에서 Line 주소의 비트수는?</strong>
+<ul>
+<li>Line 주소는 이미 특정된 블록 집합 내의 Line들을 구분하는 역할을 한다. 따라서, 블록 집합 내의 Line의 개수만큼 표현할 수 있는 비트 개수가 필요하다.</li>
+<li>Line 주소의 비트수 = <img src="https://latex.codecogs.com/svg.image?log_2" alt="MOD" />(한 블록집합에서의 Line의 개수) = <img src="https://latex.codecogs.com/svg.image?log_2" alt="MOD" />(캐시크기/블록(Line)크기) = <img src="https://latex.codecogs.com/svg.image?log_2" alt="MOD" />(64KBits/4Bits) = <img src="https://latex.codecogs.com/svg.image?log_2(16K)=log_2%7B2%5E%7B14%7D%7D=14" alt="MOD" />비트</li>
+</ul>
+</li>
+</ul>
+  <br/>
+<ul>
+<li><strong>Main Memory의 주소에서 Word 주소의 비트수는?</strong>
+<ul>
+<li>Word 주소는 이미 특정된 블록 내의 Word들을 구분한다. 따라서, 블록 내의 Word 개수만큼 표현할 수 있는 비트 개수가 필요하다.</li>
+<li>Word 주소 비트수 = <img src="https://latex.codecogs.com/svg.image?log_2" alt="MOD" />(블록당 Word 개수) = <img src="https://latex.codecogs.com/svg.image?log_2" alt="MOD" />(블록크기/Word크기) = <img src="https://latex.codecogs.com/svg.image?log_2" alt="MOD" />(4B/1B) = <img src="https://latex.codecogs.com/svg.image?log_2%7B4%7D=2" alt="MOD" /> 비트</li>
+</ul>
+</li>
+</ul>
+  <br/>
+<ul>
+<li>
+<p><strong>M.M (Main Memory)의 주소의 구성</strong></p>
+<ul>
+<li>Tag길이 + Line주소길이 + Word주소길이 = M.M의 주소 길이</li>
+<li>8 + 14 + 2 = 24 비트</li>
+</ul>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2054.png" alt="Untitled" /></p>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-18">연관 사상</h3>
+<ul>
+<li><strong>주기억장치의 블록이 캐시의 어떤 라인으로도 적재될 수 있도록 허용한다.</strong></li>
+<li>태그 필드만으로 주기억장치의 블록을 구분할 수 있다.</li>
+<li>그 블록이 캐시에 있는지 확인하기 위해, 태그가 일치하는 모든 라인과 비교해야 한다.
+<ul>
+<li>즉 Hit하는지 확인하려면, 모든 라인을 찾아봐야 한다. ⇒ 성능저하</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>원리</p>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2055.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>Cache와 Main Memory 관계</p>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2056.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>연관 사상 방식의 장단점
+<ul>
+<li>장점
+<ul>
+<li>새로운 블록이 캐시로 읽혀질 때, 블록을 교체하는데에 있어서 융통성이 있다.</li>
+</ul>
+</li>
+<li>단점
+<ul>
+<li>캐시 라인들의 태그들을 병렬로 검사하기 위한 복잡한 회로가 필요하다.</li>
+<li>Hit하는지 확인하려면, 모든 라인을 찾아봐야 한다. ⇒ 성능저하</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-19">연관 사상: 예시 문제</h3>
+<ul>
+<li>
+<p>가정</p>
+<ul>
+<li>Cache 크기 = 64KBits</li>
+<li>Main Memory 크기 = 16MBits</li>
+<li>Word 크기 = 1Bits</li>
+<li>Block 크기 = 4Bits</li>
+</ul>
+</li>
+<li>
+<p>문제</p>
+<ul>
+<li><strong>Main Memory의 주소에서 Tag의 비트수는?</strong>
+<ul>
+<li>연관 사상에서 Tag는 각 블록을 구분하는 구분자이다.(블록 집합 X) 따라서, 블록의 개수만큼 표현할 수 있는 비트 개수가 필요하다.</li>
+<li>Tag 비트수 = <img src="https://latex.codecogs.com/svg.image?log_2" alt="MOD" />(블록 개수) = <img src="https://latex.codecogs.com/svg.image?log_2" alt="MOD" />(M.M크기/블록크기) = <img src="https://latex.codecogs.com/svg.image?log_2%7B(16MBits/4Bits)%7D=log_2%7B2%5E%7B22%7D%7D=22" alt="MOD" />비트</li>
+</ul>
+</li>
+</ul>
+  <br/>
+<ul>
+<li><strong>Main Memory의 주소에서 Word 주소의 비트수는?</strong>
+<ul>
+<li>Word 주소는 이미 특정된 블록 내의 Word들을 구분한다. 따라서, 블록 내의 Word 개수만큼 표현할 수 있는 비트 개수가 필요하다.</li>
+<li>Word 주소 비트수 = <img src="https://latex.codecogs.com/svg.image?log_2" alt="MOD" />(블록당 Word 개수) = <img src="https://latex.codecogs.com/svg.image?log_2" alt="MOD" />(블록크기/Word크기) = <img src="https://latex.codecogs.com/svg.image?log_2" alt="MOD" />(4B/1B) = <img src="https://latex.codecogs.com/svg.image?log_2%7B4%7D=2" alt="MOD" /> 비트</li>
+</ul>
+</li>
+</ul>
+  <br/>
+<ul>
+<li>
+<p><strong>M.M (Main Memory)의 주소의 구성</strong></p>
+<ul>
+<li>Tag길이 + Word주소길이 = M.M의 주소 길이</li>
+<li>22 + 2 = 24 비트</li>
+</ul>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2057.png" alt="Untitled" /></p>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-20">세트 연관 사상</h3>
+<ul>
+<li>직접 사상과 연관 사상의 장점을 취하고 단점을 줄이기 위한 절충안이다.</li>
+<li><strong>캐시는 여러 개의 세트들로 나누어지며, 각 세트들은 여러 개의 라인들로 구성된다.</strong>
+<ul>
+<li><strong>세트</strong>: 캐시를 여러 개로 쪼갠 것</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>v 연관 사상 캐시</strong></p>
+<ul>
+<li>‘v 연관 사상 캐시’는 ‘세트 연관 캐시’의 일종이다.</li>
+<li>물리적으로 v개의 연관 캐시들로 구현할 수 있다.</li>
+</ul>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2058.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>k 직접 사상 캐시</strong></p>
+<ul>
+<li>‘k 직접 사상 캐시’는 ‘세트 연관 캐시’의 일종이다.</li>
+<li>k 개의 직접 사상 캐시들로 구현할 수 있다.</li>
+</ul>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2059.png" alt="Untitled" /></p>
+<ul>
+<li><strong>극단적으로 캐시를 쪼개어, 결국 모든 블록이 모든 라인에 갈 수 있다면 ⇒ 연관사상</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>Cache와 Main Memory 관계</p>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2060.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-21">세트 연관 사상: 예시 문제</h3>
+<ul>
+<li>
+<p>가정</p>
+<ul>
+<li>Cache 크기 = 64KBits</li>
+<li>Main Memory 크기 = 16MBits</li>
+<li>Word 크기 = 1Bits</li>
+<li>Block 크기 = 4Bits</li>
+</ul>
+</li>
+<li>
+<p>문제</p>
+<ul>
+<li><strong>Main Memory의 주소에서 Tag의 비트수는?</strong>
+<ul>
+<li>연관 사상에서 Tag는 각 블록 집합을 구분하는 구분자이다. 따라서, 블록 집합의 개수만큼 표현할 수 있는 비트 개수가 필요하다.</li>
+<li>Tag 비트수 = <img src="https://latex.codecogs.com/svg.image?log_2" alt="MOD" />(블록집합 개수) = <img src="https://latex.codecogs.com/svg.image?log_2" alt="MOD" />(M.M크기/블록집합크기) = <img src="https://latex.codecogs.com/svg.image?log_2%7B(16MBits/32KBits)%7D=log_2%7B2%5E%7B24-15%7D%7D=9" alt="MOD" />비트</li>
+</ul>
+</li>
+</ul>
+  <br/>
+<ul>
+<li><strong>Main Memory의 주소에서 Set 주소의 비트수는?</strong>
+<ul>
+<li>Set 주소는 이미 특정된 블록 집합 내의 Block(Set, Line)들을 구분한다. 따라서, 블록 집합 내의 Block 개수만큼 표현할 수 있는 비트 개수가 필요하다.</li>
+<li>Set 비트수 = <img src="https://latex.codecogs.com/svg.image?log_2" alt="MOD" />(블록 집합당 Block 개수) = <img src="https://latex.codecogs.com/svg.image?log_2" alt="MOD" />(블록집합 크기/Block크기) = <img src="https://latex.codecogs.com/svg.image?log_2%7B(32KBits/4B)%7D=log_2%7B2%5E%7B15-2%7D%7D=13" alt="MOD" />비트</li>
+</ul>
+</li>
+</ul>
+  <br/>
+<ul>
+<li><strong>Main Memory의 주소에서 Word 주소의 비트수는?</strong>
+<ul>
+<li>Word 주소는 이미 특정된 블록 내의 Word들을 구분한다. 따라서, 블록 내의 Word 개수만큼 표현할 수 있는 비트 개수가 필요하다.</li>
+<li>Word 주소 비트수 = <img src="https://latex.codecogs.com/svg.image?log_2" alt="MOD" />(블록당 Word 개수) = <img src="https://latex.codecogs.com/svg.image?log_2" alt="MOD" />(블록크기/Word크기) = <img src="https://latex.codecogs.com/svg.image?log_2" alt="MOD" />(4B/1B) = <img src="https://latex.codecogs.com/svg.image?log_2%7B4%7D=2" alt="MOD" /> 비트</li>
+</ul>
+</li>
+</ul>
+  <br/>
+<ul>
+<li>
+<p><strong>M.M (Main Memory)의 주소의 구성</strong></p>
+<ul>
+<li>Tag길이 + Set(Block, Line)주소길이+ Word주소길이 = M.M의 주소 길이</li>
+<li>9 + 13 + 2 = 24 비트</li>
+</ul>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2061.png" alt="Untitled" /></p>
+<ul>
+<li>Tag는 블록집합을 구분하고, 블록집합은 캐시 세트의 크기가 작을수록 많아진다.</li>
+<li>Set은 블록을 구분하고, 블록(Set)은 캐시 세트의 크기가 작을수록 작아진다.</li>
+<li><strong>따라서, 캐시가 쪼개짐에 따라 ‘Tag의 길이’와 ‘Set주소길이’가 변화한다.</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-22">캐시 크기에 대한 여러 연관성</h2>
+<h3 id="hit">캐시 세트 크기에 따른 Hit율</h3>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2062.png" alt="Untitled" /></p>
+<p><br/><br/></p>
+<h2 id="section-23">교체 알고리즘</h2>
+<h3 id="section-24">교체 알고리즘이란?</h3>
+<ul>
+<li>캐시가 채워진 뒤에, 새로운 블록을 캐시로 가져올 때 현재 캐시에 저장되어 있는 블록들 중의 하나는 반드시 교체되어야하는데, 이때 사용되는 알고리즘이다.</li>
+<li><strong>즉, 교체 알고리즘은 캐시 Miss시 블록 교체에 사용되는 알고리즘이다.</strong></li>
+</ul>
+<br/>
+<h3 id="section-25">각 사상 방법에 따른 교체 알고리즘</h3>
+<ul>
+<li>
+<p>직접 사상</p>
+<ul>
+<li>직접 사상은 각 블록의 Line 위치가 정해져있으므로, 교체 알고리즘이 필요없다.</li>
+</ul>
+</li>
+<li>
+<p>연관, 세트연관 사상</p>
+<ul>
+<li><strong>최소 최근 사용 (LRU: Least Recently Used)</strong>
+<ul>
+<li>사용되지 않은 채로 가장 오래 있었던 블록을 교체한다.</li>
+<li>완전 연관 캐시를 비교적 쉽게 구현하게 한다.</li>
+<li>최고의 적중률을 보이며, 가장 널리 사용된다.</li>
+</ul>
+</li>
+<li><strong>선입선출 (FIFO: First In First Out)</strong>
+<ul>
+<li>캐시 내에 가장 오래 머물렀던 블록을 교체한다.</li>
+<li>라운드 로빈, 원형 버퍼 기법 등으로 구현한다.</li>
+</ul>
+</li>
+<li><strong>최소사용빈도 (LFU: Least Frequently Used)</strong>
+<ul>
+<li>가장 적게 참조되었던 블록을 교체한다.</li>
+<li>각 라인에 카운터를 둔다.</li>
+</ul>
+</li>
+<li><strong>임의 (Random)</strong>
+<ul>
+<li>사용횟수에 근거한 알고리즘보다 성능이 약간 낮다.</li>
+<li>사용하지 못할 정도의 성능은 아니다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-26">쓰기 정책</h2>
+<h3 id="section-27">쓰기 정책의 필요성</h3>
+<ul>
+<li>주기억장치와 캐시 사이의 데이터의 일관성이 유지되어야 한다.</li>
+<li>데이터 일관성을 지킬 수 있도록 하는 것이 바로 쓰기 정책이다.</li>
+<li>데이터의 일관성?
+<ul>
+<li>장치 A와 장치 B의 데이터 값이 일치하도록 유지하는 것</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-28">쓰기 정책의 종류</h3>
+<ul>
+<li><strong>연속 기록 방식</strong>
+<ul>
+<li>모든 쓰기 동작들이 캐시 뿐만 아니라, 주기억장치로도 동시에 행해진다.</li>
+<li><strong>즉, 데이터를 쓸때마다 Main Memory의 데이터를 갱신한다.</strong></li>
+<li>구조가 간단하지만, <strong>매번 느린 주기억장치를 함께 액세스해야 하므로 성능이 떨어진다.</strong></li>
+</ul>
+</li>
+<li><strong>후 기록 방식</strong>
+<ul>
+<li><strong>데이터의 갱신은 캐시에서만 일어난다. 그리고 해당 블록이 교체될 때 주기억장치를 갱신다.</strong></li>
+<li><strong>구조가 복잡하며, 주기억장치의 일부분이 무효 상태가 될 수 있다. (즉, 데이터 불일치 문제 발생 가능)</strong></li>
+<li>CPU 기계 사이클이 IDLE 상태일때, 캐시의 내용을 주기억장치에 블록단위로 수시로 백업하면 시스템 성능을 높일 수 있다.</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-29">라인 크기</h2>
+<h3 id="section-30">캐시에 저장되는 방식</h3>
+<ul>
+<li>한 개의 데이터 블록이 읽혀져서 캐시에 저장될 때, 원하는 단어 뿐만 아니라 인접한 몇개의 단어들이 같이 읽혀온다.</li>
+</ul>
+<br/>
+<h3 id="section-31">블록 크기가 증가할수록</h3>
+<ul>
+<li>지역성의 원리에 의해 적중률이 처음에는 증가한다.</li>
+<li>블록이 더 커지면, “새로 인출된 정보가 사용될 확률”이 “교체되어야 하는 정보를 다시 사용하게 될 확률”보다 더 낮아져서 적중률이 감소할 수 있다.
+<ul>
+<li>즉, 블록이 너무 커서 현재 잘 사용 중인 Word가 바뀌어 버릴 가능성이 높아진다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-32">블록 크기와 적중률 간의 관계</h3>
+<ul>
+<li>블록이 커질수록 캐시에 들어올 수 있는 블록의 수는 감소한다.</li>
+<li>블록의 수가 감소하면, Word가 인출된 직후에 다른 블록과 다시 교체된다.</li>
+<li>블록이 커질수록, 원하는 단어로부터 멀리 떨어져있는 단어들도 같이 읽혀오며, 그들이 가까운 미래에 사용될 가능성은 낮다.
+<ul>
+<li>지역성의 원리가 적용되지 않는 범위까지 가져와버리기 때문이다.</li>
+</ul>
+</li>
+<li>따라서, 8~64Bits 가 캐시 크기의 최적이다.</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-33">캐시의 개수</h2>
+<h3 id="section-34">다단계 캐시</h3>
+<ul>
+<li>
+<p><strong>온 칩 캐시 (On-chip, 내부캐시, L1캐시)</strong></p>
+<ul>
+<li>processor 내부에 위치한다.</li>
+<li>프로세서의 외부 활동을 줄여주며, 실행시간을 가속시키고 전체 시스템 성능을 향상시킨다.</li>
+</ul>
+</li>
+<li>
+<p><strong>오프 칩 캐시 (Off-chip, 외부캐시, L2캐시)</strong></p>
+<ul>
+<li>SRAM을 사용하며 DRAM보다 빠르다.</li>
+<li>L2 캐시와 프로세서 사이에 별도의 데이터 버스를 이용한다.</li>
+<li>L2 버스도 프로세서 칩에 포함시키고 있는 추세이며, L3 캐시도 등장했다.</li>
+</ul>
+</li>
+<li>
+<p><strong>L2 캐시는 L1 캐시 크기의 두배가 될때까지는 캐시 Hit율에 영향력이 없다.</strong></p>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2063.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-35">분리캐시</h3>
+<ul>
+<li><strong>“명령어 전용 캐시”</strong> 와 <strong>“데이터 전용 캐시”</strong> 로 구성된다.</li>
+<li>명령어 인출/해독 유니트와 실행 유니트 간에 캐시로 인한 경합이 없다.</li>
+<li><strong>명령어 파이프라인 구조에서 유리하다.</strong>
+<ul>
+<li>파이프라인: 프로세서가 쉬지않고 계속 일하게끔 하는 방법 중 하나 (추후에 상세설명 예정)</li>
+</ul>
+</li>
+<li><strong>일반적으로 분리 캐시를 채택하고 있다.</strong></li>
+</ul>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2064.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-36">통합 캐시</h3>
+<ul>
+<li><strong>통합 캐시는 “명령어 캐시”와 “데이터 캐시”의 구분이 없는 것이다.</strong></li>
+<li>주어진 캐시 크기에 대해서는, 통합 캐시가 분리 캐시보다 적중률이 높다.</li>
+<li><strong>명령어와 데이터 간의 균형이 자동적으로 유지된다.</strong>
+<ul>
+<li>명령어 캐시가 꽉 차고 데이터 캐시에 여유가 있는 경우, 분리 캐시는 빈 공간 활용에 제약이 있다.
+<ul>
+<li>왜냐하면, 데이터 캐시가 비어있다고 해당 자리에 명령어를 저장할 수 없기 때문이다.</li>
+</ul>
+</li>
+<li>즉, 통합 캐시는 공간 효율성이 분리캐시보다 더 좋다.</li>
+</ul>
+</li>
+<li>파이프라인 구조, 병렬처리 구조에서는 분리캐시가 더 유리하다.</li>
+</ul>
+<br/>
+<h3 id="section-37">캐시 조직의 예시</h3>
+<p><img src="/assets/img/2021-10-07-ComputerStructure_Cache/Untitled%2065.png" alt="Untitled" /></p>
+<ul>
+<li>코어당 L1 캐시가 2개 존재한다. ⇒ 명령어 전용 캐시, 데이터 전용 캐시가 존재한다.</li>
+<li>L3 캐시를 각 코어가 공유한다.</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>성결대학교 컴퓨터 공학과 최정열 교수님 (2021)</li>
+    <li>William Stalling, 『컴퓨터시스템구조론(10판)』</li>
+  </ul>
+  본 게시글은 위 강의 및 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

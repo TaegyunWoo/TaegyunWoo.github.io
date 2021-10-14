@@ -1,0 +1,58 @@
+I"G<p><br/><br/></p>
+<ul>
+<li><strong><a href="https://github.com/TaegyunWoo/Spring-Test-Code-Example">예시 프로젝트 다운로드</a></strong></li>
+<li>이전 게시글
+<ul>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_JUnit5_SummaryAndBasicAnnotation">[JUnit 5] 개요 및 기본 애너테이션</a></li>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_JUnit5_BasicAssertions">[JUnit 5] 기본 Assertions</a></li>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_JUnit5_TimeAssertions">[JUnit 5] 시간에 따른 테스트</a></li>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_JUnit5_ConditionalAssertions">[JUnit 5] 조건에 따른 테스트</a></li>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_JUnit5_Tagging">[JUnit 5] 태깅과 필터링</a></li>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_JUnit5_CustomTag">[JUnit 5] 커스텀 태그</a></li>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_JUnit5_RepeatTest">[JUnit 5] 테스트 반복</a></li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h1 id="section">테스트 인스턴스 조작</h1>
+<h2 id="section-1">개요</h2>
+<h3 id="junit---">JUnit 기본 동작 전략</h3>
+<ul>
+<li>JUnit은 <strong>테스트 메서드마다 테스트 인스턴스를 새로 만든다.</strong></li>
+<li>왜냐하면, 테스트 메서드를 독립적으로 실행하여 예상치 못한 부작용을 방지하기 위함이다.</li>
+<li>이러한 전략 방식을 JUnit 5에서 변경할 수 있다.</li>
+</ul>
+<br/>
+<h3 id="codetestinstancelifecyleperclasscode"><code>@TestInstance(Lifecyle.PER_CLASS)</code></h3>
+<ul>
+<li><code>@TestInstance(Lifecyle.PER_CLASS)</code> 애너테이션을 클래스 레벨에 설정할 수 있다.</li>
+<li>해당 애너테이션을 적용하면, <strong>테스트 클래스당 인스턴스를 하나만 만들어서 사용</strong> 한다.</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-2">적용 예시</h2>
+<h3 id="section-3">테스트 클래스</h3>
+<ul>
+<li><code>test1</code> , <code>test2</code> , <code>test3</code> 모두 하나의 인스턴스의 메서드로 실행된다.</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@TestInstance</span><span class="o">(</span><span class="nc">TestInstance</span><span class="o">.</span><span class="na">Lifecycle</span><span class="o">.</span><span class="na">PER_CLASS</span><span class="o">)</span>
+<span class="kd">class</span> <span class="nc">StudyTest</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;nd&quot;&gt;@Test&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;test1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nd&quot;&gt;@Test&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;test2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nd&quot;&gt;@Test&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;test3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div>
+<br></p>
+<hr />
+<br>
+<p><a href="https://inf.run/htNB"><img src="/assets/img/Inflearn_Java_Test/logo.png" width="400px" height="300px"></a></p>
+<ul>
+<li><em>본 게시글은 백기선님의 강의를 토대로 정리한 글입니다.</em></li>
+<li><em>더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.</em></li>
+</ul>
+:ET

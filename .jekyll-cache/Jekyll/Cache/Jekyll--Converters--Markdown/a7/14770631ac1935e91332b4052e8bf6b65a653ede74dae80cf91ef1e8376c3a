@@ -1,0 +1,62 @@
+I"�<h1 id="section">2021-09-22</h1>
+<h2 id="section-1">프로젝트</h2>
+<h3 id="section-2">당일 목표</h3>
+<ul>
+<li>테스트 코드 작성
+<ul>
+<li>MyBatis 유닛 테스트 작성</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-3">수행한 주요 작업</h3>
+<ul>
+<li>
+<p>테스트 코드 작성</p>
+<ul>
+<li><code>ArticleMapper</code> 테스트 코드 작성</li>
+<li><code>UserMapper</code> 테스트 코드 작성</li>
+</ul>
+</li>
+<li>
+<p>수정사항</p>
+<ul>
+<li><code>ArticleMapper</code>의 <code>getByWriter</code> 메서드의 매개변수 타입 변경
+<ul>
+<li><code>String writerId</code> -&gt; <code>Long writerId</code></li>
+<li><code>Article</code> 도메인에서 writer 필드가 Long형이므로 알맞게 변경함.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-4">다음에 수행할 주요 작업</h3>
+<ul>
+<li>나머지 테스트 코드 작성
+<ul>
+<li>Service 계층 테스트</li>
+<li>Controller 계층 테스트</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="point">주요 학습 Point</h3>
+<ul>
+<li>마이바티스 테스트 코드 작성
+<ul>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_Test_MyBatisTest">관련 포스팅</a></li>
+</ul>
+</li>
+<li>마이바티스
+<ul>
+<li><a href="https://taegyunwoo.github.io/mybatis/MyBatis_MyBatisFunction">관련 포스팅</a></li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="amp-">문제 &amp; 해결</h2>
+<blockquote>
+<p>해당사항 없음.</p>
+</blockquote>
+:ET

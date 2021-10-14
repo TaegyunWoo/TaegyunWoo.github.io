@@ -1,0 +1,280 @@
+I"�!<p><br/><br/></p>
+<h1 id="section">상호연결</h1>
+<h2 id="section-1">개요</h2>
+<h3 id="section-2">상호연결 조직이란?</h3>
+<ul>
+<li>컴퓨터의 주요 요소들을 연결하는 경로들의 집합이다.</li>
+<li>예시) 시스템 버스</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-3">컴퓨터 주요 모듈의 입출력 신호</h2>
+<h3 id="section-4">기억장치가 처리하는 신호</h3>
+<ul>
+<li>기억장치는 동일한 길이를 가진 N개의 word들로 구성된다.
+<ul>
+<li><strong>word</strong>: 메인 메모리에 저장된 데이터의 폭</li>
+</ul>
+</li>
+<li>데이터 송신/수신</li>
+<li>주소(위치) 수신</li>
+<li>제어 신호 수신</li>
+</ul>
+<p><img src="/assets/img/2021-09-16-ComputerStructure_ComputerInteraction/Untitled%2027.png" alt="Untitled" /></p>
+<br/>
+<h3 id="io---">I/O 모듈이 처리하는 신호</h3>
+<ul>
+<li>기능적으로는 기억장치와 유사하다.</li>
+<li>데이터 송신/수신
+<ul>
+<li>컴퓨터로 데이터 송신/수신 ⇒ Internal Data (컴퓨터 내부 데이터)</li>
+<li>주변기기로 데이터 송신/수신 ⇒ External Data (컴퓨터 주변기기 데이터)</li>
+<li><strong>프로세서로 인터럽트 신호 송신</strong></li>
+</ul>
+</li>
+<li>주소(위치) 수신
+<ul>
+<li>외부장치와 연결된 인터페이스를 식별한다.</li>
+</ul>
+</li>
+<li><strong>기억장치와 차이점</strong>
+<ul>
+<li>프로세서로 인터럽트 신호를 송신한다.</li>
+</ul>
+</li>
+</ul>
+<p><img src="/assets/img/2021-09-16-ComputerStructure_ComputerInteraction/Untitled%2028.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-5">프로세서가 처리하는 신호</h3>
+<ul>
+<li>명령어, 명령어 주소와 데이터 수신</li>
+<li>인터럽트 수신</li>
+<li>처리한 데이터 송신</li>
+<li>제어신호를 다른 장치로 송신</li>
+</ul>
+<p><img src="/assets/img/2021-09-16-ComputerStructure_ComputerInteraction/Untitled%2029.png" alt="Untitled" /></p>
+<p><br/><br/></p>
+<h2 id="section-6">상호연결 방식: 버스 상호연결</h2>
+<h3 id="section-7">버스란?</h3>
+<ul>
+<li>버스는 두 개 이상의 장치들을 연결하는 통신 경로이다.</li>
+<li>버스는 <strong>공유 전송 매체</strong>이다. (Shared Transmission Medium)</li>
+<li>한 번에 한 장치만 성공적으로 전송이 가능하다.</li>
+</ul>
+<br/>
+<h3 id="section-8">시스템 버스</h3>
+<ul>
+<li>시스템 버스는 컴퓨터의 주요 구성요소들을 연결하는 버스이다.</li>
+</ul>
+<p><img src="/assets/img/2021-09-16-ComputerStructure_ComputerInteraction/Untitled%2030.png" alt="Untitled" /></p>
+<ul>
+<li><strong>Control Lines</strong>
+<ul>
+<li>제어 버스</li>
+</ul>
+</li>
+<li><strong>Address Lines</strong>
+<ul>
+<li>주소 버스</li>
+</ul>
+</li>
+<li><strong>Data Lines</strong>
+<ul>
+<li>데이터 버스</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-9">내부 버스</h3>
+<ul>
+<li>내부 버스는 CPU 내부에 존재하는 버스이다.</li>
+<li>ALU와 캐시 등을 연결하는 CPU 내의 통로이다.</li>
+</ul>
+<br/>
+<h3 id="section-10">버스 조직</h3>
+<ul>
+<li>
+<p><strong>데이터 버스</strong></p>
+<ul>
+<li>시스템 모듈 간에 데이터 이동 경로를 제공하는 버스이다.</li>
+<li><strong>데이터 버스의 폭이 컴퓨터 성능에 영향을 미친다.</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>주소 버스</strong></p>
+<ul>
+<li>데이터 버스로 전달되는 데이터의 근원지/목적지를 지정한다.</li>
+<li><strong>주소 버스의 폭이 시스템의 최대 기억 장치의 용량을 결정한다.</strong>
+<ul>
+<li>왜냐하면, 표현할 수 있는 주소의 최대 개수가 주소 버스의 폭에 따르기 때문이다.</li>
+</ul>
+</li>
+<li>I/O 포트를 지정하기 위해서 주소 버스를 사용하기도 한다.</li>
+</ul>
+</li>
+<li>
+<p><strong>제어 버스</strong></p>
+<ul>
+<li>데이터 선과 주소 선의 사용을 제어한다.</li>
+<li>시스템 모듈들 사이에 명령과 타이밍 정보를 전달한다.</li>
+<li>제어 신호의 종류
+<ul>
+<li><strong>기억장치 읽기/쓰기</strong></li>
+<li><strong>I/O 읽기/쓰기</strong></li>
+<li><strong>전송 확인</strong></li>
+<li><strong>버스 요구</strong>
+<ul>
+<li>어떤 모듈이 DMA를 위해서 버스 사용을 요구한다.</li>
+</ul>
+</li>
+<li><strong>버스 승인</strong>
+<ul>
+<li>버스를 요구한 모듈에게 버스 사용권이 허가된다.</li>
+</ul>
+</li>
+<li><strong>인터럽트 요구</strong>
+<ul>
+<li>인터럽트가 대기하고 있음을 알린다.</li>
+</ul>
+</li>
+<li><strong>인터럽트 확인</strong>
+<ul>
+<li>대기하던 인터럽트가 인식되었음을 알린다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-11">버스 동작</h3>
+<ul>
+<li>어떤 모듈이 다른 모듈에게 <strong>데이터를 보내려 할 때</strong>
+<ul>
+<li>버스의 사용권을 얻는다.</li>
+<li>버스를 통하여 데이터를 전송한다.</li>
+</ul>
+</li>
+<li>어떤 모듈이 다른 모듈로부터 <strong>데이터를 받으려 할 때</strong>
+<ul>
+<li>버스의 사용권을 얻는다.</li>
+<li>적절한 제어 선과 주소 선을 통하여 다른 모듈에게 요구 신호를 전달한다.</li>
+<li>그 모듈이 데이터를 전송해줄 때까지 기다린다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-12">버스의 유형</h3>
+<ul>
+<li><strong>전용 버스</strong>
+<ul>
+<li>한가지 기능만 수행하도록 지정되거나, 컴퓨터 구성요소들의 일부분을 연결하도록 지정한 것이다.</li>
+<li>장점
+<ul>
+<li>버스에 대한 경합이 낮아 처리율이 높다.</li>
+</ul>
+</li>
+<li>단점
+<ul>
+<li>시스템의 크기와 가격이 높다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>다중화된 버스</strong>
+<ul>
+<li>공통의 버스(시분할 방식)을 사용하는 것이다.
+<ul>
+<li>한 번에 한 장치만이 버스에 정보를 전송할 수 있다.</li>
+<li>따라서, 적절한 중재 기법이 필요하다.</li>
+</ul>
+</li>
+<li>장점
+<ul>
+<li>사용하는 선들의 수가 적어 공간과 비용이 절약된다.</li>
+</ul>
+</li>
+<li>단점
+<ul>
+<li>각 모듈은 복잡한 회로가 필요하고, 성능이 떨어진다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-13">다중 버스 구조</h3>
+<p><img src="/assets/img/2021-09-16-ComputerStructure_ComputerInteraction/Untitled%2031.png" alt="Untitled" /></p>
+<ul>
+<li><strong>on-chip Cache</strong>
+<ul>
+<li>CPU 내부 캐시</li>
+</ul>
+</li>
+<li><strong>off-chip Cache</strong>
+<ul>
+<li>CPU 외부 캐시</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-14">상호연결 방식: 점대점 상호연결</h2>
+<h3 id="section-15">점대점 상호연결 등장배경</h3>
+<ul>
+<li>기존의 방식은 공유버스 구조였다.</li>
+<li>공유버스 구조는 데이터율 상승에 따른 동기화 및 중재의 제약이 존재한다.</li>
+<li>공유버스 구조는 멀티코어, 대용량 캐시 등으로 인해 프로세서-기억장치 간 정송 병목이 발생한다.</li>
+<li>공유버스 구조보다 지연이 적고, 데이터율이 높으며 확장성이 좋다.</li>
+</ul>
+<br/>
+<h3 id="qpi">QPI</h3>
+<ul>
+<li>QPI: QuickPath Interconnection</li>
+<li>다중 직접 연결 방식이다.</li>
+<li>계층화된 프로토콜 구조를 갖는다.
+<ul>
+<li>물리 계층</li>
+<li>링크 계층</li>
+<li>라우팅 계층</li>
+<li>프로토콜 계층</li>
+</ul>
+</li>
+<li>패킷화된 데이터를 전송한다.</li>
+</ul>
+<p><img src="/assets/img/2021-09-16-ComputerStructure_ComputerInteraction/Untitled%2032.png" alt="Untitled" /></p>
+<br/>
+<h3 id="pci">PCI</h3>
+<ul>
+<li>PCI는 인텔이 설계한 고대역폭 프로세서-독립적 버스이다.</li>
+<li>주변장치를 자동으로 인식하는 <strong>PnP를 지원</strong>한다.
+<ul>
+<li>PnP: Plug And Play</li>
+</ul>
+</li>
+<li>버스 자체가 일종의 버퍼 역할을 수행한다.</li>
+<li><strong>병렬 버스 방식이다.</strong></li>
+</ul>
+<br/>
+<h3 id="pcie">PCIe</h3>
+<ul>
+<li>PCIe: PCI Express</li>
+<li>PCI를 대체한다.</li>
+<li>점대점 상호연결 방식을 제공하는 고속 시리얼 버스이다.</li>
+<li>전송채널로 독립적인 선로(lane)를 사용한다.</li>
+<li>전송채널 개수를 늘려 간단히 전송속도를 향상시킬 수 있다.</li>
+<li><strong>직렬 버스 방식이다.</strong></li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>성결대학교 컴퓨터 공학과 최정열 교수님 (2021)</li>
+    <li>William Stalling, 『컴퓨터시스템구조론(10판)』</li>
+  </ul>
+  본 게시글은 위 강의 및 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

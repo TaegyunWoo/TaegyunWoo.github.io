@@ -1,0 +1,72 @@
+I"�<h1 id="section">2021-09-19</h1>
+<h2 id="section-1">프로젝트</h2>
+<h3 id="section-2">당일 목표</h3>
+<ul>
+<li>요구사항에 맞게 구현했는지 검토</li>
+<li>테스트 코드 작성</li>
+</ul>
+<br/>
+<h3 id="section-3">수행한 주요 작업</h3>
+<ul>
+<li>요구사항 검토
+<ul>
+<li>인증되지 않은 사용자도 게시글 읽기는 가능해야한다.</li>
+<li>따라서, 게시글 읽기를 로그인하지 않은 사용자도 접근할 수 있도록 수정했다.</li>
+</ul>
+</li>
+<li>테스트 코드 작성
+<ul>
+<li>ArticleMapper 테스트 코드 작성</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-4">다음에 수행할 주요 작업</h3>
+<ul>
+<li>나머지 테스트 코드 작성</li>
+</ul>
+<br/>
+<h3 id="point">주요 학습 Point</h3>
+<ul>
+<li>인터셉터 기능
+<ul>
+<li><a href="https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_LoginInterceptor">관련 포스팅</a></li>
+</ul>
+</li>
+<li>타임리프 조건부 출력
+<ul>
+<li><a href="https://taegyunwoo.github.io/thymeleaf/THYMELEAF_IfUnlessSwitch">관련 포스팅</a></li>
+</ul>
+</li>
+<li>타임리프에서 ModelAndView에 접근할 수 있을까?
+<ul>
+<li>인터셉터를 통해, 뷰에 데이터를 전달하고자 했다.</li>
+<li>인터셉터의 <code>postHandle()</code> 메서드에서 <code>ModelAndView</code> 객체를 활용하여 전달하고자 했다.</li>
+<li>하지만, 전달한 데이터를 타임리프가 처리할 수 없었다.</li>
+<li><strong>단순히 <code>request</code> 객체의 <code>addAttribute()</code>를 사용하여 데이터를 전달하고, 타임리프에서 <code>${#request.getAttribute()}</code>를 통해 전달받으면 되는 문제였다.</strong></li>
+<li><a href="https://www.thymeleaf.org/doc/articles/springmvcaccessdata.html">참고 자료</a></li>
+</ul>
+</li>
+<li>URL패턴에 정규식을 사용하여 인터셉터 적용하기
+<ul>
+<li><code>WebConfig</code> 클래스에 인터셉터를 등록할 때, 인터셉터를 적용할 URL에 대한 패턴을 설정할 수 있다.</li>
+<li><code>addPathPatterns(&quot;패턴&quot;)</code> 을 통해 적용한다.</li>
+<li><strong>만약 정규식을 사용하여 패턴을 적용하고 싶다면 다음과 같이 작성하면 된다.</strong>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">registry</span><span class="o">.</span><span class="na">addInterceptor</span><span class="o">(</span><span class="k">new</span> <span class="n">적용할_인터셉터</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">addPathPatterns</span><span class="o">(</span><span class="s">"{정규식작성}"</span><span class="o">);</span>
+</code></pre></div></div>
+</li>
+</ul>
+</li>
+<li>스프링부트와 테스트코드
+<ul>
+<li><a href="https://taegyunwoo.github.io/test-framework/TestFramework_IntegrationTest_SpringBootTest">관련 포스팅</a></li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="amp-">문제 &amp; 해결</h2>
+<blockquote>
+<p>해당사항 없음.</p>
+</blockquote>
+:ET

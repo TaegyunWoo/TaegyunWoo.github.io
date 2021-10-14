@@ -1,0 +1,321 @@
+I"�=<p><br/><br/></p>
+<h1 id="reference">필드와 칼럼 매핑 관련 Reference</h1>
+<h2 id="section">개요</h2>
+<ul>
+<li>본 게시글은 JPA가 제공하는 필드와 칼럼 매핑용 애너테이션들을 레퍼런스 형식으로 정리한 것이다.</li>
+<li>간단히 훑어만 보고, 필요한 매핑을 사용할 일이 있을 때 찾아서 자세히 읽어보자.</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="codecolumncode-"><code>@Column</code> 애너테이션</h2>
+<ul>
+<li><code>@Column</code> 은 객체 필드를 테이블 칼럼에 매핑한다.</li>
+<li>가장 많이 사용되고 기능도 많다.</li>
+<li>주요 속성
+<ul>
+<li>
+<p><strong>name</strong></p>
+<ul>
+<li>필드와 매핑할 테이블의 컬럼 이름을 지정한다.</li>
+<li>기본값 = 객체의 필드 이름</li>
+</ul>
+</li>
+<li>
+<p><strong>nullable</strong></p>
+<ul>
+<li>DDL 관련 속성</li>
+<li>null 값의 허용 여부를 설정한다.</li>
+<li>false로 설정하면 DDL 생성시에 not null 제약조건이 붙는다.</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//적용 예시</span>
+<span class="nd">@Column</span><span class="o">(</span><span class="n">nullable</span> <span class="o">=</span> <span class="kc">false</span><span class="o">)</span>
+<span class="kd">private</span> <span class="nc">String</span> <span class="n">data</span><span class="o">;</span>
+<p><span class="c1">//결과: 생성된 DDL</span>
+<span class="n">data</span> <span class="nf">VARCHAR</span><span class="o">(</span><span class="mi">255</span><span class="o">)</span> <span class="no">NOT</span> <span class="no">NULL</span>
+</code></pre></div></div></p>
+</li>
+<li>
+<p><strong>unique</strong></p>
+<ul>
+<li>DDL 관련 속성</li>
+<li>한 칼럼에 간단히 유니크 제약조건을 걸 때 사용한다.</li>
+<li>두 컬럼 이상을 사용해서 유니크 제약조건을 사용하려면 클래스 레벨에서 <code>@Table.uniqueConstraints</code> 를 사용해야 한다.</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//적용 예시</span>
+<span class="nd">@Column</span><span class="o">(</span><span class="no">UNIQUE</span> <span class="o">=</span> <span class="no">TRUE</span><span class="o">)</span>
+<span class="kd">private</span> <span class="nc">String</span> <span class="n">data</span><span class="o">;</span>
+<p><span class="c1">//결과: 생성된 DDL</span>
+<span class="no">ALTER</span> <span class="no">TABLE</span> <span class="n">tablename</span> <span class="no">ADD</span> <span class="no">CONSTRAINT</span> <span class="n">uk_xxx</span> <span class="nf">UNIQUE</span> <span class="o">(</span><span class="n">data</span><span class="o">)</span>
+</code></pre></div></div></p>
+</li>
+<li>
+<p><strong>columnDefinition</strong></p>
+<ul>
+<li>DDL 관련 속성</li>
+<li>DB 칼럼 정보를 직접 줄 수 있다.</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//적용 예시</span>
+<span class="nd">@Column</span><span class="o">(</span><span class="n">columnDefinition</span> <span class="o">=</span> <span class="s">"varchar(100) default 'Empty'"</span><span class="o">)</span>
+<span class="kd">private</span> <span class="nc">String</span> <span class="n">data</span><span class="o">;</span>
+<p><span class="c1">//결과: 생성된 DDL</span>
+<span class="n">data</span> <span class="nf">VARCHAR</span><span class="o">(</span><span class="mi">100</span><span class="o">)</span> <span class="no">DEFAULT</span> <span class="err">’</span><span class="nc">Empty</span><span class="err">’</span>
+</code></pre></div></div></p>
+</li>
+<li>
+<p><strong>length</strong></p>
+<ul>
+<li>DDL 관련 속성</li>
+<li>문자 길이 제약조건</li>
+<li>String 타입에만 사용한다.</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//적용 예시</span>
+<span class="nd">@Column</span><span class="o">(</span><span class="n">length</span> <span class="o">=</span> <span class="mi">400</span><span class="o">)</span>
+<span class="kd">private</span> <span class="nc">String</span> <span class="n">data</span><span class="o">;</span>
+<p><span class="c1">//결과: 생성된 DDL</span>
+<span class="n">data</span> <span class="nf">VARCHAR</span><span class="o">(</span><span class="mi">400</span><span class="o">)</span>
+</code></pre></div></div></p>
+</li>
+<li>
+<p><strong>precision, scale</strong></p>
+<ul>
+<li>DDL 관련 속성</li>
+<li>BigDecimal 타입에서 사용한다.</li>
+<li>precision: 소수점을 포함한 전체 자릿수</li>
+<li>scale: 소수의 자릿수</li>
+<li>아주 큰 숫자나 정밀한 소수를 다뤄야할 때만 사용</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//적용 예시</span>
+<span class="nd">@Column</span><span class="o">(</span><span class="n">precision</span> <span class="o">=</span> <span class="mi">10</span><span class="o">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="mi">2</span><span class="o">)</span>
+<span class="kd">private</span> <span class="nc">BigDecimal</span> <span class="n">cal</span><span class="o">;</span>
+<p><span class="c1">//결과: 생성된 DDL</span>
+<span class="n">cal</span> <span class="nf">NUMERIC</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span><span class="mi">2</span><span class="o">)</span> <span class="c1">//H2</span>
+<span class="n">cal</span> <span class="nf">NUMBER</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span><span class="mi">2</span><span class="o">)</span> <span class="c1">//오라클</span>
+<span class="n">cal</span> <span class="nf">DECIMAL</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span><span class="mi">2</span><span class="o">)</span> <span class="c1">//MySQL</span>
+</code></pre></div></div></p>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="codecolumncode--"><code>@Column</code> 생략시 주의사항</h3>
+<ul>
+<li><code>@Column</code> 생략시 주의해야하는 사항이 있다.</li>
+<li>자바 기본 타입에서 <code>@Column</code> 생략시
+<ul>
+<li>DDL에서 not null 제약조건이 자동으로 추가된다.</li>
+<li>왜냐하면, 기본 타입에 null이 들어올 수 없기 때문이다.</li>
+</ul>
+</li>
+<li>객체 타입에서 <code>@Column</code> 생략시
+<ul>
+<li>DDL에서 not null 제약조건이 추가되지 않는다.</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="codeenumeratedcode-"><code>@Enumerated</code> 애너테이션</h2>
+<ul>
+<li>
+<p><code>@Enumerated</code> 애너테이션은 자바의 enum 타입을 매핑할 때 사용한다.</p>
+</li>
+<li>
+<p>주요 속성</p>
+<ul>
+<li><strong>value</strong>
+<ul>
+<li><code>EnumType.ORDINAL</code> : enum 순서를 DB에 저장한다. (기본값)</li>
+<li><code>EnumType.STRING</code> : enum 이름을 DB에 저장한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>사용 예시</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="nc">RoleType</span> <span class="o">{</span>
+	<span class="no">ADMIN</span><span class="o">,</span> <span class="no">USER</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Enumerated</span><span class="o">(</span><span class="nc">EnumType</span><span class="o">.</span><span class="na">STRING</span><span class="o">)</span> <span class="c1">// enum 이름을 DB에 저장</span>
+<span class="n">pritvate</span> <span class="nc">RoleType</span> <span class="n">roleType1</span><span class="o">;</span>
+<p><span class="nd">@Enumerated</span> <span class="c1">// enum 순서를 DB에 저장 (EnumType.ORDINAL 은 기본값이므로 생략가능)</span>
+<span class="n">pritvate</span> <span class="nc">RoleType</span> <span class="n">roleType2</span><span class="o">;</span>
+</code></pre></div></div></p>
+<ul>
+<li><code>EnumType.STRING</code>
+<ul>
+<li>enum 이름 그대로 ‘ADMIN’이나 ‘USER’라는 문자를 그대로 DB에 저장한다.</li>
+<li>장점: enum의 순서가 바뀌거나 enum이 추가되어도 안전하다.</li>
+<li>단점: <code>EnumType.ORDINAL</code> 보다는 데이터 크기가 크다.</li>
+</ul>
+</li>
+<li><code>EnumType.ORDINAL</code>
+<ul>
+<li>enum에 정의된 순서대로 <code>ADMIN</code> 은 0, <code>USER</code> 는 1 값이 DB에 저장된다.</li>
+<li>장점: DB에 저장되는 데이터 크기가 작다.</li>
+<li>단점: enum의 순서가 바뀌거나 enum이 추가되면 DB의 데이터가 잘못된 값을 의미하게 된다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="codetemporalcode-"><code>@Temporal</code> 애너테이션</h2>
+<ul>
+<li>
+<p>이 애너테이션은 날짜 타입을 매핑할 때 사용한다.</p>
+</li>
+<li>
+<p>매핑되는 타입</p>
+<ul>
+<li><code>java.util.Date</code></li>
+<li><code>java.util.Calendar</code></li>
+</ul>
+</li>
+<li>
+<p>주요 속성</p>
+<ul>
+<li><strong>value</strong>
+<ul>
+<li><code>TemporalType.DATE</code> : 날짜, DB date 타입과 매핑 (예: 2021-10-11)</li>
+<li><code>TemporalType.TIME</code> : 시간, DB time 타입과 매핑 (예: 10:30:57)</li>
+<li><code>TemporalType.TIMESTAMP</code> : 날짜와 시간, DB timestamp 타입과 매핑 (예: 2021-10-11 10:30:57)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>사용 예시</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Temporal</span><span class="o">(</span><span class="nc">TemporalType</span><span class="o">.</span><span class="na">DATE</span><span class="o">)</span>
+<span class="kd">private</span> <span class="nc">Date</span> <span class="n">date</span><span class="o">;</span> <span class="c1">//날짜</span>
+<p><span class="nd">@Temporal</span><span class="o">(</span><span class="nc">TemporalType</span><span class="o">.</span><span class="na">TIME</span><span class="o">)</span>
+<span class="kd">private</span> <span class="nc">Date</span> <span class="n">time</span><span class="o">;</span> <span class="c1">//시간</span></p>
+<p><span class="nd">@Temporal</span><span class="o">(</span><span class="nc">TemporalType</span><span class="o">.</span><span class="na">TIMESTAMP</span><span class="o">)</span>
+<span class="kd">private</span> <span class="nc">Date</span> <span class="n">timestamp</span><span class="o">;</span> <span class="c1">//날짜와 시간</span></p>
+<p><span class="c1">//==생성된 DDL==//</span>
+<span class="n">date</span> <span class="no">DATE</span><span class="o">,</span>
+<span class="n">time</span> <span class="no">TIME</span><span class="o">,</span>
+<span class="n">timestamp</span> <span class="no">TIMESTAMP</span>
+</code></pre></div></div></p>
+</li>
+<li>
+<p><code>@Temporal</code> 생략시 DDL에서 timestamp로 정의된다.</p>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="codelobcode-"><code>@Lob</code> 애너테이션</h2>
+<ul>
+<li>
+<p>DB의 BLOB, CLOB 타입과 매핑된다.</p>
+</li>
+<li>
+<p>속성이 없다.</p>
+</li>
+<li>
+<p>매핑하는 필드 타입이 문자일때 ⇒ CLOB 으로 매핑</p>
+<ul>
+<li>String, char[], java.sql.CLOB</li>
+</ul>
+</li>
+<li>
+<p>나머지 ⇒ BLOB 으로 매핑</p>
+<ul>
+<li>byte[], java.sql.BLOB</li>
+</ul>
+</li>
+<li>
+<p>사용 예시</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Lob</span>
+<span class="kd">private</span> <span class="nc">String</span> <span class="n">lobString</span><span class="o">;</span>
+<p><span class="nd">@Lob</span>
+<span class="kd">private</span> <span class="nc">Byte</span><span class="o">[]</span> <span class="n">lobByte</span><span class="o">;</span>
+</code></pre></div></div></p>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="codetransientcode-"><code>@Transient</code> 애너테이션</h2>
+<ul>
+<li>
+<p>해당 애너테이션이 적용된 필드는 매핑하지 않는다.</p>
+</li>
+<li>
+<p>객체에 임시로 어떤 값을 보관하고 싶을 때 사용한다.</p>
+</li>
+<li>
+<p>사용 예시</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Transient</span>
+<span class="kd">private</span> <span class="nc">String</span> <span class="n">temp</span><span class="o">;</span>
+</code></pre></div></div>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="codeaccesscode-"><code>@Access</code> 애너테이션</h2>
+<ul>
+<li>해당 애너테이션은 JPA가 엔티티 데이터에 접근하는 방식을 지정한다.</li>
+<li>접근 방식 종류
+<ul>
+<li><strong>필드 접근</strong>
+<ul>
+<li><code>AccessType.FIELD</code> 로 지정한다.</li>
+<li>필드에 직접 접근한다.</li>
+<li>필드 접근 권한이 private이어도 접근할 수 있다.</li>
+<li>“엔티티.필드명”으로 접근</li>
+</ul>
+</li>
+<li><strong>프로퍼티 접근</strong>
+<ul>
+<li><code>AccessType.PROPERTY</code> 로 지정한다.</li>
+<li>접근자를 사용한다.</li>
+<li>“엔티티.get필드명()“으로 접근</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="codeidcode-----"><code>@Id</code> 위치에 따른 접근 방식 결정</h3>
+<ul>
+<li>
+<p><code>@Access</code> 를 설정하지 않으면 <code>@Id</code> 의 위치를 기준으로 접근 방식이 설정된다.</p>
+</li>
+<li>
+<p><strong>필드 접근</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;nd&quot;&gt;@Id&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//...&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li><code>@Access(AccessType.FIELD)</code> 를 클래스 레벨에 적용한 것과 동일하다.</li>
+</ul>
+</li>
+<li>
+<p><strong>프로퍼티 접근</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;nd&quot;&gt;@Id&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;	
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li><code>@Access(AccessType.PROPERETY)</code> 를 클래스 레벨에 적용한 것과 동일하다.</li>
+</ul>
+</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>김영한, 『자바 ORM 표준 JPA 프로그래밍』, 에이콘</li>
+  </ul>
+  본 게시글은 위 교재를 기반으로 정리한 글입니다.
+</div>
+:ET
