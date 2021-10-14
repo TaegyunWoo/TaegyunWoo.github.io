@@ -2,8 +2,8 @@
 category: Comput-Struct
 tags: [ComputerStructure, 기억장치]
 title: "[Computer Structure] 내부 기억장치"
-date:   2021-10-07 22:06:00 
-lastmod : 2021-10-07 22:06:00
+date:   2021-10-14 22:06:00 
+lastmod : 2021-10-14 22:06:00
 sitemap :
   changefreq : daily
   priority : 1.0
