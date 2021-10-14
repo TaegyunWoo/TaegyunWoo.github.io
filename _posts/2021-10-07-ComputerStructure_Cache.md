@@ -227,7 +227,7 @@ sitemap :
 
     - **Main Memory의 주소에서 Line 주소의 비트수는?**
         - Line 주소는 이미 특정된 블록 집합 내의 Line들을 구분하는 역할을 한다. 따라서, 블록 집합 내의 Line의 개수만큼 표현할 수 있는 비트 개수가 필요하다.
-        - Line 주소의 비트수 = ![MOD](https://latex.codecogs.com/svg.image?log_2)(한 블록집합에서의 Line의 개수) = ![MOD](https://latex.codecogs.com/svg.image?log_2)(캐시크기/블록(Line)크기) = ![MOD](https://latex.codecogs.com/svg.image?log_2)(64KB/4B) = ![MOD](https://latex.codecogs.com/svg.image?log_2(16K)=log_2{2^{14}}=14)비트
+        - Line 주소의 비트수 = ![MOD](https://latex.codecogs.com/svg.image?log_2)(한 블록집합에서의 Line의 개수) = ![MOD](https://latex.codecogs.com/svg.image?log_2)(캐시크기/블록(Line)크기) = ![MOD](https://latex.codecogs.com/svg.image?log_2)(64KBits/4Bits) = ![MOD](https://latex.codecogs.com/svg.image?log_2(16K)=log_2{2^{14}}=14)비트
         
     <br/>
 
@@ -278,15 +278,15 @@ sitemap :
 ### 연관 사상: 예시 문제
 
 - 가정
-    - Cache 크기 = 64KB
-    - Main Memory 크기 = 16MB
-    - Word 크기 = 1B
-    - Block 크기 = 4B
+    - Cache 크기 = 64KBits
+    - Main Memory 크기 = 16MBits
+    - Word 크기 = 1Bits
+    - Block 크기 = 4Bits
 
 - 문제
     - **Main Memory의 주소에서 Tag의 비트수는?**
         - 연관 사상에서 Tag는 각 블록을 구분하는 구분자이다.(블록 집합 X) 따라서, 블록의 개수만큼 표현할 수 있는 비트 개수가 필요하다.
-        - Tag 비트수 = ![MOD](https://latex.codecogs.com/svg.image?log_2)(블록 개수) = ![MOD](https://latex.codecogs.com/svg.image?log_2)(M.M크기/블록크기) = ![MOD](https://latex.codecogs.com/svg.image?log_2{(16MB/4B)}=log_2{2^{22}}=22)비트
+        - Tag 비트수 = ![MOD](https://latex.codecogs.com/svg.image?log_2)(블록 개수) = ![MOD](https://latex.codecogs.com/svg.image?log_2)(M.M크기/블록크기) = ![MOD](https://latex.codecogs.com/svg.image?log_2{(16MBits/4Bits)}=log_2{2^{22}}=22)비트
     
     <br/>
 
@@ -339,21 +339,21 @@ sitemap :
 ### 세트 연관 사상: 예시 문제
 
 - 가정
-    - Cache 크기 = 64KB
-    - Main Memory 크기 = 16MB
-    - Word 크기 = 1B
-    - Block 크기 = 4B
+    - Cache 크기 = 64KBits
+    - Main Memory 크기 = 16MBits
+    - Word 크기 = 1Bits
+    - Block 크기 = 4Bits
 
 - 문제
     - **Main Memory의 주소에서 Tag의 비트수는?**
         - 연관 사상에서 Tag는 각 블록 집합을 구분하는 구분자이다. 따라서, 블록 집합의 개수만큼 표현할 수 있는 비트 개수가 필요하다.
-        - Tag 비트수 = ![MOD](https://latex.codecogs.com/svg.image?log_2)(블록집합 개수) = ![MOD](https://latex.codecogs.com/svg.image?log_2)(M.M크기/블록집합크기) = ![MOD](https://latex.codecogs.com/svg.image?log_2{(16MB/32KB)}=log_2{2^{24-15}}=9)비트
+        - Tag 비트수 = ![MOD](https://latex.codecogs.com/svg.image?log_2)(블록집합 개수) = ![MOD](https://latex.codecogs.com/svg.image?log_2)(M.M크기/블록집합크기) = ![MOD](https://latex.codecogs.com/svg.image?log_2{(16MBits/32KBits)}=log_2{2^{24-15}}=9)비트
     
     <br/>
 
     - **Main Memory의 주소에서 Set 주소의 비트수는?**
         - Set 주소는 이미 특정된 블록 집합 내의 Block(Set, Line)들을 구분한다. 따라서, 블록 집합 내의 Block 개수만큼 표현할 수 있는 비트 개수가 필요하다.
-        - Set 비트수 = ![MOD](https://latex.codecogs.com/svg.image?log_2)(블록 집합당 Block 개수) = ![MOD](https://latex.codecogs.com/svg.image?log_2)(블록집합 크기/Block크기) = ![MOD](https://latex.codecogs.com/svg.image?log_2{(32KB/4B)}=log_2{2^{15-2}}=13)비트
+        - Set 비트수 = ![MOD](https://latex.codecogs.com/svg.image?log_2)(블록 집합당 Block 개수) = ![MOD](https://latex.codecogs.com/svg.image?log_2)(블록집합 크기/Block크기) = ![MOD](https://latex.codecogs.com/svg.image?log_2{(32KBits/4B)}=log_2{2^{15-2}}=13)비트
     
     <br/>
 
