@@ -14,7 +14,7 @@ skills:
     list: ["Java", "Servlet/JSP", "MySQL"]
   - name: "Framework"
     icon-class: "fa fa-th-list"
-    list: ["Spring-Boot", "JPA", "Thymeleaf"]
+    list: ["Spring-Boot", "JPA", "JUnit", "Mockito", "Thymeleaf"]
   - name: "Tools"
     icon-class: "fa fa-cogs"
     list: ["Linux", "Git"]
