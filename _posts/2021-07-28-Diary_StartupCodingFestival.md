@@ -1,5 +1,5 @@
 ---
-category: Event
+category: Diary
 tags: [스타트업, 코딩페스티벌, 코딩대회]
 title: "스타트업 코딩 페스티벌 2021 참여 회고"
 date:   2021-07-28 17:55:00 
