@@ -39,7 +39,7 @@ sitemap :
 
 아래 그림은 LinkedList를 활용한 충돌 해결을 시각화한 것이다.
 
-![Untitled](/assets/img/2021-10-22-ALGORITHM_HashAlgorithm/Untitled%200.png)  
+![Untitled](/assets/img/2021-10-22-ALGORITHM_HashAlgorithm/Untitled%201.png)  
 > 출처: T아카데미-유튜브채널
 
 <br/>
