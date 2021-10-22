@@ -21,6 +21,7 @@ sitemap :
 **③** ②번에서 반환된 값을 index로 가지는 value를 bucket에서 찾는다.  
 
 ![Untitled](/assets/img/2021-10-22-ALGORITHM_HashAlgorithm/Untitled%200.png)
+> 출처: 위키백과
 
 <br/><br/>
 
