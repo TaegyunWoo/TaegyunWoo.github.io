@@ -11,7 +11,7 @@ sitemap :
 
 &nbsp;&nbsp;Github에서 첫 PR을 하고난 뒤에, 해당 PR이 최근에 Merge되었음을 확인했다. 드디어 나도 오픈소스에 대해 기여자가 된 것이다! 그때의 감정과 느낌을 기록하여, 앞으로 더 많은 PR을 위한 원동력으로 삼고자 글을 남긴다. 사실 Merge가 되었음을 일주일 정도 전에 메일을 통해 알게 되었다.  
 
-![Untitled](/assets/img/2021-10-24-JAVA_HashCodeAndEquals/Untitled.png)  
+![Untitled](/assets/img/2021-10-25-Diary_FirstMerge/Untitled.png)  
 
 &nbsp;&nbsp;그때 해당 이메일을 처음보고 나서, 뿌듯함이 마음속 깊숙히에서부터 올라오는 것을 느꼈다. 그러고는 바로 Github로 들어가서 어떻게 Merge가 된 것인지 확인했다. 보라색으로 'Merged'가 써있는 것이 참 좋았다. 비록, 아주 사소한 버그를 발견하여 수정한 것이지만 말이다.  
 
