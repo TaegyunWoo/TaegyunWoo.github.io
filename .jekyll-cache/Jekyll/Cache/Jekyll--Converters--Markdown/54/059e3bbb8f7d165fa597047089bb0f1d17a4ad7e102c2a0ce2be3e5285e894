@@ -1,0 +1,1452 @@
+I"K<p><br/><br/></p>
+<ul>
+<li>이전 포스팅
+<ul>
+<li><a href="https://taegyunwoo.github.io/jpa/JPA_Relation_Basic">[JPA] 연관관계 매핑 - 기초</a></li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h1 id="section">이전 내용 복습</h1>
+<p>본격적인 내용에 들어가기 전, 먼저 이전에 포스팅한 내용을 정리해보자.</p>
+<p>엔티티의 연관관계를 매핑할 때는 다음 3가지를 고려해야 한다.</p>
+<ul>
+<li>다중성</li>
+<li>단방향, 양방향</li>
+<li>연관관계의 주인</li>
+</ul>
+<p>이전 내용을 하나씩 복습해보자.</p>
+<br/>
+<h2 id="section-1">다중성</h2>
+<h3 id="section-2">다중성의 종류</h3>
+<ul>
+<li>다대일</li>
+<li>일대다</li>
+<li>일대일</li>
+<li>다대다</li>
+</ul>
+<blockquote>
+<p>다대다 관계는 실무에서 거의 사용하지 않는다.</p>
+</blockquote>
+<br/>
+<h2 id="section-3">단방향, 양방향</h2>
+<h3 id="vs-">테이블 vs 객체</h3>
+<ul>
+<li>테이블
+<ul>
+<li>외래키 하나로 조인을 사용해서 양방향으로 쿼리가 가능하므로, 사실상 방향이라는 개념이 없다.</li>
+</ul>
+</li>
+<li>객체
+<ul>
+<li>참조용 필드를 가지고 있는 객체만 연관된 객체를 조회할 수 있다.</li>
+<li>단방향
+<ul>
+<li>한 쪽만 참조하는 것</li>
+</ul>
+</li>
+<li>양방향
+<ul>
+<li>양 쪽이 서로 참조하는 것</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h2 id="section-4">연관관계의 주인</h2>
+<h3 id="section-5">배경</h3>
+<ul>
+<li>테이블의 연관관계를 관리하는 포인트는 외래키 하나이다.</li>
+<li>반면에 엔티티를 양방향으로 매핑하면 A→B, B→A 2곳에서 서로를 참조한다.</li>
+<li><strong>따라서, 객체의 연관관계를 관리하는 포인트는 2곳이다.</strong>
+<ul>
+<li>그렇기 때문에, 2곳 중 한 곳에서만 연관관계를 관리할 수 있도록 설정해야한다. ⇒ 연관관계의 주인</li>
+</ul>
+</li>
+</ul>
+<h3 id="section-6">연관관계의 주인이란?</h3>
+<ul>
+<li>JPA는 두 객체 연관관계 중 하나를 정해서 DB 외래키를 관리한다.</li>
+<li>이것을 <strong>연관관계의 주인</strong>이라고 한다.</li>
+<li>‘외래키를 가진 테이블과 매핑되는 엔티티’가 외래키를 관리하는 것이 효율적이다.
+<ul>
+<li>
+<p><strong>그러므로, ‘외래키를 가진 테이블과 매핑되는 엔티티’가 연관관계의 주인이 된다.</strong></p>
+<blockquote>
+<p>정확히 말하자면 해당 엔티티의 외래키 필드가 연관관계의 주인이다.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>연관관계의 주인은 <code>mappedBy</code> 속성을 사용하지 않는다.</li>
+</ul>
+<p>이제부터 본격적으로 다양한 연관관계 매핑에 대해 설명하겠다.</p>
+<p><br/><br/><br/></p>
+<h1 id="section-7">다양한 연관관계 매핑</h1>
+<h2 id="section-8">다대일</h2>
+<h3 id="section-9">개요</h3>
+<ul>
+<li><strong>DB 테이블의 일(1), 다(N) 관계에서 외래키는 항상 다쪽에 있다.</strong></li>
+<li><strong>따라서, 객체 양방향 관계에서 연관관계의 주인은 항상 다쪽이다.</strong></li>
+</ul>
+<br/>
+<h3 id="n1">다대일 단방향 [N:1]</h3>
+<p>예시 코드를 통해, 다대일 단방향 연관관계에 대해 알아보자.</p>
+<ul>
+<li>
+<p>다대일 단방향 연관관계 시각화</p>
+<p><img src="/assets/img/2021-10-23-JPA_Relation_Mid/Untitled%205.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>회원 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">username</span><span class="o">;</span>
+
+	<span class="nd">@ManyToOne</span> <span class="c1">//다대일</span>
+	<span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"TEAM_ID"</span><span class="o">)</span> <span class="c1">//FK 칼럼과 매핑</span>
+	<span class="kd">private</span> <span class="nc">Team</span> <span class="n">team</span><span class="o">;</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>팀 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Team</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"TEAM_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<ul>
+<li>연관 관계
+<ul>
+<li>회원은 <code>Member.team</code> 으로 팀 엔티티를 참조할 수 있다.</li>
+<li>팀에서는 회원을 참조하는 필드가 없다.</li>
+<li>따라서, 회원과 팀은 다대일 단방향 연관관계이다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><code>@JoinColumn(name = &quot;TEAM_ID&quot;)</code>
+<ul>
+<li>
+<p>해당 애너테이션을 사용해서, <code>Member.team</code> 필드를 <code>TEAM_ID</code> 외래키와 매핑했다.</p>
+</li>
+<li>
+<p>따라서, <code>Member.team</code> 필드로 회원 테이블의 <code>TEAM_ID</code> 외래키를 관리한다.</p>
+<blockquote>
+<p>단방향 관계이기 때문에, 따로 연관관계의 주인을 명시할 필요는 없다.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="n1-1n">다대일 양방향 [N:1, 1:N]</h3>
+<p>예시 코드를 통해, 다대일 양방향 연관관계에 대해 알아보자.</p>
+<ul>
+<li>
+<p>다대일 양방향 연관관계 시각화</p>
+<p><img src="/assets/img/2021-10-23-JPA_Relation_Mid/Untitled%206.png" alt="Untitled" /></p>
+<ul>
+<li>실선: 연관관계의 주인</li>
+<li>점선: 연관관계의 주인 X</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>회원 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">username</span><span class="o">;</span>
+
+	<span class="nd">@ManyToOne</span> <span class="c1">//다대일</span>
+	<span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"TEAM_ID"</span><span class="o">)</span> <span class="c1">//FK 칼럼과 매핑</span>
+	<span class="kd">private</span> <span class="nc">Team</span> <span class="n">team</span><span class="o">;</span>
+
+	<span class="c1">//편의 메서드</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">setTeam</span><span class="o">(</span><span class="nc">Team</span> <span class="n">team</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">team</span> <span class="o">=</span> <span class="n">team</span><span class="o">;</span>
+
+		<span class="k">if</span> <span class="o">(!</span><span class="n">team</span><span class="o">.</span><span class="na">getMembers</span><span class="o">().</span><span class="na">contains</span><span class="o">(</span><span class="k">this</span><span class="o">))</span> <span class="o">{</span> <span class="c1">//무한루프에 빠지지 않도록 체크</span>
+			<span class="n">team</span><span class="o">.</span><span class="na">getMembers</span><span class="o">().</span><span class="na">addMember</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+		<span class="o">}</span>
+	<span class="o">}</span>
+
+	<span class="c1">//나머지 getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>팀 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Team</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"TEAM_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="nd">@OneToMany</span><span class="o">(</span><span class="n">mappedBy</span> <span class="o">=</span> <span class="s">"team"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;</span> <span class="n">members</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;();</span>
+
+	<span class="c1">//편의 메서드</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">addMember</span><span class="o">(</span><span class="nc">Member</span> <span class="n">member</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">members</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">member</span><span class="o">);</span>
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">member</span><span class="o">.</span><span class="na">getTeam</span><span class="o">()</span> <span class="o">!=</span> <span class="k">this</span><span class="o">)</span> <span class="o">{</span> <span class="c1">//무한루프에 빠지지 않도록 체크</span>
+			<span class="n">member</span><span class="o">.</span><span class="na">setTeam</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+		<span class="o">}</span>
+	<span class="o">}</span>
+
+	<span class="c1">//나머지 getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>양방향은 외래키가 있는 쪽이 연관관계의 주인이다.</strong>
+<ul>
+<li>다시 한번 강조하지만, 일대다·다대일 관계에서는 항상 다(N)에 외래키가 존재한다.</li>
+<li>따라서, <code>Member.team</code> 이 연관관계의 주인이다.</li>
+<li>JPA는 외래키를 관리할 때, 연관관계의 주인만 사용한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>양방향 연관관계는 항상 서로를 참조해야 한다.</strong>
+<ul>
+<li>어느 한 쪽만 참조하면 양방향 연관관계가 성립하지 않는다.</li>
+<li>항상 서로 참조하게 하려면 <strong>연관관계 편의메서드를 작성하는 것</strong>이 좋다.
+<ul>
+<li>위 예시 코드에서는 회원의 <code>setTeam()</code> , 팀의 <code>addMember()</code> 메서드가 편의 메서드 역할을 한다.</li>
+</ul>
+</li>
+<li>편의 메서드는 한 곳에만 작성하거나, 양쪽 다 작성할 수 있다.
+<ul>
+<li><strong>양쪽에 다 작성하면 무한루프에 빠지므로 주의해야 한다.</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-10">일대다</h2>
+<h3 id="n">일대다 단방향 [1:N]</h3>
+<ul>
+<li>하나의 팀은 여러 회원을 참조할 수 있다.
+<ul>
+<li>이런 관계를 <strong>일대다 관계</strong>라고 한다.</li>
+</ul>
+</li>
+<li>그리고 팀은 회원들을 참조하지만, 반대로 회원에서 팀을 참조할 수는 없다.
+<ul>
+<li>이런 관계를 <strong>단방향 관계</strong>라고 한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>일대다 단방향 연관관계 시각화</p>
+<p><img src="/assets/img/2021-10-23-JPA_Relation_Mid/Untitled%207.png" alt="Untitled" /></p>
+<ul>
+<li><strong>MEMBER 테이블의 외래키를 Team 엔티티가 관리한다.</strong>
+<ul>
+<li>즉, 반대쪽 테이블에 있는 외래 키를 관리한다.</li>
+</ul>
+</li>
+<li>MEMBER 테이블의 외래키를 Team 엔티티가 관리하는 이유
+<ul>
+<li>일대다 관계에서 외래키는 항상 다쪽 테이블에 있다.</li>
+<li>하지만, 다 쪽인 <strong>Member 엔티티에는 외래키를 매핑할 수 있는 참조 필드가 없다</strong>.</li>
+<li>대신 반대쪽인 <strong>Team 엔티티에만 참조 필드인 <code>members</code> 가 있다.</strong></li>
+<li>따라서 <strong>반대편 테이블의 외래키를 관리하는 특이한 모습이 나타난다.</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>팀 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Team</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"TEAM_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="nd">@OneToMany</span>
+	<span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"TEAM_ID"</span><span class="o">)</span> <span class="c1">// 반대쪽 테이블의 FK를 매핑한다.</span>
+	<span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;</span> <span class="n">members</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;();</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>회원 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">username</span><span class="o">;</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<ul>
+<li>상세 설명
+<ul>
+<li>일대다 단방향 관계를 매핑할 때는 <code>@JoinColumn</code> 을 명시해야 한다.</li>
+<li>그렇지 않으면 JPA는 <strong>연결 테이블을 중간에 두고 연관관계를 관리하는 조인 테이블 전략을 기본으로 사용해서 매핑</strong>한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>일대다 단방향 매핑의 단점
+<ul>
+<li>‘매핑한 객체가 관리하는 외래키’가 다른 테이블에 있다.</li>
+<li>다른 테이블에 외래키가 있으면 연관관계 처리를 위한 <strong>UPDATE SQL을 추가로 실행</strong>해야 한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>일대다 단방향 매핑 연관관계 추가 예시
+<ul>
+<li>
+<p>예시 코드</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kt">void</span> <span class="nf">testSave</span><span class="o">(</span><span class="nc">EntityManager</span> <span class="n">em</span><span class="o">)</span> <span class="o">{</span>
+
+	<span class="nc">Member</span> <span class="n">member1</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">(</span><span class="s">"member1"</span><span class="o">);</span>
+	<span class="nc">Member</span> <span class="n">member2</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">(</span><span class="s">"member2"</span><span class="o">);</span>
+	<span class="nc">Team</span> <span class="n">team1</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Team</span><span class="o">(</span><span class="s">"team1"</span><span class="o">);</span>
+
+	<span class="c1">//연관관계 추가</span>
+	<span class="n">team1</span><span class="o">.</span><span class="na">getMembers</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="n">member1</span><span class="o">);</span>
+	<span class="n">team1</span><span class="o">.</span><span class="na">getMembers</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="n">member2</span><span class="o">);</span>
+
+	<span class="c1">//저장</span>
+	<span class="n">em</span><span class="o">.</span><span class="na">persist</span><span class="o">(</span><span class="n">member1</span><span class="o">);</span> <span class="c1">// "INSERT: member1"</span>
+	<span class="n">em</span><span class="o">.</span><span class="na">persist</span><span class="o">(</span><span class="n">member2</span><span class="o">);</span> <span class="c1">// "INSERT: member2"</span>
+	<span class="n">em</span><span class="o">.</span><span class="na">persist</span><span class="o">(</span><span class="n">team1</span><span class="o">);</span> <span class="c1">// "INSERT: team1", "UPDATE: member1.fk", "UPDATE: member2.fk"</span>
+	<span class="c1">//즉, 위 코드를 커밋시 team1을 저장하고 난 뒤, member1과 2의 fk를 업데이트한다.</span>
+
+	<span class="n">transaction</span><span class="o">.</span><span class="na">commit</span><span class="o">();</span> <span class="c1">// 트랜잭션 커밋</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>커밋 결과 SQL</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">//</span><span class="n">Member</span><span class="err">의</span> <span class="err">외래키로</span> <span class="err">어떤</span> <span class="n">team</span> <span class="err">엔티티가</span> <span class="err">사용됐는지</span> <span class="err">아직</span> <span class="err">모른다</span><span class="p">.</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">MEMBER</span> <span class="p">(</span><span class="n">MEMBER_ID</span><span class="p">,</span> <span class="n">USERNAME</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="k">NULL</span><span class="p">,</span> <span class="o">?</span><span class="p">)</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">MEMBER</span> <span class="p">(</span><span class="n">MEMBER_ID</span><span class="p">,</span> <span class="n">USERNAME</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="k">NULL</span><span class="p">,</span> <span class="o">?</span><span class="p">)</span>
+
+<span class="o">//</span><span class="err">이제서야</span> <span class="err">어떤</span> <span class="n">team</span> <span class="err">엔티티인지</span> <span class="err">알수있다</span><span class="p">.</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">TEAM</span> <span class="p">(</span><span class="n">TEAM_ID</span><span class="p">,</span> <span class="n">NAME</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="k">NULL</span><span class="p">,</span> <span class="o">?</span><span class="p">)</span>
+
+<span class="o">//</span><span class="err">다시</span> <span class="n">team</span> <span class="err">엔티티를</span> <span class="err">연관관계로</span> <span class="err">추가한다</span><span class="p">.</span>
+<span class="k">UPDATE</span> <span class="n">MEMBER</span> <span class="k">SET</span> <span class="n">TEAM_ID</span><span class="o">=?</span> <span class="k">WHERE</span> <span class="n">MEMBER_ID</span><span class="o">=?</span>
+<span class="k">UPDATE</span> <span class="n">MEMBER</span> <span class="k">SET</span> <span class="n">TEAM_ID</span><span class="o">=?</span> <span class="k">WHERE</span> <span class="n">MEMBER_ID</span><span class="o">=?</span>
+</code></pre></div></div>
+<ul>
+<li>member 엔티티가 저장될 때, 아직 team 엔티티를 모른다.</li>
+<li>그리고 연관 관계에 대한 정보는 team 엔티티의 <code>members</code> 필드가 관리한다.</li>
+<li><strong>따라서 member 엔티티를 저장할 때는 MEMBER 테이블의 TEAM_ID 외래 키에 아무 값도 저장되지 않는다.</strong></li>
+<li><strong>대신 team 엔티티를 저장할 때 <code>Team.members</code> 의 참조 값을 확인해서 회원 테이블에 있는 TEAM_ID 외래키를 업데이트한다.</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>따라서 일대다 단방향 매핑보다는 다대일 양방향 매핑을 사용하자.</strong>
+<ul>
+<li>위 코드처럼 작성하여 일대다 단방향 매핑을 구현하면, 관리가 까다롭고 성능상의 문제도 발생한다.</li>
+<li>따라서, 관리해야 하는 외래 키가 본인 테이블에 있는 ‘다대일 양방향 매핑’을 사용하자.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="n-n1">일대다 양방향 [1:N, N:1]</h3>
+<ul>
+<li>일대다 양방향 매핑은 존재하지 않는다. 대신 다대일 양방향 매핑을 사용해야 한다.
+<ul>
+<li>사실 ‘일대다 양방향’과 ‘다대일 양방향’은 같은 말이다.</li>
+<li>하지만 일(1)이 연관관계의 주인이 되도록 해보자.</li>
+</ul>
+</li>
+<li>양방향 매핑에서 <code>@OneToMany</code> 는 연관관계의 주인이 될 수 없다.
+<ul>
+<li>왜냐하면, 항상 다(N)쪽에 외래 키가 있기 때문이다.</li>
+<li><strong>따라서, <code>@OneToMany</code> 에는 <code>mappedBy</code> 속성이 없다.</strong></li>
+</ul>
+</li>
+<li>그래도 일대다 양방향 매핑이 완전히 불가능한 것은 아니다.
+<ul>
+<li>일대다 단방향 매핑 반대편에 같은 외래키를 사용하는 다대일 단방향 매핑을 <strong>읽기 전용으로 하나 추가</strong>하면 된다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>일대다 양방향 연관관계 시각화</p>
+<p><img src="/assets/img/2021-10-23-JPA_Relation_Mid/Untitled%208.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>팀 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Team</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"TEAM_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="nd">@OneToMany</span>
+	<span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"TEAM_ID"</span><span class="o">)</span> <span class="c1">// 반대쪽 테이블의 FK를 매핑한다.</span>
+	<span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;</span> <span class="n">members</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;();</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>회원 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">username</span><span class="o">;</span>
+
+	<span class="c1">//읽기 전용으로 추가된 필드</span>
+	<span class="nd">@ManyToOne</span>
+	<span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"TEAM_ID"</span><span class="o">,</span> <span class="n">insertable</span> <span class="o">=</span> <span class="kc">false</span><span class="o">,</span> <span class="n">updatable</span> <span class="o">=</span> <span class="kc">false</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Team</span> <span class="n">team</span><span class="o">;</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<ul>
+<li>상세 설명
+<ul>
+<li>일대다 단방향 매핑 반대편에 <strong>다대일 단방향 매핑을 추가</strong>했다.</li>
+<li>이때 <strong>일대다 단방향 매핑과 같은 TEAM_ID 외래키 컬럼을 매핑</strong>한다.</li>
+<li>둘 다 같은 키를 관리하므로 문제가 발생할 수 있다.
+<ul>
+<li>따라서 반대편인 다대일 쪽은 <code>insertable = false</code> , <code>updatable = false</code> 속성을 통해 읽기만 가능하게끔 한다.</li>
+</ul>
+</li>
+<li>해당 방법은 일대다 양방향 매핑이라기보단, <strong>일대다 단방향 매핑 반대편에 다대일 단방향 매핑을 읽기 전용으로 추가하여 일대다 양방향처럼 보이도록 하는 방법</strong>이다.</li>
+<li><strong>따라서, 일대다 단방향 매핑이 가지는 단점을 그대로 가진다.</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>될 수 있으면 다대일 양방향 매핑을 사용하자.</strong></li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-11">일대일</h2>
+<h3 id="section-12">일대일 관계란?</h3>
+<ul>
+<li>일대일 관계는 양쪽이 서로 하나의 관계만 가진다.
+<ul>
+<li>ex) 회원은 하나의 사물함만 사용하고, 사물함도 하나의 회원에 의해서만 사용된다.
+<ul>
+<li>이때, ‘주 테이블 = 회원’, ‘대상 테이블 = 사물함’이다.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>일대일 관계의 특징
+<ul>
+<li>일대일 관계는 그 반대도 일대일 관계다.</li>
+<li>일대일 관계는 주 테이블이나 대상 테이블 둘 중 어느 곳이나 외래키를 가질 수 있다.</li>
+<li>테이블은 주 테이블이든 대상 테이블이든 외래키 하나만 있으면 양쪽으로 조회할 수 있다.</li>
+<li><strong>주 테이블이나 대상 테이블 중, 누가 외래키를 가질지 선택해야 한다.</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>주 테이블에 외래키가 있는 경우</strong>
+<ul>
+<li>주 객체가 대상 객체를 참조하는 것처럼, 주 테이블에 외래키를 두고 대상 테이블을 참조한다.</li>
+<li>외래키를 객체 참조와 비슷하게 사용할 수 있다.</li>
+<li>주 테이블이 외래키를 가지고 있으므로, 주 테이블만 확인해도 대상 테이블과 연관관계가 있는지 알 수 있다.</li>
+</ul>
+</li>
+<li><strong>대상 테이블에 외래키가 있는 경우</strong>
+<ul>
+<li>테이블 관계를 일대일에서 일대다로 변경할 때, 테이블 구조를 그대로 유지할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-13">주 테이블에 외래키가 있는 경우</h3>
+<p>주 테이블에 외래키가 있으면 JPA에서 좀 더 편리하게 매핑할 수 있다.</p>
+<br/>
+<ul>
+<li><strong>단방향</strong>
+<ul>
+<li>
+<p>MEMBER가 주 테이블이고, LOCKER는 대상 테이블이라고 가정하자.</p>
+</li>
+<li>
+<p>연관관계 시각화</p>
+<p><img src="/assets/img/2021-10-23-JPA_Relation_Mid/Untitled%209.png" alt="Untitled" /></p>
+<ul>
+<li>UNIQUE KEY : 유일한 값을 보장하는 제한조건, 중복X, null 허용</li>
+</ul>
+</li>
+<li>
+<p>회원 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">username</span><span class="o">;</span>
+
+	<span class="nd">@OneToOne</span>
+	<span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"LOCKER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Locker</span> <span class="n">locker</span><span class="o">;</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>사물함 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Locker</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"LOCKER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>상세 설명</p>
+<ul>
+<li><code>@OneToOne</code> 애너테이션을 통해, 일대일 관계로 객체 매핑을 하였다.</li>
+<li>DB에는 LOCKER_ID 외래키에 유니크 제약 조건을 추가했다.
+<ul>
+<li>일대일 관계이므로 유니크 제약 조건이 필요하다.</li>
+<li>만약 유니크 제약 조건이 없다면, 여러 회원이 하나의 사물함을 사용할 수 있게 된다.</li>
+</ul>
+</li>
+<li>이 관계는 대체로 ‘다대일 단방향 연관관계’와 비슷하다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>양방향</strong>
+<ul>
+<li>
+<p>이번에도 역시 MEMBER가 주 테이블이고, LOCKER는 대상 테이블이라고 가정하자.</p>
+</li>
+<li>
+<p>연관관계 시각화</p>
+<p><img src="/assets/img/2021-10-23-JPA_Relation_Mid/Untitled%2010.png" alt="Untitled" /></p>
+</li>
+<li>
+<p>회원 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">username</span><span class="o">;</span>
+
+	<span class="nd">@OneToOne</span>
+	<span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"LOCKER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Locker</span> <span class="n">locker</span><span class="o">;</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>사물함 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Locker</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"LOCKER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="nd">@OneToOne</span><span class="o">(</span><span class="n">mappedBy</span> <span class="o">=</span> <span class="s">"locker"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Member</span> <span class="n">member</span><span class="o">;</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>상세 설명</p>
+<ul>
+<li>LOCKER_ID 외래키를 MEMBER 테이블이 가지고 있으므로, Member 엔티티의 <code>Member.locker</code> 를 연관관계의 주인으로 설정한다.
+<ul>
+<li>양방향 관계이므로 연관관계의 주인을 설정해야 한다.</li>
+<li><code>Locker.member</code> 에 <code>mappedBy</code> 속성을 사용한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-14">대상 테이블에 외래키가 있는 경우</h3>
+<p>이번에는 대상 테이블에 외래키가 있는 일대일 관계에 대해 알아보자.</p>
+<br/>
+<ul>
+<li><strong>단방향</strong>
+<ul>
+<li>
+<p>일대일 관계 중 <strong>대상 테이블에 외래키가 있는 단방향 관계는 JPA에서 지원하지 않는다.</strong></p>
+</li>
+<li>
+<p>따라서 이 경우 아래와 같은 방법으로 처리해야 한다.</p>
+<ul>
+<li>
+<p>단방향 관계를 Locker 엔티티에서 Member 엔티티 방향으로 수정한다.</p>
+<p><img src="/assets/img/2021-10-23-JPA_Relation_Mid/Untitled%2011.png" alt="Untitled" /></p>
+</li>
+<li>
+<p>양방향 관계로 만들고 Locker를 연관관계의 주인으로 설정한다.</p>
+<p><img src="/assets/img/2021-10-23-JPA_Relation_Mid/Untitled%2012.png" alt="Untitled" /></p>
+</li>
+</ul>
+</li>
+<li>
+<p>연관관계 시각화</p>
+<p><img src="/assets/img/2021-10-23-JPA_Relation_Mid/Untitled%2013.png" alt="Untitled" /></p>
+<blockquote>
+<p>JPA 2.0부터 “일대다 단방향 관계에서 대상 테이블에 외래키가 있는 매핑”을 허용했다.<br />
+하지만, “일대일 단방향 관계에서 대상 테이블에 외래키가 있는 매핑”은 허용하지 않는다.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>양방향</strong>
+<ul>
+<li>
+<p>연관관계 시각화</p>
+<p><img src="/assets/img/2021-10-23-JPA_Relation_Mid/Untitled%2014.png" alt="Untitled" /></p>
+</li>
+<li>
+<p>회원 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">username</span><span class="o">;</span>
+
+	<span class="nd">@OneToOne</span><span class="o">(</span><span class="n">mappedBy</span> <span class="o">=</span> <span class="s">"member"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Locker</span> <span class="n">locker</span><span class="o">;</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>사물함 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Locker</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"LOCKER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="nd">@OneToOne</span>
+	<span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Member</span> <span class="n">member</span><span class="o">;</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>상세설명</p>
+<ul>
+<li>일대일 매핑에서 대상 테이블에 외래키를 두고 싶으면, 이렇게 양방향으로 매핑하면 된다.</li>
+<li><code>mappedBy</code> 속성을 Member 엔티티의 <code>Member.locker</code> 필드에 적용하여, Locker 엔티티의 <code>Locker.member</code> 필드를 연관관계의 주인으로 설정하였다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-15">다대다</h2>
+<h3 id="section-16">다대다 관계란</h3>
+<ul>
+<li>
+<p>관계형 DB는 정규화된 테이블 2개로 다대다 관계를 표현할 수 없다.</p>
+</li>
+<li>
+<p>그래서 보통 다대다 관계를 <strong>일대다, 다대일 관계로 풀어내는 연결 테이블을 사용</strong>한다.</p>
+</li>
+<li>
+<p>예시</p>
+<ul>
+<li>회원들이 상품을 주문한다. 그리고 상품들이 회원들에 의해 주문된다.</li>
+</ul>
+</li>
+<li>
+<p>따라서 아래 그림처럼 중간에 연결 테이블을 추가해야 한다.</p>
+<p><img src="/assets/img/2021-10-23-JPA_Relation_Mid/Untitled%2015.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><code>@ManyToMany</code> 애너테이션 사용시</p>
+<ul>
+<li>위 테이블 상태(연견 테이블 존재)에서, 해당 애너테이션을 사용하면 아래 그림처럼 다대다 관계를 편리하게 매핑할 수 있다.</li>
+</ul>
+<p><img src="/assets/img/2021-10-23-JPA_Relation_Mid/Untitled%2016.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-17">다대다 단방향</h3>
+<ul>
+<li>
+<p>회원 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">username</span><span class="o">;</span>
+
+	<span class="nd">@ManyToMany</span>
+	<span class="nd">@JoinTable</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_PRODUCT"</span><span class="o">,</span>
+			<span class="n">joinColumns</span> <span class="o">=</span> <span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_ID"</span><span class="o">),</span>
+			<span class="n">inverseJoinColumns</span> <span class="o">=</span> <span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"PRODUCT_ID"</span><span class="o">))</span>
+	<span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Product</span><span class="o">&gt;</span> <span class="n">products</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Product</span><span class="o">&gt;();</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>상품 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Product</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"PRODUCT_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<ul>
+<li><code>@JoinTable</code> 애너테이션
+<ul>
+<li>해당 애너테이션을 통해, 연결테이블을 편리하게 처리한다.</li>
+<li><code>@JoinTable.name</code> 속성
+<ul>
+<li>연결 테이블을 지정한다.</li>
+<li>위 코드에서는 MEMBER_PRODUCT 연결 테이블을 지정했다.</li>
+</ul>
+</li>
+<li><code>@JoinTable.joinColumns</code> 속성
+<ul>
+<li>‘현재 방향인 회원’과 매핑할 조인 컬럼 정보를 지정한다.</li>
+<li>위 코드에서는 MEMBER_ID로 지정했다.</li>
+</ul>
+</li>
+<li><code>@JoinTable.inverseJoinColumns</code> 속성
+<ul>
+<li>‘반대 방향인 상품’과 매핑할 조인 컬럼 정보를 지정한다.</li>
+<li>위 코드에서는 PRODUCT_ID로 지정했다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>상세설명
+<ul>
+<li>회원 엔티티와 상품 엔티티를 <code>@ManyToMany</code> 와 <code>@JoinTable</code> 로 편리하게 매핑했다.</li>
+<li>이와 동시에, 연결 테이블까지 바로 매핑되었다.</li>
+<li><strong>따라서, 회원과 상품을 연결하는 ‘회원_상품(Member_Product) 엔티티’(중간 연결 엔티티) 없이 매핑을 완료할 수 있다.</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>다대다 관계 연산: 저장</strong></p>
+<ul>
+<li>
+<p>다음으로 다대다 관계를 저장하는 예제를 보자.</p>
+<blockquote>
+<p>참고로, 단방향 관계에 한정되는 내용은 아니다. 다대다 양방향 관계에서도 적용되는 내용이다.</p>
+</blockquote>
+</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kt">void</span> <span class="nf">save</span><span class="o">()</span> <span class="o">{</span>
+	<span class="c1">//일반 상품 저장</span>
+	<span class="nc">Product</span> <span class="n">productA</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Product</span><span class="o">();</span>
+	<span class="n">productA</span><span class="o">.</span><span class="na">setId</span><span class="o">(</span><span class="s">"productA"</span><span class="o">);</span>
+	<span class="n">productA</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">"상품A"</span><span class="o">);</span>
+	<span class="n">em</span><span class="o">.</span><span class="na">persist</span><span class="o">(</span><span class="n">productA</span><span class="o">);</span>
+
+	<span class="c1">//회원저장</span>
+	<span class="nc">Member</span> <span class="n">member1</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">();</span>
+	<span class="n">member1</span><span class="o">.</span><span class="na">setId</span><span class="o">(</span><span class="s">"member1"</span><span class="o">);</span>
+	<span class="n">member1</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">"회원1"</span><span class="o">);</span>
+	<span class="n">member1</span><span class="o">.</span><span class="na">getProducts</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="n">productA</span><span class="o">)</span> <span class="c1">//연관관계 설정</span>
+	<span class="n">em</span><span class="o">.</span><span class="na">persist</span><span class="o">(</span><span class="n">member1</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>회원1과 상품A의 연관관계를 설정했으므로 <strong>회원1을 저장할 때 연결 테이블에도 값이 저장</strong>된다.</li>
+<li>따라서, 위 코드를 실행하면 다음과 같은 SQL이 실행된다.</li>
+</ul>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">PRODUCT</span> <span class="p">...</span> <span class="o">//</span><span class="err">상품저장</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">MEMBER</span> <span class="p">...</span> <span class="o">//</span><span class="err">회원저장</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">MEMBER_PRODUCT</span> <span class="p">...</span> <span class="o">//</span><span class="err">연결테이블에도</span> <span class="err">저장</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>다대다 관계 연산: 조회 및 탐색</strong></p>
+<ul>
+<li>
+<p>다음으로, 엔티티를 조회하고 그래프 탐색을 해보자.</p>
+<blockquote>
+<p>참고로, 단방향 관계에 한정되는 내용은 아니다. 다대다 양방향 관계에서도 적용되는 내용이다.</p>
+</blockquote>
+</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kt">void</span> <span class="nf">find</span><span class="o">()</span> <span class="o">{</span>
+	<span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="nc">Member</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="s">"member1"</span><span class="o">);</span>
+	<span class="nc">List</span><span class="o">&lt;</span><span class="nc">Product</span><span class="o">&gt;</span> <span class="n">products</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="na">getProducts</span><span class="o">();</span> <span class="c1">//객체 그래프 탐색</span>
+	
+	<span class="c1">//정보 출력</span>
+	<span class="k">for</span> <span class="o">(</span><span class="nc">Product</span> <span class="n">product</span> <span class="o">:</span> <span class="n">products</span><span class="o">)</span> <span class="o">{</span>
+		<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"product name: "</span> <span class="o">+</span> <span class="n">product</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>결과: 저장해두었던 상품1이 조회된다.</li>
+<li><code>member.getProducts()</code> 를 호출할 때, 아래와 같은 SQL이 실행된다.</li>
+</ul>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">MEMBER_PRODUCT</span> <span class="n">MP</span>
+	<span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">PRODUCT</span> <span class="n">P</span> <span class="k">ON</span> <span class="n">MP</span><span class="p">.</span><span class="n">PRODUCT_ID</span><span class="o">=</span><span class="n">P</span><span class="p">.</span><span class="n">PRODUCT_ID</span>
+	<span class="k">WHERE</span> <span class="n">MP</span><span class="p">.</span><span class="n">MEMBER_ID</span><span class="o">=?</span>
+</code></pre></div></div>
+<ul>
+<li><strong>즉, <code>member.getProducts()</code> 를 호출하면 관련된 Product 엔티티를 조회하여 제공해주어야 한다.</strong> 따라서, 위 SQL이 실행된다.</li>
+<li><strong>위 SQL은 ‘연결 테이블인 MEMBER_PRODUCT’와 ‘상품 테이블’을 조인해서 연관된 상품을 조회한다.</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-18">다대다 양방향</h3>
+<ul>
+<li>양방향 매핑을 하려면 늘 그래왔듯이 <code>mappedBy</code> 속성을 이용하면 된다.
+<ul>
+<li>양쪽다 다(N)이므로, 원하는 곳에 적용하면 된다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>회원 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">username</span><span class="o">;</span>
+
+	<span class="nd">@ManyToMany</span>
+	<span class="nd">@JoinTable</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_PRODUCT"</span><span class="o">,</span>
+			<span class="n">joinColumns</span> <span class="o">=</span> <span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_ID"</span><span class="o">),</span>
+			<span class="n">inverseJoinColumns</span> <span class="o">=</span> <span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"PRODUCT_ID"</span><span class="o">))</span>
+	<span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Product</span><span class="o">&gt;</span> <span class="n">products</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Product</span><span class="o">&gt;();</span>
+
+	<span class="c1">//편의 메서드</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">addProduct</span><span class="o">(</span><span class="nc">Product</span> <span class="n">product</span><span class="o">)</span> <span class="o">{</span>
+		<span class="c1">// ...</span>
+		<span class="n">products</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">product</span><span class="o">);</span>
+		<span class="n">product</span><span class="o">.</span><span class="na">getMembers</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+	<span class="o">}</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>상품 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Product</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"PRODUCT_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="c1">//역방향 추가</span>
+	<span class="nd">@ManyToMany</span><span class="o">(</span><span class="n">mappedBy</span> <span class="o">=</span> <span class="s">"products"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;</span> <span class="n">members</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;();</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<h3 id="section-19">다대다 매핑의 한계와 극복: 배경</h3>
+<ul>
+<li>위에서 <code>@ManyToMany</code> 애너테이션을 통해, 다대다 매핑을 손쉽게 했다.</li>
+<li>하지만 이러한 방식을 실무에서 사용하기엔 한계가 있다.</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>한계</p>
+<ul>
+<li>보통 연결 테이블에 <code>MEMBER_ID</code> 와 <code>PRODUCT_ID</code> 같은 칼럼만 존재하지는 않다.</li>
+<li>대부분 그외의 일반 칼럼 (ex. 주문일자, 주문 수량 등)이 연결 테이블에 포함된다.</li>
+<li>즉, 이것을 ERD로 표현하면 아래와 같다.</li>
+</ul>
+<p><img src="/assets/img/2021-10-23-JPA_Relation_Mid/Untitled%2017.png" alt="Untitled" /></p>
+<ul>
+<li><strong>이렇게 칼럼이 추가되면 더는 <code>@ManyToMany</code> 를 사용할 수 없다!</strong>
+<ul>
+<li>왜냐하면, 추가된 칼럼들을 매핑할 수 없기 때문이다.</li>
+<li>그리고 추가된 칼럼들은 <code>@JoinTable</code> 로 처리가 불가능한 것들이다.</li>
+</ul>
+</li>
+<li>따라서, 결국에는 <strong>연결 테이블을 매핑하는 연결 엔티티를 만들고, 이곳에 추가한 컬럼들을 매핑해야 한다.</strong></li>
+<li>또한, <strong>엔티티 간의 관계도 테이블 관계처럼 일대다, 다대일로 풀어내야 한다.</strong></li>
+<li>이것을 그림으로 표현하면 아래와 같다.</li>
+</ul>
+<p><img src="/assets/img/2021-10-23-JPA_Relation_Mid/Untitled%2018.png" alt="Untitled" /></p>
+<blockquote>
+<p>참고로, ‘Product→MemberProduct’ 방향은 비즈니스 로직상 필요없다고 판단되어, 단방향으로 설정하였다.</p>
+</blockquote>
+</li>
+</ul>
+<br/>
+<h3 id="section-20">다대다 매핑의 한계와 극복: 연결엔티티 사용</h3>
+<p>위와 같은 한계가 존재하기 때문에, 연결 엔티티를 사용하여 매핑해야 한다.</p>
+<br/>
+<ul>
+<li>
+<p>DB 테이블 상태가 아래와 같다고 하자. (위에서 살펴본 것과 동일하다.)</p>
+<p><img src="/assets/img/2021-10-23-JPA_Relation_Mid/Untitled%2017.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>회원 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">username</span><span class="o">;</span>
+
+	<span class="c1">//연결엔티티와 연관관계 설정</span>
+	<span class="nd">@OneToMany</span><span class="o">(</span><span class="n">mappedBy</span> <span class="o">=</span> <span class="s">"member"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">MemberProduct</span><span class="o">&gt;</span> <span class="n">memberProducts</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">MemberProduct</span><span class="o">&gt;();</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>‘회원엔티티→연결엔티티’ 방향으로 접근이 가능하도록 설정했다.</li>
+<li>‘연결엔티티→회원엔티티’ 방향으로도 접근이 가능하게 할 것임으로, <strong>양방향 관계</strong>이다.</li>
+<li>따라서, FK가 존재하는 테이블인 MEMBER_PRODUCT와 매핑되는 MemberProduct 엔티티를 연관관계의 주인으로 설정했다.</li>
+<li>연결엔티티인 <code>MemberProduct</code> 엔티티에 대해선 아래에서 자세히 알아보자.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>상품 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Product</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"PRODUCT_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>
+<p>‘상품엔티티→연결엔티티’ 방향으로 접근할 수 없다.</p>
+</li>
+<li>
+<p>‘연결엔티티→상품엔티티’ 방향으로는 접근할 수 있도록 할 것이므로, <strong>단방향 관계</strong>이다.</p>
+<blockquote>
+<p>비즈니스 로직상 필요없다고 판단되어, 단방향으로 설정하였다.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>회원상품 엔티티 (연결엔티티)</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="nd">@IdClass</span><span class="o">(</span><span class="nc">MemberProductId</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="c1">//복합기본키 매핑을 위한 식별자 클래스 설정</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MemberProduct</span> <span class="o">{</span>
+
+	<span class="nd">@Id</span>
+	<span class="nd">@ManyToOne</span>
+	<span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Member</span> <span class="n">member</span><span class="o">;</span> <span class="c1">//MemberProductId.member와 연결</span>
+
+	<span class="nd">@Id</span>
+	<span class="nd">@ManyToOne</span>
+	<span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"PRODUCT_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Product</span> <span class="n">product</span><span class="o">;</span> <span class="c1">//MemberProductId.product와 연결</span>
+
+	<span class="kd">private</span> <span class="kt">int</span> <span class="n">orderAmount</span><span class="o">;</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>회원상품 식별자 클래스</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MemberProductId</span> <span class="kd">implements</span> <span class="nc">Serializable</span> <span class="o">{</span>
+
+	<span class="c1">//아래 변수들은 각 엔티티의 기본키를 담는다. (String 형임에 주의하자.)</span>
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">member</span><span class="o">;</span> <span class="c1">//MemberProduct.member와 연결</span>
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">product</span><span class="o">;</span> <span class="c1">//MemberProduct.product와 연결</span>
+
+	<span class="nd">@Override</span>
+	<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="nc">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span> <span class="o">...</span> <span class="o">}</span>
+
+	<span class="nd">@Override</span>
+	<span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">()</span> <span class="o">{</span> <span class="o">...</span> <span class="o">}</span>
+	
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>JPA에서 복합 기본키를 사용하기 위해, 만들어진 식별자 클래스</li>
+</ul>
+<blockquote>
+<p>자세한 것은 아래에서 설명한다.</p>
+</blockquote>
+</li>
+</ul>
+<br/>
+<ul>
+<li>코드 상세 설명
+<ul>
+<li>회원상품 엔티티 (연결 엔티티)
+<ul>
+<li><code>@Id</code> 와 <code>@JoinColumn</code> 을 동시에 사용해서 기본키+외래키를 한번에 매핑한다.</li>
+<li><code>@IdClass</code> 를 사용해서, <strong>복합 기본키를 매핑</strong>한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>복합 기본키</strong>
+<ul>
+<li>복합 기본키란, 기본키가 여러 칼럼인 것을 뜻한다.
+<ul>
+<li>단순히 기본키로 여러 개의 칼럼이 사용되는 것을 뜻한다.</li>
+</ul>
+</li>
+<li>회원상품 엔티티는 <strong>“기본키가 MEMBER_ID와 PRODUCT_ID로 이루어진 복합 기본키”</strong> 를 갖는다.</li>
+<li>JPA에서의 복합 기본키 사용법
+<ol>
+<li>별도의 식별자 클래스 만들기</li>
+<li>엔티티에 <code>@IdClass</code> 를 사용해서 식별자 클래스를 지정하기</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>식별자 클래스의 특징</strong>
+<ul>
+<li>식별자 클래스를 통해서, 여러 기본키를 하나의 복합 기본키로 묶는다.</li>
+<li>복합키는 별도의 식별자 클래스로 만들어야한다.</li>
+<li><code>Serializable</code> 을 구현해야 한다.</li>
+<li><code>equals</code> 와 <code>hashCode</code> 메서드를 구현해야 한다.</li>
+<li>기본 생성자가 있어야 한다.</li>
+<li>public 클래스여야 한다.</li>
+<li><code>@IdClass</code> 대신, <code>@EmbeddedId</code> 를 사용하는 방법도 있다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>식별 관계</strong>
+<ul>
+<li>회원상품은 회원과 상품의 기본키를 받아서 자신의 기본키로 사용한다.</li>
+<li>이렇게 <strong>부모 테이블의 기본키를 받아서, ‘자신의 기본키 + 외래키’로 사용하는 것을 DB용어로 “식별관계”</strong> 라고 한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>예시코드 정리
+<ul>
+<li><strong>회원상품은 회원의 기본키를 받아서, 자신의 기본키로 사용함과 동시에 회원과의 관계를 위한 외래키로 사용한다.</strong></li>
+<li><strong>회원상품은 상품의 기본키를 받아서, 자신의 기본키로 사용함과 동시에 회원과의 관계를 위한 외래키로 사용한다.</strong></li>
+<li><strong><code>MemberProductId</code> 식별자 클래스로 두 기본키를 묶어서 복합 기본키로 사용한다.</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>연결엔티티를 사용한 관계: 저장 예시 코드</p>
+<ul>
+<li>위처럼 구성한 관계를 어떻게 저장하는지 살펴보자. 예시코드는 아래와 같다.</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kt">void</span> <span class="nf">save</span><span class="o">()</span> <span class="o">{</span>
+	<span class="c1">//일반 상품 저장</span>
+	<span class="nc">Product</span> <span class="n">productA</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Product</span><span class="o">();</span>
+	<span class="n">productA</span><span class="o">.</span><span class="na">setId</span><span class="o">(</span><span class="s">"productA"</span><span class="o">);</span>
+	<span class="n">productA</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">"상품A"</span><span class="o">);</span>
+	<span class="n">em</span><span class="o">.</span><span class="na">persist</span><span class="o">(</span><span class="n">productA</span><span class="o">);</span>
+
+	<span class="c1">//회원 저장</span>
+	<span class="nc">Member</span> <span class="n">member1</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">();</span>
+	<span class="n">member1</span><span class="o">.</span><span class="na">setId</span><span class="o">(</span><span class="s">"member1"</span><span class="o">);</span>
+	<span class="n">member1</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">"회원1"</span><span class="o">);</span>
+	<span class="n">em</span><span class="o">.</span><span class="na">persist</span><span class="o">(</span><span class="n">member1</span><span class="o">);</span>
+
+	<span class="c1">//회원상품 저장</span>
+	<span class="nc">MemberProduct</span> <span class="n">memberProduct</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MemberProduct</span><span class="o">();</span>
+	<span class="n">memberProduct</span><span class="o">.</span><span class="na">setMember</span><span class="o">(</span><span class="n">member1</span><span class="o">);</span> <span class="c1">//주문 회원 - 연관관계 설정</span>
+	<span class="n">memberProduct</span><span class="o">.</span><span class="na">setProduct</span><span class="o">(</span><span class="n">productA</span><span class="o">);</span> <span class="c1">//주문 상품 - 연관관계 설정</span>
+	<span class="n">memberProduct</span><span class="o">.</span><span class="na">setOrderAmount</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span> <span class="c1">//주문 개수 - 일반 칼럼 값 설정</span>
+	<span class="n">em</span><span class="o">.</span><span class="na">persist</span><span class="o">(</span><span class="n">memberProduct</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>회원상품 엔티티를 만들면서, 연관된 회원 엔티티와 상품 엔티티를 설정했다.</li>
+<li>회원상품 엔티티는 DB에 저장될 때, 연관된 회원의 기본키와 상품의 기본키를 가져와서 자신의 기본키 값으로 사용한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>연결엔티티를 사용한 관계: 조회 예시 코드</p>
+<ul>
+<li>위처럼 저장했을 때, 어떻게 조회하는지 살펴보자. 예시코드는 아래와 같다.</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kt">void</span> <span class="nf">find</span><span class="o">()</span> <span class="o">{</span>
+	<span class="c1">//복합 기본키(식별자 클래스 객체) 생성</span>
+	<span class="nc">MemberProductId</span> <span class="n">memberProductId</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MemberProductId</span><span class="o">();</span>
+	<span class="n">memberProductId</span><span class="o">.</span><span class="na">setMember</span><span class="o">(</span><span class="s">"member1"</span><span class="o">);</span> <span class="c1">//member 엔티티의 기본키 값 설정</span>
+	<span class="n">memberProductId</span><span class="o">.</span><span class="na">setProduct</span><span class="o">(</span><span class="s">"productA"</span><span class="o">);</span> <span class="c1">//product 엔티티의 기본키 값 설정</span>
+
+	<span class="c1">//식별자 클래스 객체를 사용하여 조회</span>
+	<span class="c1">//조회할때 사용될 기본키로 식별자 클래스 객체를 넘겨준다!</span>
+	<span class="nc">MemberProduct</span> <span class="n">memberProduct</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="nc">MemberProduct</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">memberProductId</span><span class="o">);</span>
+
+	<span class="c1">//객체 그래프 탐색</span>
+	<span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="n">memberProduct</span><span class="o">.</span><span class="na">getMember</span><span class="o">();</span>
+	<span class="nc">Product</span> <span class="n">product</span> <span class="o">=</span> <span class="n">memberProduct</span><span class="o">.</span><span class="na">getProduct</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li><strong><code>em.find()</code> 부분을 보면 <code>MemberProductId</code> 식별자 클래스의 인스턴스를 통해 조회한다.</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>이러한 과정은 <strong>단순히 칼럼 하나만 기본키로 사용하는 것에 비해 너무 복잡하다!</strong></li>
+<li>좀 더 쉽고 편리한 방법에 대해 계속해서 알아보자.</li>
+</ul>
+<br/>
+<h3 id="section-21">다대다: 새로운 기본키 사용</h3>
+<p>위에서 <strong>복합 기본키 사용을 위해, 식별자 클래스</strong>를 생성하여 매핑하였다. 하지만 너무 복잡하다는 단점이 있다. 따라서, 다른 방법을 알아보자.</p>
+<ul>
+<li>복합 기본키를 연결테이블의 기본키로 사용하는 방법 대신, 추천하는 기본키 생성 전략은 <strong>DB에서 자동으로 생성해주는 대리키를 Long 값으로 사용하는 것</strong>이다.
+<ul>
+<li>이것은 이전 방법보다 간편하고 거의 영구히 사용할 수 있으며, 비즈니스에 의존하지 않는다.</li>
+<li>무엇보다 복합 기본키를 만들지 않아도 된다.</li>
+</ul>
+</li>
+</ul>
+<p>이제부터 예시코드를 통해 알아보자.</p>
+<blockquote>
+<p>이제 연결엔티티의 이름을 ‘주문’으로 변경하자. 앞으로 진행하는 내용을 수행하면 ‘회원상품’이라는 이름보단 ‘주문’이라는 이름이 더 잘 어울릴 것이다.</p>
+</blockquote>
+<br/>
+<ul>
+<li>
+<p>테이블 관계 시각화</p>
+<p><img src="/assets/img/2021-10-23-JPA_Relation_Mid/Untitled%2019.png" alt="Untitled" /></p>
+<ul>
+<li><code>ORDER_ID</code> 칼럼이 새로 추가되어, 대리키로서의 역할을 수행한다. (AUTO INCREMENT 등을 통해, DB가 값을 자동으로 생성해준다.)</li>
+<li><code>MEMBER_ID</code> , <code>PRODUCT_ID</code> 칼럼은 단순 FK로만 변경되었다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>주문 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Order</span> <span class="o">{</span>
+
+	<span class="c1">//새 기본키</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"ORDER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="nd">@ManyToOne</span>
+	<span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Member</span> <span class="n">member</span><span class="o">;</span> <span class="c1">//연관관계의 주인이다.</span>
+
+	<span class="nd">@ManyToOne</span>
+	<span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"PRODUCT_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Product</span> <span class="n">product</span><span class="o">;</span> <span class="c1">//연관관계의 주인이다.</span>
+
+	<span class="kd">private</span> <span class="kt">int</span> <span class="n">orderAmount</span><span class="o">;</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>대리키를 사용함으로써 이전 방식보다 훨씬 매핑이 단순하고 이해하기 쉽다.
+<ul>
+<li>이전 방식
+<ul>
+<li>연결엔티티의 PK·FK = 회원, 상품</li>
+<li>따라서, 식별자 클래스를 통해 복합키를 사용한다.</li>
+</ul>
+</li>
+<li>현재 방식
+<ul>
+<li>연결엔티티의 PK = DB가 자동생성해준 값 (대리키)</li>
+<li>연결엔티티의 FK = 회원, 상품</li>
+<li>복합키를 사용하지 않기 때문에, 식별자 클래스가 필요없다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>회원 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">username</span><span class="o">;</span>
+
+	<span class="c1">//연결엔티티와 연관관계 설정</span>
+	<span class="nd">@OneToMany</span><span class="o">(</span><span class="n">mappedBy</span> <span class="o">=</span> <span class="s">"member"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Order</span><span class="o">&gt;</span> <span class="n">orders</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Order</span><span class="o">&gt;();</span> <span class="c1">//이름변경</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>연결 엔티티의 이름이 ‘회원상품’에서 ‘주문’으로 변경되었으므로, orders 필드 이름을 변경한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>상품 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Product</span> <span class="o">{</span>
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"PRODUCT_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="c1">//getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>단방향이기 때문에, 변경사항 없다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>저장 예시</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kt">void</span> <span class="nf">save</span><span class="o">()</span> <span class="o">{</span>
+	<span class="c1">//일반 상품 저장</span>
+	<span class="nc">Product</span> <span class="n">productA</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Product</span><span class="o">();</span>
+	<span class="n">productA</span><span class="o">.</span><span class="na">setId</span><span class="o">(</span><span class="s">"productA"</span><span class="o">);</span>
+	<span class="n">productA</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">"상품A"</span><span class="o">);</span>
+	<span class="n">em</span><span class="o">.</span><span class="na">persist</span><span class="o">(</span><span class="n">productA</span><span class="o">);</span>
+
+	<span class="c1">//회원 저장</span>
+	<span class="nc">Member</span> <span class="n">member1</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">();</span>
+	<span class="n">member1</span><span class="o">.</span><span class="na">setId</span><span class="o">(</span><span class="s">"member1"</span><span class="o">);</span>
+	<span class="n">member1</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">"회원1"</span><span class="o">);</span>
+	<span class="n">em</span><span class="o">.</span><span class="na">persist</span><span class="o">(</span><span class="n">member1</span><span class="o">);</span>
+
+	<span class="c1">//주문 저장</span>
+	<span class="nc">Order</span> <span class="n">order</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Order</span><span class="o">();</span>
+	<span class="n">order</span><span class="o">.</span><span class="na">setMember</span><span class="o">(</span><span class="n">member1</span><span class="o">);</span> <span class="c1">//주문 회원 - 연관관계 설정</span>
+	<span class="n">order</span><span class="o">.</span><span class="na">setProduct</span><span class="o">(</span><span class="n">productA</span><span class="o">);</span> <span class="c1">//주문 상품 - 연관관계 설정</span>
+	<span class="n">order</span><span class="o">.</span><span class="na">setOrderAmount</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span> <span class="c1">//주문 개수 - 일반 칼럼 값 설정</span>
+	<span class="n">em</span><span class="o">.</span><span class="na">persist</span><span class="o">(</span><span class="n">order</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>저장의 경우, 기존 코드와 크게 달라진 것은 없다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>조회 예시</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kt">void</span> <span class="nf">find</span><span class="o">()</span> <span class="o">{</span>
+
+	<span class="nc">Long</span> <span class="n">orderId</span> <span class="o">=</span> <span class="mi">1L</span><span class="o">;</span>
+	<span class="nc">MemberProduct</span> <span class="n">memberProduct</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="nc">MemberProduct</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">orderId</span><span class="o">);</span> <span class="c1">//단순화됨</span>
+
+	<span class="c1">//객체 그래프 탐색</span>
+	<span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="n">memberProduct</span><span class="o">.</span><span class="na">getMember</span><span class="o">();</span>
+	<span class="nc">Product</span> <span class="n">product</span> <span class="o">=</span> <span class="n">memberProduct</span><span class="o">.</span><span class="na">getProduct</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>식별자 클래스를 사용하지 않아서 코드가 한결 단순해졌다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>다대다 연관관계 정리
+<ul>
+<li>다대다 관계를 일대다 다대일 관계로 풀어내기 위해, 연결 테이블을 만들 때 식별자를 어떻게 구성할지 선택해야 한다.</li>
+<li>식별자 구성 종류
+<ul>
+<li><strong>식별 관계</strong> : 받아온 식별자를 기본키+외래키로 사용한다.</li>
+<li><strong>비식별 관계</strong> : 받아온 식별자는 외래키로만 사용하고 새로운 식별자를 추가한다.</li>
+</ul>
+</li>
+<li><strong>비식별 관계로 다대다 연관관계를 구성하는 것이 단순하고 편리하다.</strong></li>
+</ul>
+</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>김영한, 『자바 ORM 표준 JPA 프로그래밍』, 에이콘</li>
+  </ul>
+  본 게시글은 위 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

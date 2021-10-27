@@ -1,0 +1,722 @@
+I"�S<p><br/><br/></p>
+<h1 id="section">외부 기억장치</h1>
+<h2 id="section-1">자기 디스크</h2>
+<h3 id="section-2">디스크란?</h3>
+<ul>
+<li>자성물질로 코딩된 비자성 물질로 만드어진 원형 평판이다.</li>
+</ul>
+<br/>
+<h3 id="section-3">자기적 읽기 및 쓰기 메커니즘</h3>
+<ul>
+<li>데이터는 <strong>헤드</strong>라고 불리는 전도성 코일을 통하여 디스크에 기록되고 검색된다.</li>
+<li><strong>쓰기 메커니즘</strong>
+<ul>
+<li>코일에 전기가 흐르면 자기장이 발생한다는 사실을 이용한다.</li>
+</ul>
+</li>
+<li><strong>읽기 메커니즘</strong>
+<ul>
+<li>자기장 내에서 코일이 이동하면, 코일에 전류가 발생한다는 사실을 이용한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-4">데이터 조직과 형식화</h3>
+<ul>
+<li><strong>트랙 (track)</strong>
+<ul>
+<li>트랙의 폭 = 헤드의 폭</li>
+</ul>
+</li>
+<li><strong>섹터 (sector)</strong>
+<ul>
+<li>디스크로 들어오거나 나가는 데이터의 전송단위</li>
+<li>대부분 고정-길이 섹터를 사용한다.
+<ul>
+<li>512B</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>갭 (gap)</strong>
+<ul>
+<li>인접한 트랙을 분리하는 역할을 한다.</li>
+<li>인접한 섹터를 분리하는 역할을 한다.</li>
+<li>헤드가 잘못 정렬되거나 자기장의 간섭으로 인하여 발생하는 오류를 방지하거나 최소화한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>정면 시각화</p>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%2088.png" alt="Untitled" /></p>
+</li>
+<li>
+<p>측면 시각화</p>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%2089.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-5">디스크 배치 방식</h3>
+<ul>
+<li>디스크에 데이터를 배치하는 방식에는 두가지가 존재한다.
+<ul>
+<li><strong>등각속도</strong></li>
+<li><strong>다중 영역 기록</strong></li>
+</ul>
+</li>
+</ul>
+<p>하나씩 알아보자.</p>
+<br/>
+<h3 id="section-6">등각속도</h3>
+<ul>
+<li>
+<p>등각속도란, “디스크 중심부에 가까이 위치한 비트”와 “바깥쪽 비트”들의 이동속도 차이를 보완하기 위해서, <strong>바깥쪽으로 갈수록 저장된 정보의 비트들 간격을 증가시킨다.</strong></p>
+</li>
+<li>
+<p>각 데이터 블록들이 트랙과 섹터에 의해, 직접 주소가 지정된다.</p>
+</li>
+<li>
+<p>디스크 저장 용량이 <strong>가장 안쪽 트랙에서 얻을 수 있는 최대 기록 밀도에 의해 제한</strong>된다.</p>
+<ul>
+<li>바깥쪽에 더 많은 비트를 저장할 수 있지만, ‘바깥쪽 비트수 = 안쪽 비트수’라서 바깥쪽 용량을 낭비하게 된다.</li>
+</ul>
+</li>
+<li>
+<p>시각화</p>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%2090.png" alt="Untitled" /></p>
+</li>
+</ul>
+<blockquote>
+<p>등선속도는 포스팅 하단에서 다룬다.</p>
+</blockquote>
+<br/>
+<h3 id="section-7">다중 영역 기록</h3>
+<ul>
+<li>트랙마다 거의 같은 비트 밀도를 갖는다.</li>
+<li><strong>중심부로부터 멀리 떨어진 영역일수록 더 많은 비트들을 저장할 수 있다.</strong></li>
+<li>동작 회로가 복잡해지나 저장 용량을 늘릴 수 있다.</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>시각화</p>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%2091.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-8">트랙 내에서 섹터의 위치 찾기</h3>
+<ul>
+<li>섹터 주요 구성요소
+<ul>
+<li><strong>ID 필드</strong>
+<ul>
+<li>특정 섹터를 지정하기 위해서 사용되는 식별자이다.</li>
+</ul>
+</li>
+<li><strong>SYNCH 바이트</strong>
+<ul>
+<li>필드의 시작점을 구별하는 특수한 비트 패턴</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%2092.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-9">디스크 성능 파라미터</h3>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%2093.png" alt="Untitled" /></p>
+<ul>
+<li><strong>탐색 시간</strong>
+<ul>
+<li>디스크 팔을 트랙으로 이동시키는데 걸리는 시간</li>
+</ul>
+</li>
+<li><strong>회전 지연</strong>
+<ul>
+<li>섹터가 헤드에 도달할 때까지 걸리는 시간</li>
+</ul>
+</li>
+<li><strong>전송 시간</strong>
+<ul>
+<li>데이터 전송을 위해 걸리는 시간</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="raid">RAID</h2>
+<h3 id="raid-1">RAID란?</h3>
+<ul>
+<li>
+<p>RAID 개발 배경</p>
+<ul>
+<li>“프로세서”와 “디스크 드라이브” 사이의 속도 차이를 줄이기 위해서 제안되었다.</li>
+</ul>
+</li>
+<li>
+<p>RAID란?</p>
+<ul>
+<li>RAID란 독립적으로 병렬 동작하는 디스크 배열이다.</li>
+<li>여러 개의 디스크들이 있어서, 원하는 데이터가 서로 다른 디스크 상에 존재하는 경우에는 병렬로 처리가 가능하게 된다.</li>
+<li>액세스될 데이터가 여러 개의 디스크들에 분산되어 있으면 하나의 입출력 요구가 병렬로 수행될 수 있다.</li>
+</ul>
+</li>
+<li>
+<p>RAID 신뢰도 문제</p>
+<ul>
+<li>장치의 개수가 많아질수록, 장애 가능성이 높아진다.</li>
+<li>따라서, 신뢰도 향상을 위해 여분의 디스크들을 활용한다.</li>
+</ul>
+</li>
+<li>
+<p>RAID 형태</p>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%2094.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="raid-">RAID의 특성</h3>
+<ul>
+<li>RAID는 운영체제에 의해 “하나의 논리적 드라이브로 보여지는 물리적 디스크 드라이브들의 집합”이다.
+<ul>
+<li><strong>즉, 독립적으로 병렬 동작하는 디스크 배열이다.</strong></li>
+</ul>
+</li>
+<li><strong>스트라이핑 (striping)</strong>
+<ul>
+<li>데이터가 “배열을 이루고 있는 물리적인 디스크 드라이브들”에 저장되는 방법</li>
+</ul>
+</li>
+<li><strong>스트립 (strip)</strong>
+<ul>
+<li>“배열을 이루고 있는 물리적인 디스크 드라이브들”에 저장된 데이터</li>
+</ul>
+</li>
+<li><strong>여분의 디스크 용량</strong>
+<ul>
+<li>디스크 오류 발생시, 데이터 복구를 하기 위한 <strong>패리티 정보</strong>를 저장하는 공간</li>
+<li><strong>패리티 정보</strong>
+<ul>
+<li>오류정정코드</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="raid--1">용도에 따른 RAID 종류</h3>
+<ul>
+<li>
+<p>RAID의 종류는 다양하다.</p>
+<blockquote>
+<p>자세한 것은 아래에서 다룬다.</p>
+</blockquote>
+</li>
+<li>
+<p><strong>높은 전송율을 요구하는 상황</strong></p>
+<ul>
+<li>작은 크기의 스트립을 갖는 RAID를 사용해야 한다.</li>
+<li>작은 크기의 스트립들은 전송율이 빠르다.</li>
+</ul>
+</li>
+<li>
+<p><strong>I/O 접근 횟수가 많은 상황</strong></p>
+<ul>
+<li>큰 크기의 스트립을 갖는 RAID를 사용해야 한다.</li>
+<li>큰 크기의 데이터를 한번에 전송하여, 접근 횟수를 최소화한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="raid--raid-0">RAID 종류: RAID 0</h3>
+<ul>
+<li>
+<p><strong>여분의 디스크가 존재하지 않는다.</strong></p>
+<ul>
+<li>즉, 에러복구를 위한 디스크가 없다.</li>
+</ul>
+</li>
+<li>
+<p><strong>데이터가 사용 가능한 모든 디스크들에 나누어 저장된다.</strong></p>
+<ul>
+<li>하나의 논리적인 디스크 상에 저장되어 있는 것처럼 보인다.</li>
+<li>스트립 = 물리적 블록, 섹터 등</li>
+<li>스트립은 배열 내에 연속적으로 배치된 디스크들에 대해 <strong>라운드-로빈 방식으로 저장</strong>된다.</li>
+</ul>
+</li>
+<li>
+<p>장단점</p>
+<ul>
+<li>속도 향상</li>
+<li>에러가 발생해도 복구 불가능</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>형태</p>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%2095.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="raid--raid-1">RAID 종류: RAID 1</h3>
+<ul>
+<li>모든 데이터들을 <strong>여분의 디스크에 그대로 복사하여 저장</strong>한다.
+<ul>
+<li>이것을 Mirrored Disks 라고 한다.</li>
+</ul>
+</li>
+<li>데이터는 모든 디스크에 스트라이핑된다.</li>
+<li>특징
+<ul>
+<li>읽기 요구는 두 개의 디스크 중에서 “속도가 빠른 쪽에서 제공”한다.
+<ul>
+<li>원본 디스크, 여분 디스크 중 빠른 쪽에서 제공</li>
+</ul>
+</li>
+<li>쓰기 요구는 두 개의 스트립을 모두 갱신해야 한다. (병렬 수행)
+<ul>
+<li>원본 디스크, 여분 디스크 모두 갱신해야 한다.</li>
+</ul>
+</li>
+<li>오류에 대한 복구가 간단하다.
+<ul>
+<li>원본 데이터 그대로 백업했으므로</li>
+</ul>
+</li>
+<li>비용이 높다.</li>
+</ul>
+</li>
+<li><strong>주로 시스템 소프트웨어 및 중요한 파일을 저장하는 드라이브로만 사용된다.</strong></li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>형태</p>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%2096.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="raid--raid-2">RAID 종류: RAID 2</h3>
+<ul>
+<li>
+<p>RAID 2와 RAID 3의 공통사항</p>
+<ul>
+<li><strong>병렬 액세스 기법을 사용한다.</strong>
+<ul>
+<li>병렬 액세스 기법: 하나의 I/O 요구에 모든 디스크들이 동시에 참여한다.</li>
+</ul>
+</li>
+<li><strong>아주 작은 크기의 스트립을 사용한다.</strong>
+<ul>
+<li>바이트, 워드 크기</li>
+<li>따라서, 전송율이 중요한 상황에서 유용하다.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>RAID 2와 RAID 3의 차이점</p>
+<ul>
+<li><strong>여분의 디스크 수는 데이터 디스크 수의 로그값에 비례한다.</strong></li>
+</ul>
+</li>
+<li>
+<p>구성요소</p>
+<ul>
+<li>Working 디스크
+<ul>
+<li>실제 데이터가 저장되어 있는 디스크</li>
+</ul>
+</li>
+<li>여분 디스크 (페리티 디스크)
+<ul>
+<li>실제 데이터를 복구하기 위한 정보(페리티)가 저장되어있는 디스크</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>읽기 동작</p>
+<ul>
+<li>모든 디스크들(working disks)이 액세스된다.</li>
+</ul>
+</li>
+<li>
+<p>쓰기 동작</p>
+<ul>
+<li>모든 디스크/페리티 디스크들이 동시에 액세스된다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>형태</p>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%2097.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="raid--raid-3">RAID 종류: RAID 3</h3>
+<ul>
+<li>
+<p>RAID 2와 RAID 3의 공통사항</p>
+<ul>
+<li><strong>병렬 액세스 기법을 사용한다.</strong>
+<ul>
+<li>병렬 액세스 기법: 하나의 I/O 요구에 모든 디스크들이 동시에 참여한다.</li>
+</ul>
+</li>
+<li><strong>아주 작은 크기의 스트립을 사용한다.</strong>
+<ul>
+<li>바이트, 워드 크기</li>
+<li>따라서, 전송율이 중요한 상황에서 유용하다.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>RAID 2와 RAID 3의 차이점</p>
+<ul>
+<li><strong>배열이 아무리 크더라도 여분의 디스크는 1개만 있으면 된다.</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>형태</p>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%2098.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="raid--raid-4">RAID 종류: RAID 4</h3>
+<ul>
+<li>
+<p>RAID 4와 RAID 5와 RAID 6의 공통사항</p>
+<ul>
+<li><strong>독립적인 액세스 기법을 사용한다.</strong>
+<ul>
+<li>독립적인 액세스 기법: 각 디스크가 독립적으로 작동하며, 독립적인 I/O 요구들이 병렬로 처리 가능하다.</li>
+</ul>
+</li>
+<li><strong>스트립들 상대적으로 크다.</strong>
+<ul>
+<li>블록 단위</li>
+<li>따라서, 높은 I/O 요구율을 필요로 하는 상황에 적합하다.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>RAID 4와 RAID 5와 RAID 6의 차이점</p>
+<ul>
+<li><strong>비트 단위 패리티 스트립은 각 데이터 디스크상의 대응되는 스트립에 대해서 계산된다.</strong>
+<ul>
+<li>즉, 아래 그림의 주황색 박스부분과 같다.</li>
+</ul>
+</li>
+<li><strong>I/O 쓰기 요구시, 쓰기에 대해 패널티가 수반된다.</strong></li>
+<li>왜냐하면 <strong>각 디스크에 데이터를 쓸 때, 각 쓰기마다 패리티 비트가 업데이트되어야 하기 때문이다. 이때 속도가 저하된다.</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>형태</p>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%2099.png" alt="Untitled" /></p>
+<ul>
+<li>쓰기 패널티 예시
+<ul>
+<li>만약, ‘block 0’과 ‘block 10’에 쓰기 요청이 들어와서 병렬처리 시도시, ‘P(0-3)’, ’P(8-11)’을 동시에 접근할 수 없다.</li>
+<li>따라서, 병목이 발생하여 속도가 저하된다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="raid--raid-5">RAID 종류: RAID 5</h3>
+<ul>
+<li>
+<p>RAID 4와 RAID 5와 RAID 6의 공통사항</p>
+<ul>
+<li><strong>독립적인 액세스 기법을 사용한다.</strong>
+<ul>
+<li>독립적인 액세스 기법: 각 디스크가 독립적으로 작동하며, 독립적인 I/O 요구들이 병렬로 처리 가능하다.</li>
+</ul>
+</li>
+<li><strong>스트립들 상대적으로 크다.</strong>
+<ul>
+<li>블록 단위</li>
+<li>따라서, 높은 I/O 요구율을 필요로 하는 상황에 적합하다.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>RAID 4와 RAID 5와 RAID 6의 차이점</p>
+<ul>
+<li><strong>패리티 스트립들이 모든 디스크에 분산되어 저장된다.</strong></li>
+<li><strong>RAID 4에서 나타나는 I/O 병목을 회피할 수 있다.</strong></li>
+</ul>
+</li>
+<li>
+<p>주로 파일 서버, DB 서버, 응용 서버, 웹 서버 등에서 사용된다.</p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>형태</p>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%20100.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="raid--raid-6">RAID 종류: RAID 6</h3>
+<ul>
+<li>
+<p>RAID 4와 RAID 5와 RAID 6의 공통사항</p>
+<ul>
+<li><strong>독립적인 액세스 기법을 사용한다.</strong>
+<ul>
+<li>독립적인 액세스 기법: 각 디스크가 독립적으로 작동하며, 독립적인 I/O 요구들이 병렬로 처리 가능하다.</li>
+</ul>
+</li>
+<li><strong>스트립들 상대적으로 크다.</strong>
+<ul>
+<li>블록 단위</li>
+<li>따라서, 높은 I/O 요구율을 필요로 하는 상황에 적합하다.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>RAID 4와 RAID 5와 RAID 6의 차이점</p>
+<ul>
+<li><strong>두 가지 서로 다른 패리티 계산이 수행되어 서로 다른 디스크들의 별도 블록에 저장된다.</strong></li>
+<li><strong>총 N+2 개의 디스크들로 구성되어 있다.</strong>
+<ul>
+<li>N: 일반 디스크 개수</li>
+<li>2: 패리티 디스크 개수</li>
+</ul>
+</li>
+<li><strong>극히 높은 데이터 가용성을 제공한다.</strong>
+<ul>
+<li>2개의 디스크가 고장나도 복원이 가능하다.</li>
+</ul>
+</li>
+<li><strong>매 쓰기 동작마다 두 개의 패리티 블록을 갱신해야 한다.</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>형태</p>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%20101.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="raid--2">RAID 정리</h3>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%20102.png" alt="Untitled" /></p>
+<p><br/><br/></p>
+<h2 id="sdd">솔리드 스테이트 드라이브 (SDD)</h2>
+<h3 id="section-10">솔리드 스테이트 드라이브란?</h3>
+<ul>
+<li>SSD는 데이터를 저장하기 위한 기억장치로 반도체 메모리를 이용하는 저장장치이다.
+<ul>
+<li>주로 플래시 메모리를 사용한다.</li>
+</ul>
+</li>
+<li>‘자기 디스크’나 ‘읽기/쓰기 헤드’, ‘구동장치’가 없다.</li>
+</ul>
+<br/>
+<h3 id="ssd-">SSD 조직</h3>
+<ul>
+<li><strong>SSD 인터페이스</strong></li>
+<li><strong>제어기</strong></li>
+<li><strong>주소지정</strong></li>
+<li><strong>데이터 버퍼/캐시</strong></li>
+<li><strong>오류 정정</strong></li>
+<li><strong>플래시 메모리</strong>
+<ul>
+<li>NAND 형</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="ssd--1">SSD 특징</h3>
+<ul>
+<li>고성능</li>
+<li>물리적 충격과 진동에 덜 민감하다.</li>
+<li>기계적인 마모가 발생하지 않아 수명이 길다</li>
+<li>전력 소비량이 낮다</li>
+<li>액세스 시간 및 지연 시간이 낮다</li>
+<li>비트당 가격이 높다</li>
+</ul>
+<br/>
+<h3 id="ssd---">SSD에 대한 현실적인 이슈</h3>
+<ul>
+<li>장치를 사용할수록 SSD의 성능이 저하된다.</li>
+<li>쓰기 한계가 존재한다.
+<ul>
+<li>쓰기를 할수록 산화막에 손상이 발생하여, 저장된 전자의 양을 정확히 판단하기 어려워 오류 발생 가능성이 증가한다.</li>
+<li>산화막: float gate에 전자가 들어갈 때 손상될 수 있다.</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-11">광 기억장치</h2>
+<h3 id="section-12">광학 디스크</h3>
+<ul>
+<li>
+<p>구성요소</p>
+<ul>
+<li><strong>투과면</strong>
+<ul>
+<li>레이저 광선을 쏘아 해당 투명 투과면을 통과한다.</li>
+</ul>
+</li>
+<li><strong>기록면</strong>
+<ul>
+<li>반사하는 빛의 반사량 차이로 1과 0을 구분한다.</li>
+</ul>
+</li>
+<li><strong>라벨 인쇄면</strong>
+<ul>
+<li>라벨이 인쇄된 면</li>
+</ul>
+</li>
+</ul>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%20103.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>트랙과 기록 방향</p>
+<ul>
+<li><strong>하나의 나선형 트랙 모양</strong>이다.</li>
+<li><strong>같은 길이의 섹터, 단위 길이당 기록 밀도가 동일</strong>하다.</li>
+</ul>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%20104.png" alt="Untitled" /></p>
+<ul>
+<li><strong>“안쪽의 섹터”와 “바깥쪽의 섹터”의 기록 밀도는 동일하다.</strong>
+<ul>
+<li><strong>따라서, 데이터 전송속도가 같다.</strong></li>
+<li><strong>단, 회전속도는 “바깥쪽”이 더 빠르다.</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-13">광학디스크 구동 방식</h3>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%20105.png" alt="Untitled" /></p>
+<br/>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%20106.png" alt="Untitled" /></p>
+<br/>
+<h3 id="cd-rom">CD-ROM</h3>
+<ul>
+<li>
+<p>CD-ROM은 원래 오디오 신호를 저장하기 위해 개발되었다.</p>
+</li>
+<li>
+<p>동작원리</p>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%20107.png" alt="Untitled" /></p>
+<ul>
+<li>피트(Pit)들이 포함된 표면은 높은 반사율을 가진 알루미늄 등으로 코팅된다.</li>
+<li>표면은 아크릴로 코팅하여 보호한다.</li>
+</ul>
+</li>
+<li>
+<p>정보 읽기 원리</p>
+<ul>
+<li>피트(Pit)와 랜드(Land) 사이의 변화가 광 센서에 의해 검색되어 디지털 신호로 변환된다.</li>
+</ul>
+</li>
+<li>
+<p>CD 종류에 따른 오류 정정 기능</p>
+<ul>
+<li><strong>데이터 저장 CD</strong>
+<ul>
+<li>오류 정정 기능이 존재한다.</li>
+</ul>
+</li>
+<li><strong>오디오 저장 CD</strong>
+<ul>
+<li>오류 정정 기능이 없다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="cd-">CD의 종류</h3>
+<ul>
+<li><strong>CD-Recordable (CD-R)</strong>
+<ul>
+<li>데이터를 한번만 쓸 수 있다.</li>
+<li>매체가 염료 층을 포함하고 있다.</li>
+<li>고강도 레이저가 염료 층의 반사율을 변경한다.</li>
+</ul>
+</li>
+<li><strong>CD-Rewritable (CD-RW)</strong>
+<ul>
+<li>반복적으로 기록/삭제가 가능하다.</li>
+</ul>
+</li>
+</ul>
+<h3 id="dvd">디지털 다목적 디스크 (DVD)</h3>
+<ul>
+<li>
+<p>주요 특징</p>
+<ul>
+<li>다계층 (여러 층으로 데이터를 저장한다.)</li>
+<li>고용량</li>
+<li>한 면에 영화 1편 저장 가능하다.</li>
+<li>영화는 지역 코드를 포함한다.</li>
+</ul>
+</li>
+<li>
+<p>용량 증대 요인</p>
+<ul>
+<li>피트들이 더 가까워졌다.</li>
+<li>복층으로 구성할 수 있다.</li>
+<li>양면으로 만들 수 있다.</li>
+</ul>
+</li>
+<li>
+<p>CD vs DVD</p>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%20108.png" alt="Untitled" /></p>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%20109.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-14">블루레이 디스크</h3>
+<ul>
+<li>HD급 동영상 2시간 분량을 저장할 수 있는 용량 제공</li>
+<li>청자색 영역의 짧은 파장을 가진 레이저를 이용해서 읽기/쓰기</li>
+<li>초점이 가까워지고, 찌그러짐이 감소하여 <strong>피트와 트랙이 더 작아졌다.</strong></li>
+</ul>
+<br/>
+<h3 id="section-15">광 기억장치들의 특성</h3>
+<p><img src="/assets/img/2021-10-21-ComputerStructure_OuterMemory/Untitled%20110.png" alt="Untitled" /></p>
+<ul>
+<li><strong>간격: CD → DVD → Blu-ray 순으로 줄어든다.</strong></li>
+<li><strong>레이저 파장: CD → DVD → Blu-ray 순으로 줄어든다.</strong></li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>성결대학교 컴퓨터 공학과 최정열 교수님 (2021)</li>
+    <li>William Stalling, 『컴퓨터시스템구조론(10판)』</li>
+  </ul>
+  본 게시글은 위 강의 및 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

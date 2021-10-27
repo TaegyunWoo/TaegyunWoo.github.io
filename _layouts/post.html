@@ -29,11 +29,16 @@ markdown: true
       </p>
     </header>
 
+    <b>목차</b>
+    <div id="markdown-outline" class="col-lg-3">
+    </div>
+    <hr/>
+
     {{ content }}
   </div>
 
-  <div id="markdown-outline" class="col-lg-3">
-  </div>
+  <!-- <div id="markdown-outline" class="col-lg-3">
+  </div> -->
 
   {% if site.disqus.comments and jekyll.environment == "production" %}
     {% include disqus.html %}
