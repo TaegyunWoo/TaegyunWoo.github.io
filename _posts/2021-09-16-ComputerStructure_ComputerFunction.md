@@ -28,10 +28,10 @@ sitemap :
         - 현재 실행 중인 명령어 자체를 저장하는 공간이다.
     - **MAR**
         - Memory Address Register
-        - PC를 통해, 다음 명령어의 주소를 저장하는 공간이다.
+        - PC를 통해, 가져와야할 명령어의 주소나 단어(word)의 주소를 저장하는 공간이다.
     - **MBR**
         - Memory Buffer Register
-        - MAR로 가져온 명령어 자체를 저장하는 공간이다.
+        - MAR로 가져온 명령어 자체나 단어(word)를 저장하는 공간이다.
     - **I/O AR**
         - Input/Output Address Register
         - 입출력 주소를 저장하는 공간이다.
@@ -96,15 +96,15 @@ sitemap :
     - 주어진 연산 코드
         - 아래와 같이 연산 코드에 대한 명령어가 주어졌다고 가정하자.
         - **'0001'** or **'1'**
-            - 메모리에서 데이터를 가져와 AC에 로드한다.
+            - 메모리에서 데이터를 가져와 AC(누산기)에 로드한다.
         - **'0101'** or **'5'**
-            - 메모리에서 데이터를 가져와 AC와 더하기 연산을 한다.
+            - 메모리에서 데이터를 가져와 AC(누산기)와 더하기 연산을 한다.
     - **실행 순서**
         1. Step 1
 
             ![Untitled](/assets/img/2021-09-16-ComputerStructure_ComputerFunction/Untitled%2015.png)
 
-            > AC : Accumulator (임시저장공간)
+            > AC : Accumulator (임시저장공간, 누산기)
 
         2. Step 2
 
