@@ -281,13 +281,20 @@ sitemap :
 
 ### 성능에 영향을 미치는 요소
 
-- **클록율 (clock rate, clock cycle)**
-    - 클럭 사이클
-
+- **클록 사이클 수 (clock cycles)**
+    - 클럭 사이클이란?  
         ![Untitled](/assets/img/2021-09-10-ComputerStructure_Summary/Untitled%208.png)
+    - 공식
+        - ![ClockCycle=I_{c}*CPI](https://latex.codecogs.com/svg.image?ClockCycle=I_{c}*CPI)
+        > ![I_{c}](https://latex.codecogs.com/svg.image?I_{c}) 와 ![CPI](https://latex.codecogs.com/svg.image?CPI)에 대해선 아래에서 설명하겠다.
 
+<br/>
+
+- **클록율 (clock rate)**
     - Hz 단위로 표현한다.
     - 1 Hz = 1초에 1개의 사이클을 수행한다.
+    - 공식
+        - ![\frac{ClockCycles}{CPUTime}](https://latex.codecogs.com/svg.image?\frac{ClockCycles}{CPUTime})
 
 - 예시
     - 10 나노초에 1개의 사이클을 수행한다. ⇒ 10 nsec(nano second) *clock cycle* ⇒ 100 MHz *clock rate*
@@ -305,13 +312,13 @@ sitemap :
 ### 명령어 당 사이클 수 (CPI)
 
 - CPI: Cycles Per Instruction
-- **하나의 명령어를 수행하기 위해서 소요되는 클럭 사이클 수**
+- **하나의 명령어를 수행하기 위해서 소요되는 클럭 사이클 수 (평균)**
 - **공식**
     - ![CPI=\frac{\sum_{i=1}^{n}{CPI}_i*I_i}{I_c}](https://latex.codecogs.com/svg.image?CPI=\frac{\sum_{i=1}^{n}{CPI}_i*I_i}{I_c})
-    - ![{CPI}_i](https://latex.codecogs.com/svg.image?{CPI}_i) : 명령어 유형 i를 위해 필요한 사이클 수
-    - ![I_i](https://latex.codecogs.com/svg.image?I_i) : 주어진 프로그램에서 실행된 유형 i의 명령어들의 수
-    - ![I_c](https://latex.codecogs.com/svg.image?I_c) : 주어진 프로그램에서 실행된 명령어들의 수
-    - ![n](https://latex.codecogs.com/svg.image?n) : 명령어 수
+    - ![{CPI}_i](https://latex.codecogs.com/svg.image?{CPI}_i) : 명령어 유형 ![I_i](https://latex.codecogs.com/svg.image?I_i)를 위해 필요한 사이클 수
+    - ![I_i](https://latex.codecogs.com/svg.image?I_i) : 전체 명령어 중 특정 유형에 속한 명령어의 수
+    - ![I_c](https://latex.codecogs.com/svg.image?I_c) : 전체 명령어의 수
+    - n : 명령어 유형의 개수
 
 <br/>
 
@@ -374,20 +381,26 @@ sitemap :
 
     ![Untitled](/assets/img/2021-09-10-ComputerStructure_Summary/Untitled%2010.png)
 
-- 풀이
-    - 코드 1의 총 CPI
-        - ![1*2+2*1+3*2=10](https://latex.codecogs.com/svg.image?1*2+2*1+3*2=10)
-    - 코드 2의 총 CPI
-        - ![1*4+2*1+3*1=9](https://latex.codecogs.com/svg.image?1*4+2*1+3*1=9)
-
-- 정답
-    - 어떤 코드가 더 많은 명령어를 실행하는가?
-        - 코드 2
-    - 어떤 코드가 더 빠른가?
-        - 코드 2
-    - 각 코드의 CPI
-        - 코드 1: 10 CPI
-        - 코드 2: 9 CPI
+- 풀이 및 정답
+    - 문제: 어떤 코드가 더 많은 명령어를 실행하는가?
+        - 코드 1의 총 명령어 개수
+            - ![2+1+2=5](https://latex.codecogs.com/svg.image?2+1+2=5)
+        - 코드 2의 총 명령어 개수
+            - ![4+1+1=6](https://latex.codecogs.com/svg.image?4+1+1=6)
+        - 정답: 코드 2
+    
+    - 문제: 어떤 코드가 더 빠른가?
+        - 코드 1의 클럭 사이클
+            - ![1*2+2*1+3*2=10](https://latex.codecogs.com/svg.image?1*2+2*1+3*2=10)
+        - 코드 2의 클럭 사이클
+            - ![1*4+2*1+3*1=9](https://latex.codecogs.com/svg.image?1*4+2*1+3*1=9)
+        - 정답: 코드 2
+    
+    - 문제: 각 코드의 CPI
+        - 코드 1의 CPI
+            - ![\frac{(1*2+2*1+3*2)}{5}=2](https://latex.codecogs.com/svg.image?\frac{(1*2+2*1+3*2)}{5}=2)
+        - 코드 2의 CPI
+            - ![\frac{(1*4+2*1+3*1)}{6}=1.5](https://latex.codecogs.com/svg.image?\frac{(1*4+2*1+3*1)}{6}=1.5)
 
 <br/>
 
@@ -398,11 +411,12 @@ sitemap :
     클럭 속도는 얼마든지 빠르게 만들 수 있는데, 이렇게 하면 CPU의 다른 부분에 대한 설계에 영향을 미쳐 같은 프로그램에 대해 **A보다 1.2배 많은 클럭 사이클이 필요**하다고 한다.  
     컴퓨터 B의 클럭 속도는 얼마로 해야하는가?
 - 풀이
-    - 공식: 주어진 프로그램을 수행하는데 필요한 프로세서 시간  
-    ![T=I_c*CPI*\tau](https://latex.codecogs.com/svg.image?T=I_c*CPI*\tau)
-    - ![I_c*CPI](https://latex.codecogs.com/svg.image?I_c*CPI) = '수행해야할 사이클 수' 이다.
-    - ![6=2GHz*1.2*\tau=20*10^9*1.2*\tau=24*10^9\tau](https://latex.codecogs.com/svg.image?6=2GHz*1.2*\tau=20*10^9*1.2*\tau=24*10^9\tau)
-    - ![\tau=4*10^9=4GHz](https://latex.codecogs.com/svg.image?\tau=4*10^9=4GHz)
+    - 공식: 클록율  
+    ![ClockRate=\frac{ClockCycles}{CPUTime}](https://latex.codecogs.com/svg.image?ClockRate=\frac{ClockCycles}{CPUTime})
+    - ![2GHz=\frac{ClockCycles_A}{10s}](https://latex.codecogs.com/svg.image?2GHz=\frac{ClockCycles_A}{10s})
+    - ![ClockCycles_A=2*10^{9}*10](https://latex.codecogs.com/svg.image?ClockCycles_A=2*10^{9}*10)
+    - ![ClockCycles_B=2*10^{9}*10*1.2](https://latex.codecogs.com/svg.image?ClockCycles_B=2*10^{9}*10*1.2)
+    - ![ClockRate_B=\frac{2*10^{9}*10*1.2Hz}{6s}=\frac{24*10^{9}Hz}{6s}=4GHz](https://latex.codecogs.com/svg.image?ClockRate_B=\frac{2*10^{9}*10*1.2Hz}{6s}=\frac{24*10^{9}Hz}{6s}=4GHz)
     - 그러므로, 컴퓨터 B의 클럭속도는 4GHz 로 해야한다.
 
 <br/>
@@ -415,7 +429,7 @@ sitemap :
     - ![SpeedUp=\frac{T(1-f)+Tf}{T(1-f)+\frac{Tf}{N}}=\frac{1}{(1-f)+\frac{f}{N}}](https://latex.codecogs.com/svg.image?SpeedUp=\frac{T(1-f)+Tf}{T(1-f)+\frac{Tf}{N}}=\frac{1}{(1-f)+\frac{f}{N}})
     - ![T](https://latex.codecogs.com/svg.image?T) : 단일 프로세서를 이용하여 특정 프로그램을 처리하는데 걸리는 시간
     - ![N](https://latex.codecogs.com/svg.image?N) : **병렬 프로세서의 개수**
-    - ![f](https://latex.codecogs.com/svg.image?f) : 한 프로그램에서 스케줄링 오버헤드 없이, 무한히 병렬화할 수 있는 **코드의 비율**
+    - ![f](https://latex.codecogs.com/svg.image?f) : 한 프로그램에서 스케줄링 오버헤드 없이, 무한히 **병렬화할 수 있는 코드의 비율**
 
 <br/>
 
