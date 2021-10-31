@@ -211,7 +211,7 @@ sitemap :
 
 - 해결
     - 해당 단어 평균 접근 시간 = (레벨1에 있을 확률 \* 레벨1의 액세스 시간) + (레벨2에 있을 확률 \* (레벨1의 액세스 시간 + 레벨2의 액세스 시간))
-    - 해당 단어 평균 접근 시간![R](https://latex.codecogs.com/svg.image?=(0.95*0.01ms)+(0.05*(0.01ms+0.1ms))=0.15ms)
+    - 해당 단어 평균 접근 시간![R](https://latex.codecogs.com/svg.image?=(0.95*0.01ms)+(0.05*(0.01ms+0.1ms))=0.015ms)
     
     ![Untitled](/assets/img/2021-09-30-ComputerStructure_Memory/Untitled%2039.png)
 
