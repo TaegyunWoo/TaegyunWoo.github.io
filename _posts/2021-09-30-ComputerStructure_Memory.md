@@ -285,7 +285,7 @@ sitemap :
 
 <br/>
 
-- **액세스 시간 ($T_s$)**
+- **액세스 시간 (T_s)**
     - ![T_s=H*T_1+(1-H)*(T_1+T_2)=T_1+(1-H)*T_2](https://latex.codecogs.com/svg.image?T_s=H*T_1+(1-H)*(T_1+T_2)=T_1+(1-H)*T_2)
         - ![T_1](https://latex.codecogs.com/svg.image?T_1) : M1의 액세스 시간
         - ![T_2](https://latex.codecogs.com/svg.image?T_2) : M2의 액세스 시간
