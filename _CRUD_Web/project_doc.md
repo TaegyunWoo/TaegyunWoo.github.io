@@ -56,7 +56,13 @@ sitemap :
 
 ### 적용 기술
 
-![Untitled](/assets/img/Series-CRUD_Web/Untitled%203.png)
+|구분|적용기술|비고|
+|----|--------|----|
+|Front|Bootstrap Free Template|[https://startbootstrap.com/snippets/portfolio-one-column]
+|Back|Spring-Boot 2.5.6||
+|Database|H2DB||
+|Version Control|Git||
+|Template Engine|Thymeleaf||
 
 <br/><br/>
 
