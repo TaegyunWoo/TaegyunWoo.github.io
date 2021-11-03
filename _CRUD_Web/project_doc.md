@@ -60,7 +60,7 @@ sitemap :
 |----|--------|----|
 |Front|Bootstrap Free Template|[https://startbootstrap.com/snippets/portfolio-one-column]
 |Back|Spring-Boot 2.5.6||
-|Database|H2DB||
+|Database|H2DB, MyBatis||
 |Version Control|Git||
 |Template Engine|Thymeleaf||
 
