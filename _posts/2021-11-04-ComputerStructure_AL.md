@@ -335,7 +335,7 @@ sitemap :
 
 ### 부동소수점 수의 표현법
 
-- ![2^N](https://latex.codecogs.com/svg.image?{\pm}S*B^{{\pm}E})
+- ![2^N](https://latex.codecogs.com/svg.image?{\pm}S*B^{\pm{E}\space})
     - S : 가수 (significand)
     - B : 기수 (base)
     - E : 지수 (exponent)
