@@ -1,6 +1,6 @@
 ---
 category: Diary
-tags: [Github]
+tags: [DevFest]
 title: "[DevFest University] 백엔드 프로그래머 신입으로 취업하기 위해 무엇을 해야하나"
 date:   2021-11-06 17:15:00 
 lastmod : 2021-11-06 17:15:00

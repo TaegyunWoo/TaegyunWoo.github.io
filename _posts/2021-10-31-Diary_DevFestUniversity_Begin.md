@@ -1,6 +1,6 @@
 ---
 category: Diary
-tags: [Github]
+tags: [Devfest]
 title: "[DevFest University] DevFest University 2021에 참가해보자!"
 date:   2021-10-31 13:15:00 
 lastmod : 2021-10-31 13:15:00
