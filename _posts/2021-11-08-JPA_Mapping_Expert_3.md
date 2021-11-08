@@ -2,8 +2,8 @@
 category: JPA
 tags: [JPA]
 title: "[JPA] 고급매핑 (3)"
-date:   2021-11-08 17:26:00 
-lastmod : 2021-11-08 17:26:00
+date:   2021-11-08 17:20:00 
+lastmod : 2021-11-08 17:20:00
 sitemap :
   changefreq : daily
   priority : 1.0
