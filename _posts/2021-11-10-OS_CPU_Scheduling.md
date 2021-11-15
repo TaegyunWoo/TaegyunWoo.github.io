@@ -416,6 +416,91 @@ sitemap :
     
     - 단순히 우선순위가 가장 높은 순서대로 실행된다.
 
+<br/><br/>
+
+## CPU 스케줄링 종류: 라운드 로빈
+
+### Round Robin
+
+- Round Robin이란?
+    - 시분할 시스템을 위해 설계된 스케줄링 방식이다.
+    - 각 프로세스는 '10~100 밀리초'의 CPU 시간을 할당 받는다.
+        - 시간할당량(CPU 시간) = q (Quantum)
+    - 시간 q가 지나면, 실행 중이던 프로세스가 선점당하여 준비완료 큐의 끝에 가게 된다.
+        - 선점: 새치기
+
+<br/>
+
+- 예시
+    - 가정
+        - 준비완료 큐: 5개의 프로세스 존재
+        - q : 20밀리초
+    - 이때, 각 프로세스는 매 100밀리초마다 최대 20밀리초를 할당받게 된다.
+
+<br/>
+
+### 시간할당량(q)에 따른 성능
+
+- **q가 너무 클 때**
+    - FCFS와 동일하게 동작한다.
+    - Convoy Effect 가 발생할 수 있다.
+- **q가 너무 작을 때**
+    - Context Switching 이 너무 빈번하게 일어난다.
+    - 따라서 오버헤드가 자주 발생하여 성능이 떨어진다.
+- 정리
+    - 따라서 시간할당량(q)는 보통 10ms ~ 100ms로 설정한다.
+    - 그리고 Context Switching 시 오버헤드는 10마이크로초 이내여야 한다.
+
+<br/>
+
+### Round Robin 예시
+
+- 가정
+    
+    ![Untitled](/assets/img/2021-11-10-OS_CPU_Scheduling/Untitled%2036.png)
+    
+
+- 간트차트 시각화
+    
+    ![Untitled](/assets/img/2021-11-10-OS_CPU_Scheduling/Untitled%2037.png)
+    
+<br/>
+
+### Round Robin 특징
+
+- 일반적으로 SJF 보다 높은 평균 처리시간(Turnaround Time)을 갖는다.
+- 응답시간(Response Time) 측면에서는 RR방식이 더 우수하다.
+    - 각 프로세스들에게 공평하게 기회를 주기 때문이다.
+
+<br/>
+
+### Time Quantum(q)와 Context Switching 간의 관계
+
+- 가정
+    - 프로세스의 CPU 시간은 10이다. (Burst Time = 10)
+- **q가 12일 때**
+    
+    ![Untitled](/assets/img/2021-11-10-OS_CPU_Scheduling/Untitled%2038.png)
+    
+    - Context Switching이 일어나지 않는다.
+- **q가 6일 때**
+    
+    ![Untitled](/assets/img/2021-11-10-OS_CPU_Scheduling/Untitled%2039.png)
+    
+- **q가 1일 때**
+    
+    ![Untitled](/assets/img/2021-11-10-OS_CPU_Scheduling/Untitled%2040.png)
+    
+<br/>
+
+### Time Quantum(q)와 Turnaround Time 간의 관계 예시
+
+![Untitled](/assets/img/2021-11-10-OS_CPU_Scheduling/Untitled%2041.png)
+
+- 결론
+    - 프로세스들 중 80%가 'q보다 낮은 Burst Time'을 가져야 한다.
+    - 이때, 일반적으로 좋은 성능을 기대할 수 있다.
+
 <br><br>
 
 ---
