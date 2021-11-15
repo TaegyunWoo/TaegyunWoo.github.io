@@ -65,7 +65,7 @@ sitemap :
 
 ### 다단계 큐 스케줄링 예시
 
-![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2042.png)
+![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2042.png)
 
 <br/>
 
@@ -83,11 +83,11 @@ sitemap :
         - Q2 : FCFS방식
     - 동작
         
-        ![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2043.png)
+        ![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2043.png)
         
     - Burst Time이 35인 프로세스 처리시
         
-        ![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2044.png)
+        ![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2044.png)
         
 <br/><br/>
 
@@ -145,17 +145,17 @@ sitemap :
 
 - **모든 프로세스가 하나의 Ready Queue에 들어가 있는 방식**
     
-    ![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2045.png)
+    ![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2045.png)
     
 
 - **프로세스가 각 코어의 독립된 큐에 들어가 있는 방식 (Per-Core Queue)**
     
-    ![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2046.png)
+    ![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2046.png)
     
     - **부하 균등 (Load Balancing)**
         - Core 당 할당된 Task 개수가 같게끔 맞추는 것을 말한다.
         
-        ![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2047.png)
+        ![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2047.png)
         
     - **부하 균등의 문제점**
         1. 부하 균등을 하고자 Task를 다른 Core로 옮기면 ⇒ Cache Miss 가 높아진다.  
@@ -177,20 +177,20 @@ sitemap :
 - **Processor Affinity 적용을 안했을 때**
     - step 1
         
-        ![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2048.png)
+        ![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2048.png)
         
     - step 2
         
-        ![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2049.png)
+        ![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2049.png)
         
     - step 3
         
-        ![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2050.png)
+        ![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2050.png)
         
 
 - **Processor Affinity 적용했을 때**
     
-    ![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2051.png)
+    ![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2051.png)
     
 <br/>
 
@@ -216,11 +216,11 @@ sitemap :
 - **하나의 쓰레드가 메모리 탐색을 위해 Stall (메모리 멈춤) 되었을 때, 다른 쓰레드가 일하게 만들어서 효율을 더 올릴 수 있다.**
     - 단일 쓰레드일 때
         
-        ![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2052.png)
+        ![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2052.png)
         
     - 다중 쓰레드일 때
         
-        ![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2053.png)
+        ![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2053.png)
         
 <br/><br/>
 
@@ -244,14 +244,14 @@ sitemap :
 - **Interrupt Latency**
     - 인터럽트 발생부터 ISR(Interrupt Service Routine) 실행까지의 시간을 말한다.
     
-    ![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2054.png)
+    ![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2054.png)
     
 - **Dispatch Latency**
     - conflicts 와 dispatch 시간의 합을 의미한다.
     - conflicts : 실행 중인 프로세스를 Block하는 시간
     - dispatch : 새 프로세스를 할당하는 시간
     
-    ![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2055.png)
+    ![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2055.png)
     
 <br/>
 
@@ -264,7 +264,7 @@ sitemap :
     - 프로세스들이 갖는 특성 중 하나이다.
     - 특성 주기마다 스케줄링을 요구한다는 특성을 말한다.
     
-    ![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2056.png)
+    ![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2056.png)
     
     - **0 ≤ t ≤ d ≤ p**
         - t: 처리시간
@@ -298,7 +298,7 @@ sitemap :
             - 총 CPU 이용률이 1을 넘지 않는다. ⇒ 즉, 데드라인을 충족시킬 수 있다.
         2. 스케줄링 예시
             
-            ![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2057.png)
+            ![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2057.png)
             
 <br/>
 
@@ -318,7 +318,7 @@ sitemap :
         - 실시간 스케줄링의 경우, 모든 input을 미리 알 수 없기 때문이다.
     - input이란?
         
-        ![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2058.png)
+        ![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2058.png)
         
         - 위와 같은 정보(Burst Time, ...)들
 - **시뮬레이션**
@@ -336,25 +336,25 @@ sitemap :
 
 - 예시 input
     
-    ![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2059.png)
+    ![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2059.png)
     
     - 도착시간은 모두 0으로 같다.
 
 - 예시 알고리즘
     - **FCFS**
         
-        ![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2060.png)
+        ![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2060.png)
         
         - 최소 평균 대기 시간: (0+10+39+42+49)/5 = 28
     - **비선점형 SJF (Shortest Job First)**
         
-        ![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2061.png)
+        ![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2061.png)
         
         - 최소 평균 대기 시간: (0+3+10+20+32)/5 = 13
     - **RR (Round Robin)**
         - q = 10 일때
         
-        ![Untitled](/assets/img/2021-11-10-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2062.png)
+        ![Untitled](/assets/img/2021-11-15-OS_MultiLayerQueue_MultiProcessor_RealtimeSystem/Untitled%2062.png)
         
         - 최소 평균 대기 시간: (0+(10+20+2)+20+23+(30+10))/5=23
         - P1 대기시간: 0
