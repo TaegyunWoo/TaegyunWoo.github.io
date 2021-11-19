@@ -58,3 +58,7 @@ setter 메서드는 엔티티의 필드 값을 설정해주고, 적절한 값이
     - Action: 술을 산다.
     - Validation: 술을 살 때, 20세 이상인가?
     - 위와 같이, 특정 행동(Action)에 종속되는 검증(Validation)이라면, 검증 로직은 따로 떼어내야 한다.
+
+<br/>
+
+> Okky에 남긴 글을 보려면, [여기](https://okky.kr/article/1101050)로 가자.
