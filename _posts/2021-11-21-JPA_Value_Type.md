@@ -3,7 +3,7 @@ category: JPA
 tags: [JPA]
 title: "[JPA] 값 타입"
 date:   2021-11-21 01:00:00 
-lastmod : 2021-11-14 01:00:00
+lastmod : 2021-11-21 01:00:00
 sitemap :
   changefreq : daily
   priority : 1.0
