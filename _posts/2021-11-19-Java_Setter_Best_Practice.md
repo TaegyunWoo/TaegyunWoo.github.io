@@ -29,7 +29,8 @@ setter 메서드는 엔티티의 필드 값을 설정해주고, 적절한 값이
 ## 해결과정
 
 따라서 국내 개발자 커뮤니티 Okky에 질문 글을 남겼다.  
-(추가로 StackOverFlow에도 비슷한 내용의 질문이 있었지만, 답변이 모호했다...)
+- 추가로 StackOverFlow에도 비슷한 내용의 질문이 있었지만, 답변이 모호했다...
+- 관련 링크: [Is it a good practice to throw Exception inside setters in Java?](https://stackoverflow.com/questions/37092544/is-it-a-good-practice-to-throw-exception-inside-setters-in-java)
 
 > 참고로 Okky는 java 개발자가 많다.
 
