@@ -156,7 +156,7 @@ JPQL, QueryDSL, 네이티브 SQL, 객체지향 쿼리 심화에 대해 간략하
 
 - 실행한 JPQL
     
-    ```
+    ```xml
     select m
     from Member m
     where m.username = 'kim'
@@ -208,7 +208,7 @@ JPQL, QueryDSL, 네이티브 SQL, 객체지향 쿼리 심화에 대해 간략하
 
 - JPQL 쿼리
     
-    ```
+    ```xml
     select m from Member as m where m.username = 'kim';
     ```
     
@@ -262,7 +262,7 @@ Criteria를 좀 더 알아보고 싶다면, 다른 자료를 찾아보는 것을
 
 - JPQL 쿼리
     
-    ```
+    ```xml
     select m from Member as m where m.username = 'kim';
     ```
     
@@ -313,7 +313,7 @@ Criteria를 좀 더 알아보고 싶다면, 다른 자료를 찾아보는 것을
 
 - JPQL 쿼리
     
-    ```
+    ```xml
     select m from Member as m where m.username = 'kim';
     ```
     
