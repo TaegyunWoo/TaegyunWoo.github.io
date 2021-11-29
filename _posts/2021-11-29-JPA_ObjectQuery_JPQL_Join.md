@@ -292,15 +292,15 @@ List<Member> members = em.createQuery(query, Member.class)
 - 시각화
     - 엔티티 페치 조인 시도 시
         
-        ![Untitled](JPA%2009~10%205c2a5612c8444a94866c99a15b5a8180/Untitled%206.png)
+        ![Untitled](/assets/img/2021-11-29-JPA_ObjectQuery_JPQL_Join/Untitled%206.png)
         
     - 엔티티 페치 조인 결과 테이블
         
-        ![Untitled](JPA%2009~10%205c2a5612c8444a94866c99a15b5a8180/Untitled%207.png)
+        ![Untitled](/assets/img/2021-11-29-JPA_ObjectQuery_JPQL_Join/Untitled%207.png)
         
     - 엔티티 페치 조인 결과 객체
         
-        ![Untitled](JPA%2009~10%205c2a5612c8444a94866c99a15b5a8180/Untitled%208.png)
+        ![Untitled](/assets/img/2021-11-29-JPA_ObjectQuery_JPQL_Join/Untitled%208.png)
         
         - **회원과 팀 객체가 객체 그래프를 유지하면서 조회되었다.**
 
@@ -371,18 +371,18 @@ List<Member> members = em.createQuery(query, Member.class)
 - 시각화를 통해, 위 예시를 좀 더 자세히 알아보자.
     - 컬렉션 페치 조인 시도
         
-        ![Untitled](JPA%2009~10%205c2a5612c8444a94866c99a15b5a8180/Untitled%209.png)
+        ![Untitled](/assets/img/2021-11-29-JPA_ObjectQuery_JPQL_Join/Untitled%209.png)
         
         - **`MEMBER` 테이블과 조인하면서 결과가 증가한다.**
         - **따라서 아래 조인 결과 테이블을 보면 같은 '팀A'가 2건 조회된다.**
     - 컬렉션 페치 조인 결과 테이블
         
-        ![Untitled](JPA%2009~10%205c2a5612c8444a94866c99a15b5a8180/Untitled%2010.png)
+        ![Untitled](/assets/img/2021-11-29-JPA_ObjectQuery_JPQL_Join/Untitled%2010.png)
         
         - 같은 레코드 `팀A` 가 2개 존재한다.
     - 컬렉션 페치 조인 결과 객체
         
-        ![Untitled](JPA%2009~10%205c2a5612c8444a94866c99a15b5a8180/Untitled%2011.png)
+        ![Untitled](/assets/img/2021-11-29-JPA_ObjectQuery_JPQL_Join/Untitled%2011.png)
         
 <br/>
 
@@ -450,11 +450,11 @@ List<Member> members = em.createQuery(query, Member.class)
         - SQL에 `DISTINCT` 가 추가된다.
         - 하지만 결과 테이블의 레코드 데이터가 다르므로, 'SQL의 `DISTINCT`'로서의 효과는 없다.
             
-            ![Untitled](JPA%2009~10%205c2a5612c8444a94866c99a15b5a8180/Untitled%2012.png)
+            ![Untitled](/assets/img/2021-11-29-JPA_ObjectQuery_JPQL_Join/Untitled%2012.png)
             
         - **다음으로 애플리케이션에서 `DISTINCT` 명령어를 보고 중복된 데이터를 걸러낸다.**
             
-            ![Untitled](JPA%2009~10%205c2a5612c8444a94866c99a15b5a8180/Untitled%2013.png)
+            ![Untitled](/assets/img/2021-11-29-JPA_ObjectQuery_JPQL_Join/Untitled%2013.png)
             
         - 이제 다시 결과를 출력해보자.
             
@@ -493,7 +493,7 @@ List<Member> members = em.createQuery(query, Member.class)
     - **단지 SELECT 절에 지정한 엔티티 (프로젝션)만 조회할 뿐이다.**
     - 따라서 **"회원 컬렉션을 지연 로딩으로 설정"하면 아래 그림과 같이, 프록시나 아직 초기화하지 않은 컬렉션 래퍼를 반환**한다.
         
-        ![Untitled](JPA%2009~10%205c2a5612c8444a94866c99a15b5a8180/Untitled%2014.png)
+        ![Untitled](/assets/img/2021-11-29-JPA_ObjectQuery_JPQL_Join/Untitled%2014.png)
         
     - 또는 **"회원 컬렉션을 즉시 로딩으로 설정"하면, 회원 컬렉션을 즉시 로딩하기 위해 쿼리를 한번 더 실행한다.**
 
