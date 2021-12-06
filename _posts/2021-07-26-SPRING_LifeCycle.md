@@ -23,7 +23,7 @@ sitemap :
 > 초기화 작업?  
 'DB 커넥션 풀'과 같은 기능을 구현할 때, 필요한 객체 초기화 작업을 뜻한다.
 
-**스프링은 읜존관계 주입이 완료되면 스프링 빈에게 콜백 메서드를 통해서 초기화 시점을 알려주는 다양한 기능을 제공** 한다. 또한 **스프링은 스프링 컨테이너가 종료되기 직전에 소멸 콜백**을 준다.
+**스프링은 의존관계 주입이 완료되면 스프링 빈에게 콜백 메서드를 통해서 초기화 시점을 알려주는 다양한 기능을 제공** 한다. 또한 **스프링은 스프링 컨테이너가 종료되기 직전에 소멸 콜백**을 준다.
 
 <br><br>
 
@@ -145,10 +145,13 @@ public class BeanLifeCycleTest {
 	static class LifeCycleConfig {
 		@Bean
 		public NetworkClient networkClient() {
+			//이때, 생성자가 동작한다.
 			NetworkClient networkClient = new NetworkClient();
 			networkClient.setUrl("http://hello-spring.dev");
 			return networkClient;
 		}
+		//위 메서드가 실행된 후, 빈이 등록된다.
+		//이때, afterPropertiesSet 메서드가 동작한다.
 	}
 
 }
@@ -236,6 +239,8 @@ public class BeanLifeCycleTest {
 			networkClient.setUrl("http://hello-spring.dev");
 			return networkClient;
 		}
+		//위 메서드가 실행된 후, 빈이 등록된다.
+		//이때, close 메서드가 동작한다.
 	}
 
 }
@@ -339,6 +344,8 @@ public class BeanLifeCycleTest {
 			networkClient.setUrl("http://hello-spring.dev");
 			return networkClient;
 		}
+		//위 메서드가 실행된 후, 빈이 등록된다.
+		//이때, close 메서드가 동작한다.
 	}
 
 }
