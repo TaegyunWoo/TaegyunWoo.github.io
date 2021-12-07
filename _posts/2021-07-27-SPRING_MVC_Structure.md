@@ -168,7 +168,7 @@ public class OldController implements Controller {
 - 동작 순서
     1. **핸들러 매핑으로 핸들러 조회**
         1. `HandlerMapping` 을 순서대로 실행해서, 핸들러를 찾는다.
-        2. `OldController` 예시의 경우, `SimpleControllerHandlerAdapter` 가 실행에 성공한다.
+        2. `OldController` 예시의 경우, `BeanNameUrlHandlerMapping` 가 실행에 성공한다.
     2. **핸들러 어댑터 조회**
         1. `HandlerAdapter` 의 `supports()` 메서드를 순서대로 호출한다.
         2. `OldController` 예시의 경우, `SimpleControllerHandlerAdapter` 가 대상이 된다.
