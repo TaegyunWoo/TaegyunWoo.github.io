@@ -1,7 +1,7 @@
 ---
 category: Comput-Struct
 tags: [ComputerStructure]
-title: "[Computer Structure] 프로세서의 조직과 기능"
+title: "[Computer Structure] CPU 제어유닛"
 date:   2021-12-02 19:00:00 
 lastmod : 2021-12-02 19:00:00
 sitemap :
