@@ -82,7 +82,7 @@ sitemap :
 
 <br/>
 
-### `rejectValue()` 의 매개변수
+### `reject()` 의 매개변수
 
 - 메서드 형태
 
