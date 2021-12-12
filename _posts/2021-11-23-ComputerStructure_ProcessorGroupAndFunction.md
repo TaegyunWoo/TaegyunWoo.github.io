@@ -388,7 +388,7 @@ sitemap :
     - 가정
         - 아래 명령어가 수행된다고 가정하자.
         - **ADD EAX, EBX** ⇒ (EAX = EAX + EBX)
-        - **SUB ECX, EAX** ⇒ (ECX = ECX + EAX)
+        - **SUB ECX, EAX** ⇒ (ECX = ECX - EAX)
     - 데이터 해저드 발생
         
         ![Untitled](/assets/img/2021-11-23-ComputerStructure_ProcessorGroupAndFunction/Untitled%2057.png)
