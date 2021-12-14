@@ -117,7 +117,7 @@ sitemap :
 
 - 리눅스에서의 쓰레드 스케줄링 예시
     - 리눅스는 Pthread Scheduling 이라는 방식으로 쓰레드를 스케줄링한다.
-    - **Pthred Scheduling은 SCS 기법에 기반한다.**
+    - **Pthread Scheduling은 SCS 기법에 기반한다.**
 
 <br/><br/>
 
