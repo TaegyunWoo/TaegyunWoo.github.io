@@ -124,7 +124,8 @@ sitemap :
 
 - 디스패처는 Short-term Scheduler(CPU 스케줄러)가 선택한 프로세스에게 CPU 제어권을 준다.
     - 이때 'Ready → Running'으로 상태가 변화한다.
-    - **따라서 'Ready → Running'에서는 스케줄링 결정이 이루어지지 않는다!**
+    - **따라서 디스패처가 'Ready → Running'로 변환해줄 때는 스케줄링 결정이 이루어지지 않는다!**
+    - **Short-term Scheduler가 디스패처에게 넘겨줄 프로세스를 선택할 때, 스케줄링 결정이 루어진다.**
 
 <br/>
 
