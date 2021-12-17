@@ -72,18 +72,13 @@ sitemap :
     @Service
     class HelloService {
     
-    	//**상세설명: 1**
-    	//엔티티 매니저 주입
-    	@PersistenceContext
-    	EntityManager em;
-    
     	@Autowired
     	Repository1 repository1;
     	@Autowired
     	Repository2 repository2;
     
     	//----------트랜잭션 시작----------
-    	@Transactional
+    	@Transactional	//**상세설명: 1**
     	public void logic() {
     		repository1.hello();
     
@@ -139,7 +134,7 @@ sitemap :
     2. `repository2.findMember()`
         - 해당 메서드를 통해 조회한 member 엔티티는 트랜잭션 범위 안에 있으므로 영속성 컨텍스트의 관리를 받는다.
         - 따라서 지금은 영속 상태이다.
-    3. `**@Transactional` 을 선언한 메서드가 정상 종료되면 트랜잭션을 커밋한다.**
+    3. **`@Transactional` 을 선언한 메서드가 정상 종료되면 트랜잭션을 커밋한다.**
         - **이때 영속성 컨텍스트를 종료한다.**
         - **영속성 컨텍스트가 사라졌으므로 조회한 엔티티(member)는 이제부터 준영속 상태가 된다.**
     4. 서비스 메서드가 끝나면서 트랜잭션과 영속성 컨텍스트가 종료되었다.
