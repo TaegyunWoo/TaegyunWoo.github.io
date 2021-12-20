@@ -1,0 +1,512 @@
+I"id<p><br/><br/></p>
+<ul>
+<li>이전 게시글
+<ul>
+<li><a href="https://taegyunwoo.github.io/jpa/JPA_Mapping_Expert_1">[JPA] 고급매핑 (1)</a></li>
+<li><a href="https://taegyunwoo.github.io/jpa/JPA_Mapping_Expert_2">[JPA] 고급매핑 (2)</a></li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h1 id="section">이번 포스팅에서 다룰 내용</h1>
+<p><a href="https://taegyunwoo.github.io/jpa/JPA_Mapping_Expert_1">이전 포스팅1</a>에서 다룬 고급 매핑 내용은 아래와 같다.</p>
+<ul>
+<li>상속 관계 매핑</li>
+<li><code>@MappedSuperclass</code></li>
+</ul>
+<p><a href="https://taegyunwoo.github.io/jpa/JPA_Mapping_Expert_2">이전 포스팅2</a>에서 다룬 고급 매핑 내용은 아래와 같다.</p>
+<ul>
+<li>복합 키와 식별 관계 매핑</li>
+</ul>
+<p>아래는 이번 포스팅에서 다룰 고급 매핑 내용이다.</p>
+<ul>
+<li>조인 테이블</li>
+<li>엔티티 하나에 여러 테이블 매핑하기</li>
+</ul>
+<p><br/><br/><br/></p>
+<h1 id="section-1">조인 테이블</h1>
+<h2 id="section-2">개요</h2>
+<h3 id="db----">DB 테이블 연관관계 설계 방법</h3>
+<p>DB 테이블의 연관관계를 설계하는 방법은 크게 2가지이다.</p>
+<ul>
+<li><strong>조인 칼럼을 사용하는 방법 (외래키 사용)</strong></li>
+<li><strong>조인 테이블을 사용하는 방법 (테이블 사용)</strong></li>
+</ul>
+<p>이에 대해 하나씩 설명하겠다.</p>
+<br/>
+<h3 id="section-3">조인 칼럼을 사용하는 방법</h3>
+<ul>
+<li>
+<p>테이블 간의 관계는 주로 조인 칼럼이라 부르는 외래키 칼럼을 사용해서 관리한다.</p>
+</li>
+<li>
+<p>조인 칼럼을 사용한 테이블 시각화</p>
+<p><img src="/assets/img/2021-11-08-JPA_Mapping_Expert_3/Untitled%2033.png" alt="Untitled" /></p>
+<ul>
+<li><code>LOCKER_ID</code> 에 NULL을 허용한다.</li>
+</ul>
+</li>
+<li>
+<p>조인 칼럼 데이터 시각화</p>
+<p><img src="/assets/img/2021-11-08-JPA_Mapping_Expert_3/Untitled%2034.png" alt="Untitled" /></p>
+</li>
+<li>
+<p>외래키에 NULL을 허용한다. ⇒ 이것을 <strong>선택적 비식별 관계</strong>라고 한다.</p>
+</li>
+<li>
+<p>외래키에 NULL이 오는것을 허용하므로, <strong>회원과 사물함을 조인할 때 외부조인을 사용</strong>해야 한다.</p>
+</li>
+<li>
+<p>회원과 사물함이 아주 가끔 관계를 맺는다면 외래키 값 대부분이 NULL로 저장되는 단점도 존재한다.</p>
+</li>
+</ul>
+<br/>
+<h3 id="section-4">조인 테이블을 사용하는 방법</h3>
+<ul>
+<li>
+<p>조인 테이블을 사용한 테이블 시각화</p>
+<p><img src="/assets/img/2021-11-08-JPA_Mapping_Expert_3/Untitled%2035.png" alt="Untitled" /></p>
+</li>
+<li>
+<p>조인 테이블 데이터 시각화</p>
+<p><img src="/assets/img/2021-11-08-JPA_Mapping_Expert_3/Untitled%2036.png" alt="Untitled" /></p>
+</li>
+<li>
+<p>이 방법은 조인 테이블이라는 별도의 테이블을 사용해서 연관관계를 관리한다.</p>
+</li>
+<li>
+<p>조인 칼럼을 사용하는 방법</p>
+<ul>
+<li>단순히 외래키 칼럼만 추가해서 연관관계를 맺는다.</li>
+</ul>
+</li>
+<li>
+<p>조인 테이블을 사용하는 방법</p>
+<ul>
+<li>연관관계를 관리하는 조인 테이블을 추가하고, 여기서 두 테이블의 외래키를 가지고 연관관계를 관리한다.
+<ul>
+<li><strong>따라서 <code>MEMBER</code>와 <code>LOCKER</code> 테이블에는 외래키 칼럼이 없다!</strong></li>
+</ul>
+</li>
+<li>단점은 테이블을 하나 추가해야 한다는 점이다.</li>
+</ul>
+</li>
+<li>
+<p><strong>따라서 기본적으로 조인 칼럼을 사용하되, 필요하다고 판단되면 조인 테이블을 사용하는 것이 좋다.</strong></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-5">앞으로 설명할 내용: 조인 테이블</h3>
+<p>조인 테이블에 대해 설명할 내용은 다음과 같다.</p>
+<ul>
+<li>객체와 테이블을 매핑할 때
+<ul>
+<li>조인 칼럼은 <code>@JoinColumn</code> 으로 매핑한다.</li>
+<li>조인 테이블은 <code>@JoinTable</code> 로 매핑한다.</li>
+</ul>
+</li>
+<li>조인 테이블은 주로 다대다 관계를 일대다·다대일 관계로 풀어낼 때 사용된다.
+<ul>
+<li>하지만 일대일, 일대다, 다대일 관계에서도 사용된다.</li>
+<li>이 경우에 대해 알아보자.</li>
+</ul>
+</li>
+</ul>
+<p>이제 조인 테이블에 대해 하나씩 알아보자.</p>
+<p><br/><br/></p>
+<h2 id="section-6">일대일 조인 테이블</h2>
+<h3 id="section-7">가정</h3>
+<ul>
+<li>
+<p>일대일 관계를 만들려면 <strong>조인 테이블의 외래키 칼럼 각각에 유니크 제약조건을 걸어야 한다.</strong></p>
+<ul>
+<li>유니크 제약조건: 중복값 허용 X</li>
+</ul>
+</li>
+<li>
+<p>일대일 조인 테이블 시각화</p>
+<p><img src="/assets/img/2021-11-08-JPA_Mapping_Expert_3/Untitled%2037.png" alt="Untitled" /></p>
+<ul>
+<li><code>PARENT_CHILD.PARENT_ID</code> 는 PK로 사용되므로 유니크 제약조건이 자동으로 걸려있다.</li>
+</ul>
+</li>
+<li>
+<p>예시 코드를 통해, 일대일 조인 테이블을 어떻게 매핑하는지 알아보자.</p>
+</li>
+</ul>
+<br/>
+<h3 id="section-8">예시 코드</h3>
+<ul>
+<li>
+<p><strong>부모 클래스</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Parent</span> <span class="o">{</span>
+
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"PARENT_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="nd">@OneToOne</span> <span class="c1">//mapped 속성을 사용하지 않는다. (단방향)</span>
+	<span class="nd">@JoinTable</span><span class="o">(</span>
+		<span class="n">name</span> <span class="o">=</span> <span class="s">"PARENT_CHILD"</span><span class="o">,</span>
+		<span class="n">joinColumns</span> <span class="o">=</span> <span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"PARENT_ID"</span><span class="o">),</span>
+		<span class="n">inverseJoinColumns</span> <span class="o">=</span> <span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"CHILD_ID"</span><span class="o">),</span>
+	<span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Child</span> <span class="n">child</span><span class="o">;</span>
+
+	<span class="c1">// getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li><code>@JoinTable</code> 속성
+<ul>
+<li>name : 매핑할 조인 테이블의 이름</li>
+<li>joinColumns : 현재 엔티티를 참조하는 외래키</li>
+<li>inverseJoinColumns : 반대방향 엔티티를 참조하는 외래키</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>자식 클래스</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Child</span> <span class="o">{</span>
+
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"CHILD_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="c1">// getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>양방향으로 매핑하려면 다음 코드를 추가하면 된다.</p>
+<ul>
+<li>조인테이블의 경우 <code>PARENT</code> 테이블이 FK를 갖지 않지만, 연관관계의 주인이 될 수 있다.</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Child</span> <span class="o">{</span>
+	<span class="c1">// ...</span>
+
+	<span class="nd">@OneToOne</span><span class="o">(</span><span class="n">mappedBy</span> <span class="o">=</span> <span class="s">"child"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Parent</span> <span class="n">parent</span><span class="o">;</span>
+
+	<span class="c1">// ...</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-9">일대다 조인 테이블</h2>
+<h3 id="section-10">가정</h3>
+<ul>
+<li>
+<p>일대다 관계를 만들려면, <strong>조인 테이블의 칼럼 중 ’다(N)와 관련된 칼럼 <code>CHILD_ID</code> ’에 유니크 제약조건</strong>을 걸어야 한다.</p>
+</li>
+<li>
+<p>일대다 단방향 관계에 대해 매핑하는 방법을 알아보자.</p>
+</li>
+<li>
+<p>조인 테이블을 사용한 일대다 관계 시각화</p>
+<p><img src="/assets/img/2021-11-08-JPA_Mapping_Expert_3/Untitled%2038.png" alt="Untitled" /></p>
+<ul>
+<li><code>PARENT_CHILD.CHILD_ID</code> 가 PK이므로 자동으로 유니크 제약조건이 걸린다.</li>
+</ul>
+</li>
+<li>
+<p>바로 예시코드를 통해, 일대다 단방향 관계를 조인 테이블로 표현했을 때 어떻게 매핑해야하는지 알아보자.</p>
+</li>
+</ul>
+<br/>
+<h3 id="section-11">예시 코드</h3>
+<ul>
+<li>
+<p><strong>부모 클래스</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Parent</span> <span class="o">{</span>
+
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"PARENT_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="nd">@OneToMany</span>
+	<span class="nd">@JoinTable</span><span class="o">(</span>
+		<span class="n">name</span> <span class="o">=</span> <span class="s">"PARENT_CHILD"</span><span class="o">,</span>
+		<span class="n">joinColumns</span> <span class="o">=</span> <span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"PARENT_ID"</span><span class="o">),</span>
+		<span class="n">inverseJoinColumns</span> <span class="o">=</span> <span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"CHILD_ID"</span><span class="o">),</span>
+	<span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Child</span><span class="o">&gt;</span> <span class="n">childs</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Child</span><span class="o">&gt;();</span>
+
+	<span class="c1">// getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>자식 클래스</strong></p>
+<blockquote>
+<p>단방향이라면 자식 클래스는 변경사항이 없다.</p>
+</blockquote>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Child</span> <span class="o">{</span>
+
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"CHILD_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="c1">// getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-12">다대일 조인 테이블</h2>
+<h3 id="section-13">기본 설명</h3>
+<ul>
+<li>다대일은 일대다에서 방향만 반대인 것이다.
+<ul>
+<li>연관관계의 주인만이 바뀐다.</li>
+</ul>
+</li>
+<li>바로 예시 코드를 통해, 조인 테이블을 사용한 다대일 양방향 관계를 알아보자.</li>
+</ul>
+<br/>
+<h3 id="section-14">예시 코드</h3>
+<ul>
+<li>
+<p><strong>부모 클래스</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Parent</span> <span class="o">{</span>
+
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"PARENT_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="nd">@ManyToOne</span><span class="o">(</span><span class="n">mappedBy</span> <span class="o">=</span> <span class="s">"parent"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Child</span><span class="o">&gt;</span> <span class="n">childs</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Child</span><span class="o">&gt;();</span>
+
+	<span class="c1">// getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>자식 클래스</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Child</span> <span class="o">{</span>
+
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"CHILD_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="nd">@ManyToOne</span><span class="o">(</span><span class="n">optional</span> <span class="o">=</span> <span class="kc">false</span><span class="o">)</span> <span class="c1">//null 허용 X</span>
+	<span class="nd">@JoinTable</span><span class="o">(</span>
+		<span class="n">name</span> <span class="o">=</span> <span class="s">"PARENT_CHILD"</span><span class="o">,</span>
+		<span class="n">joinColumns</span> <span class="o">=</span> <span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"CHILD_ID"</span><span class="o">),</span>
+		<span class="n">inverseJoinColumns</span> <span class="o">=</span> <span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"PARENT_ID"</span><span class="o">),</span>
+	<span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Parent</span> <span class="n">parent</span><span class="o">;</span>
+
+	<span class="c1">// getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-15">다대다 조인 테이블</h2>
+<h3 id="section-16">가정</h3>
+<ul>
+<li>
+<p>다대다 관계를 만들려면, <strong>조인 테이블의 두 칼럼을 합해서 하나의 복합 유니크 제약조건</strong>을 걸어야 한다.</p>
+</li>
+<li>
+<p>조인 테이블을 사용한 다대다 관계 시각화</p>
+<p><img src="/assets/img/2021-11-08-JPA_Mapping_Expert_3/Untitled%2039.png" alt="Untitled" /></p>
+<ul>
+<li><code>PARENT_CHILD</code> 테이블의 <code>PARENT_ID</code> 와 <code>CHILD_ID</code> 가 복합키이므로 복합 유니크 제약조건이 걸려있다.</li>
+</ul>
+</li>
+<li>
+<p>바로 예시코드를 통해, 다대다 관계를 조인 테이블로 표현했을 때 어떻게 매핑해야하는지 알아보자.</p>
+</li>
+</ul>
+<br/>
+<h3 id="section-17">예시 코드</h3>
+<ul>
+<li>
+<p><strong>부모 클래스</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Parent</span> <span class="o">{</span>
+
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"PARENT_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="nd">@ManyToMany</span>
+	<span class="nd">@JoinTable</span><span class="o">(</span>
+		<span class="n">name</span> <span class="o">=</span> <span class="s">"PARENT_CHILD"</span><span class="o">,</span>
+		<span class="n">joinColumns</span> <span class="o">=</span> <span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"PARENT_ID"</span><span class="o">),</span>
+		<span class="n">inverseJoinColumns</span> <span class="o">=</span> <span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"CHILD_ID"</span><span class="o">)</span>
+	<span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Child</span><span class="o">&gt;</span> <span class="n">childs</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Child</span><span class="o">&gt;();</span>
+
+	<span class="c1">// getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>자식 클래스</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Child</span> <span class="o">{</span>
+
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"CHILD_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="c1">// getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p><strong>이때 조인 테이블에 컬럼을 추가하면, <code>@JoinTable</code> 전략을 사용할 수 없다. 이때는 새로운 엔티티를 만들어서 조인 테이블과 매핑해야 한다.</strong></p>
+<ul>
+<li><a href="https://taegyunwoo.github.io/jpa/JPA_Relation_Mid#24">이전 게시글</a>을 참고하자.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<p>지금까지 조인 테이블을 사용하여 여러 관계를 매핑하는 방법에 다루었다. 이제 엔티티 하나에 여러 테이블을 매핑하는 방법에 대해 알아보자.</p>
+<p><br/><br/><br/></p>
+<h1 id="section-18">엔티티 하나에 여러 테이블 매핑</h1>
+<h2 id="section-19">개요</h2>
+<h3 id="codesecondarytablecode-"><code>@SecondaryTable</code> 애너테이션</h3>
+<ul>
+<li><code>@SecondaryTable</code> 애너테이션을 사용하면 한 엔티티에 여러 테이블을 매핑할 수 있다.</li>
+</ul>
+<blockquote>
+<p>잘 사용되지는 않는다.</p>
+</blockquote>
+<p><br/><br/></p>
+<h2 id="section-20">여러 테이블 매핑 예시</h2>
+<h3 id="section-21">시각화</h3>
+<ul>
+<li>아래 그림은 ‘하나의 엔티티가 여러 테이블과 매핑된 것’을 시각적으로 나타낸 것이다.</li>
+</ul>
+<p><img src="/assets/img/2021-11-08-JPA_Mapping_Expert_3/Untitled%2040.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-22">예시 코드</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="nd">@Table</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"BOARD"</span><span class="o">)</span>
+<span class="nd">@SecondaryTable</span><span class="o">(</span>
+	<span class="n">name</span> <span class="o">=</span> <span class="s">"BOARD_DETAIL"</span><span class="o">,</span>
+	<span class="n">pkJoinColumns</span> <span class="o">=</span> <span class="nd">@PrimaryKeyJoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"BOARD_DETAIL_ID"</span><span class="o">)</span>
+<span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Board</span> <span class="o">{</span>
+
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"BOARD_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">title</span><span class="o">;</span>
+
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">table</span> <span class="o">=</span> <span class="s">"BOARD_DETAIL"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">content</span><span class="o">;</span>
+
+	<span class="c1">// getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>
+<p><code>@Table</code> 을 사용하여, 기본적인 테이블 <code>BOARD</code> 와 매핑했다.</p>
+</li>
+<li>
+<p><code>@SecondaryTable</code> 을 추가로 사용하여, 추가 테이블 <code>BOARD_DETAIL</code> 과 매핑했다.</p>
+</li>
+<li>
+<p>content 필드는 <code>@Column(table = &quot;BOARD_DETAIL&quot;)</code> 을 사용해서, <code>BOARD_DETAIL</code> 테이블의 칼럼에 매핑했다.</p>
+</li>
+<li>
+<p>title 필드는 테이블을 지정하지 않았다. ⇒ 기본 테이블인 <code>BOARD</code> 에 매핑된다.</p>
+</li>
+<li>
+<p><code>@SecondaryTable</code> 속성</p>
+<ul>
+<li>name
+<ul>
+<li>매핑할 다른 테이블의 이름</li>
+<li>위 예제에서는 테이블명을 <code>BOARD_DETAIL</code> 로 지정했다.</li>
+</ul>
+</li>
+<li>pkJoinColumns
+<ul>
+<li>매핑할 다른 테이블의 기본키 칼럼 속성 설정</li>
+<li>위 예제에서는 <code>BOARD_DETAIL_ID</code> 로 지정했다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-23">권장사항</h3>
+<ul>
+<li><code>@SecondaryTable</code> 을 사용하여 여러 테이블을 하나의 엔티티와 매핑하는 것을 권장하지 않는다.</li>
+<li><strong>테이블당 엔티티를 각각 만들어서 일대일 매핑하는 것을 권장한다.</strong></li>
+</ul>
+<p><br/><br/><br/></p>
+<h1 id="section-24">총정리</h1>
+<h2 id="section-25">지금까지 다룬 내용</h2>
+<p>지금까지 총 3번에 걸쳐 ‘고급매핑’에 대해 다뤘다. 지금까지 다룬 내용은 다음과 같다.</p>
+<ul>
+<li><strong>객체의 상속 관계를 DB에 매핑하는 방법</strong></li>
+<li><strong>매핑 정보만 상속하는 <code>@MappedSuperclass</code></strong></li>
+<li><strong>복합키를 사용하는 식별 관계와 비식별 관계</strong></li>
+<li><strong>조인 테이블</strong></li>
+<li><strong>엔티티 하나에 여러 테이블을 매핑하는 방법</strong></li>
+</ul>
+<br/>
+<h2 id="section-26">자주 사용되는 내용</h2>
+<ul>
+<li><strong>상속 관계 매핑</strong></li>
+<li><strong><code>@MappedSuperclass</code></strong></li>
+</ul>
+<p>사실 실제 프로젝트에선 위 두가지가 가장 많이 사용된다. 나머지는 사용되지는 않는다.</p>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>김영한, 『자바 ORM 표준 JPA 프로그래밍』, 에이콘</li>
+  </ul>
+  본 게시글은 위 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

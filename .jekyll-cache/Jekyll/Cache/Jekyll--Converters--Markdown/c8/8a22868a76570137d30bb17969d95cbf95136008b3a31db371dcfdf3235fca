@@ -1,0 +1,652 @@
+I"{<p><br/><br/></p>
+<ul>
+<li>이전 게시글
+<ol>
+<li><a href="https://taegyunwoo.github.io/jpa/JPA_ObjectQuery_Begin">[JPA] 객체지향 쿼리 언어 - 소개</a></li>
+<li><a href="https://taegyunwoo.github.io/jpa/JPA_ObjectQuery_JPQL_Begin">[JPA] 객체지향 쿼리 언어 - JPQL 기초</a></li>
+</ol>
+</li>
+</ul>
+<p><br/><br/></p>
+<h1 id="jpql---">JPQL - 조인</h1>
+<h2 id="section">개요</h2>
+<ul>
+<li>JPQL도 SQL과 마찬가지고 조인을 지원한다.</li>
+<li>JPQL의 조인은 SQL의 조인과 기능이 대부분 같고, 문법만 약간 다르다.</li>
+</ul>
+<p>바로 JPQL 조인에 대해 알아보자.</p>
+<p><br/><br/></p>
+<h2 id="section-1">내부 조인</h2>
+<h3 id="section-2">내부 조인 사용 예시</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">String</span> <span class="n">teamName</span> <span class="o">=</span> <span class="s">"팀A"</span><span class="o">;</span>
+<p><span class="c1">//INNER JOIN 적용</span>
+<span class="nc">String</span> <span class="n">query</span> <span class="o">=</span> <span class="s">“SELECT m FROM Member m INNER JOIN m.team t “</span>
+<span class="o">+</span> <span class="s">“WHERE t.name = :teamName”</span><span class="o">;</span></p>
+<p><span class="nc">List</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;</span> <span class="n">members</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">createQuery</span><span class="o">(</span><span class="n">query</span><span class="o">,</span> <span class="nc">Member</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="o">.</span><span class="na">setParameter</span><span class="o">(</span><span class="s">“teamName”</span><span class="o">,</span> <span class="n">teamName</span><span class="o">)</span>
+<span class="o">.</span><span class="na">getResultList</span><span class="o">();</span>
+</code></pre></div></div></p>
+<blockquote>
+<p><code>INNER</code> 는 생략 가능하다.</p>
+</blockquote>
+<ul>
+<li>
+<p>생성된 JPQL 쿼리</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT m FROM Member m INNER JOIN m.team t
+	WHERE t.name = '팀A'
+</code></pre></div></div>
+<ul>
+<li><code>FROM Member m</code>
+<ul>
+<li>회원을 선택하고 m이라는 별칭을 주었다.</li>
+</ul>
+</li>
+<li><code>Member m JOIN m.team t</code>
+<ul>
+<li>회원이 가지고 있는 <strong>연관 필드로 팀과 조인</strong>한다.</li>
+<li>조인한 팀에는 t라는 별칭을 주었다.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>생성된 SQL 쿼리</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span>
+	<span class="n">M</span><span class="p">.</span><span class="n">ID</span> <span class="k">AS</span> <span class="n">ID</span><span class="p">,</span>
+	<span class="n">M</span><span class="p">.</span><span class="n">AGE</span> <span class="k">AS</span> <span class="n">AGE</span><span class="p">,</span>
+	<span class="n">M</span><span class="p">.</span><span class="n">TEAM_ID</span> <span class="k">AS</span> <span class="n">TEAM_ID</span><span class="p">,</span>
+	<span class="n">M</span><span class="p">.</span><span class="n">NAME</span> <span class="k">AS</span> <span class="n">NAME</span>
+<span class="k">FROM</span>
+	<span class="n">MEMBER</span> <span class="n">M</span> <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">TEAM</span> <span class="n">T</span> <span class="k">ON</span> <span class="n">M</span><span class="p">.</span><span class="n">TEAM_ID</span><span class="o">=</span><span class="n">T</span><span class="p">.</span><span class="n">ID</span>
+<span class="k">WHERE</span>
+	<span class="n">T</span><span class="p">.</span><span class="n">NAME</span><span class="o">=</span><span class="s1">'팀A'</span>
+<p></code></pre></div></div></p>
+</li>
+</ul>
+<br/>
+<h3 id="jpql--">JPQL 조인의 특징</h3>
+<ul>
+<li>
+<p><strong>JPQL 조인 시, 연관 필드를 사용하여 조인한다.</strong></p>
+<ul>
+<li>JPQL: <code>INNER JOIN m.team t</code></li>
+<li>SQL: <code>INNER JOIN TEAM T</code></li>
+</ul>
+</li>
+<li>
+<p>따라서 아래와 같은 JPQL 쿼리는 잘못된 쿼리이다.</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT m FROM Member m JOIN Team t
+	WHERE t.name = '팀A'
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<h3 id="section-3">조인한 두 개의 엔티티 동시 조회</h3>
+<ul>
+<li>
+<p>아래 JPQL 쿼리를 작성하여 변수 <code>query</code> 에 저장했다고 가정하자.</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT m, t FROM Member m JOIN m.team t
+</code></pre></div></div>
+</li>
+<li>
+<p>결과 자바 코드</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">List</span><span class="o">&lt;</span><span class="nc">Object</span><span class="o">[]&gt;</span> <span class="n">resultList</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">createQuery</span><span class="o">(</span><span class="n">query</span><span class="o">)</span>
+		<span class="o">.</span><span class="na">getResultList</span><span class="o">();</span>
+<p><span class="k">for</span> <span class="o">(</span><span class="nc">Object</span><span class="o">[]</span> <span class="n">resultRecord</span> <span class="o">:</span> <span class="n">resultList</span><span class="o">)</span> <span class="o">{</span>
+<span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="o">(</span><span class="nc">Member</span><span class="o">)</span> <span class="n">resultRecord</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+<span class="nc">Team</span> <span class="n">team</span> <span class="o">=</span> <span class="o">(</span><span class="nc">Team</span><span class="o">)</span> <span class="n">resultRecord</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
+<span class="o">}</span>
+</code></pre></div></div></p>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-4">외부 조인</h2>
+<h3 id="section-5">외부 조인 사용 예시</h3>
+<ul>
+<li>
+<p>외부 조인 JPQL 쿼리</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT m FROM Member m LEFT OUTER JOIN m.team t
+</code></pre></div></div>
+<ul>
+<li><code>OUTER</code> 는 생략 가능하다.</li>
+</ul>
+</li>
+<li>
+<p>변환된 외부 조인 SQL 쿼리</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span>
+	<span class="n">M</span><span class="p">.</span><span class="n">ID</span> <span class="k">AS</span> <span class="n">ID</span><span class="p">,</span>
+	<span class="n">M</span><span class="p">.</span><span class="n">AGE</span> <span class="k">AS</span> <span class="n">AGE</span><span class="p">,</span>
+	<span class="n">M</span><span class="p">.</span><span class="n">TEAM_ID</span> <span class="k">AS</span> <span class="n">TEAM_ID</span><span class="p">,</span>
+	<span class="n">M</span><span class="p">.</span><span class="n">NAME</span> <span class="k">AS</span> <span class="n">NAME</span>
+<span class="k">FROM</span>
+	<span class="n">MEMBER</span> <span class="n">M</span> <span class="k">LEFT</span> <span class="k">OUTER</span> <span class="k">JOIN</span> <span class="n">TEAM</span> <span class="n">T</span> <span class="k">ON</span> <span class="n">M</span><span class="p">.</span><span class="n">TEAM_ID</span><span class="o">=</span><span class="n">T</span><span class="p">.</span><span class="n">ID</span>
+<p></code></pre></div></div></p>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-6">컬렉션 조인</h2>
+<h3 id="section-7">컬렉션 조인이란?</h3>
+<ul>
+<li>일대다 관계나 다대다 관계처럼 컬렉션을 사용하는 곳에 조인하는 것을 컬렉션 조인이라고 한다.</li>
+<li>다대일 조인 vs 일대다 조인
+<ul>
+<li><strong>다대일 조인</strong>
+<ul>
+<li>[회원 → 팀]</li>
+<li><strong>단일 값 연관 필드 (<code>m.team</code>)을 사용하는 조인</strong></li>
+</ul>
+</li>
+<li>일대다 조인
+<ul>
+<li>[팀 → 회원]</li>
+<li><strong>컬렉션 값 연관 필드(<code>t.members</code>)를 사용하는 조인</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-8">컬렉션 조인 사용 예시</h3>
+<ul>
+<li>
+<p>컬렉션 조인을 사용하는 JPQL 쿼리</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT t, m FROM Team t LEFT JOIN t.members m
+</code></pre></div></div>
+<ul>
+<li><code>t LEFT JOIN t.members</code>
+<ul>
+<li>‘팀’과 ‘팀이 보유한 회원목록’을 컬렉션 값 연관 필드로 외부 조인했다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-9">세타 조인</h2>
+<h3 id="section-10">세타 조인이란?</h3>
+<ul>
+<li>Full Join에서 <code>WHERE</code> 절로 조건을 제시하는 조인이다.
+<ul>
+<li>Full Join
+<ul>
+<li>각 테이블의 레코드 수를 곱한 만큼의 레코드를 출력하는 것</li>
+<li>테이블 간에 연관관계가 전혀 없어도 상관없이 조인된다.</li>
+<li>각 테이블의 레코드 간에 가능한 모든 수의 조합을 하여 결과로 반환한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>세타 조인은 내부 조인만 지원한다.</li>
+</ul>
+<br/>
+<h3 id="section-11">세타 조인 사용 예시</h3>
+<ul>
+<li>
+<p>회원 이름이 팀 이름과 똑같은 사람 수를 구하는 예시 쿼리 : JPQL</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select count(m) from Member m, Team t
+	where m.username = t.name
+</code></pre></div></div>
+</li>
+<li>
+<p>변환된 세타 조인 SQL 쿼리</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="n">M</span><span class="p">.</span><span class="n">ID</span><span class="p">)</span>
+<span class="k">FROM</span>
+	<span class="n">MEMBER</span> <span class="n">M</span> <span class="k">CROSS</span> <span class="k">JOIN</span> <span class="n">TEAM</span> <span class="n">T</span>
+<span class="k">WHERE</span>
+	<span class="n">M</span><span class="p">.</span><span class="n">USERNAME</span><span class="o">=</span><span class="n">T</span><span class="p">.</span><span class="n">NAME</span>
+</code></pre></div></div>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="join-on-">JOIN ON 절</h2>
+<h3 id="join-on--1">JOIN ON 절이란?</h3>
+<ul>
+<li>JPA 2.1부터 지원하는 기능이다.</li>
+<li><strong>ON 절을 사용하면, 조인 대상을 필터링하고 조인할 수 있다.</strong>
+<ul>
+<li>즉 ON 절의 조건으로 ‘원하는 조인 대상’을 걸러내고, 그에 대한 결과 테이블로 조인시킨다.</li>
+</ul>
+</li>
+<li>보통 ON 절은 외부 조인에서만 사용한다.
+<ul>
+<li>왜냐하면 내부 조인에서 ON 절을 사용하면, WHERE 절을 사용하는 것과 결과가 같기 때문이다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="join-on---">JOIN ON 절 사용 예시</h3>
+<ul>
+<li>
+<p>모든 회원을 조회하면서, 회원과 연관된 팀도 조회한다. 이때 팀은 이름이 ‘A’인 팀만 조회한다.</p>
+<ul>
+<li>이에 대한 JPQL은 아래와 같다.</li>
+</ul>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT m, t
+FROM
+	Member m LEFT JOIN m.team t
+ON
+	t.name = 'A'
+</code></pre></div></div>
+<ul>
+<li>변환된 SQL은 아래와 같다.</li>
+</ul>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT m.*, t.*
+FROM
+	MEMBER m LEFT OUTER JOIN TEAM t
+ON
+	m.TEAM_ID=t.id AND t.name='A'
+</code></pre></div></div>
+<ul>
+<li><strong>SQL 결과를 보면, 조인시점에 조인 대상을 <code>AND t.name='A'</code> 로 필터링한다.</strong></li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-12">페치 조인</h2>
+<h3 id="section-13">페치 조인이란?</h3>
+<ul>
+<li>
+<p>JPQL에서 성능 최적화를 위해 제공하는 기능이다.</p>
+<ul>
+<li>SQL에서 이야기하는 조인의 종류는 아니다.</li>
+</ul>
+</li>
+<li>
+<p>연관된 엔티티나 컬렉션을 한 번에 같이 조회하는 기능이 바로 페치 조인이다.</p>
+</li>
+<li>
+<p><code>join fetch</code> 명령어로 사용할 수 있다.</p>
+</li>
+<li>
+<p>페치 조인 문법</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>페치조인 ::= [LEFT [OUTER] | INNER] JOIN FETCH 조인경로
+</code></pre></div></div>
+</li>
+</ul>
+<p>페치 조인에 대해 자세히 알아보자.</p>
+<br/>
+<h3 id="section-14">엔티티 페치 조인</h3>
+<ul>
+<li>
+<p>페치 조인을 사용해서, 회원 엔티티를 조회하면서 연관된 팀 엔티티도 함께 조회하는 JPQL</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select m
+from Member m join fetch m.team
+</code></pre></div></div>
+<ul>
+<li>프로젝션 대상이 <code>m</code> 밖에 없다.</li>
+<li><code>join fetch</code> 명령어를 사용했다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>위와 같이 JPQL 쿼리를 작성하면, <strong>연관된 엔티티나 컬렉션을 함께 조회</strong>한다.
+<ul>
+<li>위 예시에선, 회원(<code>m</code>)과 팀(<code>m.team</code>)을 함께 조회한다.</li>
+</ul>
+</li>
+<li><strong>페치 조인은 별칭을 사용할 수 없다.</strong>
+<ul>
+<li>하지만 하이버네이트는 페치 조인에도 별칭을 허용한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>위 JPQL 쿼리를 SQL로 변환한 결과</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span>
+	<span class="n">M</span><span class="p">.</span><span class="o">*</span><span class="p">,</span> <span class="n">T</span><span class="p">.</span><span class="o">*</span>
+<span class="k">FROM</span> <span class="n">MEMBER</span> <span class="n">M</span>
+<span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">TEAM</span> <span class="n">T</span> <span class="k">ON</span> <span class="n">M</span><span class="p">.</span><span class="n">TEAM_ID</span><span class="o">=</span><span class="n">T</span><span class="p">.</span><span class="n">ID</span>
+</code></pre></div></div>
+<ul>
+<li>JPQL에선 프로젝션 대상이 <code>m</code> 밖에 없었지만, SQL로 변환하니 <code>MEMBER</code> 와 <code>TEAM</code> 모두 프로젝션 대상이 되었다.</li>
+</ul>
+</li>
+<li>
+<p>시각화</p>
+<ul>
+<li>
+<p>엔티티 페치 조인 시도 시</p>
+<p><img src="/assets/img/2021-11-29-JPA_ObjectQuery_JPQL_Join/Untitled%206.png" alt="Untitled" /></p>
+</li>
+<li>
+<p>엔티티 페치 조인 결과 테이블</p>
+<p><img src="/assets/img/2021-11-29-JPA_ObjectQuery_JPQL_Join/Untitled%207.png" alt="Untitled" /></p>
+</li>
+<li>
+<p>엔티티 페치 조인 결과 객체</p>
+<p><img src="/assets/img/2021-11-29-JPA_ObjectQuery_JPQL_Join/Untitled%208.png" alt="Untitled" /></p>
+<ul>
+<li><strong>회원과 팀 객체가 객체 그래프를 유지하면서 조회되었다.</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>상세 설명</p>
+<ul>
+<li>엔티티 페치 조인 JPQL에서 <code>select m</code> 으로 회원 엔티티만 선택했는데, 실행된 SQL을 보면 <code>SELECT M.*, T.*</code> 로 회원과 연관된 팀도 함께 조회된 것을 확인할 수 있다.
+<ul>
+<li>즉 엔티티 페치 조인시, 연관 엔티티까지 가져온다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>엔티티 페치 조인 사용 예시</p>
+<ul>
+<li>위에서 작성한 페치 조인 JPQL 쿼리를 사용해보자.</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">String</span> <span class="n">jpql</span> <span class="o">=</span> <span class="s">"select m from Member m join fetch m.team"</span><span class="o">;</span>
+<span class="nc">List</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;</span> <span class="n">members</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">createQuery</span><span class="o">(</span><span class="n">jpql</span><span class="o">,</span> <span class="nc">Member</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+			<span class="o">.</span><span class="na">getResultList</span><span class="o">();</span>
+<p><span class="k">for</span> <span class="o">(</span><span class="nc">Member</span> <span class="n">member</span> <span class="o">:</span> <span class="n">members</span><span class="o">)</span> <span class="o">{</span>
+<span class="c1">//페치 조인으로 회원과 팀을 함께 조회했다.</span>
+<span class="c1">//따라서 지연 로딩이 발생하지 않는다.</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">member</span><span class="o">.</span><span class="na">getUsername</span><span class="o">()</span> <span class="o">+</span> <span class="s">”,”</span> <span class="o">+</span> <span class="n">member</span><span class="o">.</span><span class="na">getTeam</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
+<span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li>
+<p>출력 결과는 아래와 같다.</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>회원1,팀A
+회원2,팀A
+회원3,팀B
+</code></pre></div></div>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>엔티티 페치 조인과 지연로딩</strong>
+<ul>
+<li>만약 회원과 팀을 지연로딩으로 설정했다고 가정해보자.
+<ul>
+<li>페치 조인을 사용했기 때문에, 회원을 조회할 때 팀도 함께 조회했다.</li>
+<li>따라서, <strong>연관된 팀 엔티티는 프록시가 아닌 실제 엔티티</strong>다.</li>
+<li><strong>즉 연관됨 팀을 사용해도 지연 로딩이 일어나지 않는다.</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-15">컬렉션 페치 조인</h3>
+<ul>
+<li>
+<p>이번에는 일대다 관계인 컬렉션을 페치 조인해보자.</p>
+</li>
+<li>
+<p>아래는 컬렉션 페치 조인 JPQL 쿼리이다.</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select t
+from Team t join fetch t.members
+where t.name = '팀A'
+</code></pre></div></div>
+<ul>
+<li>페치 조인을 사용했다.</li>
+<li>따라서 팀(<code>t</code>)를 조회하면서 연관된 회원 컬렉션(<code>t.members</code>)도 함께 조회한다.</li>
+</ul>
+</li>
+<li>
+<p>위 JPQL을 변환하여 실행된 SQL은 아래와 같다.</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">T</span><span class="p">.</span><span class="o">*</span><span class="p">,</span> <span class="n">M</span><span class="p">.</span><span class="o">*</span>
+<span class="k">FROM</span> <span class="n">TEAM</span> <span class="n">T</span> <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">MEMBER</span> <span class="n">M</span> <span class="k">ON</span> <span class="n">T</span><span class="p">.</span><span class="n">ID</span><span class="o">=</span><span class="n">M</span><span class="p">.</span><span class="n">TEAM_ID</span>
+<span class="k">WHERE</span> <span class="n">T</span><span class="p">.</span><span class="n">NAME</span><span class="o">=</span><span class="s1">'팀A'</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<ul>
+<li>시각화를 통해, 위 예시를 좀 더 자세히 알아보자.
+<ul>
+<li>
+<p>컬렉션 페치 조인 시도</p>
+<p><img src="/assets/img/2021-11-29-JPA_ObjectQuery_JPQL_Join/Untitled%209.png" alt="Untitled" /></p>
+<ul>
+<li><strong><code>MEMBER</code> 테이블과 조인하면서 결과가 증가한다.</strong></li>
+<li><strong>따라서 아래 조인 결과 테이블을 보면 같은 ‘팀A’가 2건 조회된다.</strong></li>
+</ul>
+</li>
+<li>
+<p>컬렉션 페치 조인 결과 테이블</p>
+<p><img src="/assets/img/2021-11-29-JPA_ObjectQuery_JPQL_Join/Untitled%2010.png" alt="Untitled" /></p>
+<ul>
+<li>같은 레코드 <code>팀A</code> 가 2개 존재한다.</li>
+</ul>
+</li>
+<li>
+<p>컬렉션 페치 조인 결과 객체</p>
+<p><img src="/assets/img/2021-11-29-JPA_ObjectQuery_JPQL_Join/Untitled%2011.png" alt="Untitled" /></p>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>상세 설명</p>
+<ul>
+<li>JPQL에서 <code>select t</code> 로 팀만 선택했는데, SQL을 보면 <code>T.*, M.*</code> 로 팀과 연관된 회원도 함께 조회한 것을 확인할 수 있다.</li>
+<li><strong><code>TEAM</code> 테이블과 <code>MEMBER</code> 테이블이 조인하면서 결과가 증가했다.</strong>
+<ul>
+<li><strong>그로 인해, 조인 결과 테이블에 같은 ‘팀A’가 2건 조회되었다.</strong></li>
+<li><strong>따라서 주소가 <code>0x100</code>으로 같은 ‘팀A’를 2건 가지게 된다.</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>예시 코드</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">String</span> <span class="n">jpql</span> <span class="o">=</span> <span class="s">"select t from Team t join fetch t.members where t.name = '팀A'"</span><span class="o">;</span>
+<p><span class="c1">//아래 코드 실행 시, teams 리스트에 같은 객체(팀A)가 2개 들어간다.</span>
+<span class="nc">List</span><span class="o">&lt;</span><span class="nc">Team</span><span class="o">&gt;</span> <span class="n">teams</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">createQuery</span><span class="o">(</span><span class="n">jpql</span><span class="o">,</span> <span class="nc">Team</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">getResultList</span><span class="o">();</span></p>
+<p><span class="k">for</span> <span class="o">(</span><span class="nc">Team</span> <span class="n">team</span> <span class="o">:</span> <span class="n">teams</span><span class="o">)</span> <span class="o">{</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">team</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">”,”</span> <span class="o">+</span> <span class="n">team</span><span class="o">);</span></p>
+<pre><code>&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Member&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;member&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;team&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;-&amp;gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;member&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getUsername&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;,&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;member&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li>
+<p>출력 결과는 아래와 같다.</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>팀A,Team@0x100
+-&gt;회원1,Member@0x200
+-&gt;회원2,Member@0x300
+<p>팀A,Team@0x100
+-&gt;회원1,Member@0x200
+-&gt;회원2,Member@0x300
+</code></pre></div></div></p>
+<ul>
+<li>같은 ‘팀A’가 2건 조회된 것을 확인할 수 있다.</li>
+<li>그리고 연관된 엔티티 역시 동일하다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="distinct">페치 조인과 DISTINCT</h3>
+<ul>
+<li><code>DISTINCT</code> 란?
+<ul>
+<li>SQL에서의 <code>DISTINCT</code>
+<ul>
+<li>중복된 결과를 제거하는 명령어</li>
+</ul>
+</li>
+<li>JPQL에서의 <code>DISTINCT</code>
+<ul>
+<li>SQL에 <code>DISTINCT</code> 를 추가한다.</li>
+<li><strong>또한 애플리케이션에서 한 번 더 중복을 제거한다.</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>바로 위에서 살펴본 컬렉션 페치 조인은 ‘팀A’가 중복으로 조회된다. <strong><code>DISTINCT</code> 를 사용해서 이러한 문제를 해결</strong>할 수 있다.
+<ul>
+<li>
+<p>예시 JPQL 쿼리</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select distinct t
+from Team t join fetch t.members
+where t.name = '팀A'
+</code></pre></div></div>
+<ul>
+<li>
+<p>SQL에 <code>DISTINCT</code> 가 추가된다.</p>
+</li>
+<li>
+<p>하지만 결과 테이블의 레코드 데이터가 다르므로, ’SQL의 <code>DISTINCT</code>’로서의 효과는 없다.</p>
+<p><img src="/assets/img/2021-11-29-JPA_ObjectQuery_JPQL_Join/Untitled%2012.png" alt="Untitled" /></p>
+</li>
+<li>
+<p><strong>다음으로 애플리케이션에서 <code>DISTINCT</code> 명령어를 보고 중복된 데이터를 걸러낸다.</strong></p>
+<p><img src="/assets/img/2021-11-29-JPA_ObjectQuery_JPQL_Join/Untitled%2013.png" alt="Untitled" /></p>
+</li>
+<li>
+<p>이제 다시 결과를 출력해보자.</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>팀A,Team@0x100
+-&gt;회원1,Member@0x200
+-&gt;회원2,Member@0x300
+</code></pre></div></div>
+<ul>
+<li>‘팀A’ 객체의 중복이 사라졌다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-16">페치 조인과 일반 조인의 차이</h3>
+<ul>
+<li>
+<p>일반 조인 예시</p>
+<ul>
+<li>
+<p>JPQL</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select t
+from Team t join t.members m
+where t.name = '팀A'
+</code></pre></div></div>
+</li>
+<li>
+<p>SQL</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">T</span><span class="p">.</span><span class="o">*</span>
+<span class="k">FROM</span> <span class="n">TEAM</span> <span class="n">T</span> <span class="k">JOIN</span> <span class="n">MEMBER</span> <span class="n">M</span> <span class="k">ON</span> <span class="n">T</span><span class="p">.</span><span class="n">ID</span><span class="o">=</span><span class="n">M</span><span class="p">.</span><span class="n">TEAM_ID</span>
+<span class="k">WHERE</span> <span class="n">T</span><span class="p">.</span><span class="n">NAME</span><span class="o">=</span><span class="s1">'팀A'</span>
+</code></pre></div></div>
+</li>
+</ul>
+</li>
+<li>
+<p>일반 조인 시</p>
+<ul>
+<li>
+<p><strong>JPQL은 결과를 반환할 때, 연관관계까지 고려하지 않는다.</strong></p>
+</li>
+<li>
+<p><strong>단지 SELECT 절에 지정한 엔티티 (프로젝션)만 조회할 뿐이다.</strong></p>
+</li>
+<li>
+<p>따라서 <strong>“회원 컬렉션을 지연 로딩으로 설정”하면 아래 그림과 같이, 프록시나 아직 초기화하지 않은 컬렉션 래퍼를 반환</strong>한다.</p>
+<p><img src="/assets/img/2021-11-29-JPA_ObjectQuery_JPQL_Join/Untitled%2014.png" alt="Untitled" /></p>
+</li>
+<li>
+<p>또는 <strong>“회원 컬렉션을 즉시 로딩으로 설정”하면, 회원 컬렉션을 즉시 로딩하기 위해 쿼리를 한번 더 실행한다.</strong></p>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-17">페치 조인의 특징과 한계</h3>
+<ul>
+<li>페치 조인의 특징
+<ul>
+<li>
+<p><strong>페치 조인을 사용하면, SQL 한번으로 연관된 엔티티들을 함께 조회할 수 있다.</strong></p>
+<ul>
+<li>따라서 SQL 호출 횟수를 줄여 성능을 최적화할 수 있다.</li>
+</ul>
+</li>
+<li>
+<p><strong>페치 조인은 글로벌 로딩 전략보다 우선한다.</strong></p>
+<ul>
+<li>즉 글로벌 로딩 전략을 지연 로딩으로 설정해도, JPQL에서 페치 조인을 사용하면 페치 조인을 적요해서 함께 조회한다.</li>
+</ul>
+</li>
+<li>
+<p><strong>연관된 엔티티를 쿼리 시점에 조회하므로 지연 로딩이 발생하지 않는다.</strong></p>
+<ul>
+<li><strong>따라서 준영속 상태에서도 객체 그래프를 탐색할 수 있다.</strong></li>
+</ul>
+<blockquote>
+<p>이미 연관된 엔티티 간의 객체 그래프가 생성되어 있기 때문에</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>효과적인 설정방법
+<ul>
+<li>글로벌 로딩 전략 == 지연 로딩</li>
+<li>최적화가 필요한 경우 == 페치 조인 적용</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>페치 조인의 한계
+<ul>
+<li>
+<p><strong>페치 조인 대상에는 별칭을 줄 수 없다.</strong></p>
+<ul>
+<li>하이버네이트는 페치 조인에 별칭을 지원하긴 하지만, 특별히 조심해서 사용해야한다.</li>
+</ul>
+<blockquote>
+<p>자세한 것은 추후 포스팅으로 다룰 예정이다.</p>
+</blockquote>
+</li>
+<li>
+<p><strong>둘 이상의 컬렉션을 페치할 수 없다.</strong></p>
+</li>
+<li>
+<p><strong>컬렉션을 페치 조인하면 페이징 API를 사용할 수 없다.</strong></p>
+<ul>
+<li>왜냐하면 페치 조인과 함께 페이징 API를 사용하면, 메모리에서 페이징 처리를 하기 때문에 Overflow가 발생할 수 있다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-18">참고</h3>
+<ul>
+<li>페치 조인은 객체 그래프를 유지할 때 사용하면 효과적이다.</li>
+<li>반면에 여러 테이블을 조인해서, 엔티티가 가진 모양이 아닌 다른 결과를 내야 한다면 DTO로 반환하는 것이 더 효과적일 수 있다.</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>김영한, 『자바 ORM 표준 JPA 프로그래밍』, 에이콘</li>
+  </ul>
+  본 게시글은 위 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

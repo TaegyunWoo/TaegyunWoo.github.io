@@ -1,0 +1,44 @@
+I"r<h1 id="section">2021-09-28</h1>
+<h2 id="section-1">프로젝트</h2>
+<h3 id="section-2">당일 목표</h3>
+<ul>
+<li>테스트 코드 작성
+<ul>
+<li>Service 계층 테스트 코드 작성</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-3">수행한 주요 작업</h3>
+<ul>
+<li>
+<p>테스트 코드 작성: <code>SignUpService</code></p>
+<ul>
+<li><code>isDifferentPassword</code> 메서드에 대한 테스트 코드 작성</li>
+<li><code>isExistEmail</code> 메서드에 대한 테스트 코드 작성</li>
+</ul>
+</li>
+<li>
+<p>테스트 코드 작성: <code>BoardService</code></p>
+<ul>
+<li><code>addNewArticle</code> 메서드에 대한 테스트 코드 작성</li>
+<li><code>updateArticle</code> 메서드에 대한 테스트 코드 작성</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-4">다음에 수행할 주요 작업</h3>
+<ul>
+<li>추후 학습 후, 고도화 작업 및 예시 배포 작업</li>
+</ul>
+<br/>
+<h3 id="point">주요 학습 Point</h3>
+<blockquote>
+<p>비교적 간단한 개념이었음.</p>
+</blockquote>
+<p><br/><br/></p>
+<h2 id="amp-">문제 &amp; 해결</h2>
+<blockquote>
+<p>해당 사항 없음.</p>
+</blockquote>
+:ET

@@ -1,0 +1,436 @@
+I"�S<p><br/><br/></p>
+<p>앞으로 총 6개의 포스팅으로, 객체지향 쿼리 언어에 대해 다룰 예정이다.</p>
+<p>본 포스팅은 그에 대한 첫번째 글이다. 이 글을 통해, 앞으로 떠날 대장정에 대해 대략적인 흐름을 잡아보자.</p>
+<p><br/><br/></p>
+<h1 id="section">객체지향 쿼리 소개</h1>
+<h2 id="section-1">개요</h2>
+<h3 id="section-2">다룰 내용</h3>
+<ul>
+<li>앞으로 다룰 내용
+<ul>
+<li>JPQL</li>
+<li>QueryDSL</li>
+<li>네이티브 SQL</li>
+<li>객체지향 쿼리 심화</li>
+</ul>
+</li>
+</ul>
+<p>본 포스팅을 통해 객체지향 쿼리 언어에 대한 여행을 떠나기 전, 전체적인 흐름을 잡는데 도움을 줄 수 있도록 위에 서술한 내용에 대해 대략적으로 알아본다.</p>
+<br/>
+<h3 id="section-3">본 포스팅에서 다룰 내용</h3>
+<p>JPQL, QueryDSL, 네이티브 SQL, 객체지향 쿼리 심화에 대해 간략하게 설명하겠다.</p>
+<br/>
+<h3 id="section-4">들어가며…</h3>
+<ul>
+<li>이전 포스팅에선 지금까지 아래 방법을 통해, 엔티티·연관엔티티를 찾았다.
+<ul>
+<li>식별자로 조회: <code>EntityManager.find()</code></li>
+<li>객체 그래프 탐색: <code>a.getB().getC()</code></li>
+</ul>
+</li>
+<li><strong>하지만 이 기능만으로 애플리케이션을 개발하긴 어렵다.</strong>
+<ul>
+<li>예) 나이가 30살 이상인 회원을 모두 검색하기</li>
+<li>위 경우, 조건(<code>WHERE</code>) 검색이 필요하다.</li>
+<li>하지만 기존 방법으로는 불가능하다.</li>
+</ul>
+</li>
+<li><strong>따라서 JPQL과 같은 객체지향 쿼리를 사용해야 한다.</strong></li>
+</ul>
+<br/>
+<h3 id="jpa----">JPA가 제공하는 다양한 검색 방법들</h3>
+<ul>
+<li>
+<p><strong>JPQL</strong></p>
+</li>
+<li>
+<p><strong>Criteria 쿼리</strong></p>
+<ul>
+<li>JPQL을 편하게 작성하도록 도와주는 API, 빌더 클래스 모음</li>
+<li>하지만 너무 복잡하여 QueryDSL을 사용하는 것을 권장한다.</li>
+</ul>
+<blockquote>
+<p>따라서 우리 블로그에서는 자세히 다루지 않는다.</p>
+</blockquote>
+</li>
+<li>
+<p><strong>네이티브 SQL</strong></p>
+<ul>
+<li>JPA에서 JPQL 대신 직접 SQL을 사용할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="jpa------">JPA가 공식 지원하지는 않지만 유용한 검색 방법들</h3>
+<ul>
+<li><strong>QueryDSL</strong>
+<ul>
+<li>Criteria 쿼리처럼 JPQL을 편하게 작성하도록 도와주는 빌더 클래스 모음</li>
+<li>비표준 오픈소스 프레임워크이다.</li>
+</ul>
+</li>
+<li><strong>JDBC 직접사용, MyBatis와 같은 SQL 매퍼 프레임워크 사용</strong>
+<ul>
+<li>필요하면 JDBC를 직접 사용할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="jpql-">JPQL 맛보기</h2>
+<h3 id="jpql">JPQL이란?</h3>
+<ul>
+<li>
+<p>ORM의 목적</p>
+<ul>
+<li>DB 테이블이 아닌, 엔티티 객체를 대상으로 개발하기</li>
+</ul>
+</li>
+<li>
+<p>JPQL이란?</p>
+<ul>
+<li>위와 같은 ORM의 목적처럼, 엔티티 객체를 대상으로 데이터를 검색하기 위한 객체지향 쿼리이다.</li>
+<li>보다 복잡한 쿼리를 위해 JPA에서 제공하는 기능이다.</li>
+</ul>
+</li>
+<li>
+<p>JPQL의 특징</p>
+<ul>
+<li>테이블이 아닌 객체를 대상으로 검색하는 객체지향 쿼리</li>
+<li>SQL을 추상화해서 특정 DB SQL에 의존하지 않는다.</li>
+</ul>
+</li>
+<li>
+<p>SQL vs JPQL</p>
+<ul>
+<li>SQL
+<ul>
+<li>DB 테이블을 대상으로 하는 데이터 중심의 쿼리</li>
+</ul>
+</li>
+<li>JPQL
+<ul>
+<li>엔티티 객체를 대상으로 하는 객체지향 쿼리</li>
+<li>JPA가 JPQL을 분석하여 적절한 SQL을 만들어 DB를 조회한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>다양한 검색 방법들 중, JPQL이 가장 중요하다.</strong></p>
+<ul>
+<li>Criteria나 QueryDSL은 JPQL을 편하게 작성하도록 도와주는 빌더 클래스일 뿐이다.</li>
+<li>따라서 JPQL을 이해해야 나머지도 이해할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="jpql--1">JPQL 소개</h3>
+<ul>
+<li>JPQL은 엔티티 객체를 조회하는 객체지향 쿼리이다.</li>
+<li>JPQL은 SQL을 추상화해서 특정 DB에 의존하지 않는다.
+<ul>
+<li>데이터베이스 방언(Dialect)만 변경하면 JPQL을 수정하지 않아도 자연스럽게 DB를 변경할 수 있다.</li>
+</ul>
+</li>
+<li>JPQL은 SQL보다 간결하다.
+<ul>
+<li>엔티티 직접 조회</li>
+<li>묵시적 조인</li>
+<li>다형성</li>
+<li>위 기능들을 지원하여, 간결하게 쿼리를 작성할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="jpql--">JPQL 사용 예시</h3>
+<ul>
+<li>
+<p>회원 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"Member"</span><span class="o">)</span> <span class="c1">// 엔티티이름 설정</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"name"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">username</span><span class="o">;</span>
+
+	<span class="c1">//...</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>JPQL 사용</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//쿼리 생성</span>
+<span class="nc">String</span> <span class="n">jpql</span> <span class="o">=</span> <span class="s">"select m from Member m where m.username = 'kim'"</span><span class="o">;</span>
+<span class="nc">List</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;</span> <span class="n">resultList</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">createQuery</span><span class="o">(</span><span class="n">jpql</span><span class="o">,</span> <span class="nc">Member</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">getResultList</span><span class="o">();</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<ul>
+<li>상세 설명
+<ul>
+<li>회원이름이 <code>kim</code> 인 <strong>엔티티를 조회</strong>한다.</li>
+<li>JPQL에서 <code>Member</code>는 <strong>엔티티 이름</strong>이다.</li>
+<li><code>m.username</code> 은 테이블 칼럼명이 아니라, <strong>엔티티 객체의 필드명</strong>이다.</li>
+<li><code>em.createQuery()</code> 메서드
+<ul>
+<li>실행할 JPQL</li>
+<li>반환할 엔티티의 클래스 타입인 <code>Member.class</code></li>
+<li>위 두가지를 해당 메서드에 넘겨주고 <code>getResultList()</code> 메서드를 실행하면, JPA는 JPQL을 SQL로 변환해서 DB를 조회한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>실행한 JPQL</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select m
+from Member m
+where m.username = 'kim'
+</code></pre></div></div>
+</li>
+<li>
+<p>실제로 실행된 SQL</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span>
+	<span class="n">member</span><span class="p">.</span><span class="n">id</span> <span class="k">as</span> <span class="n">id</span><span class="p">,</span>
+	<span class="n">member</span><span class="p">.</span><span class="n">age</span> <span class="k">as</span> <span class="n">age</span><span class="p">,</span>
+	<span class="n">member</span><span class="p">.</span><span class="n">team_id</span> <span class="k">as</span> <span class="n">team</span><span class="p">,</span>
+	<span class="n">member</span><span class="p">.</span><span class="n">name</span> <span class="k">as</span> <span class="n">name</span>
+<span class="k">from</span>
+	<span class="n">Member</span> <span class="n">member</span>
+<span class="k">where</span>
+	<span class="n">member</span><span class="p">.</span><span class="n">name</span><span class="o">=</span><span class="s1">'kim'</span>
+</code></pre></div></div>
+<blockquote>
+<p>실제 하이버네이트 구현체가 생성한 SQL은 별칭이 복잡하다.<br />
+따라서 별칭부분만 알아보기 쉽게 수정한 것이다.</p>
+</blockquote>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="criteria-">Criteria 맛보기</h2>
+<h3 id="criteria">Criteria란?</h3>
+<blockquote>
+<p>여기서 다루는 내용을 마지막으로, Criteria에 대해선 앞으로 설명하지 않는다.</p>
+</blockquote>
+<ul>
+<li>Criteria는 JPQL을 생성하는 빌더 클래스이다.</li>
+<li>Criteria의 장점
+<ul>
+<li>문자가 아닌 프로그래밍 코드로 JPQL을 작성할 수 있다.
+<ul>
+<li>예시) <code>query.select(m).where(...)</code></li>
+<li>JPQL에선 문자열을 직접 다룬다. 따라서 오타가 있어도 <strong>컴파일은 성공하지만, 런타임 시점에 오류가 발생</strong>한다.</li>
+<li>따라서 문자가 아닌 코드로 JPQL를 작성한다면, 컴파일 시점에 오류를 발견할 수 있다.</li>
+</ul>
+</li>
+<li>IDE를 사용하면 코드 자동완성을 지원한다.</li>
+<li>동적 쿼리를 작성하기 편하다.</li>
+</ul>
+</li>
+<li>Criteria의 단점
+<ul>
+<li><strong>모든 장점을 상쇄할 정도로 복잡하고 장황하다.</strong></li>
+<li><strong>따라서 사용하기 불편하고, 코드가 한눈에 들어오지도 않는다.</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="criteria--">Criteria 사용 예시</h3>
+<p>위 JPQL에서 작성한 것을 그대로 Criteria로 옮겨보자.</p>
+<ul>
+<li>
+<p>JPQL 쿼리</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select m from Member as m where m.username = 'kim';
+</code></pre></div></div>
+</li>
+<li>
+<p>Criteria 코드</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//Criteria 사용 준비</span>
+<span class="nc">CriteriaBuilder</span> <span class="n">cb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">getCriteriaBuilder</span><span class="o">();</span>
+<span class="nc">CriteriaQuery</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;</span> <span class="n">query</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="na">createQuery</span><span class="o">(</span><span class="nc">Member</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+<span class="c1">//루트 클래스 (조회를 시작할 클래스)</span>
+ <span class="nc">Root</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;</span> <span class="n">m</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="nc">Member</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+<span class="c1">//쿼리 생성</span>
+<span class="nc">CriteriaQuery</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;</span> <span class="n">cq</span> <span class="o">=</span>
+		<span class="n">query</span><span class="o">.</span><span class="na">select</span><span class="o">(</span><span class="n">m</span><span class="o">).</span><span class="na">where</span><span class="o">(</span><span class="n">cb</span><span class="o">.</span><span class="na">equal</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"username"</span><span class="o">),</span> <span class="s">"kim"</span><span class="o">));</span>
+<span class="nc">List</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;</span> <span class="n">resultList</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">createQuery</span><span class="o">(</span><span class="n">cq</span><span class="o">).</span><span class="na">getResultList</span><span class="o">();</span>
+</code></pre></div></div>
+<ul>
+<li><code>m.get(&quot;username&quot;)</code> 에서 필드명을 <code>&quot;username&quot;</code> 과 같은 문자열로 작성했다.
+<ul>
+<li>메타모델을 사용하면, 문자가 아닌 코드로 작성할 수 있다.</li>
+</ul>
+</li>
+<li>메타모델?
+<ul>
+<li>자바가 제공하는 애너테이션 프로세서 기능을 사용하면, 애너테이션을 분석해서 클래스를 생성할 수 있다.</li>
+<li>JPA는 이 기능을 사용해서 <code>Member</code> 엔티티 클래스로부터 <code>Member_</code> 라는 Criteria 전용 클래스를 생성한다.</li>
+<li>이것을 메타모델이라고 한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>다시 말하지만, Criteria에 대해선 여기까지만 다룬다.<br />
+Criteria를 좀 더 알아보고 싶다면, 다른 자료를 찾아보는 것을 추천한다.</p>
+</blockquote>
+<p><br/><br/></p>
+<h2 id="querydsl-">QueryDSL 맛보기</h2>
+<h3 id="querydsl">QueryDSL이란?</h3>
+<ul>
+<li>Criteria처럼 JPQL 빌더 역할을 한다.</li>
+<li>QueryDSL의 장점
+<ul>
+<li>코드 기반이다.</li>
+<li>단순하고 사용하기 쉽다.</li>
+<li>작성한 코드도 JPQL과 비슷해서 한눈에 들어온다.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>따라서 Criteria 대신 QueryDSL을 사용하는 것을 권장한다.</p>
+</blockquote>
+<br/>
+<h3 id="querydsl--">QueryDSL 사용 예시</h3>
+<p>이번에도 위 JPQL에서 작성한 것을 그대로 QueryDSL로 옮겨보자.</p>
+<ul>
+<li>
+<p>JPQL 쿼리</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select m from Member as m where m.username = 'kim';
+</code></pre></div></div>
+</li>
+<li>
+<p>QueryDSL 코드</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//준비</span>
+<span class="nc">JPAQuery</span> <span class="n">query</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">JPAQuery</span><span class="o">(</span><span class="n">em</span><span class="o">);</span>
+<span class="nc">QMember</span> <span class="n">member</span> <span class="o">=</span> <span class="nc">QMember</span><span class="o">.</span><span class="na">member</span><span class="o">;</span>
+
+<span class="c1">//쿼리, 결과조회</span>
+<span class="nc">List</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;</span> <span class="n">members</span> <span class="o">=</span>
+		<span class="n">query</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">member</span><span class="o">)</span>
+		<span class="o">.</span><span class="na">where</span><span class="o">(</span><span class="n">member</span><span class="o">.</span><span class="na">username</span><span class="o">.</span><span class="na">eq</span><span class="o">(</span><span class="s">"kim"</span><span class="o">))</span>
+		<span class="o">.</span><span class="na">list</span><span class="o">(</span><span class="n">member</span><span class="o">);</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<ul>
+<li>상세설명
+<ul>
+<li>QueryDSL이 Criteria 보다 훨씬 간결하고, 보기 좋지 않은가?</li>
+<li>QueryDSL 역시 애너테이션 프로세서를 사용해서, 쿼리 전용 클래스를 만들어야 한다.
+<ul>
+<li>Criteria 처럼 애너테이션 프로세서를 사용해야 한다.</li>
+<li><code>QMember</code> 가 <code>Member</code> 엔티티 클래스를 기반으로 생성한 QueryDSL 쿼리 전용 클래스이다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="sql-">네이티브 SQL 맛보기</h2>
+<h3 id="sql">네이티브 SQL이란?</h3>
+<ul>
+<li>JPA에서 지원하는 기능으로, SQL을 직접 사용할 수 있다.</li>
+<li>네이티브 SQL의 필요성
+<ul>
+<li>JPQL을 사용해도 가끔 특정 DB에 의존하는 기능을 사용해야 할 때가 있다.
+<ul>
+<li>예시) 오라클의 <code>CONNECT BY</code> 기능 등</li>
+</ul>
+</li>
+<li>이러한 기능들은 표준화가 되어있지 않으므로, JPQL에서 사용할 수 없다.</li>
+<li>이때 네이티브 SQL이 필요하다.</li>
+</ul>
+</li>
+<li>네이티브 SQL의 단점
+<ul>
+<li>당연하게도, 특정 DB에 의존하는 SQL을 작성해야 한다는 것이 단점이다.</li>
+<li>따라서 DB 변경시, 네이티브 SQL도 수정해야 한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="sql--">네이티브 SQL 사용 예시</h3>
+<p>이번에도 위 JPQL에서 작성한 것을 그대로 네이티브 SQL로 옮겨보자.</p>
+<ul>
+<li>
+<p>JPQL 쿼리</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select m from Member as m where m.username = 'kim';
+</code></pre></div></div>
+</li>
+<li>
+<p>네이티브 SQL 코드</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">String</span> <span class="n">sql</span> <span class="o">=</span> <span class="s">"SELECT ID, AGE, TEAM_ID, NAME FROM MEMBER "</span>
+				<span class="o">+</span> <span class="s">"WHERE NAME = 'kim'"</span><span class="o">;</span>
+<span class="nc">List</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;</span> <span class="n">resultList</span> <span class="o">=</span> 
+		<span class="n">em</span><span class="o">.</span><span class="na">createNativeQuery</span><span class="o">(</span><span class="n">sql</span><span class="o">,</span> <span class="nc">Member</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">getResultList</span><span class="o">();</span>
+</code></pre></div></div>
+<ul>
+<li><code>em.createNativeQuery()</code> 를 사용하면 된다.</li>
+<li>나머지는 같다.</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="jdbc-----sql---">JDBC 직접 사용, 마이바티스 같은 SQL 매퍼 프레임워크 사용</h2>
+<p>이럴 일은 드물겠지만, JDBC 커넥션에 직접 접근하고 싶으면 JPA는 JDBC 커넥션을 획득하는 API를 제공하지 않으므로, <strong>JPA 구현체가 제공하는 방법을 사용</strong>해야 한다.</p>
+<h3 id="jdbc-connection-">하이버네이트에서 직접 JDBC Connection 획득하기</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 1.</span>
+<span class="nc">Session</span> <span class="n">session</span> <span class="o">=</span> <span class="n">entityManager</span><span class="o">.</span><span class="na">unwrap</span><span class="o">(</span><span class="nc">Session</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+<span class="c1">// 2.</span>
+<span class="n">session</span><span class="o">.</span><span class="na">doWork</span><span class="o">(</span><span class="k">new</span> <span class="nc">Work</span><span class="o">()</span> <span class="o">{</span>
+
+	<span class="nd">@Override</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">(</span><span class="nc">Connection</span> <span class="n">connection</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">SQLException</span> <span class="o">{</span>
+		<span class="c1">//work...</span>
+	<span class="o">}</span>
+
+<span class="o">});</span>
+
+</code></pre></div></div>
+<ol>
+<li>먼저 JPA <code>EntityManager</code> 에서 하이버네이트 <code>Session</code> 을 구한다.</li>
+<li>그리고 <code>Session</code> 의 <code>doWork()</code> 메서드를 호출하면 된다.</li>
+</ol>
+<br/>
+<h3 id="jdbc-or-----">직접 JDBC or 마이바티스 사용 시, 발생하는 문제</h3>
+<ul>
+<li>
+<p>JDBC나 마이바티스를 JPA와 함께 사용하면 영속성 컨텍스트를 적절한 시점에 강제로 플러시(Flush)해야 한다.</p>
+<blockquote>
+<p><a href="https://taegyunwoo.github.io/jpa/JPA_Persistence1#16">플러시(Flush) 관련 포스팅</a></p>
+</blockquote>
+</li>
+<li>
+<p>왜냐하면 JDBC나 마이바티스는 모두 JPA를 위회해서 DB에 접근하기 때문이다.</p>
+<ul>
+<li><strong>JPA를 우회하는 SQL에 대해서는 JPA가 전혀 인식하지 못한다.</strong></li>
+<li>따라서 영속성 컨텍스트와 DB를 불일치 상태로 만들어 데이터 무결성을 훼손할 수 있다.</li>
+</ul>
+</li>
+<li>
+<p><strong>따라서 JPA를 우회해서 SQL을 실행하기 직전에 영속성 컨텍스트를 수동으로 플러시해서 DB와 영속성 컨텍스트를 동기화하면 된다.</strong></p>
+</li>
+</ul>
+<blockquote>
+<p>잘 이해가 되지 않아도 걱정할 필요없다. 추후 포스팅에서 자세히 다룬다.<br />
+이런게 있구나 정도로만 알아두자.</p>
+</blockquote>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>김영한, 『자바 ORM 표준 JPA 프로그래밍』, 에이콘</li>
+  </ul>
+  본 게시글은 위 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

@@ -1,0 +1,667 @@
+I"��<p><br/><br/></p>
+<h1 id="section">이번 포스팅에서 다룰 내용</h1>
+<p>이번 포스팅에서 다룰 고급 매핑 내용은 아래와 같다.</p>
+<ul>
+<li>상속 관계 매핑</li>
+<li><code>@MappedSuperclass</code></li>
+</ul>
+<p>아래는 다음 포스팅에서 다룰 고급 매핑 내용이다.</p>
+<ul>
+<li>복합 키와 식별 관계 매핑</li>
+<li>조인 테이블</li>
+<li>엔티티 하나에 여러 테이블 매핑하기</li>
+</ul>
+<p>하나의 게시글에서 다루기엔 분량이 꽤 많으므로, 총 3번에 걸쳐서 설명하겠다.</p>
+<p><br/><br/></p>
+<h1 id="section-1">상속 관계 매핑</h1>
+<h2 id="section-2">개요</h2>
+<ul>
+<li>관계형 DB에는 상속이라는 개념이 없다.</li>
+<li>대신, 슈퍼타입 서브타입 관계라는 모델링 기법이 존재한다.
+<ul>
+<li>이것은 객체의 상속 개념과 가장 유사하다.</li>
+</ul>
+</li>
+<li>ORM에서의 상속 관계 매핑이란?
+<ul>
+<li>객체의 상속 구조와 데이터베이스의 슈퍼타입 서브타입 관계를 매핑하는 것이다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-3">슈퍼타입 서브타입 논리 모델</h3>
+<p><img src="/assets/img/2021-11-07-JPA_Mapping_Expert_1/Untitled%2020.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-4">객체 상속 모델</h3>
+<p><img src="/assets/img/2021-11-07-JPA_Mapping_Expert_1/Untitled%2021.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-5">슈퍼타입 서브타입 논리 모델을 테이블로 구현하는 방법의 종류</h3>
+<p>총 3가지의 방법이 있다.</p>
+<ul>
+<li><strong>각각 테이블로 변환하는 방법</strong>
+<ul>
+<li>각각을 모두 테이블로 만든다.</li>
+<li>조회할때 조인을 사용한다.</li>
+<li>이것을 JPA에서는 <strong>조인 전략</strong> 이라고 한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>통합 테이블로 변환하는 방법</strong>
+<ul>
+<li>테이블을 하나만 사용해서 통합한다.</li>
+<li>이것을 JPA에서는 <strong>단일 테이블 전략</strong> 이라고 한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>서브타입 테이블로 변환하는 방법</strong>
+<ul>
+<li>서브 타입마다 하나의 테이블을 만든다.</li>
+<li>이것을 JPA에서는 <strong>구현 클래스마다 테이블 전략</strong> 이라고 한다.</li>
+</ul>
+</li>
+</ul>
+<p>지금부터 하나씩 알아보자.</p>
+<p><br/><br/></p>
+<h2 id="section-6">조인 전략</h2>
+<h3 id="section-7">조인 전략이란?</h3>
+<ul>
+<li>
+<p>엔티티 각각을 모두 테이블로 만들다.</p>
+</li>
+<li>
+<p>자식 테이블과 부모 테이블이 식별관계인 전략이다.</p>
+<ul>
+<li>식별관계란, ‘자식 테이블이 부모 테이블의 기본 키를 받아서, 기본 키 + 외래 키로 사용하는 것’</li>
+</ul>
+</li>
+<li>
+<p>타입을 구분하는 컬럼을 추가해야 한다. 여기서는 DTYPE 컬럼을 구분 컬럼으로 사용한다.</p>
+<ul>
+<li>왜냐하면, 객체는 타입으로 구분할 수 있지만 테이블은 타입의 개념이 없다.</li>
+</ul>
+</li>
+<li>
+<p>조인전략 테이블 시각화</p>
+<p><img src="/assets/img/2021-11-07-JPA_Mapping_Expert_1/Untitled%2022.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-8">예제 코드</h3>
+<ul>
+<li>
+<p><strong>부모 클래스</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="nd">@Inheritance</span><span class="o">(</span><span class="n">strategy</span> <span class="o">=</span> <span class="nc">InheritanceType</span><span class="o">.</span><span class="na">JOINED</span><span class="o">)</span>
+<span class="nd">@DiscriminatorColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"DTYPE"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Item</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;nd&quot;&gt;@Id&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@GeneratedValue&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@Column&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;ITEM_ID&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//getter, setter 생략&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>자식 클래스</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="nd">@DiscriminatorValue</span><span class="o">(</span><span class="s">"A"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Album</span> <span class="kd">extends</span> <span class="nc">Item</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;artist&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//getter, setter 생략&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="nd">@DiscriminatorValue</span><span class="o">(</span><span class="s">"M"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Movie</span> <span class="kd">extends</span> <span class="nc">Item</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;director&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//getter, setter 생략&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="nd">@DiscriminatorValue</span><span class="o">(</span><span class="s">"B"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Book</span> <span class="kd">extends</span> <span class="nc">Item</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;author&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isbn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//getter, setter 생략&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li><code>ITEM_ID</code> 칼럼과 자동으로 매핑된다.
+<ul>
+<li>부모 클래스로부터 기본키 필드를 물려받는다.</li>
+<li><strong>물려받은 PK 필드를 ‘자신과 매핑된 테이블(자식테이블)의 PK·FK 칼럼’과 자동으로 매핑한다.</strong></li>
+<li>이때, 매핑할 PK·FK 칼럼명으로 <strong>부모의 PK칼럼명을 그대로 사용</strong> 한다. (기본설정)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>상세 설명
+<ul>
+<li><code>@Inheritance(strategy = InheritanceType.JOINED)</code>
+<ul>
+<li>상속 매핑을 사용하려면, 부모 클래스에 <code>@Inheritance</code> 를 설정해야 한다.</li>
+<li>그리고 조인 전략을 사용할 것이므로, 해당 애너테이션의 속성을 <code>strategy = InheritanceType.JOINED</code> 로 설정한다.</li>
+</ul>
+</li>
+<li><code>@DiscriminatorColumn(name = &quot;DTYPE&quot;)</code>
+<ul>
+<li>부모 클래스에 구분 칼럼을 지정한다.</li>
+<li>이 칼럼으로 저장된 자식 테이블을 구분할 수 있다.</li>
+<li><code>name</code> 속성의 기본값이 <code>DTYPE</code> 이므로, <code>@DiscriminatorColumn</code> 으로 줄여서 사용해도 된다.</li>
+</ul>
+</li>
+<li><code>@DiscriminatorValue(&quot;M&quot;)</code>
+<ul>
+<li>엔티티를 저장할 때, 구분 칼럼에 입력할 값을 지정한다.</li>
+<li>만약 영화 엔티티를 저장하면, 구분 칼럼 DTYPE에 값 M이 저장된다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>‘자식 테이블의 PK·FK 칼럼명’이 ‘부모 테이블의 PK 칼럼명’과 다를 때</p>
+<ul>
+<li>위에서 설명했듯, ‘부모 클래스의 PK 필드’는 자식 클래스가 물려받아 ‘자식 클래스의 PK·FK 필드’로 사용한다.</li>
+<li>이때, ‘자식 클래스의 PK·FK 필드가 매핑되는 자식 테이블의 칼럼명’은 ‘부모 테이블의 PK 칼럼명’을 그대로 사용한다.</li>
+<li>만약 매핑되는 칼럼명을 변경하고 싶다면, <code>@PrimaryKeyJoinColumn</code> 애너테이션을 사용하면 된다.</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="nd">@DiscriminatorValue</span><span class="o">(</span><span class="s">"M"</span><span class="o">)</span>
+<span class="nd">@PrimaryKeyJoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"BOOK_ID"</span><span class="o">)</span>
+<span class="c1">//상속받은 PK·FK 필드는 ITEM_ID 칼럼이 아닌, BOOK_ID 칼럼과 매핑된다.</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Movie</span> <span class="kd">extends</span> <span class="nc">Item</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;director&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//getter, setter 생략&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-9">조인 전략의 장단점과 특징</h3>
+<p>조인 전략을 사용했을 때의 장점과 단점은 아래와 같다.</p>
+<ul>
+<li>장점
+<ul>
+<li>테이블이 정규화된다.</li>
+<li>외래 키 참조 무결성 제약조건을 활용할 수 있다.</li>
+<li>저장공간을 효율적으로 사용한다.</li>
+</ul>
+</li>
+<li>단점
+<ul>
+<li>조회할 때, 조인이 많이 사용되므로 성능이 저하될 수 있다.</li>
+<li>조회 쿼리가 복잡하다.</li>
+<li>데이터를 등록할 때, INSERT SQL을 두 번 실행한다.</li>
+</ul>
+</li>
+</ul>
+<p>아래는 조인 전략의 특징이다.</p>
+<ul>
+<li>JPA 표준 명세는 구분 컬럼을 사용하도록 한다.</li>
+<li>하지만, 하이버네이트를 포함한 몇몇 구현체는 구분 컬럼 없이도 동작한다.</li>
+<li>즉, <code>@DiscriminatorColumn</code> 을 사용하지 않아도 동작한다.</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-10">단일 테이블 전략</h2>
+<h3 id="section-11">단일 테이블 전략이란?</h3>
+<ul>
+<li>
+<p>테이블을 하나만 사용하는 전략이다.</p>
+</li>
+<li>
+<p>구분 컬럼으로 어떤 자식 데이터가 저장되었는지 구분한다.</p>
+</li>
+<li>
+<p>조회할 때, 조인을 사용하지 않으므로 일반적으로 가장 빠르다.</p>
+</li>
+<li>
+<p>단일 테이블 시각화</p>
+<p><img src="/assets/img/2021-11-07-JPA_Mapping_Expert_1/Untitled%2023.png" alt="Untitled" /></p>
+</li>
+<li>
+<p><strong>자식 엔티티가 매핑한 칼럼은 모두 null을 허용해야 한다!</strong></p>
+<ul>
+<li>예시) Book 엔티티 저장시</li>
+<li><code>ITEM_ID</code> , <code>NAME</code> , <code>PRICE</code> , <code>AUTHOR</code> , <code>ISBN</code> , <code>DTYPE</code> 칼럼만 사용한다.</li>
+<li><code>ARTIST</code> , <code>DIRECTOR</code> , <code>ACTOR</code> 칼럼은 모두 비워져있다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-12">예시 코드</h3>
+<ul>
+<li>
+<p><strong>부모 클래스</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="nd">@Inheritance</span><span class="o">(</span><span class="n">strategy</span> <span class="o">=</span> <span class="nc">InheritanceType</span><span class="o">.</span><span class="na">SINGLE_TABLE</span><span class="o">)</span> <span class="c1">//전략 변경</span>
+<span class="nd">@DiscriminatorColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"DTYPE"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Item</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;nd&quot;&gt;@Id&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@GeneratedValue&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@Column&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;ITEM_ID&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//getter, setter 생략&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>자식 클래스</strong></p>
+<blockquote>
+<p>자식 클래스는 변경사항이 없다.</p>
+</blockquote>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="nd">@DiscriminatorValue</span><span class="o">(</span><span class="s">"A"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Album</span> <span class="kd">extends</span> <span class="nc">Item</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;artist&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//getter, setter 생략&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="nd">@DiscriminatorValue</span><span class="o">(</span><span class="s">"M"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Movie</span> <span class="kd">extends</span> <span class="nc">Item</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;director&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//getter, setter 생략&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="nd">@DiscriminatorValue</span><span class="o">(</span><span class="s">"B"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Book</span> <span class="kd">extends</span> <span class="nc">Item</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;author&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isbn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//getter, setter 생략&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>상세 설명
+<ul>
+<li><code>@Inheritance</code> 의 속성을 <code>strategy = InheritanceType.SINGLE_TABLE</code> 로 변경하여, 단일 테이블 전략으로 설정한다.</li>
+<li><strong>이때, 테이블 하나에 모든 것을 통합하므로, 구분 컬럼을 필수로 사용해야 한다.</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-13">단일 테이블 전략의 장단점과 특징</h3>
+<p>단일 테이블 전략을 사용했을 때의 장점과 단점은 아래와 같다.</p>
+<ul>
+<li>장점
+<ul>
+<li>조인 필요 없으므로, 일반적으로 조회 성능이 빠르다.</li>
+<li>조회 쿼리가 단순하다.</li>
+</ul>
+</li>
+<li>단점
+<ul>
+<li>자식 엔티티가 매핑한 칼럼은 모두 null을 허용해야 한다.</li>
+<li>단일 테이블에 모든 것을 저장하므로, 테이블이 커질 수 있다.
+<ul>
+<li>그러므로 상황에 따라서, 조회 성능이 오히려 느려질 수 있다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>아래는 단일 테이블 전략의 특징이다.</p>
+<ul>
+<li><strong>구분 컬럼 (<code>DTYPE</code>)을 반드시 사용해야 한다.</strong>
+<ul>
+<li>즉, <code>@DiscriminatorColumn</code> 을 사용해야 한다.</li>
+<li>왜냐하면 <code>DTYPE</code> 칼럼이 없다면, 자식 엔티티를 구분할 방법이 없다.</li>
+</ul>
+</li>
+<li><code>@DiscriminatorValue</code> 를 지정하지 않으면, 기본적으로 엔티티 이름을 사용한다.
+<ul>
+<li>예시) <code>Movie</code> , <code>Book</code> , <code>Album</code></li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-14">구현 클래스마다 테이블 전략</h2>
+<h3 id="section-15">구현 클래스마다 테이블 전략이란?</h3>
+<ul>
+<li>아래 그림과 같이, 자식 엔티티마다 테이블을 만드는 전략이다.</li>
+<li>자식 테이블 각각에 필요한 칼럼이 모두 존재한다.</li>
+</ul>
+<p><img src="/assets/img/2021-11-07-JPA_Mapping_Expert_1/Untitled%2024.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-16">예시 코드</h3>
+<ul>
+<li>
+<p><strong>부모 클래스</strong></p>
+<blockquote>
+<p><code>@DiscriminatorColumn</code> 가 필요없다.</p>
+</blockquote>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="nd">@Inheritance</span><span class="o">(</span><span class="n">strategy</span> <span class="o">=</span> <span class="nc">InheritanceType</span><span class="o">.</span><span class="na">TABLE_PER_CLASS</span><span class="o">)</span> <span class="c1">//전략 변경</span>
+<span class="c1">// @DiscriminatorColumn(name = "DTYPE")</span>
+<span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Item</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;nd&quot;&gt;@Id&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@GeneratedValue&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@Column&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;ITEM_ID&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//getter, setter 생략&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>자식 클래스</strong></p>
+<blockquote>
+<p><code>@DiscriminatorValue</code> 가 필요없다.</p>
+</blockquote>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="c1">// @DiscriminatorValue("A")</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Album</span> <span class="kd">extends</span> <span class="nc">Item</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;artist&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//getter, setter 생략&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="c1">//@DiscriminatorValue("M")</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Movie</span> <span class="kd">extends</span> <span class="nc">Item</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;director&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//getter, setter 생략&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="c1">//@DiscriminatorValue("B")</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Book</span> <span class="kd">extends</span> <span class="nc">Item</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;author&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isbn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//getter, setter 생략&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>상세 설명
+<ul>
+<li><code>@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)</code>
+<ul>
+<li>구현 클래스마다 테이블 전략을 사용하도록 설정한다.</li>
+</ul>
+</li>
+<li><strong>이 전략은 일반적으로 추천하지 않는 전략이다!</strong>
+<ul>
+<li>이 전략의 단점이 너무 크다. 아래에서 설명한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-17">구현 클래스마다 테이블 전략의 장단점과 특징</h3>
+<p>구현 클래스마다 테이블 전략을 사용했을 때의 장점과 단점은 아래와 같다.</p>
+<ul>
+<li>장점
+<ul>
+<li>서브 타입을 구분해서 처리할 때 효과적이다.</li>
+<li>not null 제약조건을 사용할 수 있다.</li>
+</ul>
+</li>
+<li>단점
+<ul>
+<li>여러 자식 테이블을 함께 조회할 때, 성능이 느리다.
+<ul>
+<li>SQL에 UNION을 사용해야 하기 때문이다.</li>
+</ul>
+</li>
+<li>자식 테이블을 통합해서 쿼리하기 어렵다.</li>
+</ul>
+</li>
+</ul>
+<p>아래는 구현 클래스마다 테이블 전략의 특징이다.</p>
+<ul>
+<li>구분 컬럼을 사용하지 않는다.</li>
+<li><strong>웬만하면 조인 전략이나 단일 테이블 전략을 고려하자!</strong></li>
+</ul>
+<p><br/><br/></p>
+<h1 id="codemappedsuperclasscode-"><code>@MappedSuperclass</code> 애너테이션</h1>
+<h2 id="section-18">개요</h2>
+<h3 id="codemappedsuperclasscode--1"><code>@MappedSuperclass</code> 이란?</h3>
+<ul>
+<li>‘부모 클래스’는 테이블과 매핑하지 않고, ‘부모 클래스를 상속 받는 자식 클래스’에게 매핑 정보만 제공하고 싶을 때, 해당 애너테이션을 사용하면 된다.</li>
+<li>즉 추상 클래스와 비슷하지만…
+<ul>
+<li><code>@Entity</code> 는 실제 테이블과 매핑된다.</li>
+<li><code>@MappedSuperclass</code> 는 실제 테이블과 매핑되지는 않는다.</li>
+</ul>
+</li>
+<li><strong>그러므로 <code>@MappedSuperclass</code> 는 단순히 매핑 정보를 상속할 목적으로만 사용된다.</strong>
+<ul>
+<li>즉, 공통속성(필드)를 묶기 위해서 사용된다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="codemappedsuperclasscode----"><code>@MappedSuperclass</code> 를 적용한 객체 시각화</h3>
+<ul>
+<li>
+<p>테이블 관계</p>
+<p><img src="/assets/img/2021-11-07-JPA_Mapping_Expert_1/Untitled%2025.png" alt="Untitled" /></p>
+</li>
+<li>
+<p>엔티티 관계</p>
+<p><img src="/assets/img/2021-11-07-JPA_Mapping_Expert_1/Untitled%2026.png" alt="Untitled" /></p>
+</li>
+<li>
+<p>회원(<code>MEMBER</code>)와 판매자(<code>SELLER</code>)는 서로 관계가 없는 테이블이다.</p>
+</li>
+<li>
+<p>회원(<code>Member</code>)와 판매자(<code>Seller</code>)는 서로 관계가 없는 엔티티이다.</p>
+</li>
+<li>
+<p>여기서 테이블은 그대로 두고, 객체 모델의 <code>id</code> , <code>name</code> 두 공통 속성을 부모 클래스로 모으고 객체 상속 관계로 만들어보자.</p>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-19">예시 코드</h2>
+<h3 id="section-20">부모 클래스</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@MappedSuperclass</span>
+<span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">BaseEntity</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;nd&quot;&gt;@Id&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@GeneratedValue&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//getter, setter 생략&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li>이 클래스를 통해, 공통 속성을 묶는다.</li>
+</ul>
+<br/>
+<h3 id="section-21">자식 클래스</h3>
+<ul>
+<li>
+<p>Member 클래스</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="kd">extends</span> <span class="nc">BaseEntity</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;c1&quot;&gt;// ID 매핑정보 상속 받음 =&amp;gt; 'id 필드', 'MEMBER.ID 칼럼' 매핑&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// NAME 매핑정보 상속 받음 =&amp;gt; 'name 필드', 'MEMBER.NAME 칼럼' 매핑&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//getter, setter 생략&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+</li>
+<li>
+<p>Seller 클래스</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Seller</span> <span class="kd">extends</span> <span class="nc">BaseEntity</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;c1&quot;&gt;// ID 매핑정보 상속 받음 =&amp;gt; 'id 필드', 'SELLER.ID 칼럼' 매핑&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// NAME 매핑정보 상속 받음 =&amp;gt; 'name 필드', 'SELLER.NAME 칼럼' 매핑&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shopName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//getter, setter 생략&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>상세 설명
+<ul>
+<li><code>BaseEntity</code> 클래스
+<ul>
+<li>객체들이 주로 사용하는 공통 매핑 정보를 정의했다.</li>
+<li>테이블과 매핑할 필요가 없다.</li>
+<li><strong>이 클래스는 단지, 자식 엔티티에게 공통으로 사용되는 매핑 정보만 제공하면 된다.</strong></li>
+<li>따라서, <code>@MappedSuperclass</code> 를 적용했다.</li>
+</ul>
+</li>
+<li>자식 엔티티
+<ul>
+<li>상속을 통해, <code>BaseEntity</code> 의 매핑 정보를 물려받았다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-22">물려받은 매핑 정보, 연관관계 재정의</h3>
+<ul>
+<li>부모로부터 물려받은 매핑 정보를 재정의하려면 아래 애너테이션을 사용하면 된다.
+<ul>
+<li>
+<p><code>@AttributeOverrides</code></p>
+</li>
+<li>
+<p><code>@AttributeOverride</code></p>
+</li>
+<li>
+<p>예시 코드 - 1</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="nd">@AttributeOverride</span><span class="o">(</span>
+	<span class="n">name</span> <span class="o">=</span> <span class="s">"id"</span><span class="o">,</span>
+	<span class="n">column</span> <span class="o">=</span> <span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_ID"</span><span class="o">)</span>
+<span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="kd">extends</span> <span class="nc">BaseEntity</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li>부모에게 상속받은 <code>id</code> 속성(필드)과 매핑되는 칼럼명을 <code>MEMBER_ID</code> 로 재정의했다.</li>
+<li>따라서 <code>Member.id</code> 필드는 <code>ID</code> 가 아닌, <code>MEMBER_ID</code> 칼럼과 매핑된다.</li>
+</ul>
+</li>
+<li>
+<p>예시 코드 - 2</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="nd">@AttributeOverrides</span><span class="o">({</span>
+	<span class="nd">@AttributeOverride</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"id"</span><span class="o">,</span> <span class="n">column</span> <span class="o">=</span> <span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"Member_ID"</span><span class="o">)),</span>
+	<span class="nd">@AttributeOverride</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"name"</span><span class="o">,</span> <span class="n">column</span> <span class="o">=</span> <span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"Member_NAME"</span><span class="o">))</span>
+<span class="o">})</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="kd">extends</span> <span class="nc">BaseEntity</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li><code>@AttributeOverrides</code> 를 통해, 여러 매핑 정보를 오버라이딩할 수 있다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>부모로부터 물려받은 연관관계를 재정의하려면 아래 애너테이션을 사용하면 된다.
+<ul>
+<li><code>@AssociationOverrides</code></li>
+<li><code>@AssociationOverride</code></li>
+</ul>
+<blockquote>
+<p>따로 설명하지는 않겠다.</p>
+</blockquote>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-23">정리</h2>
+<h3 id="codemappedsuperclasscode--2"><code>@MappedSuperclass</code> 특징</h3>
+<ul>
+<li>테이블과 매핑되지 않고, 자식 클래스에 <strong>엔티티의 매핑 정보를 상속</strong>하기 위해 사용한다.</li>
+<li><code>@MappedSuperclass</code> 로 지정한 클래스는 엔티티가 아니므로, <code>em.find()</code> 나 JPQL에서 사용할 수 없다.</li>
+<li>해당 애너테이션이 적용된 클래스는 직접 사용될 일이 없다.
+<ul>
+<li>따라서 추상 클래스로 만드는 것을 권장한다.</li>
+</ul>
+</li>
+<li>즉, <code>@MappedSuperclass</code> 는 단순히 공통으로 사용하는 매핑 정보를 모아주는 역할만을 한다.</li>
+</ul>
+<br/>
+<h3 id="section-24">엔티티가 상속받을 수 있는 것</h3>
+<ul>
+<li>엔티티(<code>@Entity</code>)는 엔티티(<code>@Entity</code>)이거나, <code>@MappedSuperclass</code> 로 지정한 클래스만 상속받을 수 있다.</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>김영한, 『자바 ORM 표준 JPA 프로그래밍』, 에이콘</li>
+  </ul>
+  본 게시글은 위 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

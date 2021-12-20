@@ -1,0 +1,429 @@
+I"7<p><br/><br/></p>
+<h1 id="section">쓰레드와 병행성</h1>
+<h2 id="section-1">개요</h2>
+<h3 id="section-2">쓰레드란?</h3>
+<ul>
+<li>쓰레드는 프로세스 내에 있는 것으로 CPU 이용의 기본 단위이다.</li>
+</ul>
+<p><img src="/assets/img/2021-11-10-OS_Thread/Untitled.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-3">쓰레드 구성요소</h3>
+<ul>
+<li>쓰레드 ID</li>
+<li>프로그램 카운터</li>
+<li>레지스터 집합</li>
+<li>스택</li>
+</ul>
+<br/>
+<h3 id="section-4">멀티쓰레드의 필요성</h3>
+<ul>
+<li>
+<p>현대에서 사용되는 시스템은 대부분 멀티 쓰레드를 지원한다.</p>
+</li>
+<li>
+<p>프로세스 생성은 비용이 많이 드는 반면, 쓰레드 생성은 비용이 비교적 저렴하다.</p>
+</li>
+<li>
+<p>멀티쓰레드를 사용하면, 코드를 간단하게 하고 효율은 올라가게 한다.</p>
+</li>
+<li>
+<p>커널은 일반적으로 멀티쓰레드를 지원한다.</p>
+</li>
+<li>
+<p>멀티 쓰레드 예시</p>
+<ul>
+<li>문서 편집 응용프로그램을 예시로 삼아, 멀티 쓰레드에 대한 예시를 알아보자.</li>
+<li>문서 편집 App에서 사용되는 쓰레드 업무
+<ul>
+<li>화면 갱신</li>
+<li>키보드 입력 데이터 가져오기</li>
+<li>철자 확인</li>
+<li>네트워크 요청에 응답하기</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="amp--">클라이언트&amp;서버 구조에서의 쓰레드</h3>
+<ul>
+<li>클라이언트의 요청당 쓰레드를 서버에서 생성하여 응답한다.</li>
+</ul>
+<p><img src="/assets/img/2021-11-10-OS_Thread/Untitled%201.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-5">쓰레드 사용시 장점</h3>
+<ul>
+<li><strong>응답성 향상</strong>
+<ul>
+<li>병렬적으로 업무를 처리할 수 있으므로, 응답성이 향상된다.</li>
+</ul>
+</li>
+<li><strong>자원공유</strong></li>
+<li><strong>경제성</strong>
+<ul>
+<li>프로세스를 새로 만드는 것보다 쓰레드를 생성하는 것이 더 저렴하다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-6">멀티코어 프로그래밍</h3>
+<ul>
+<li>
+<p>현대의 CPU는 멀티코어 CPU이다.</p>
+<ul>
+<li>한 개의 칩에 여러 개의 CPU(core)가 존재한다.</li>
+</ul>
+<p><img src="/assets/img/2021-11-10-OS_Thread/Untitled%202.png" alt="Untitled" /></p>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="parallelism-concurrency">Parallelism과 Concurrency</h2>
+<h3 id="parallelism">Parallelism이란?</h3>
+<ul>
+<li>병렬 실행</li>
+<li><strong>한 시점에 여러 개 작업을 동시에 실행한다.</strong></li>
+</ul>
+<br/>
+<h3 id="concurrency">Concurrency란?</h3>
+<ul>
+<li>병렬 실행</li>
+<li><strong>한 개 이상의 작업이 수행되게 한다.</strong>
+<ul>
+<li>즉, Time Sharing을 생각하면 된다.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Parallelism과 Concurrency 를 구분할 수 있어야 한다.</p>
+</blockquote>
+<br/>
+<h3 id="concurrency-vs-parallelism">Concurrency vs Parallelism</h3>
+<ul>
+<li>
+<p><strong>Concurrency</strong></p>
+<ul>
+<li>Concurrency는 단일 코어에서 사용된다.</li>
+<li>즉, Time Sharing을 의미한다.</li>
+</ul>
+<p><img src="/assets/img/2021-11-10-OS_Thread/Untitled%203.png" alt="Untitled" /></p>
+<ul>
+<li>시간을 분할하여, 여러 Task를 번갈아가며 수행한다.</li>
+</ul>
+</li>
+<li>
+<p><strong>Parallelism</strong></p>
+<ul>
+<li>Parallelism은 멀티 코어에서 사용된다.</li>
+<li>진짜 동시 실행을 의미한다.</li>
+</ul>
+<p><img src="/assets/img/2021-11-10-OS_Thread/Untitled%204.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-7">멀티쓰레드 사용시 고려해야하는 점</h3>
+<ul>
+<li>멀티쓰레드를 사용하면, 개발자는 여러 문제를 고려해야 한다.</li>
+<li>고려사항
+<ul>
+<li><strong>작업 분리</strong></li>
+<li><strong>균형</strong></li>
+<li><strong>데이터 분리</strong></li>
+<li><strong>데이터 종속성</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-8">병렬 실행 유형</h3>
+<p>병렬 실행을 하는 방법에는 2가지가 존재한다. 이는 아래와 같다.</p>
+<ul>
+<li><strong>Data Parallelism (데이터 병렬)</strong>
+<ul>
+<li>
+<p>배열처럼 이어진 여러 데이터들에 대해, 같은 Task을 병렬적으로 수행하는 것</p>
+</li>
+<li>
+<p><strong>즉, 데이터에 초점을 맞추고, 반복적인 메커니즘을 병렬적으로 수행하는 것</strong></p>
+<blockquote>
+<p>Loop의 각 Step을 병렬적으로 처리한다고 생각하면 된다.</p>
+</blockquote>
+</li>
+<li>
+<p>주로 Vector Processing에서 사용된다.</p>
+</li>
+<li>
+<p>예시</p>
+<ul>
+<li>배열 a, b, c가 존재할 때, <code>c = a + b</code> 에 대한 연산</li>
+</ul>
+<p><img src="/assets/img/2021-11-10-OS_Thread/Untitled%205.png" alt="Untitled" /></p>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>Task Parallelism (테스크 병렬)</strong></p>
+<ul>
+<li><strong>다양한 데이터에 대해, 서로 다른 Task를 수행하는 것</strong></li>
+</ul>
+<p><img src="/assets/img/2021-11-10-OS_Thread/Untitled%206.png" alt="Untitled" /></p>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-9">암달의 법칙</h2>
+<h3 id="section-10">암달의 법칙이란?</h3>
+<ul>
+<li><strong>암달의 법칙은 “순차 코드 부분과 병렬 부분에 대한 성능 향상율”을 의미한다.</strong></li>
+</ul>
+<br/>
+<h3 id="section-11">암달의 법칙 공식</h3>
+<ul>
+<li>공식
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?speedup%5Cle%5Cfrac%7B1%7D%7BS+%5Cfrac%7B(1-S)%7D%7BN%7D%7D" alt="O(n^2)" /></li>
+<li>speadup : 속도 향상율</li>
+<li>S : 순차 코드 부분의 비율</li>
+<li>(1-S) : 병렬 코드 부분의 비율</li>
+<li>N : 프로세서의 개수</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>특징
+<ul>
+<li>N이 무한대이면, <img src="https://latex.codecogs.com/svg.image?%5Cfrac%7B1%7D%7BS%7D" alt="O(n^2)" /> 로 수렴한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-12">예시 문제</h3>
+<ul>
+<li>문제
+<ul>
+<li>순차 코드 부분의 비율이 75%이고, 병렬 코드 부분의 비율이 25%이다.</li>
+<li>그리고 프로세서가 1개에서 2개로 증가되었을 때, 속도가 얼마나 빨라졌겠는가?</li>
+</ul>
+</li>
+<li>풀이
+<ul>
+<li>S = 0.75</li>
+<li>(1-S) = 0.25</li>
+<li>N = 2</li>
+<li><img src="https://latex.codecogs.com/svg.image?%5Cfrac%7B1%7D%7BS+%5Cfrac%7B(1-S)%7D%7BN%7D%7D=%5Cfrac%7B1%7D%7B0.75+%5Cfrac%7B(0.25)%7D%7B2%7D%7D=1.6" alt="O(n^2)" /></li>
+<li>따라서, 1.6배 빨라졌다.</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-13">유저 쓰레드와 커널 쓰레드</h2>
+<h3 id="section-14">유저 쓰레드, 커널 쓰레드란?</h3>
+<ul>
+<li>유저 쓰레드
+<ul>
+<li>유저 쓰레드는 유저 레벨 쓰레드 라이브러리에 의해 동작하는 쓰레드이다.</li>
+<li><strong>유저 쓰레드는 “유저 스페이스에서 동작하는 쓰레드”이다.</strong></li>
+<li><strong>유저 쓰레드는 커널 쓰레드의 도움을 받아 동작한다.</strong></li>
+<li>주요 유저 레벨 쓰레드 라이브러리
+<ul>
+<li>POSIX에서 사용되는 <strong>Pthreads</strong></li>
+<li>Windows에서 사용되는 <strong>threads</strong></li>
+<li>Java에서 사용되는 <strong>threads</strong>
+<ul>
+<li>이것은 언어 레벨에서 쓰레드를 지원하는 것이다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>커널 쓰레드
+<ul>
+<li>커널에서 제공하는 쓰레드이다.</li>
+</ul>
+</li>
+</ul>
+<p><img src="/assets/img/2021-11-10-OS_Thread/Untitled%207.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-15">유저 쓰레드와 커널 쓰레드 간의 매핑 종류</h3>
+<p>유저 쓰레드와 커널 쓰레드가 서로 매핑하는 방식은 총 3가지가 있다. 이것은 아래와 같다.</p>
+<ul>
+<li><strong>Many-To-One</strong></li>
+<li><strong>One-To-One</strong></li>
+<li><strong>Many-To-Many</strong></li>
+</ul>
+<br/>
+<h3 id="many-to-one">Many-To-One</h3>
+<ul>
+<li><strong>여러 유저레벨 쓰레드가 하나의 커널 쓰레드에 매핑된다.</strong></li>
+<li><strong>한 개의 유저 쓰레드 봉쇄가 전부를 다 봉쇄시킨다.</strong>
+<ul>
+<li>왜냐하면, 커널 쓰레드가 하나이기 때문이다.</li>
+</ul>
+</li>
+<li>과거에 사용하던 방식이다.</li>
+</ul>
+<p><img src="/assets/img/2021-11-10-OS_Thread/Untitled%208.png" alt="Untitled" /></p>
+<br/>
+<h3 id="one-to-one">One-To-One</h3>
+<ul>
+<li>사용자 쓰레드와 커널 쓰레드가 서로 일대일로 매핑된다.</li>
+<li>Many-To-One 보다 더 병렬성에서 우수하다.
+<ul>
+<li>유저쓰레드는 독립적으로 동작한다.</li>
+</ul>
+</li>
+<li>오버헤드 때문에 가끔, 프로세서당 동작하는 쓰레드 개수가 제한된다.</li>
+<li>현대 시스템에서 사용되는 방식이다.</li>
+<li>사용처
+<ul>
+<li>Windows xp, 2000</li>
+<li>Linux</li>
+<li>Solaris 9 and later</li>
+</ul>
+</li>
+</ul>
+<p><img src="/assets/img/2021-11-10-OS_Thread/Untitled%209.png" alt="Untitled" /></p>
+<br/>
+<h3 id="many-to-many">Many-To-Many</h3>
+<ul>
+<li>많은 유저 쓰레드가 많은 커널 쓰레드에 매핑된다.</li>
+<li>운영체제가 충분히 많은 커널 쓰레드를 만들도록 허용한다.</li>
+<li>구현시 오버헤드가 발생하여, 사용되지 않는 방식이다.</li>
+</ul>
+<p><img src="/assets/img/2021-11-10-OS_Thread/Untitled%2010.png" alt="Untitled" /></p>
+<br/>
+<h3 id="two-level-model">Two-level Model</h3>
+<ul>
+<li>Many-To-Many와 비슷한 방식이다.</li>
+<li>하지만, 유저 쓰레드 수가 커널 쓰레드 수보다 적거나 같도록 제한한다.</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-16">쓰레드 라이브러리</h2>
+<h3 id="section-17">쓰레드 라이브러리의 역할</h3>
+<ul>
+<li><strong>쓰레드 라이브러리는 “쓰레드들을 만들고 관리하는 API를 프로그래머에게 제공”한다.</strong></li>
+</ul>
+<br/>
+<h3 id="api-">쓰레드 API 방식</h3>
+<p>쓰레드 API를 제공하는 방식은 아래와 같다.</p>
+<ul>
+<li>라이브러리가 완전 유저 스페이스에 있는 방식</li>
+<li>운영체제가 커널 레벨 라이브러리를 지원하는 방식</li>
+</ul>
+<br/>
+<h3 id="pthreads">Pthreads</h3>
+<ul>
+<li>
+<p>POSIX 운영체제에서 사용되는 라이브러리이다.</p>
+</li>
+<li>
+<p>Pthreads 라이브러리는 유저 쓰레드와 커널 쓰레드 모두 지원한다.</p>
+</li>
+<li>
+<p>Pthreads 라이브러리는 UNIX 계열군의 표준 API이다.</p>
+</li>
+<li>
+<p><strong>Pthreads는 오직 명세(가이드)일 뿐이다. 이에 대한 구현은 각 벤더들이 한다.</strong></p>
+</li>
+<li>
+<p>Pthreads 예시 코드</p>
+<p><img src="/assets/img/2021-11-10-OS_Thread/Untitled%2011.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="windows-thread-">Windows Thread 예시코드</h3>
+<p><img src="/assets/img/2021-11-10-OS_Thread/Untitled%2012.png" alt="Untitled" /></p>
+<p><img src="/assets/img/2021-11-10-OS_Thread/Untitled%2013.png" alt="Untitled" /></p>
+<br/>
+<h3 id="java-threads">Java Threads</h3>
+<ul>
+<li>쓰레드는 자바 프로그램 실행의 근본적인 모델이다.</li>
+<li>자바 언어와 API는 쓰레드 생성과 관리를 풍부하게 지원한다.</li>
+<li>언어 레벨에서 쓰레드를 지원한다.</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-18">암묵적 쓰레딩</h2>
+<h3 id="section-19">암묵적 쓰레딩이란?</h3>
+<ul>
+<li>쓰레드를 점점 더 많이 쓰다보니, 프로그램 수행의 정확성을 지키기가 어려워졌다.</li>
+<li><strong>따라서 쓰레드 생성 관리 등을 프로그래머 대신, 컴파일러와 런타임 라이브러리에 맡긴 것을 암묵적 쓰레딩이라고 한다.</strong></li>
+</ul>
+<br/>
+<h3 id="section-20">암묵적 쓰레딩의 방법</h3>
+<p>암묵적 쓰레딩을 하는 3가지 방법은 아래와 같다.</p>
+<ul>
+<li><strong>Thread Pools</strong></li>
+<li><strong>OpenMP</strong></li>
+<li><strong>Grand Central Dispatch (GCD)</strong></li>
+</ul>
+<br/>
+<h3 id="thread-pools">Thread Pools</h3>
+<ul>
+<li>수행해야 할 일들(Tasks)을 기다리는 쓰레드의 풀을 구성한다.</li>
+<li>쓰레드를 그때그때 새로 만드는 것 보다, <strong>미리 만들어두어 이미 존재하는 쓰레드로 서비스하는 것이 조금 더 빠르다.</strong></li>
+<li><strong>Pool의 사이즈 만큼의 쓰레드를 서비스 할 수 있다.</strong>
+<ul>
+<li>Pool 사이즈 이상의 요청시, 사용 중인 쓰레드가 완료될 때까지 기다려야한다.</li>
+</ul>
+</li>
+</ul>
+<p><img src="/assets/img/2021-11-10-OS_Thread/Untitled%2014.png" alt="Untitled" /></p>
+<ul>
+<li>윈도우즈의 쓰레드 API도 Thread Pools 를 지원한다.</li>
+</ul>
+<br/>
+<h3 id="openmp">OpenMP</h3>
+<ul>
+<li>OpenMP는 병렬 프로그램을 지원한다.</li>
+<li>전처리기를 통해서 구현할 수 있다.
+<ul>
+<li>병렬 수행영역을 전처리기로 표기하여, 쓰레드를 사용하여 처리한다.</li>
+</ul>
+</li>
+</ul>
+<p><img src="/assets/img/2021-11-10-OS_Thread/Untitled%2015.png" alt="Untitled" /></p>
+<br/>
+<h3 id="grand-central-dispatch-gcd">Grand Central Dispatch (GCD)</h3>
+<ul>
+<li>
+<p>GCD는 Apple 사의 기술이다.</p>
+</li>
+<li>
+<p><code>^{}</code> 을 통해, 병렬처리를 한다.</p>
+<ul>
+<li>해당 중괄호 안에 작성된 내용을 독립적으로 실행될 수 있는 작업단위로 처리한다.</li>
+</ul>
+</li>
+<li>
+<p>GCD의 종류</p>
+<ul>
+<li>
+<p><strong>Serial (직렬)</strong></p>
+<p><img src="/assets/img/2021-11-10-OS_Thread/Untitled%2016.png" alt="Untitled" /></p>
+</li>
+<li>
+<p><strong>Concurrent (병행)</strong></p>
+<p><img src="/assets/img/2021-11-10-OS_Thread/Untitled%2017.png" alt="Untitled" /></p>
+</li>
+</ul>
+<blockquote>
+<p><strong>위 두가지 모두 GCD가 지원한다.</strong></p>
+</blockquote>
+</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>성결대학교 컴퓨터 공학과 강영명 교수님 (2021)</li>
+    <li>Siberschatz et. al., 『Operating System Concepts 10th Ed.』</li>
+  </ul>
+  본 게시글은 위 강의 및 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

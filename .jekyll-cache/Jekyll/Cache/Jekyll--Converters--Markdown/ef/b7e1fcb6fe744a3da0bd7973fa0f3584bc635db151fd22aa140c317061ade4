@@ -1,0 +1,365 @@
+I""o<p><br/><br/></p>
+<h1 id="section">다룰 내용</h1>
+<p>이번 포스팅에서 다룰 내용은 아래와 같다.</p>
+<ul>
+<li><strong>영속성 전이, 고아 객체</strong>
+<ul>
+<li>연관된 객체를 함께 저장하거나 함께 삭제할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<p>하나씩 알아보자.</p>
+<p><br/><br/><br/></p>
+<h1 id="section-1">영속성 전이</h1>
+<h2 id="cascade">CASCADE</h2>
+<h3 id="section-2">영속성 전이란?</h3>
+<ul>
+<li>특정 엔티티를 영속 상태로 만들 때, 연관된 엔티티도 함께 영속 상태로 만들고 싶을 때 사용하는 기능이다.</li>
+<li>JPA는 <code>CASCADE</code> 옵션으로 영속성 전이를 제공한다.</li>
+<li>예시를 통해, 기존의 방식과 무엇이 다른지 알아보자.</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-3">기본 예시</h2>
+<h3 id="section-4">연관관계 설정 기존 방식</h3>
+<ul>
+<li>
+<p>엔티티 관계</p>
+<p><img src="/assets/img/2021-11-14-JPA_Relation_Management/Untitled%2050.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>부모 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Parent</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;nd&quot;&gt;@Id&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@GeneratedValue&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;nd&quot;&gt;@OneToMany&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mappedBy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;parent&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Child&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;children&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ArrayList&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Child&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;();&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>부모 자식 저장 로직</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">saveNoCascade</span><span class="o">(</span><span class="nc">EntityManager</span> <span class="n">em</span><span class="o">)</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;c1&quot;&gt;//부모 저장&lt;/span&gt;
+&lt;span class=&quot;nc&quot;&gt;Parent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Parent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;em&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;persist&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//부모를 먼저 저장해야한다. (영속 상태로 변경)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//1번 자식 저장&lt;/span&gt;
+&lt;span class=&quot;nc&quot;&gt;Child&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;child1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Child&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;child1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setParent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//자식 -&amp;gt; 부모 연관관계 설정&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getChildren&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;child1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//부모 -&amp;gt; 자식 연관관계 설정&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;em&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;persist&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;child1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//자식1 저장 (영속 상태로 변경)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//2번 자식 저장&lt;/span&gt;
+&lt;span class=&quot;nc&quot;&gt;Child&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;child2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Child&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;child2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setParent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//자식 -&amp;gt; 부모 연관관계 설정&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getChildren&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;child2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//부모 -&amp;gt; 자식 연관관계 설정&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;em&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;persist&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;child2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//자식2 저장 (영속 상태로 변경)&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li><code>em.persist(parent)</code>
+<ul>
+<li>부모 엔티티를 먼저 저장하고, 영속 상태로 만들었다.</li>
+<li>다른 엔티티에서 <code>parent</code> 엔티티가 연관관계로 사용되려면, 영속 상태이어야 한다.</li>
+</ul>
+</li>
+<li><code>em.persist(child1)</code> , <code>em.persist(child2)</code>
+<ul>
+<li>각각 자식 엔티티를 영속상태로 만듦과 동시에 저장한다.</li>
+<li><em>너무 번거롭다…</em></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>이때 영속성 전이를 사용하면, 부모 엔티티만 영속 상태로 만들어도 연관된 자식 엔티티까지 영속 상태로 만들 수 있다.</strong></p>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-5">영속성 전이: 저장</h2>
+<h3 id="section-6">영속성 전이를 적용하여 저장하기</h3>
+<ul>
+<li>
+<p>위 예시 코드를 아래와 같이 수정하여, 영속성 전이 기능을 적용하자.</p>
+</li>
+<li>
+<p>부모 엔티티</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Parent</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;nd&quot;&gt;@Id&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@GeneratedValue&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//영속성 전이 설정&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@OneToMany&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mappedBy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;parent&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cascade&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;CascadeType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;PERSIST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Child&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;children&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ArrayList&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Child&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;();&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li><code>cascade = CascadeType.PERSIST</code>
+<ul>
+<li>위와 같이 설정 시, 부모를 영속화할 때 연관된 자식들도 함께 영속화하라고 할 수 있다.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>부모 자식 저장 로직</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">saveCascade</span><span class="o">(</span><span class="nc">EntityManager</span> <span class="n">em</span><span class="o">)</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;c1&quot;&gt;//부모 저장&lt;/span&gt;
+&lt;span class=&quot;nc&quot;&gt;Parent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Parent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//em.persist(parent); 부모를 먼저 저장할 필요가 없다.&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//1번 자식 저장&lt;/span&gt;
+&lt;span class=&quot;nc&quot;&gt;Child&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;child1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Child&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;child1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setParent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getChildren&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;child1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//em.persist(child1); 필요없는 코드이다.&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//2번 자식 저장&lt;/span&gt;
+&lt;span class=&quot;nc&quot;&gt;Child&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;child2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Child&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;child2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setParent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getChildren&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;child2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//em.persist(child2); 필요없는 코드이다.&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//부모 엔티티 영속화 및 저장&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;em&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;persist&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//이때, 연관된 자식까지 영속화하고 저장한다.&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li><code>em.persist(parent);</code> 호출시
+<ul>
+<li>먼저 parent를 영속화한 뒤, child를 영속화한다. 그 다음, 각 엔티티를 저장한다.</li>
+<li>따라서 최종적인 연관관계 설정이 해당 코드 한줄로 끝난다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-7">영속성 전이 저장 시각화</h3>
+<p><img src="/assets/img/2021-11-14-JPA_Relation_Management/Untitled%2051.png" alt="Untitled" /></p>
+<ul>
+<li><strong>즉, 부모만 영속화하면 자식 엔티티까지 함께 영속화해서 저장한다.</strong></li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-8">영속성 전이 특징</h2>
+<ul>
+<li>영속성 전이는 연관관계를 매핑하는 것과는 관련이 없다.</li>
+<li><strong>영속성 전이는 영속화할 때, 연관된 엔티티도 같이 영속화하는 편리함을 제공할 뿐이다.</strong></li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-9">영속성 전이: 삭제</h2>
+<h3 id="section-10">영속성 전이를 적용하여 삭제하기</h3>
+<ul>
+<li>
+<p>부모·자식 엔티티를 모두 제거하기 위한 기존 코드</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Parent</span> <span class="n">findParent</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="nc">Parent</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="mi">1L</span><span class="o">);</span>
+<span class="nc">Child</span> <span class="n">findChild1</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="nc">Child</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="mi">1L</span><span class="o">);</span>
+<span class="nc">Child</span> <span class="n">findChild2</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="nc">Child</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="mi">2L</span><span class="o">);</span>
+<p><span class="n">em</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">findChild1</span><span class="o">);</span>
+<span class="n">em</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">findChild2</span><span class="o">);</span>
+<span class="n">em</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">parent</span><span class="o">);</span>
+</code></pre></div></div></p>
+<ul>
+<li>기존 방식은 위와 같이 각각 하나씩 제거해야 한다.</li>
+<li>외래키 제약조건을 고려하여, 연관된 자식 엔티티부터 삭제해야 한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>영속성 전이를 사용하여, 부모·자식 엔티티를 모두 제거하기</p>
+<ul>
+<li>먼저 부모 엔티티에 <code>CascadeType.REMOVE</code> 를 설정한다.</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Parent</span> <span class="n">findParent</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="nc">Parent</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="mi">1L</span><span class="o">);</span>
+<span class="c1">//Child findChild1 = em.find(Child.class, 1L); 필요없는 코드</span>
+<span class="c1">//Child findChild2 = em.find(Child.class, 2L);</span>
+<p><span class="c1">//em.remove(findChild1); 필요없는 코드</span>
+<span class="c1">//em.remove(findChild2);</span>
+<span class="n">em</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">parent</span><span class="o">);</span>
+</code></pre></div></div></p>
+<ul>
+<li><code>em.remove(parent);</code>
+<ul>
+<li>먼저 연관된 Child 엔티티를 모두 삭제한다.</li>
+<li>그 후, findParent를 삭제한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-11">삭제 순서</h3>
+<ul>
+<li><strong>연관 엔티티 삭제 시, 외래키 제약조건을 고려해야 한다.</strong></li>
+<li>삭제 순서
+<ol>
+<li>자식 삭제 (FK를 갖는 엔티티 먼저 삭제)</li>
+<li>부모 삭제 (FK에 들어가는 엔티티 삭제)</li>
+</ol>
+</li>
+<li><strong>위와 같이 삭제해야, 외래키 무결성을 위반하는 경우를 방지할 수 있다.</strong></li>
+</ul>
+<p><br/><br/></p>
+<h2 id="cascade-">CASCADE 종류</h2>
+<h3 id="section-12">종류</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="nc">CascadeType</span> <span class="o">{</span>
+	<span class="no">ALL</span><span class="o">,</span> <span class="c1">//모두 적용</span>
+	<span class="no">PERSIST</span><span class="o">,</span> <span class="c1">//영속</span>
+	<span class="no">MERGE</span><span class="o">,</span> <span class="c1">//병합</span>
+	<span class="no">REMOVE</span><span class="o">,</span> <span class="c1">//삭제</span>
+	<span class="no">REFRESH</span><span class="o">,</span> <span class="c1">//REFRESH</span>
+	<span class="no">DETACH</span> <span class="c1">//DETACH</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<br/>
+<h3 id="section-13">여러 속성 적용하기</h3>
+<ul>
+<li>
+<p>여러 속성을 동시에 적용할 수도 있다.</p>
+</li>
+<li>
+<p>예시</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cascade</span> <span class="o">=</span> <span class="o">{</span><span class="nc">CascadeType</span><span class="o">.</span><span class="na">PERSIST</span><span class="o">,</span> <span class="nc">CascadeType</span><span class="o">.</span><span class="na">REMOVE</span><span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<h3 id="section-14">참고사항</h3>
+<ul>
+<li><code>CascadeType.PERSIST</code> 와 <code>CascadeType.REMOVE</code>
+<ul>
+<li>위 두 가지 경우는 <code>em.persist()</code> , <code>em.remove()</code> 를 실행할 때 바로 전이되지 않는다.</li>
+<li><strong>플러시를 호출할 때 전이된다.</strong></li>
+</ul>
+</li>
+</ul>
+<p><br/><br/><br/></p>
+<h1 id="section-15">고아 객체</h1>
+<h2 id="section-16">개요</h2>
+<h3 id="section-17">고아 객체란?</h3>
+<ul>
+<li>부모 엔티티와 연관관계가 끊어진 자식 엔티티</li>
+</ul>
+<br/>
+<h3 id="section-18">고아 객체 제거 기능</h3>
+<ul>
+<li>JPA는 고아 객체를 자동으로 삭제하는 기능을 제공한다.</li>
+<li><strong>해당 기능을 통해, 부모 엔티티의 컬렉션에서 자식 엔티티의 참조만 제거하면 자식 엔티티가 자동으로 삭제되게 할 수 있다.</strong></li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-19">예시</h2>
+<h3 id="section-20">고아 객체 제거 기능 설정</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Parent</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;nd&quot;&gt;@Id&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@GeneratedValue&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//고아 객체 자동 제거 설정&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@OneToMany&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mappedBy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;parent&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;orphanRemoval&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Child&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;children&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ArrayList&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Child&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;();&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li><code>orphanRemoval = true</code>
+<ul>
+<li>해당 속성을 설정하여 고아 객체 제거 기능을 활성화했다.</li>
+<li>이제 컬렉션에서 제거한 엔티티는 자동으로 삭제된다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-21">사용 예시</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Parent</span> <span class="n">parent1</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="nc">Parent</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">id</span><span class="o">);</span>
+<p><span class="c1">//ArrayList에 저장된 첫번째 연관 엔티티를 컬렉션에서 삭제</span>
+<span class="n">parent1</span><span class="o">.</span><span class="na">getChildren</span><span class="o">().</span><span class="na">remove</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</code></pre></div></div></p>
+<ul>
+<li><strong>위와 같이, 컬렉션에서 연관 엔티티를 제거하기만 해도 DB의 데이터가 삭제된다.</strong></li>
+<li><strong>이 기능은 영속성 컨텍스트를 플러시할 때 적용되므로, 플러시 시점에 DELETE SQL 이 실행된다.</strong></li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>모든 자식 엔티티 제거 예시</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">parent1</span><span class="o">.</span><span class="na">getChildren</span><span class="o">().</span><span class="na">clear</span><span class="o">();</span> <span class="c1">//ArrayList 비우기</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<h3 id="section-22">주의사항</h3>
+<ul>
+<li>
+<p><strong>참조가 제거된 엔티티는 다른 곳에서 참조하지 않는 고아 객체로 판단하여 삭제한다.</strong></p>
+<ul>
+<li>따라서 이 기능은 ‘특정 엔티티가 개인 소유하는 엔티티’에만 적용해야 한다.</li>
+<li>그래서 <code>orphanRemovel</code> 속성은 <code>@OneToOne</code> , <code>@OneToMany</code> 에만 사용할 수 있다.</li>
+</ul>
+</li>
+<li>
+<p><strong>고아 객체 제거 기능: 부모를 먼저 제거하면, 자식도 같이 제거된다.</strong></p>
+<ul>
+<li><code>CascadeType.REMOVE</code> 와 동일하다.</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-23">영속성 전이 + 고아 객체: 생명주기</h2>
+<p>만약 <code>CascadeType.ALL</code> 과 <code>orphanRemoval = true</code> 를 동시에 사용하면 어떻게 될까?</p>
+<br/>
+<h3 id="section-24">생명주기: 영속성 전이, 고아객체 제거 기능을 사용하지 않을 때</h3>
+<ul>
+<li>일반적으로 <code>EntityManager.persist()</code> 를 통해 엔티티를 영속화하고, <code>EntityManager.remove()</code> 를 통해 엔티티를 제거한다.
+<ul>
+<li>직접 자식엔티티가 <code>persist()</code> , <code>remove()</code> 한다.</li>
+</ul>
+</li>
+<li><strong>즉, 엔티티 스스로 생명주기를 관리한다는 것과 같다.</strong></li>
+</ul>
+<br/>
+<h3 id="section-25">생명주기: 영속성 전이, 고아객체 제거 기능을 모두 사용할 때</h3>
+<ul>
+<li>
+<p>부모 엔티티를 통해서 자식의 생명주기가 관리된다.</p>
+<ul>
+<li>부모 엔티티에서만 <code>persist()</code>, <code>remove()</code> 해도, 자식 엔티티까지 처리된다.</li>
+</ul>
+</li>
+<li>
+<p>예시: 자식을 저장하려면 부모에 등록만하면 된다.</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Parent</span> <span class="n">parent</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="nc">Parent</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">parentId</span><span class="o">);</span>
+<span class="n">parent</span><span class="o">.</span><span class="na">addChild</span><span class="o">(</span><span class="n">child1</span><span class="o">);</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>예시: 자식을 삭제하려면 부모에 제거만하면 된다.</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Parent</span> <span class="n">parent</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="nc">Parent</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">parentId</span><span class="o">);</span>
+<span class="n">parent</span><span class="o">.</span><span class="na">getChildren</span><span class="o">().</span><span class="na">remove</span><span class="o">(</span><span class="n">removeObj</span><span class="o">);</span>
+</code></pre></div></div>
+</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>김영한, 『자바 ORM 표준 JPA 프로그래밍』, 에이콘</li>
+  </ul>
+  본 게시글은 위 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

@@ -1,0 +1,799 @@
+I"f<p><br/><br/></p>
+<h1 id="section">컴퓨터 산술</h1>
+<h2 id="alu">산술논리연산장치 (ALU)</h2>
+<h3 id="cpu-">중앙처리장치(CPU)의 구성</h3>
+<ul>
+<li><strong>산술논리연산장치</strong>
+<ul>
+<li>ALU</li>
+<li>산술 및 논리 연산을 수행한다.</li>
+</ul>
+</li>
+<li><strong>레지스터</strong></li>
+<li><strong>제어장치</strong></li>
+</ul>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled.png" alt="Untitled" /></p>
+<br/>
+<h3 id="alu---">ALU 내부 구성 요소</h3>
+<ul>
+<li><strong>산술 연산장치</strong>
+<ul>
+<li>+, -, *, / 등을 수행한다.</li>
+</ul>
+</li>
+<li><strong>논리 연산장치</strong>
+<ul>
+<li>AND, OR, XOR, NOT 등을 수행한다.</li>
+</ul>
+</li>
+<li><strong>시프트 레지스터</strong>
+<ul>
+<li>비트들을 좌우측으로 이동</li>
+</ul>
+</li>
+<li><strong>보수기(complementer)</strong>
+<ul>
+<li>2진 데이터를 2의 보수로 변환한다.</li>
+<li>음수를 만드는 역할을 한다.</li>
+</ul>
+</li>
+<li><strong>상태 레지스터(status register)</strong>
+<ul>
+<li>연산 결과의 상태를 나타내는 플래그(flag)들을 저장한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="alu----1">ALU의 연산 동작 예시</h3>
+<ul>
+<li>
+<p><strong>ADD AC, B 연산</strong></p>
+<ul>
+<li>AC ← AC + B 라는 의미이다.</li>
+<li>AC: 누산기(레지스터의 일종)</li>
+</ul>
+</li>
+<li>
+<p>연산과정</p>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%201.png" alt="Untitled" /></p>
+<ol>
+<li>TEMP1 ← AC</li>
+<li>TEMP2 ← B</li>
+<li>AC ← TEMP1 + TEMP2</li>
+</ol>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-1">정수 표현</h2>
+<h3 id="section-2">10진수의 개념</h3>
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?(724)_%7B10%7D=7*10%5E2+2*10%5E1+4*10%5E0" alt="(724)_{10}=710^2+210^1+4*10^0" /></li>
+</ul>
+<br/>
+<h3 id="section-3">2진수의 개념</h3>
+<ul>
+<li>10진수의 관계는 2의 승수 (<img src="https://latex.codecogs.com/svg.image?2%5EN" alt="2^N" />)로 표현한다.</li>
+<li><img src="https://latex.codecogs.com/svg.image?(101101)_2=1*2%5E5+0*2%5E4+1*2%5E3+1*2%5E2+0*2%5E1+1*2%5E0=(45)_%7B10%7D" alt="2^N" /></li>
+</ul>
+<br/>
+<h3 id="section-4">16진수의 개념</h3>
+<ul>
+<li>2진수를 4비트씩 나누어 16진수로 표현한다.
+<ul>
+<li>0000 ⇒ 0</li>
+<li>1111 ⇒ F</li>
+</ul>
+</li>
+<li><img src="https://latex.codecogs.com/svg.image?(F3)_%7B16%7D=15*16%5E1+3*16%5E0=(243)_%7B10%7D" alt="2^N" /></li>
+</ul>
+<br/>
+<h3 id="section-5">진법 변환</h3>
+<ul>
+<li><strong>10진수를 2진수로 변환하기</strong>
+<ul>
+<li>
+<p>연속적으로 2로 나눗셈을 수행하면서 얻어지는 나머지에 의해서 만들어진다.</p>
+</li>
+<li>
+<p>예시</p>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%202.png" alt="Untitled" /></p>
+<ul>
+<li>결과: 101001</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>2진수를 10진수로 변환</strong>
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?(101001)_2=1*2%5E5+0*2%5E4+1*2%5E3+0*2%5E2+0*2%5E1+1*2%5E0=(41)_%7B10%7D" alt="2^N" /></li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-6">음수의 표현</h3>
+<ul>
+<li>최상위 비트를 <strong>부호 비트로 사용</strong>한다.
+<ul>
+<li>0: 양수</li>
+<li>1: 음수</li>
+</ul>
+</li>
+<li>음수 표현 방법
+<ul>
+<li><strong>부호 크기 표현</strong></li>
+<li><strong>보수 표현</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="section-7">부호 크기 표현</h3>
+<ul>
+<li>비트 구성요소
+<ul>
+<li>최상위 비트 = 최상위 비트</li>
+<li>나머지 비트 = 수의 크기</li>
+<li>예시) +9 = 0 0001001</li>
+</ul>
+</li>
+<li><strong>문제점</strong>
+<ul>
+<li><strong>0의 표현이 2개 존재하므로, 표현할 수 있는 수의 개수가 줄어든다.</strong>
+<ul>
+<li>0 0000000 = +0</li>
+<li>1 0000000 = -0</li>
+</ul>
+</li>
+<li>따라서, n개의 비트로 표현할 수 있는 수가 <img src="https://latex.codecogs.com/svg.image?2%5EN" alt="2^N" /> 이 아니라, <img src="https://latex.codecogs.com/svg.image?2%5EN-1" alt="2^N" /> 이다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-8">보수 표현</h3>
+<ul>
+<li>
+<p><strong>음수 = 양수를 표현하는 비트에 2의 보수를 취한 것</strong></p>
+</li>
+<li>
+<p>보수 종류</p>
+<ul>
+<li>1의 보수: 모든 비트들을 반전시킨다.</li>
+<li>2의 보수: 1의 보수 + 1</li>
+<li>예시)
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?(9)_%7B10%7D=(00001001)_2" alt="2^N" /></li>
+<li>1의 보수: <img src="https://latex.codecogs.com/svg.image?(11110110)_2" alt="2^N" /></li>
+<li>2의 보수: <img src="https://latex.codecogs.com/svg.image?(11110111)_2=(-9)_%7B10%7D" alt="2^N" /></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>’2의 보수로 표현된 2진수(음수)’를 10진수로 변환하는 방법</strong></p>
+<ul>
+<li>양수로 변환하여 10진수를 구한 뒤, 그 결과값에 ‘-’ 부호를 붙인다.</li>
+<li>예시)
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?(9)_%7B10%7D=(00001001)_2" alt="2^N" /></li>
+<li><img src="https://latex.codecogs.com/svg.image?(-9)_%7B10%7D=(11110111)_2" alt="2^N" /></li>
+<li>-9의 2의 보수 = <img src="https://latex.codecogs.com/svg.image?(00001001)_2=(9)_%7B10%7D" alt="2^N" /></li>
+<li>여기에 ’-’를 붙인다. ⇒ <img src="https://latex.codecogs.com/svg.image?(-9)_%7B10%7D" alt="2^N" /></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-9">수의 표현 범위</h3>
+<ul>
+<li>2의 보수로 표현된 n비트 데이터의 표현할 수 있는 수의 범위는 아래와 같다.
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?-2%5E%7Bn-1%7D%7B%5Cle%7DN%5Cle2%5E%7Bn-1%7D-1" alt="2^N" /></li>
+<li>0이 존재하므로 <img src="https://latex.codecogs.com/svg.image?2%5E%7Bn-1%7D" alt="2^N" />에 1을 빼야한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>비트에 따른 수의 범위와 최대값과 최소값의 표현
+<ul>
+<li>8비트 2의 보수
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?-128%7B%5Cle%7DN%5Cle+127" alt="2^N" /></li>
+</ul>
+</li>
+<li>16비트 2의 보수
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?-32768%7B%5Cle%7DN%7B%5Cle%7D+32767" alt="2^N" /></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-10">비트 확장</h3>
+<ul>
+<li>
+<p>비트 확장이란, 부호가 있는 데이터의 비트 수를 늘리는 연산이다.</p>
+</li>
+<li>
+<p><strong>부호화-크기 표현에 비트 확장 연산하기</strong></p>
+<ul>
+<li>+18 = <strong>0</strong>0010010 (8비트)</li>
+<li>+18 = <strong>0</strong>0000000 00010010 (16비트)</li>
+<li>-18 = <strong>1</strong>0010010 (8비트)</li>
+<li>-18 = <strong>1</strong>0000000 00010010 (16비트)</li>
+</ul>
+</li>
+<li>
+<p><strong>2의 보수 표현에 비트 확장 연산하기</strong></p>
+<ul>
+<li>+18 = <strong>0</strong>0010010 (8비트)</li>
+<li>+18 = <strong>00000000</strong> 00010010 (16비트)</li>
+<li>-18 = <strong>1</strong>1101110 (8비트)</li>
+<li>-18 = <strong>11111111</strong> 11101110 (16비트)</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-11">정수의 산술 연산</h2>
+<h3 id="section-12">음수화</h3>
+<ul>
+<li>양수를 음수로 표현하고자 할땐, 2의 보수를 취하여 표현하면 된다.</li>
+<li>예시)
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?(+19)_%7B10%7D=(00010011)_2" alt="2^N" /></li>
+<li><img src="https://latex.codecogs.com/svg.image?(-19)_%7B10%7D=(11101101)_2" alt="2^N" /></li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-13">2의 보수로 표현된 수들의 덧셈</h3>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%203.png" alt="Untitled" /></p>
+<ul>
+<li>오버플로우
+<ul>
+<li>위의 그림은 총 4비트를 갖는 수에 대한 연산을 나타낸 것이다.</li>
+<li><strong>4비트로 표현할 수 있는 수의 범위 = -8 ~ +7</strong></li>
+<li><img src="https://latex.codecogs.com/svg.image?(0101)_2+(0100)_2" alt="2^N" /> 의 경우, 연산 결과로 9가 나온다.</li>
+<li>9는 4개의 비트로 표현할 수 없는 수이다. 따라서, Overflow가 발생한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-14">2의 보수로 표현된 수들의 뺄셈</h3>
+<ul>
+<li>감수와 피감수
+<ul>
+<li>A - B</li>
+<li>A: 피감수</li>
+<li>B: 감수</li>
+</ul>
+</li>
+<li><strong>뺄셈을 하기 위해선, 감수의 보수를 취한 뒤 그것을 피감수와 더한다.</strong></li>
+</ul>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%204.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-15">2의 보수 정수들의 기하학적 표현</h3>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%205.png" alt="Untitled" /></p>
+<ul>
+<li>오버플로우 예시
+<ul>
+<li>총 4비트를 갖는 수에 대해 연산을 했을 때, 오버플로우가 발생하는 상황에 대해 알아보자.</li>
+<li><img src="https://latex.codecogs.com/svg.image?(0101)_2+(0100)_2" alt="2^N" /> 의 경우, 연산 결과로 9가 나온다.</li>
+<li>9는 4개의 비트로 표현할 수 없는 수이다. 따라서, Overflow가 발생한다.</li>
+<li>이 경우, <img src="https://latex.codecogs.com/svg.image?(0101)_2+(0100)_2" alt="2^N" /> 의 결과로 -7이 도출된다.</li>
+<li><strong>왜냐하면 위 그림에서 덧셈 회전방향으로 회전시, +7 이후는 -8이기 때문이다.</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-16">덧셈/뺄셈 하드웨어 흐름</h3>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%206.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-17">곱셈</h3>
+<ul>
+<li><strong>피승수</strong>
+<ul>
+<li>곱해지는 수</li>
+<li>M</li>
+</ul>
+</li>
+<li><strong>승수</strong>
+<ul>
+<li>곱하는 수</li>
+<li>Q</li>
+</ul>
+</li>
+<li>예시
+<ul>
+<li>5 * 10</li>
+<li>피승수: 5</li>
+<li>승수: 10</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>부호가 없는 경우의 곱셈의 예</strong></p>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%207.png" alt="Untitled" /></p>
+<ul>
+<li>
+<p>4비트의 두 수가 서로 곱셈을 수행하면, 2배인 8비트의 길이의 결과를 출력한다.</p>
+</li>
+<li>
+<p><strong>컴퓨터에서의 계산 예시</strong></p>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%208.png" alt="Untitled" /></p>
+</li>
+<li>
+<p><strong>부호없는 2진 곱셈 흐름도</strong></p>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%209.png" alt="Untitled" /></p>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>부호있는 두 수의 곱셈: Booth 알고리즘</strong></p>
+<ul>
+<li>연산 순서
+<ol>
+<li><strong>승수와 피승수를 Q와 M 레지스터에 저장</strong></li>
+<li><img src="https://latex.codecogs.com/svg.image?Q_%7B0%7D" alt="2^N" /> <strong>의 오른쪽에</strong> <img src="https://latex.codecogs.com/svg.image?Q_%7B-1%7D" alt="2^N" /> <strong>라는 한 비트 레지스터 추가</strong>
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?Q_%7B0%7D" alt="2^N" /> : Q 레지스터의 LSB (가장 오른쪽 비트)</li>
+</ul>
+</li>
+<li><img src="https://latex.codecogs.com/svg.image?Q_%7B0%7D" alt="2^N" /> <strong>와</strong> <img src="https://latex.codecogs.com/svg.image?Q_%7B-1%7D" alt="2^N" /> <strong>가 같은 경우</strong>
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?A" alt="2^N" />, <img src="https://latex.codecogs.com/svg.image?Q" alt="2^N" />, <img src="https://latex.codecogs.com/svg.image?Q_%7B-1%7D" alt="2^N" /> 레지스터의 모든 비트를 우측으로 반 비트씩 산술시프트한다.</li>
+</ul>
+</li>
+<li><img src="https://latex.codecogs.com/svg.image?Q_%7B0%7D" alt="2^N" /> <strong>와</strong> <img src="https://latex.codecogs.com/svg.image?Q_%7B-1%7D" alt="2^N" /> <strong>가 0 , 1 인 경우</strong>
+<ul>
+<li>피승수를 <img src="https://latex.codecogs.com/svg.image?A" alt="2^N" />에 더한다.</li>
+<li>그리고 우측  산술시프트 한다.</li>
+</ul>
+</li>
+<li><img src="https://latex.codecogs.com/svg.image?Q_%7B0%7D" alt="2^N" /> <strong>와</strong> <img src="https://latex.codecogs.com/svg.image?Q_%7B-1%7D" alt="2^N" /> <strong>가 1 , 0 인 경우</strong>
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?A" alt="2^N" />로부터 피승수를 뺀다.</li>
+<li>그리고 우측 산술시프트 한다.</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%2010.png" alt="Untitled" /></p>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%2011.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-18">나눗셈</h3>
+<ul>
+<li>
+<p><strong>피제수</strong></p>
+<ul>
+<li>나눠지는 수</li>
+<li>Q</li>
+</ul>
+</li>
+<li>
+<p><strong>제수</strong></p>
+<ul>
+<li>나누는 수</li>
+<li>M</li>
+</ul>
+</li>
+<li>
+<p>음수에서의 나눗셈</p>
+<ul>
+<li><strong>피제수 = 제수 * 몫 + 나머지</strong></li>
+<li>7 / -3
+<ul>
+<li>7 = -3 * -2 + 1</li>
+</ul>
+</li>
+<li>-7 / -3
+<ul>
+<li>-7 = -3 * 2 - 1</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>부호없는 2진 나눗셈 흐름도</strong></p>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%2012.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p><strong>나눗셈 예시: 7/3</strong></p>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%2013.png" alt="Untitled" /></p>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-19">부동소수점 표현</h2>
+<h3 id="section-20">소수점 표현의 종류</h3>
+<ul>
+<li><strong>고정소수점 표현 방식</strong>
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?(1010.1010)_2=2%5E%7B3%7D+2%5E%7B1%7D+2%5E%7B-1%7D+2%5E%7B-3%7D=10.625" alt="2^N" /></li>
+<li>매우 큰 수 및 매우 작은 수의 표현이 불가능하다.</li>
+</ul>
+</li>
+<li><strong>부동소수점 표현 방식</strong>
+<ul>
+<li>과학적 표기의 지수를 사용하여 소수점의 위치를 이동시킬 수 있는 표현 방법이다.</li>
+<li>표현의 범위가 확대된다.</li>
+<li>십진수에 대한 부동 소수점 표현 예시
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?176,000=1.76*10%5E5" alt="2^N" /></li>
+<li><img src="https://latex.codecogs.com/svg.image?176,000=17.6*10%5E4" alt="2^N" /></li>
+<li><img src="https://latex.codecogs.com/svg.image?0.000176=1.76*10%5E%7B-4%7D" alt="2^N" /></li>
+<li><img src="https://latex.codecogs.com/svg.image?0.000176=17.6*10%5E%7B-5%7D" alt="2^N" /></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-21">부동소수점 수의 표현법</h3>
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?%7B%5Cpm%7DS*B%5E%7B%5Cpm%7BE%7D%5Cspace%7D" alt="2^N" />
+<ul>
+<li>S : 가수 (significand)</li>
+<li>B : 기수 (base)</li>
+<li>E : 지수 (exponent)</li>
+</ul>
+</li>
+</ul>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%2014.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-22">정규화된 표현</h3>
+<ul>
+<li>지수의 값에 따라, 동일한 수에 대한 부동소수점 표현이 여러가지 존재한다.
+<ul>
+<li>예시)
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?0.1001*2%5E5" alt="2^N" /></li>
+<li><img src="https://latex.codecogs.com/svg.image?100.1*2%5E2" alt="2^N" /></li>
+<li><img src="https://latex.codecogs.com/svg.image?0.01001*2%5E6" alt="2^N" /></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>따라서 부동소수점의 수를 통일되게 표현해야 한다. ⇒ 정규화된 표현</strong>
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?%7B%5Cpm%7D1.bbb...b*2%5EE" alt="2^N" /></li>
+<li>무조건 앞은 1이 위치해야 한다.</li>
+</ul>
+</li>
+<li>예시
+<ul>
+<li>정규화 X
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?100.1*2%5E2" alt="2^N" /></li>
+</ul>
+</li>
+<li>정규화 O
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?1.001*2%5E4" alt="2^N" /></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-23">가수</h3>
+<ul>
+<li><strong>정규화된 표현에서 가수의 맨 좌측 비트는 항상 1로 정해져 있으므로 가수 필드에 저장할 필요가 없다.</strong></li>
+</ul>
+<br/>
+<h3 id="section-24">기수</h3>
+<ul>
+<li>기수는 묵시적이며, 모든 수에 동일하므로 저장할 필요가 없다.</li>
+<li>즉 2진수로 저장되므로, 기수는 무조건 2이다.</li>
+</ul>
+<br/>
+<h3 id="section-25">지수 (바이어스된 표현)</h3>
+<ul>
+<li>지수는 부호를 가지므로 이에 대한 표현이 필요하다.
+<ul>
+<li>따라서, 바이어스된 표현을 사용하여 필드에 저장한다.</li>
+</ul>
+</li>
+<li><strong>바이어스된 표현</strong>
+<ul>
+<li>필드에 저장시
+<ul>
+<li><strong>(본래 지수값) + 127</strong></li>
+</ul>
+</li>
+<li>필드에서 추출시
+<ul>
+<li><strong>(저장된 바이어스된 지수값) - 127</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>보통 바이어스화 할 때, 127를 더한다.</p>
+</blockquote>
+<br/>
+<ul>
+<li>예시
+<ul>
+<li>지수값: <img src="https://latex.codecogs.com/svg.image?(4)_%7B10%7D=(00000100)_2" alt="2^N" /></li>
+<li>바이어스된 지수 표현: <img src="https://latex.codecogs.com/svg.image?(00000100)_2+(01111111)_2=(10000011)_2" alt="2^N" />
+<ul>
+<li>즉, <img src="https://latex.codecogs.com/svg.image?(00000100)_2" alt="2^N" /> 대신 <img src="https://latex.codecogs.com/svg.image?(10000011)_2" alt="2^N" /> 로 필드에 저장한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-26">부동소수점 표기 연습문제 (1)</h3>
+<ul>
+<li>문제
+<ul>
+<li><strong>10진수 -13.625</strong>를 32비트 부동소수점 형식으로 표현하라.</li>
+</ul>
+</li>
+<li>풀이
+<ul>
+<li>
+<p><img src="https://latex.codecogs.com/svg.image?(13.625)_%7B10%7D=(1101.101)_%7B2%7D=(1.101101)_2*2%5E3" alt="2^N" /></p>
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?0.625*2=1.25" alt="2^N" /> 에서 <strong>1 추출 ⇒ 소수점 첫번째 자리</strong></li>
+<li><img src="https://latex.codecogs.com/svg.image?0.25*2=0.5" alt="2^N" /> 에서 <strong>0 추출 ⇒ 소수점 두번째 자리</strong></li>
+<li><img src="https://latex.codecogs.com/svg.image?0.5*2=1.0" alt="2^N" /> 에서 <strong>1 추출 ⇒ 소수점 세번째 자리</strong></li>
+<li>따라서, 소수점 부분은 <img src="https://latex.codecogs.com/svg.image?(101)_2" alt="2^N" /></li>
+</ul>
+</li>
+<li>
+<p><strong>부호비트: 1 (음수)</strong></p>
+</li>
+<li>
+<p><strong>가수부:</strong> <img src="https://latex.codecogs.com/svg.image?(101101)_2" alt="2^N" /> <strong>(좌측의 1은 제외한다.)</strong></p>
+</li>
+<li>
+<p><strong>지수부:</strong> <img src="https://latex.codecogs.com/svg.image?(3)_%7B10%7D=(00000011)_2" alt="2^N" /> <strong>⇒</strong> <img src="https://latex.codecogs.com/svg.image?00000011+01111111=10000010" alt="2^N" /> <strong>(바이어스 더하기)</strong></p>
+</li>
+<li>
+<p>결과</p>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%2015.png" alt="Untitled" /></p>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-27">부동소수점 표기 연습문제 (2)</h3>
+<ul>
+<li>문제
+<ul>
+<li>32비트 부동소수점으로 표현된 아래 수에 대한 10진수는?</li>
+<li><strong>0 10000011 101 0000 0000 0000 0000 0000</strong></li>
+</ul>
+</li>
+<li>풀이
+<ul>
+<li><strong>부호비트: 0 (양수)</strong></li>
+<li><strong>가수부:</strong> <img src="https://latex.codecogs.com/svg.image?(101)_2" alt="2^N" /> <strong>⇒</strong> <img src="https://latex.codecogs.com/svg.image?(1.101)_2=1+2%5E%7B-1%7D+2%5E%7B-3%7D=(1.625)_%7B10%7D" alt="2^N" />
+<ul>
+<li>생략된 1 다시 가져오기</li>
+</ul>
+</li>
+<li><strong>지수부:</strong> <img src="https://latex.codecogs.com/svg.image?(10000011)_2-(01111111)_2=(10000011)_2+(10000001)_2=(00000100)_2=(4)_%7B10%7D" alt="2^N" /></li>
+<li>결과
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?(1.625)_%7B10%7D*2%5E4=(26)_%7B10%7D" alt="2^N" /></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-28">전형적인 32비트 형식으로 표현 가능한 수의 범위</h3>
+<ul>
+<li>
+<p><strong>정수</strong></p>
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?-2%5E%7B31%7D" alt="2^N" /> ~ <img src="https://latex.codecogs.com/svg.image?(2%5E%7B31%7D-1)" alt="2^N" /></li>
+<li>총 <img src="https://latex.codecogs.com/svg.image?2%5E%7B32%7D" alt="2^N" />가지의 수를 표현할 수 있다.</li>
+</ul>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%2016.png" alt="Untitled" /></p>
+</li>
+<li>
+<p><strong>부동소수점수</strong></p>
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?-(2-2%5E%7B-23%7D)*2%5E%7B128%7D" alt="2^N" /> ~ <img src="https://latex.codecogs.com/svg.image?2%5E%7B-127%7D" alt="2^N" /></li>
+<li><img src="https://latex.codecogs.com/svg.image?2%5E%7B-127%7D" alt="2^N" /> ~ <img src="https://latex.codecogs.com/svg.image?(2-2%5E%7B23%7D)%5E%7B-128%7D" alt="2^N" /></li>
+</ul>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%2017.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-29">부동소수점의 밀도</h3>
+<ul>
+<li><strong>비트할당 문제</strong>
+<ul>
+<li>표현하는 수의 범위와 정밀도를 결정해야 한다.</li>
+<li><strong>지수 필드의 비트 수가 늘어날 때</strong>
+<ul>
+<li>소수점을 이동시키는 범위가 커져서 표현 가능한 수의 범위가 확장된다.</li>
+</ul>
+</li>
+<li><strong>가수 필드의 비트 수가 늘어날 때</strong>
+<ul>
+<li>이진수로 표현할 수 있는 수가 많아져서 정밀도가 증가한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="ieee-754-formats">IEEE 754 formats</h3>
+<ul>
+<li>
+<p>IEEE 754 formats 은 부동 소수점 비트 포멧의 표준이다.</p>
+</li>
+<li>
+<p>32비트</p>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%2018.png" alt="Untitled" /></p>
+</li>
+<li>
+<p>64비트</p>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%2019.png" alt="Untitled" /></p>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-30">부동소수점의 산술연산</h2>
+<h3 id="section-31">개요</h3>
+<ul>
+<li>가수와 지수의 연산을 분리해서 수행한다.</li>
+<li><strong>덧셈과 뺄셈</strong>
+<ul>
+<li>지수를 같은 값으로 조정한 후, 가수들에 대해 덧셈과 뺄셈을 수행한다.</li>
+<li>이때 지수는 “피연산자들의 지수 중 큰 것으로 통일”한다.</li>
+</ul>
+</li>
+<li><strong>곱셈과 나눗셈</strong>
+<ul>
+<li>가수끼리는 곱셈과 나눗셈을 수행한다.</li>
+<li>곱셈
+<ul>
+<li>지수 연산 시 덧셈</li>
+</ul>
+</li>
+<li>나눗셈
+<ul>
+<li>지수 연산 시 뺄셈</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-32">부동소수점 수의 덧셈과 뺄셈</h3>
+<ul>
+<li>
+<p>절차</p>
+<ol>
+<li><strong>피연산자들이 0인지 검사한다.</strong></li>
+<li><strong>두 수의 지수들을 같아지도록 가수의 자리수를 조정한다.</strong>
+<ul>
+<li>큰 값으로 조정한다.</li>
+</ul>
+</li>
+<li><strong>가수들 간에 덧셈/뺄셈을 수행한다.</strong>
+<ul>
+<li>가수들의 부호를 고려해서 더해진다.</li>
+</ul>
+</li>
+<li><strong>결과를 정규화한다.</strong>
+<ul>
+<li>가장 왼쪽 비트가 0이 아닐 때까지, 좌측으로 쉬프트시킨다.</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>이진수의 부동소수점 수의 덧셈 예시</strong></p>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%2020.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-33">부동소수점 수의 곱셈</h3>
+<ul>
+<li>
+<p><strong>가수끼리는 곱셈 연산을 수행하고 지수끼리는 덧셈을 수행한다.</strong></p>
+</li>
+<li>
+<p>연산 워크플로우</p>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%2021.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-34">부동소수점 수의 나눗셈</h3>
+<ul>
+<li>
+<p><strong>가수부분은 나눗셈 연산을 수행하고, 지수부분은 뺄셈 연산을 수행한다.</strong></p>
+</li>
+<li>
+<p>연산 워크플로우</p>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%2022.png" alt="Untitled" /></p>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-35">논리 연산</h2>
+<h3 id="section-36">개요</h3>
+<ul>
+<li>ALU에서 L에 해당되는 연산이다.</li>
+</ul>
+<br/>
+<h3 id="section-37">마스크 연산</h3>
+<ul>
+<li>
+<p><strong>원하는 비트들을 선택적으로 clear(0으로 만들기)하는데 사용하는 연산이다.</strong></p>
+</li>
+<li>
+<p><strong>A 레지스터의 상위 4비트를 0으로 clear하는 경우의 예시</strong></p>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%2023.png" alt="Untitled" /></p>
+</li>
+</ul>
+<br/>
+<h3 id="section-38">비교 연산</h3>
+<ul>
+<li><strong>두 데이터를 비교하는 연산이다.</strong></li>
+<li><strong>대응되는 비트들의 값이 같으면, 해당 비트를 0으로 설정한다.</strong></li>
+<li><strong>대응되는 비트들의 값이 다르면, 해당 비트를 1으로 설정한다.</strong></li>
+<li><strong>모든 비트들이 같은 경우, Z 플래그 (zero 플래그)를 1로 설정한다.</strong></li>
+</ul>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%2024.png" alt="Untitled" /></p>
+<br/>
+<h3 id="section-39">산술적 쉬프트</h3>
+<ul>
+<li><strong>쉬프트 과정에서 부호 비트는 유지하고, 수의 크기를 나타내는 비트들만 쉬프트한다.</strong></li>
+<li>쉬프트 종류
+<ul>
+<li><strong>산술적 좌측-쉬프트</strong>
+<ul>
+<li>D4(불변) , D4←D3 , D3←D2 , D2←D1</li>
+</ul>
+</li>
+<li><strong>산술적 우측-쉬프트</strong>
+<ul>
+<li>D4(불변) , D4→D3 , D3→D2 , D2→D1</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>예시</p>
+<p><img src="/assets/img/2021-11-04-ComputerStructure_AL/Untitled%2025.png" alt="Untitled" /></p>
+</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>성결대학교 컴퓨터 공학과 최정열 교수님 (2021)</li>
+    <li>William Stalling, 『컴퓨터시스템구조론(10판)』</li>
+  </ul>
+  본 게시글은 위 강의 및 교재를 기반으로 정리한 글입니다.
+</div>
+:ET
