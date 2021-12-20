@@ -5,7 +5,7 @@ title: "[스프링 - MVC] HandlerMethodArgumentResolver"
 date:   2021-12-20 14:00:00 
 lastmod : 2021-12-20 14:00:00
 sitemap :
-  changefreq : dailys
+  changefreq : daily
   priority : 1.0
 ---
 
