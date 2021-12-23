@@ -1,0 +1,163 @@
+I"s.<p><br/><br/></p>
+<h1 id="handlermethodargumentresolver">HandlerMethodArgumentResolver</h1>
+<h2 id="section">개요</h2>
+<h3 id="handlermethodargumentresolver-1">HandlerMethodArgumentResolver란?</h3>
+<ul>
+<li>컨트롤러 메서드에서 특정 조건에 맞는 파라미터가 있을 때, 원하는 값을 바인딩해주는 인터페이스이다.</li>
+<li><code>@RequestBody</code> , <code>@PathVariable</code> 등의 애너테이션이 HandlerMethodArgumentResolver를 사용한 것이다.</li>
+<li>따라서, 스프링에서 제공되지 않는 데이터를 바인딩받고 싶다면, HandlerMethodArgumentResolver 인터페이스를 직접 구현하고, Argument Resolver로 등록하면 된다.</li>
+</ul>
+<br/>
+<h3 id="handlermethodargumentresolver-">HandlerMethodArgumentResolver 예시</h3>
+<ul>
+<li>
+<p>컨트롤러 클래스</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyController</span> <span class="o">{</span>
+	<span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/api/my/{aaa}"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">String</span> <span class="nf">controllerMethod</span><span class="o">(</span><span class="nd">@PathVariable</span> <span class="nc">String</span> <span class="n">aaa</span><span class="o">)</span> <span class="o">{</span>
+		<span class="c1">//...</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>이때, URL을 분석해서 aaa에 해당하는 값을 <code>String aaa</code> 에 바인딩해준다.</li>
+<li>이것은 HandlerMethodArgumentResolver의 일종이라고 한다.</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="handlermethodargumentresolver--1">직접 HandlerMethodArgumentResolver 구현하기</h2>
+<p>예시를 통해, 알아보자.</p>
+<h3 id="person-">Person 객체</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Getter</span>
+<span class="nd">@Setter</span>
+<span class="nd">@AllArgsConstructor</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Person</span> <span class="o">{</span>
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="nc">Integer</span> <span class="n">age</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">gender</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<br/>
+<h3 id="section-1">애너테이션</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Target</span><span class="o">(</span><span class="nc">ElementType</span><span class="o">.</span><span class="na">PARAMETER</span><span class="o">)</span>
+<span class="nd">@Retention</span><span class="o">(</span><span class="nc">RetentionPolicy</span><span class="o">.</span><span class="na">RUNTIME</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nd">@interface</span> <span class="nc">CustomAnno</span> <span class="o">{</span>
+<p><span class="o">}</span>
+</code></pre></div></div>
+<br/></p>
+<h3 id="argumentresolver">ArgumentResolver</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Component</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CustomArgumentResolver</span> <span class="kd">implements</span> <span class="nc">HandlerMethodArgumentResolver</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;c1&quot;&gt;//본 Argument Resolver 적용 조건&lt;/span&gt;
+</code></pre>
+<p><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">supportsParameter</span><span class="o">(</span><span class="nc">MethodParameter</span> <span class="n">parameter</span><span class="o">)</span> <span class="o">{</span>
+<span class="kt">boolean</span> <span class="n">isCorrectParameterType</span> <span class="o">=</span> <span class="n">parameter</span><span class="o">.</span><span class="na">getParameterType</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="nc">Person</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="kt">boolean</span> <span class="n">isCorrectAnnotation</span> <span class="o">=</span> <span class="n">parameter</span><span class="o">.</span><span class="na">hasParameterAnnotation</span><span class="o">(</span><span class="nc">CustomAnno</span><span class="o">.</span><span class="na">class</span><span class="o">);</span></p>
+<pre><code>	&lt;span class=&quot;c1&quot;&gt;//@CustomAnno 애너테이션이 붙어있고 Person 타입일 때, 본 resolver를 적용한다.&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isCorrectParameterType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isCorrectAnnotation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span></p>
+<pre><code>&lt;span class=&quot;c1&quot;&gt;//실제로 Resolver가 동작하는 메서드&lt;/span&gt;
+</code></pre>
+<p><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="nc">Object</span> <span class="nf">resolveArgument</span><span class="o">(</span><span class="nc">MethodParameter</span> <span class="n">parameter</span><span class="o">,</span> <span class="nc">ModelAndViewContainer</span> <span class="n">mavContainer</span><span class="o">,</span> <span class="nc">NativeWebRequest</span> <span class="n">webRequest</span><span class="o">,</span> <span class="nc">WebDataBinderFactory</span> <span class="n">binderFactory</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+<span class="nc">Person</span> <span class="n">person</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Person</span><span class="o">(</span><span class="s">“MyName”</span><span class="o">,</span> <span class="mi">30</span><span class="o">,</span> <span class="s">“Man”</span><span class="o">);</span>
+<span class="k">return</span> <span class="n">person</span><span class="o">;</span>
+<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li><code>supportsParameter()</code> 메서드
+<ul>
+<li>해당 Argument Resolver를 적용할 수 있는지 판단하는 메서드이다.</li>
+<li>return 값이 true이면 적용하고, false이면 적용하지 않는다.</li>
+<li><code>parameter.getParameterType().equals(Person.class)</code>
+<ul>
+<li>컨트롤러 메서드의 매개변수가 Person 타입인지 확인한다.</li>
+</ul>
+</li>
+<li><code>parameter.hasParameterAnnotation(CustomAnno.class)</code>
+<ul>
+<li>컨트롤러 메서드의 매개변수에 <code>@CustomAnno</code> 애너테이션이 붙어있는지 확인한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><code>resolveArgument()</code> 메서드
+<ul>
+<li>바인딩 시, 실행되는 메서드이다.</li>
+<li>실제 바인딩할 객체를 리턴한다.</li>
+<li>매개변수 설명
+<ul>
+<li>
+<p><code>MethodParameter parameter</code></p>
+<ul>
+<li>컨트롤러 메서드의 매개변수 중, 바인딩될 매개변수 관련</li>
+</ul>
+</li>
+<li>
+<p><code>ModelAndViewContainer mavContainer</code></p>
+<ul>
+<li>모델과 뷰 관련 매개변수</li>
+<li>호출된 컨트롤러 메서드에 전달될 <code>Model</code> 이나 <code>View</code> 객체에 접근할 수 있다.</li>
+</ul>
+</li>
+<li>
+<p><code>NativeWebRequest webRequest</code></p>
+<ul>
+<li>들어온 요청 관련 매개변수</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">webRequest</span><span class="o">.</span><span class="na">getNativeRequest</span><span class="o">(</span><span class="nc">HttpServletRequest</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</code></pre></div></div>
+<ul>
+<li><strong>위 코드를 통해, 호출된 컨트롤러 메서드에 전달될 <code>HttpServletRequest</code> 객체에 접근할 수도 있다.</strong></li>
+</ul>
+</li>
+<li>
+<p><code>WebDataBinderFactory webDataBinderFactory</code></p>
+<ul>
+<li><code>WebDataBinder</code> 객체 생성 팩토리</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="argument-resolver-">Argument Resolver 등록</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Configuration</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebConfig</span> <span class="kd">implements</span> <span class="nc">WebMvcConfigurer</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;nd&quot;&gt;@Autowired&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;CustomArgumentResolver&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;resolver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;addArgumentResolvers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;HandlerMethodArgumentResolver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;argumentResolvers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;argumentResolvers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resolver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div>
+<br/></p>
+<h3 id="section-2">컨트롤러</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@RestController</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyController</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;nd&quot;&gt;@GetMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/api/my&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;myMethod&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nd&quot;&gt;@CustomAnno&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;person&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;c1&quot;&gt;//...&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li>위에서 작성한 <code>resolveArgument()</code> 메서드의 반환값이 <code>myMethod</code> 메서드의 매개변수 <code>person</code> 에 바인딩된다.</li>
+</ul>
+:ET

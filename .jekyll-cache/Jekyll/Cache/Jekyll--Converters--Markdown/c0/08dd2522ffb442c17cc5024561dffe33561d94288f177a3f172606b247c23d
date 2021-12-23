@@ -1,0 +1,358 @@
+I"^;<p><br/><br/></p>
+<h1 id="jwt-">JWT 개념</h1>
+<p>먼저 JWT에 대해 알아보고, JWT를 구현하는 방법들에 대해 설명하도록 하겠다.</p>
+<h2 id="jwt">JWT란?</h2>
+<ul>
+<li>Json Web Token</li>
+<li>Json 포맷을 이용하여 사용자에 대한 속성을 저장하는 Claim 기반의 Web Token</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="jwt--1">JWT 구조</h2>
+<ul>
+<li>JWT 구성요소
+<ul>
+<li><strong>Header</strong></li>
+<li><strong>Payload</strong></li>
+<li><strong>Signature</strong></li>
+</ul>
+</li>
+</ul>
+<p>각 요소는 모두 JSON 형식을 갖는다.</p>
+<p><img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&amp;fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcL07DS%2FbtqArTTqJqU%2FaKbkKW5KiuPpr7kefx4yAk%2Fimg.png" alt="출처링크: https://doqtqu.tistory.com/277" /></p>
+<p>출처링크: <a href="https://doqtqu.tistory.com/277">https://doqtqu.tistory.com/277</a></p>
+<ul>
+<li>Json 형태인 각 부분은 Base64로 인코딩 되어 표현된다.</li>
+<li>또한 각 요소를 이어 주기 위해, .(마침표) 구분자를 사용하여 구분한다.</li>
+<li>위 그림의 <code>Encoded</code> 부분이 바로 JWT 토큰 값이다.</li>
+</ul>
+<br/>
+<h3 id="header-">Header (헤더)</h3>
+<p>토큰의 헤더는 <code>typ</code> 과 <code>alg</code> 로 구성된다.</p>
+<ul>
+<li>
+<p><code>typ</code></p>
+<ul>
+<li>토큰의 타입을 지정한다.</li>
+<li>JWT 사용 시, <code>typ</code> 의 값은 반드시 ‘<strong>JWT</strong>’ 이다.</li>
+</ul>
+</li>
+<li>
+<p><code>alg</code></p>
+<ul>
+<li>Signature를 해싱하기 위한 알고리즘 방식을 지정한다.</li>
+<li>즉, Signature의 값은 <code>alg</code> 에 명시된 알고리즘을 사용한 결과이다.</li>
+<li>예시
+<ul>
+<li>HS256</li>
+<li>RSA</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>어떤 데이터를 <code>alg</code> 알고리즘으로 해싱했는지는 Signature에서 설명함.</p>
+</blockquote>
+</li>
+<li>
+<p>Header 형식 예시</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+	</span><span class="nl">"alg"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HS256"</span><span class="p">,</span><span class="w">
+	</span><span class="nl">"typ"</span><span class="p">:</span><span class="w"> </span><span class="err">JWT</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+</li>
+</ul>
+<br/>
+<h3 id="payload-">PayLoad (페이로드)</h3>
+<p>페이로드에는 클레임(Claim)들이 담겨 있다.</p>
+<ul>
+<li>클레임?
+<ul>
+<li>토큰에서 사용할 정보의 조각</li>
+<li>Key-Value 형태</li>
+</ul>
+</li>
+</ul>
+<br/>
+<p>클레임의 종류는 총 3가지이다.</p>
+<ul>
+<li><strong>등록된 클레임 (Registered Claim)</strong>
+<ul>
+<li>
+<p>토큰 정보를 표현하기 위해, 이미 정해진 종류의 데이터</p>
+</li>
+<li>
+<p>즉, 공식적(표준)으로 사용되는 클레임이다.</p>
+</li>
+<li>
+<p>등록된 클레임 종류</p>
+<ul>
+<li><code>iss</code> : 토큰 발급자 (issuer)</li>
+<li><code>sub</code> : 토큰 제목 (subject), 유니크한 값을 사용한다. (주로 사용자 이메일)</li>
+<li><code>aud</code> : 토큰 대상자 (audience)</li>
+<li><code>exp</code> : 토큰 만료 시간 (expiration), NumericDate 형식</li>
+<li><code>nbf</code> : 토큰 활성 날짜 (not before), 해당 날이 지나기 전의 토큰은 활성화되지 않는다.</li>
+<li><code>iat</code> : 토큰 발급 시간 (issued at), 토큰 발급 이후의 경과시간을 알 수 있다.</li>
+<li><code>jti</code> : JWT 토큰 식별자 (JWT ID), 중복 방지를 위해 사용한다. 일회용 토큰(Access Token) 등에 사용된다.</li>
+</ul>
+</li>
+<li>
+<p>예시</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+	</span><span class="nl">"iss"</span><span class="p">:</span><span class="w"> </span><span class="s2">"scope"</span><span class="w">
+	</span><span class="nl">"sub"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user@gmail.com"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>공개 클레임 (Public Claim)</strong>
+<ul>
+<li>
+<p>사용자 정의 클레임</p>
+</li>
+<li>
+<p>공개용 정보를 위해 사용된다.</p>
+</li>
+<li>
+<p>충돌 방지를 위해, URI 포맷을 이용한다.</p>
+</li>
+<li>
+<p>예시</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+	</span><span class="nl">"http://mydomain.com"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>비공개 클레임 (Private Claim)</strong>
+<ul>
+<li>
+<p>사용자 정의 클레임</p>
+</li>
+<li>
+<p>서버와 클라이언트 사이에 임의로 지정한 정보를 저장한다.</p>
+</li>
+<li>
+<p>예시</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+	</span><span class="nl">"myClaim"</span><span class="p">:</span><span class="w"> </span><span class="s2">"myValue"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="signature-">Signature (서명)</h3>
+<ul>
+<li>Signature는 토큰을 인코딩하거나 유효성 검증을 할 때 사용하는 고유한 암호화 코드이다.</li>
+<li><strong>Signature 생성 과정</strong>
+<ol>
+<li>헤더와 페이로드의 값을 각각 BASE64로 인코딩한다.</li>
+<li>‘1번에서 인코딩한 값’과 ‘서버 측에 숨겨둔 비밀키’를 Header에서 정의한 알고리즘(<code>alg</code>)으로 해싱을 한다.</li>
+<li>2번에서 해싱된 결과를 다시 BASE64로 인코딩한다.</li>
+<li>3번의 결과가 Signature 이다.</li>
+</ol>
+</li>
+</ul>
+<br/>
+<h3 id="jwt----">JWT 토큰 예시: 일반적인 경우</h3>
+<p><img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&amp;fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fc3oKza%2FbtqArSHlIuP%2FQQU4oljS5KxyNgv4651Nk1%2Fimg.png" alt="출처링크: https://doqtqu.tistory.com/277" /></p>
+<p>출처링크: <a href="https://doqtqu.tistory.com/277">https://doqtqu.tistory.com/277</a></p>
+<ul>
+<li>위 토큰 값은 HTTP 요청 메시지에서 <code>Authorization</code> 이라는 헤더의 value로 사용된다.</li>
+<li>일반적으로 Bearer 라는 단어가 토큰값 앞에 붙는다.</li>
+</ul>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">//HTTP</span><span class="w"> </span><span class="err">요청</span><span class="w"> </span><span class="err">메시지의</span><span class="w"> </span><span class="err">헤더</span><span class="w">
+<p></span><span class="err">Authorization:</span><span class="w"> </span><span class="err">Bearer</span><span class="w"> </span><span class="err">토큰값</span><span class="w">
+</span></code></pre></div></div></p>
+<p><br/><br/></p>
+<h1 id="jwt--">JWT를 구현하는 방법들</h1>
+<h1 id="jwt---">JWT 토큰값을 저장하는 방법들</h1>
+<h2 id="section">방법의 종류</h2>
+<ol>
+<li>localStorage에 토큰값을 저장하는 방법</li>
+<li>cookie에 토큰값을 저장하는 방법</li>
+<li>Access 토큰과 Refresh 토큰을 사용하는 방법</li>
+</ol>
+<p><br/><br/></p>
+<h2 id="localstorage--">1. localStorage에 저장하는 방법</h2>
+<h3 id="localstorage">localStorage란?</h3>
+<ul>
+<li>사용자가 key/value 쌍의 형태로 데이터를 유지할 수 있도록하는 간단한 클라이언트 측 데이터베이스이다.</li>
+<li>로컬 저장소에 데이터를 검색/쓰기하는 매우 간단한 API가 있으며, 도메인당 최대 10MB의 데이터를 저장할 수 있다.</li>
+<li>쿠키와 달리 저장된 데이터는 모든 HTTP 요청에 포함되지 않는다.</li>
+</ul>
+<br/>
+<h3 id="section-1">원리</h3>
+<ol>
+<li>
+<p>클라이언트의 인증(authentication, 로그인) 성공 시, 서버가 JWT 토큰을 응답한다.</p>
+<ul>
+<li>이때, 단순히 토큰값만을 클라이언트에게 전달한다.</li>
+</ul>
+</li>
+<li>
+<p><strong>클라이언트가 해당 토큰값을 localStorage에 저장한다.</strong></p>
+</li>
+<li>
+<p>클라이언트가 인가(authorization)를 해야할 때마다, localStorage에 저장된 토큰값을 꺼내온다.</p>
+</li>
+<li>
+<p>클라이언트가 HTTP 요청 메시지의 헤더에 아래와 같이 작성한다.</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">Authorization:</span><span class="w"> </span><span class="err">Bearer</span><span class="w"> </span><span class="err">토큰값</span><span class="w">
+</span></code></pre></div></div>
+</li>
+<li>
+<p>서버가 해당 토큰값을 확인하여, 유효한 토큰인지 확인한다.</p>
+<ul>
+<li>이때 <code>Bearer</code> 문자열은 제외하고, 오직 <code>토큰값</code>만 사용한다.</li>
+<li>토큰의 유효성 검증은 아래와 같다.
+<ul>
+<li>올바른 JWT 토큰 형식인지?</li>
+<li>만료시간(<code>exp</code>)이 초과되지 않았는지?</li>
+<li>활성 날짜(<code>nbf</code>)가 지났는지?</li>
+<li>Signature 값이 올바른지?</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<br/>
+<h3 id="section-2">로그아웃 방법</h3>
+<ul>
+<li>클라이언트 측에서, 자신의 localStorage에 저장된 토큰값을 제거한다.</li>
+</ul>
+<br/>
+<h3 id="section-3">해당 방식의 특징</h3>
+<ul>
+<li>CSRF 공격에 안전하다.</li>
+<li>XSS에 취약하다.
+<ul>
+<li>공격자가 localStorage에 접근하는 JS 코드를 작성하여, 토큰값에 접근할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="cookie--">2. cookie에 저장하는 방법</h2>
+<h3 id="section-4">원리</h3>
+<ol>
+<li>
+<p>클라이언트의 인증(authentication, 로그인) 성공 시, 서버가 JWT 토큰을 응답한다.</p>
+<ul>
+<li>이때 서버는 아래와 같이 응답하여, 클라이언트의 쿠키에 토큰 값을 저장한다.</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 자바 코드로 쿠키 설정하는 예시</span>
+<p><span class="kd">public</span> <span class="kt">void</span> <span class="nf">createTokenCookie</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
+<span class="nc">Cookie</span> <span class="n">cookie</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Cookie</span><span class="o">(</span><span class="s">“token”</span><span class="o">,</span> <span class="n">토큰값</span><span class="o">);</span>
+<span class="n">cookie</span><span class="o">.</span><span class="na">setHttpOnly</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span> <span class="c1">//HttpOnly 옵션 설정</span>
+<span class="n">cookie</span><span class="o">.</span><span class="na">setPath</span><span class="o">(</span><span class="s">”/”</span><span class="o">);</span> <span class="c1">//경로 설정</span>
+<span class="n">response</span><span class="o">.</span><span class="na">addCookie</span><span class="o">(</span><span class="n">cookie</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li><code>HttpOnly</code> 설정을 통해, JS에서의 쿠키접근을 막는다. (보안성)</li>
+</ul>
+</li>
+<li>
+<p><strong>클라이언트의 쿠키에 해당 토큰값이 저장된다.</strong></p>
+</li>
+<li>
+<p>클라이언트가 요청을 보낼 때마다, 쿠키(<code>token</code>)가 함께 전달된다.</p>
+</li>
+<li>
+<p>서버가 해당 토큰값을 확인하여, 유효한 토큰인지 확인한다.</p>
+<ul>
+<li>이때 <code>Bearer</code> 문자열은 제외하고, 오직 <code>토큰값</code>만 사용한다.</li>
+<li>토큰의 유효성 검증은 아래와 같다.
+<ul>
+<li>올바른 JWT 토큰 형식인지?</li>
+<li>만료시간(<code>exp</code>)이 초과되지 않았는지?</li>
+<li>활성 날짜(<code>nbf</code>)가 지났는지?</li>
+<li>Signature 값이 올바른지?</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<br/>
+<h3 id="section-5">로그아웃 방법</h3>
+<ul>
+<li>서버 측에서 해당 쿠키를 삭제하도록 응답한다.</li>
+</ul>
+<br/>
+<h3 id="section-6">해당 방식의 특징</h3>
+<ul>
+<li>XSS 공격에 비교적 안전하다.
+<ul>
+<li>쿠키의 <code>httpOnly</code> 옵션 사용시, js에서 쿠키에 접근할 수 없다.</li>
+<li>하지만 이것만으로 XSS 공격을 완벽히 방어할 순 없다.</li>
+</ul>
+</li>
+<li>CSRF 공격에 취약하다.</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="access-token-refresh-token---">3. Access Token과 Refresh Token 을 사용하는 방법</h2>
+<blockquote>
+<p>이것이 Best Practice이다.</p>
+</blockquote>
+<br/>
+<h3 id="access-token-refresh-token">Access Token과 Refresh Token</h3>
+<ul>
+<li><strong>Access Token</strong>
+<ul>
+<li>수명이 보통 몇시간 ~ 몇분이다.</li>
+<li>해당 토큰으로 인가(Authorization)한다.</li>
+</ul>
+</li>
+<li><strong>Refresh Token</strong>
+<ul>
+<li>수명이 보통 2주이다.</li>
+<li>해당 토큰으로 Access Token이 만료되었을 때, 다시 Access Token을 받아온다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-7">원리</h3>
+<ol>
+<li>클라이언트의 인증(authentication, 로그인) 성공 시, 서버가 ‘Refresh 토큰’을 응답한다.
+<ul>
+<li>이때 서버는 Refresh 토큰을 httpOnly 쿠키로 설정하여, 쿠키로 전달한다.</li>
+</ul>
+</li>
+<li>클라이언트가 Refresh 토큰을 쿠키에 저장한다.</li>
+<li><strong>클라이언트는 url이 새로고침 될 때마다, Refresh Token을 요청 메시지에 담아 새로운 AccessToken을 발급 받는다.</strong></li>
+<li>클라이언트가 Access 토큰을 JS의 <code>private variable</code> 에 저장한다.</li>
+<li>서버가 해당 토큰값을 확인하여, 유효한 토큰인지 확인한다.
+<ul>
+<li>이때 <code>Bearer</code> 문자열은 제외하고, 오직 <code>토큰값</code>만 사용한다.</li>
+<li>토큰의 유효성 검증은 아래와 같다.
+<ul>
+<li>올바른 JWT 토큰 형식인지?</li>
+<li>만료시간(<code>exp</code>)이 초과되지 않았는지?</li>
+<li>활성 날짜(<code>nbf</code>)가 지났는지?</li>
+<li>Signature 값이 올바른지?</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<br/>
+<h3 id="section-8">로그아웃 방법</h3>
+<ul>
+<li>Refresh 토큰이 담긴 쿠키를 제거하도록, 서버가 응답한다.</li>
+</ul>
+<br/>
+<h3 id="section-9">해당 방식의 특징</h3>
+<ul>
+<li>XSS 공격을 방어할 수 있다.</li>
+<li>CSRF 공격을 방어할 수 있다.</li>
+</ul>
+:ET
