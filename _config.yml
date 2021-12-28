@@ -19,6 +19,7 @@ paginate_path: "page:num"
 layout: post
 permalink: /:categories/:title
 excerpt_separator: "[-----]"
+future: true
 
 url: https://taegyunwoo.github.io # Required: replace this with your domain
 name: MeCoMeGae # Required: will be displayed on every page's header
