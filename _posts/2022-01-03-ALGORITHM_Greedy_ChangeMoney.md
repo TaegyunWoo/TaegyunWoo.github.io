@@ -1,7 +1,7 @@
 ---
 category: Algorithm
 tags: [알고리즘, DP, 개요]
-title: "[알고리즘 - 동적계획] 개요"
+title: "[알고리즘 - 그리디] 거스름돈"
 date:   2022-01-03 17:00:00 
 lastmod : 2022-01-03 17:00:00
 sitemap :
