@@ -1,0 +1,364 @@
+I"D<p><br/><br/></p>
+<h1 id="stomp">STOMP</h1>
+<h2 id="section">개요</h2>
+<h3 id="stomp-1">STOMP란?</h3>
+<ul>
+<li>Simple/Stream Text Oriented Messaging Protocol의 약자로, 간단한 문자 기반 메시징 프로토콜이다.</li>
+<li>HTTP와 마찬가지로, Frame을 사용해 전송하는 프로토콜이다.
+<ul>
+<li>Frame: 주소와 명령, 명령 수행을 위한 데이터가 모두 포함된 데이터</li>
+</ul>
+</li>
+<li>TCP/IP 위에서 동작한다.</li>
+<li>STOMP는 일종의 스펙(명세서)으로, 기능 구현은 전적으로 서버에 달려있다.
+<ul>
+<li>STOMP 스펙에 맞춰 직접 구현할 필요가 없다. <code>org.springframework.boot:spring-boot-starter-websocket</code> 이 관련 로직을 제공한다.</li>
+</ul>
+</li>
+<li>STOMP는 웹소켓 위에 얹어 함께 사용할 수 있는 하위(서브) 프로토콜이다.</li>
+<li><strong>PUB/SUB 구조를 갖는다.</strong></li>
+<li><strong>Message Broker가 중간에서 메시지를 전달한다.</strong></li>
+</ul>
+<br/>
+<h3 id="pubsub-">Pub/Sub 구조</h3>
+<ul>
+<li>아래 요소들로 이루어져, 메시징 처리를 하는 구조를 뜻한다.
+<ul>
+<li><strong>메시지 공급 주체 (Publisher)</strong></li>
+<li><strong>메시지 소비 주체 (Subscriber)</strong></li>
+<li><strong>메시지 주제 (Topic)</strong></li>
+</ul>
+</li>
+<li>행위별 정리
+<ul>
+<li>채팅방 생성 ⇒ Topic를 생성하는 것</li>
+<li>특정 채팅방 입장 ⇒ 해당 Topic에 대한 Subscriber가 되는 것</li>
+<li>특정 채팅방에 채팅을 보내는 것 ⇒ 해당 Topic에 대해 Publisher가 되는 것</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="message-broker">Message Broker</h3>
+<ul>
+<li>Message Broker란
+<ul>
+<li>Publisher가 전달한 msg를 Subscriber에게 전달하는 역할을 수행한다.</li>
+<li>STOMP가 Pub/Sub 구조로 동작할 수 있게 만드는 주체이다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="websocket-vs-stomp">WebSocket vs STOMP</h3>
+<ul>
+<li>WebSocket은 메시지의 형식이 정해져 있지 않다.</li>
+<li>따라서 대규모 프로젝트에 WebSocket을 적용하기엔, 어려움이 많다.</li>
+<li>그에 반해 STOMP는 메시지 송·수신 시, <strong>미리 정의된 규칙을 사용</strong>한다.</li>
+<li>또한 이름에서 알 수 있듯이, <strong>텍스트 기반 프로토콜</strong>이다.
+<ul>
+<li>따라서 메시지 작성 시, 텍스트로 모든 것을 작성해야 한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="stomp-frame-">STOMP의 Frame 구조</h3>
+<ul>
+<li><strong>Frame은 텍스트 라인들로 이루어져 있다.</strong>
+<ul>
+<li>텍스트 기반 프로토콜이기 때문에</li>
+</ul>
+</li>
+<li>UTF-8 인코딩 방식을 사용해야 한다.</li>
+</ul>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>COMMAND 
+header1:value1 
+header2:value2 
+<p>Body^@
+</code></pre></div></div></p>
+<ul>
+<li>
+<p>구성요소</p>
+<ul>
+<li><strong>명령(COMMAND) - 클라이언트가 요청 시, 사용하는 주요 COMMAND</strong>
+<ul>
+<li>
+<p><code>CONNECT</code></p>
+<ul>
+<li>클라이언트의 TCP/IP 연결 요청</li>
+<li><code>accept-version</code> 헤더에 수용할 STOMP 버전을 반드시 명시해야 한다.</li>
+<li><code>host</code> 헤더에 연결할 호스트명을 반드시 명시해야 한다.</li>
+</ul>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CONNECT
+accept-version:1.0,1.1,2.0
+host:stomp.github.org
+<p>^@
+</code></pre></div></div></p>
+<blockquote>
+<p>당연히 바디부분은 필요없다.</p>
+</blockquote>
+</li>
+<li>
+<p><code>SEND</code></p>
+<ul>
+<li>클라이언트(Publisher)가 msg를 보낸다.</li>
+<li><code>destination</code> 헤더에 msg를 보낼 Topic을 반드시 지정해야 한다.</li>
+</ul>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SEND
+destination:/queue/a
+<p>hello queue a
+^@
+</code></pre></div></div></p>
+</li>
+<li>
+<p><code>SUBSCRIBE</code></p>
+<ul>
+<li>클라이언트가 특정 Topic에 대해, 구독을 한다. ⇒ 해당 클라이언트는 Subscriber가 된다.</li>
+<li>해당 Topic으로 오는 모든 msg를 클라이언트(Subscriber)가 받게 된다.</li>
+<li><code>destination</code> 헤더로 Subscribe할 Topic을 반드시 지정해야 한다.</li>
+<li><code>id</code> 헤더로 유니크한 Subscribe Id를 설정해야 한다.</li>
+</ul>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SUBSCRIBE
+id:0
+destination:/queue/foo
+ack:client
+<p>^@
+</code></pre></div></div></p>
+<blockquote>
+<p>당연히 <code>SUBSCRIBE</code> 에는 Body 부분이 필요없다.</p>
+</blockquote>
+</li>
+<li>
+<p><code>UNSUBSCRIBE</code></p>
+<ul>
+<li>말 그대로, Subscribe을 취소한다.</li>
+<li><code>id</code> 헤더에 <code>Subscribe</code> 때 설정한 <code>id</code> 를 반드시 넣어야 한다.</li>
+</ul>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>UNSUBSCRIBE
+id:0
+<p>^@
+</code></pre></div></div></p>
+</li>
+<li>
+<p><code>DISCONNECT</code></p>
+<ul>
+<li>연결을 해지한다. 해지 순서는 아래와 같다.</li>
+</ul>
+<ol>
+<li>
+<p>클라이언트 측 요청 msg</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DISCONNECT
+receipt:77
+<p>^@
+</code></pre></div></div></p>
+</li>
+<li>
+<p>이에 대한 서버 측 응답 msg</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RECEIPT
+receipt-id:77
+<p>^@
+</code></pre></div></div></p>
+<ul>
+<li>이때 클라이언트가 보낸 <code>receipt</code> 의 값과 서버가 보낸 <code>receipt-id</code> 의 값이 같아야 한다.</li>
+</ul>
+</li>
+<li>
+<p>소켓을 닫는다.</p>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+  <br/>
+<ul>
+<li>
+<p><strong>명령(COMMAND) - 서버가 응답 시, 사용하는 주요 COMMAND</strong></p>
+<ul>
+<li>
+<p><code>CONNECTED</code></p>
+<ul>
+<li>클라이언트가 <code>CONNECT</code> 프레임을 보내면, 아래와 같이 응답해야 한다.</li>
+<li><code>version</code> 헤더에 현재 STOMP 버전을 명시해야 한다.</li>
+</ul>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CONNECTED
+version:1.2
+<p>^@
+</code></pre></div></div></p>
+</li>
+<li>
+<p><code>MESSAGE</code></p>
+<ul>
+<li>서버가 해당 Topic(<code>destination</code>)를 Subscribe하는 클라이언트들에게 msg를 보낸다.</li>
+</ul>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MESSAGE
+subscription:0
+message-id:007
+destination:/queue/a
+<p>hello queue a^@
+</code></pre></div></div></p>
+</li>
+<li>
+<p><code>RECEIPT</code></p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RECEIPT
+receipt-id:message-12345
+<p>^@
+</code></pre></div></div></p>
+</li>
+<li>
+<p><code>ERROR</code></p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ERROR
+receipt-id:message-12345
+content-type:text/plain
+content-length:170
+message:malformed frame received
+<h2 id="the-message">The message:</h2>
+<p>MESSAGE
+destined:/queue/a
+receipt:message-12345</p>
+<h2 id="hello-queue-a">Hello queue a!</h2>
+<p>Did not contain a destination header, which is REQUIRED
+for message propagation.
+^@
+</code></pre></div></div></p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>헤더(Header)</strong></p>
+</li>
+<li>
+<p><strong>바디(Body)</strong></p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>자세한 것은 <a href="https://stomp.github.io/stomp-specification-1.2.html#STOMP_Frames">STOMP 레퍼런스</a> 참고</p>
+</blockquote>
+<p><br/><br/></p>
+<h2 id="stomp--with-spring-boot">STOMP 구현 (With Spring-boot)</h2>
+<h3 id="stomp--">스프링에서의 STOMP 통신 흐름</h3>
+<p><img src="/assets/img/2021-12-23-Tech_STOMP/Untitled.png" alt="참고 영상: [10분 테코톡] 아론의 웹소켓&amp;스프링" /></p>
+<p>참고 영상: <a href="https://www.youtube.com/watch?v=rvss-_t6gzg">[10분 테코톡] 아론의 웹소켓&amp;스프링</a></p>
+<ul>
+<li>가정
+<ul>
+<li>구독자(Subscriber)들이 <code>/topic</code> 이라는 Topic을 현재 구독 중이다.</li>
+<li>발신자(Publisher)가 <code>/topic</code> 에 msg를 보내고자 한다.</li>
+</ul>
+</li>
+<li>이때 발신자가 선택할 수 있는 선택지는 아래와 같다.
+<ul>
+<li><strong><code>SEND</code> 프레임의 <code>destination</code> 헤더에 <code>/topic</code> 을 넣어, 바로 msg을 전달하는 방법</strong></li>
+<li><strong>메시지 가공 및 처리를 하기 위해, <code>SEND</code> 프레임의 <code>destination</code> 헤더에 <code>/app</code> 을 넣어 msg를 전달하는 방법</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="codewebsocketbrokerconfigcode">웹소켓메시지브로커 등록: <code>WebSocketBrokerConfig</code></h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Configuration</span>
+<span class="nd">@EnableWebSocketMessageBroker</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebSocketBrokerConfig</span> <span class="kd">implements</span> <span class="nc">WebSocketMessageBrokerConfigurer</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;c1&quot;&gt;//메시지 브로커 관련 설정&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;configureMessageBroker&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;MessageBrokerRegistry&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;c1&quot;&gt;//발신자가 선택할 수 있는 1번 방법&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;enableSimpleBroker&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/queue&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;/topic&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+	&lt;span class=&quot;c1&quot;&gt;//발신자가 선택할 수 있는 2번 방법 (메시지 가공)&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setApplicationDestinationPrefixes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/app&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;registerStompEndpoints&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;StompEndpointRegistry&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addEndpoint&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/stomp-websocket&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;withSockJS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li><code>implements WebSocketMessageBrokerConfigurer</code>
+<ul>
+<li>STOMP 방식으로 구현하려면, 해당 인터페이스를 구현해야 한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><code>enableSimpleBroker(&quot;/queue&quot;, &quot;/topic&quot;)</code>
+<ul>
+<li>내장 메시지 브로커를 사용하도록 설정한다.</li>
+<li>“<code>SEND</code> 프레임의 <code>destination</code> 헤더에 <code>/topic</code> 을 넣어, 바로 msg을 전달하는 방법” 에 해당된다.</li>
+<li><strong>파라미터로 전달받은 값이 msg의 <code>destination</code> 헤더의 prefix로서 사용되면, 내장 메시지 브로커가 처리한다.</strong></li>
+<li>위 예시 코드의 경우, <code>/queue</code> 나 <code>/topic</code> 이 <code>destination</code> 헤더의 prefix로 사용되면 내장 메시지 브로커인 <code>SimpleBroker</code> 가 그 메시지를 받아 구독자들에게 전달해준다.</li>
+<li>관례적인 prefix들
+<ul>
+<li><strong>/queue</strong> : 메시지가 일대일로 전송될 때</li>
+<li><strong>/topic</strong> : 메시지가 일대다로 브로드캐스팅 될 때</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><code>setApplicationDestinationPrefixes(&quot;/app&quot;)</code>
+<ul>
+<li>클라이언트로부터 전달받은 msg를 구독자(Subscriber)들에게 전달하기 전에, 메시지 가공이 필요한 경우의 prefix를 설정한다.</li>
+<li>“메시지 가공 및 처리를 하기 위해, <code>SEND</code> 프레임의 <code>destination</code> 헤더에 <code>/app</code> 을 넣어 msg를 전달하는 방법” 에 해당된다.</li>
+<li>위 예시 코드의 경우, <code>/app</code> 이 <code>destination</code> 헤더의 prefix로 사용되면 msg를 가공하는 핸들러로 msg가 전달된다.</li>
+<li>일반 WebSocket처럼 일일이 핸들러를 등록하지 않아도 된다.
+<ul>
+<li>일반 컨트롤러처럼 핸들러가 매핑되므로</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><code>addEndpoint(&quot;/stomp-websocket&quot;)</code>
+<ul>
+<li>HTTP HandShaking을 할 때, 사용될 주소를 지정한다.</li>
+<li>즉, 웹소켓을 <strong>연결(Connection)</strong> 할 주소를 지정한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="codemsgprocesscontrollercode">메시지 가공 핸들러: <code>MsgProcessController</code></h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@RestController</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MsgProcessController</span> <span class="o">{</span>
+<pre><code>&lt;span class=&quot;nd&quot;&gt;@MessageMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/hello&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@SendTo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/topic/roomId&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MessageResponseDto&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;MessageRequestDto&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Exception&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;MessageResponseDto&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+		&lt;span class=&quot;s&quot;&gt;&quot;Hello, &quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;!&quot;&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+</code></pre></div></div></p>
+<ul>
+<li><code>@MessageMapping(&quot;/hello&quot;)</code>
+<ul>
+<li>
+<p>만약 클라이언트에서 “../hello” 라는 api로 메시지를 보내면, <code>process()</code> 메서드가 호출된다.</p>
+<blockquote>
+<p><code>WebSocketBrokerConfig</code> 에서 설정했던 <code>/app</code> 과 합쳐져, <code>/app/hello</code> 를 <code>destination</code> 헤더 값으로 갖는 메시지들이 <code>process()</code> 메서드에 전달되게 된다.</p>
+</blockquote>
+</li>
+<li>
+<p>그리고 <code>process()</code> 메서드의 파라미터인 <code>MessageRequestDto</code> 에 전송된 msg가 바인딩된다.</p>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><code>@SendTo(&quot;/topic/roomId&quot;)</code>
+<ul>
+<li>“/topic/roomId” 라는 Topic을 구독하고 있는 클라이언트(Subscriber)들에게 ‘<code>process()</code> 메서드에서 return하는 값’을 msg로서 브로드캐스팅한다.</li>
+<li>“/topic/…” 에 msg를 전달하는 것이니, 리턴값이 바로 Simple Broker로 전달된다.</li>
+</ul>
+</li>
+</ul>
+:ET
