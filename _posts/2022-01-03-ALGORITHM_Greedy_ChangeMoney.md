@@ -27,6 +27,43 @@ sitemap :
 ### 문제 해설
 - 가장 큰 화폐 단위부터 돈을 거슬러 주면 된다.
 
+### 소스코드
+```java
+public class 거스름돈 {
+
+  public static int solution1(int input) {
+    int answer = 0;
+
+    while (input != 0) {
+      if (input >= 500) {
+        input -= 500;
+      } else if (input >= 100) {
+        input -= 100;
+      } else if (input >= 50) {
+        input -= 50;
+      } else if (input >= 10) {
+        input -= 10;
+      }
+      answer++;
+    }
+
+    return answer;
+  }
+
+  public static int solution2(int input) {
+    int answer = 0;
+    int[] coins = {500, 100, 50, 10};
+
+    for (int coin : coins) {
+      answer += input / coin;
+      input %= coin;
+    }
+
+    return answer;
+  }
+}
+```
+
 ### 시간복잡도
 - `solution1` 의 경우
   - n의 크기와 반복(`while`) 횟수가 비례한다.  

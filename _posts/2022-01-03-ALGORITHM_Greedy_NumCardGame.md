@@ -73,6 +73,28 @@ sitemap :
 ### 문제 해설
 - 각 행마다 가장 작은 숫자를 뽑아내고, 그 중 가장 큰 숫자를 출력하면 해결되는 단순한 문제이다. 
 
+### 소스코드
+```java
+public class 숫자_카드_게임 {
+
+  public static int solution1(int n, int m, int[][] arr) {
+    int answer = 0;
+    int temp = 0;
+
+    for (int i = 0; i < n; i++) {
+      temp = Arrays.stream(arr[i]).min().getAsInt();
+//            Arrays.sort(arr[i]);
+//            temp = arr[i][0];
+      if (answer < temp) {
+        answer = temp;
+      }
+    }
+
+    return answer;
+  }
+}
+```
+
 ### 시간복잡도
 - `solution1` 의 경우
   - 각 행별로 가장 작은 수 구하기
