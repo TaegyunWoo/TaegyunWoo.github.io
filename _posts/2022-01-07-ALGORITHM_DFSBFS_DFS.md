@@ -25,8 +25,6 @@ sitemap :
 - 그래프의 모든 노드들을 방문(탐색)해야 한다.
 - 특정한 경로로 탐색을 하다가 특정한 상황에서 최대한 깊숙이 들어가 노드를 방문한 후, 다시 돌아가 다른 경로로 탐색하는 알고리즘이다.
 
-<br/>
-
 ### DFS 동작 과정
 1. 탐색 시작 노드를 스택에 삽입하고 방문 처리를 한다.
 2. 스택의 최상단 노드에 방문하지 않은 인접 노드가 있으면 그 인접 노드를 스택에 넣고 방문 처리를 한다.  
@@ -34,78 +32,50 @@ sitemap :
 3. 2번 과정을 더 이상 수행할 수 없을 때까지 반복한다.
 > DFS에서 인접 노드를 선택할 땐, 가장 낮은 번호를 갖는 노드를 최우선으로 선택하는 것이 좋다.
 
-<br/><br/>
-
 ## 예시
 ### 예시에서 사용할 그래프 형태
 ![](/assets/img/2022-01-07-ALGORITHM_DFSBFS_DFS/Untitled14.jpg)
-
-<br/>
+> **8번 노드가 1번 노드가 아닌 2번 노드와 인접함에 주의하자!**  
+(교재와 다르다.)
 
 ### Step 01
 ![](/assets/img/2022-01-07-ALGORITHM_DFSBFS_DFS/Untitled01.jpg)
 
-<br/>
-
 ### Step 02
 ![](/assets/img/2022-01-07-ALGORITHM_DFSBFS_DFS/Untitled.jpg)
-
-<br/>
 
 ### Step 03
 ![](/assets/img/2022-01-07-ALGORITHM_DFSBFS_DFS/Untitled13.jpg)
 
-<br/>
-
 ### Step 04
 ![](/assets/img/2022-01-07-ALGORITHM_DFSBFS_DFS/Untitled11.jpg)
-
-<br/>
 
 ### Step 05
 ![](/assets/img/2022-01-07-ALGORITHM_DFSBFS_DFS/Untitled10.jpg)
 
-<br/>
-
 ### Step 06
 ![](/assets/img/2022-01-07-ALGORITHM_DFSBFS_DFS/Untitled09.jpg)
-
-<br/>
 
 ### Step 07
 ![](/assets/img/2022-01-07-ALGORITHM_DFSBFS_DFS/Untitled08.jpg)
 
-<br/>
-
 ### Step 08
 ![](/assets/img/2022-01-07-ALGORITHM_DFSBFS_DFS/Untitled07.jpg)
-
-<br/>
 
 ### Step 09
 ![](/assets/img/2022-01-07-ALGORITHM_DFSBFS_DFS/Untitled06.jpg)
 
-<br/>
-
 ### Step 10
 ![](/assets/img/2022-01-07-ALGORITHM_DFSBFS_DFS/Untitled05.jpg)
-
-<br/>
 
 ### Step 11
 ![](/assets/img/2022-01-07-ALGORITHM_DFSBFS_DFS/Untitled04.jpg)
 
-<br/>
-
 ### Step 12
 ![](/assets/img/2022-01-07-ALGORITHM_DFSBFS_DFS/Untitled03.jpg)
 
-<br/>
-
 ### Step 13
 ![](/assets/img/2022-01-07-ALGORITHM_DFSBFS_DFS/Untitled02.jpg)
-
-<br/>
 
 ### 결과
 - DFS 수행 결과, 아래 순서대로 탐색되었다.
@@ -113,7 +83,8 @@ sitemap :
 1 -> 2 -> 7 -> 6 -> 8 -> 3 -> 4 -> 5
 ```
 
-<br/><br/>
+### 특징
+- stack 대신 재귀 함수를 이용하여, DFS를 구현할 수 있다.
 
 ## 소스코드 - 인접리스트
 ### DFS 알고리즘
@@ -231,8 +202,6 @@ public class Main {
  ![](/assets/img/2022-01-07-ALGORITHM_DFSBFS_DFS/Untitle23.jpg)
  ![](/assets/img/2022-01-07-ALGORITHM_DFSBFS_DFS/Untitle24.jpg)
 
-<br/><br/>
-
 ## 소스코드 - 인접행렬
 ### DFS 알고리즘
 ```java
@@ -316,8 +285,6 @@ public class Main {
 ```text
 1 2 7 6 8 3 4 5
 ```
-
-<br/>
 
 ### 소스코드 흐름
 > 인접리스트 방식과 동일하다.
