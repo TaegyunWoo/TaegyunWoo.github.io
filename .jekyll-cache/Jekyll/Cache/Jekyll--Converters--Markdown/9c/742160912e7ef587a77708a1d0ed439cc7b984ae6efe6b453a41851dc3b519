@@ -1,0 +1,260 @@
+I"�`<p><br/><br/></p>
+<blockquote>
+<p><a href="https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/greedy/%ED%81%B0_%EC%88%98%EC%9D%98_%EB%B2%95%EC%B9%99.java">소스코드</a></p>
+</blockquote>
+<h1 id="greedy----">Greedy : 큰 수의 법칙</h1>
+<h2 id="section">문제</h2>
+<h3 id="section-1">문제 정의</h3>
+<ul>
+<li>큰 수의 법칙은 다양한 수로 이루어진 배열이 있을 때, 주어진 수들을 M번 더하여 가장 큰수를 만드는 법칙이다.</li>
+<li>단, 배열의 특정한 인텍스에 해당하는 수가 연속해서 K번을 초과하여 더해질 수 없다.</li>
+<li>예시
+<ul>
+<li>배열 {2, 4, 5, 4, 6} 이 있고, M이 8, K가 3이라고 가정하자.</li>
+<li>이 경우, 특정한 인덱스 수가 연속해서 세 번까지만 더해질 수 있으므로, 큰 수의 법칙에 따른 결과는 아래와 같다.</li>
+</ul>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>6 + 6 + 6 + 5 + 6 + 6 + 6 + 5
+즉, 46이 정답이다.
+</code></pre></div></div>
+</li>
+<li>단, 서로 다른 인덱스에 해당하는 수가 같은 경우에도 서로 다른 것으로 간주한다.</li>
+<li>예시
+<ul>
+<li>배열 {3, 4, 3, 4, 3} 가 있고, M이 7, K가 2라고 가정하자.</li>
+<li>이 경우, 두번째 원소에 해당하는 4와 네번째 원소에 해당하는 4를 번갈아 두번씩 더하는 것이 가능하다.</li>
+</ul>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4 + 4 + 4 + 4 + 4 + 4 + 4
+즉, 28이 정답이다.
+</code></pre></div></div>
+</li>
+<li>배열의 크기 N, 숫자가 더해지는 횟수 M, 연속 허용 횟수 K가 주어질 때 큰 수의 법칙에 따른 결과를 출력하라.</li>
+</ul>
+<br/>
+<h3 id="section-2">입력조건</h3>
+<ul>
+<li>첫째줄에 N, M, K의 자연수가 주어지며, 각 수는 공백으로 구분된다.
+<ul>
+<li>N: 2 이상, 1000 이하</li>
+<li>M: 1 이상, 10000 이하</li>
+<li>K: 1 이상, 10000 이하</li>
+</ul>
+</li>
+<li>둘째줄에 N개의 자연수가 주어진다. 각 자연수는 공백으로 구분된다.
+<ul>
+<li>단 각각의 자연수는 1 이상 10000 이하의 수로 주어진다.</li>
+</ul>
+</li>
+<li>입력으로 주어지는 K는 항상 M보다 작거나 같다.</li>
+</ul>
+<br/>
+<h3 id="section-3">출력조건</h3>
+<ul>
+<li>첫째줄에 큰 수의 법칙에 따라 더해진 답을 출력한다.</li>
+</ul>
+<br/>
+<h3 id="section-4">입·출력 예시</h3>
+<ul>
+<li>
+<p>입력</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5 8 3
+2 4 5 4 6
+</code></pre></div></div>
+</li>
+<li>
+<p>출력</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>46
+</code></pre></div></div>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-5">풀이</h2>
+<h3 id="section-6">문제 해설</h3>
+<ul>
+<li>입력으로 주어진 배열에서 사용되는 원소는 오직 <code>가장 큰 수</code> 와 <code>두 번째로 큰 수</code> 이다.</li>
+<li>따라서 먼저, <code>가장 큰 수</code> 와 <code>두 번째로 큰 수</code> 를 구한다.</li>
+<li>그 후, <code>M</code>과 <code>K</code>에 맞춰 정답을 구한다.
+<ul>
+<li><code>가장 큰 수</code> 를 <code>K</code> 번 더한다.</li>
+<li><code>K</code> 번 보다 많이 반복되어 더할 수 없으므로, 이제 <code>두 번째로 큰 수</code> 를 한 번 더한다.</li>
+<li><code>가장 큰 수</code> 를 다시 <code>K</code> 번 더한다.</li>
+<li>이것을 <code>M</code> 에 맞춰 반복한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-7">소스코드</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">큰_수의_법칙</span> <span class="o">{</span>
+<p><span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">solution1</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">,</span> <span class="kt">int</span> <span class="n">m</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">)</span> <span class="o">{</span>
+<span class="kt">int</span> <span class="n">answer</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">biggestNum</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">secondaryBigNum</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span></p>
+<pre><code>&lt;span class=&quot;c1&quot;&gt;//가장 큰 수와 2번째로 큰 수 찾기&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;biggestNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;biggestNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;secondaryBigNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;biggestNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;secondaryBigNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//정답 찾기&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;temp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;temp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;answer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;biggestNum&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;temp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;answer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;secondaryBigNum&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;temp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;answer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span></p>
+<p><span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">solution2</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">,</span> <span class="kt">int</span> <span class="n">m</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">)</span> <span class="o">{</span>
+<span class="kt">int</span> <span class="n">answer</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">biggestNum</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">secondaryBigNum</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span></p>
+<pre><code>&lt;span class=&quot;c1&quot;&gt;//가장 큰 수와 2번째로 큰 수 찾기&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;biggestNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;biggestNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;secondaryBigNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;biggestNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;secondaryBigNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//정답 찾기&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;반복횟수&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// (k+1)개의 원소로 구성된 수열이 반복되는 횟수&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;나머지&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 반복 후 남은 개수, 즉 가장큰 수가 더해져야하는 횟수&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;수열의_합&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;biggestNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;secondaryBigNum&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;answer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;수열의_합&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;반복횟수&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;biggestNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;나머지&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;answer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span></p>
+<p><span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">solution3</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">,</span> <span class="kt">int</span> <span class="n">m</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">)</span> <span class="o">{</span>
+<span class="kt">int</span> <span class="n">answer</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">biggestNum</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">secondaryBigNum</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span></p>
+<pre><code>  &lt;span class=&quot;nc&quot;&gt;Arrays&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;sort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//O(nlogn) 시간 소요 (Dual-Pivot Quick Sort)&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;//가장 큰 수와 2번째로 큰 수 찾기&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;biggestNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;secondaryBigNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;//정답 찾기&lt;/span&gt;
+  &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;반복횟수&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// (k+1)개의 원소로 구성된 수열이 반복되는 횟수&lt;/span&gt;
+  &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;나머지&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 반복 후 남은 개수, 즉 가장큰 수가 더해져야하는 횟수&lt;/span&gt;
+  &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;수열의_합&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;biggestNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;secondaryBigNum&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;answer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;수열의_합&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;반복횟수&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;biggestNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;나머지&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;answer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<br/></p>
+<h3 id="section-8">시간복잡도</h3>
+<ul>
+<li><code>solution1</code> 의 경우
+<ul>
+<li>가장 큰 수와 두 번째로 큰 수 구하기
+<ul>
+<li>크기가 n인 input 배열을 처음부터 끝까지 스캔하여, 가장 큰 수를 구한다.</li>
+<li>크기가 n인 input 배열을 처음부터 끝까지 다시 스캔하여, 두 번째로 큰 수를 구한다.</li>
+<li>따라서 가장 큰 수와 두 번째로 큰 수를 구하는 시간복잡도는 <code>O(2n)</code> , 즉 <code>O(n)</code> 이다.</li>
+</ul>
+</li>
+<li>정답 구하기
+<ul>
+<li>가장 큰 수를 한 번 더한다. 이 연산을 k번 반복한다.</li>
+<li>두번째로 큰 수 를 한번 더한다.</li>
+<li>다시 가장 큰 수를 한 번 더한다. 이 연산을 k번 반복한다.</li>
+<li>각 원소가 더해지는 총 연산 횟수가 m번일 때까지 반복한다.</li>
+<li>따라서 정답을 구하는 시간복잡도는 <code>O(m)</code> 이다.</li>
+</ul>
+</li>
+<li>따라서 총 시간복잡도는 <code>O(n) + O(m)</code> 이다.</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<ul>
+<li><code>solution2</code> 의 경우
+<ul>
+<li>가장 큰 수와 두 번째로 큰 수 구하기
+<blockquote>
+<p><code>solution1</code>와 동일한 로직이다. 따라서 시간복잡도가 <code>O(n)</code> 으로 같다.</p>
+</blockquote>
+</li>
+<li>정답 구하기
+<ul>
+<li><strong>수열이 반복되는 것에 주목해야 한다.</strong></li>
+<li>예를 들어 가장 큰 수가 6이고 두번째로 큰 수가 4일 때, k가 3이라면 아래 수열이 반복될 것이다.</li>
+</ul>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{6, 6, 6, 4}, {6, 6, 6, 4}, ...
+</code></pre></div></div>
+<ul>
+<li>해당 수열이 총 <code>m / (수열의 길이)</code> 번 반복된다.</li>
+<li>수열의 길이는 <code>k+1</code> 과 같다. 왜냐하면 한 수열 내에서 가장 큰 수가 k번 반복되고, 두번째로 큰 수가 하나 포함되기 때문이다.</li>
+<li>또한, <code>m / (수열의 길이)</code>가 정확히 나눠지지 않는 경우도 고려해야 한다.</li>
+<li><code>m / (수열의 길이)</code> 의 나머지만큼 가장 큰 수가 반복해서 더해진다.</li>
+<li>예를 들어, 가장 큰 수가 6이고 두번째로 큰 수가 4일 때, k가 3이고 m이 7이면 아래와 같다.</li>
+</ul>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// m/(수열의 길이) = 7/(3+1) = 1..3 이므로
+<p>{6, 6, 6, 4}, {6, 6, 6}
+</code></pre></div></div></p>
+<ul>
+<li>정리해보면, 정답을 구할 때 사용할 수 있는 식은 아래와 같다.</li>
+</ul>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- j = 수열 반복 횟수 = m/(수열의 길이)
+- h = 수열 반복 후, 가장 큰 수를 추가적으로 더해줘야 하는 횟수 = m-(수열 반복 횟수)
+- g = 수열의 원소들의 합 = (가장 큰 수)*k + (두번째로 큰 수)
+- 정답 = g*j + h(가장 큰 수)
+</code></pre></div></div>
+<ul>
+<li>위 수식을 계산하는 시간복잡도는 <code>O(1)</code> 이다.</li>
+</ul>
+</li>
+<li>따라서 총 시간 복잡도는 <code>O(n)</code> 이다. 즉 <code>가장 큰 수</code> 와 <code>두번째로 큰 수</code> 를 구하는 시간만큼만 걸린다.</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<ul>
+<li><code>solution3</code> 의 경우
+<ul>
+<li>가장 큰 수와 두 번째로 큰 수 구하기
+<ul>
+<li><code>Arrays</code> 에서 제공하는 <code>Arrays.sort()</code> 함수를 사용하여 배열을 정렬하고, <code>가장 큰 수</code> 와 <code>두번째로 큰 수</code> 를 구한다.</li>
+<li><code>Arrays.sort()</code> 는 <code>Dual-Pivot Quick Sort</code> 를 사용하며, 정렬하는데 걸리는 시간복잡도는 <code>O(nlogn)</code> 이다.</li>
+</ul>
+</li>
+<li>정답 구하기
+<blockquote>
+<p><code>solution2</code>와 동일한 로직이다. 따라서 시간복잡도가 <code>O(1)</code> 로 같다.</p>
+</blockquote>
+</li>
+<li>따라서 총 시간복잡도는 <code>O(nlogn)</code> 이다.</li>
+<li>즉 <code>solution3</code> 이 <code>solution2</code> 보다 빠르다.</li>
+</ul>
+</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>나동빈, 『이것이 코딩 테스트다』</li>
+  </ul>
+  본 게시글은 위 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

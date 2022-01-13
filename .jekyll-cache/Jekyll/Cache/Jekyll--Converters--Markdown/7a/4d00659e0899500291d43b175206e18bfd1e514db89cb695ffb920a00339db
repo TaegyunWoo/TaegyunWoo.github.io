@@ -1,0 +1,100 @@
+I"�<p><br/><br/></p>
+<blockquote>
+<p><a href="https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/sort/%EC%9C%84%EC%97%90%EC%84%9C_%EC%95%84%EB%9E%98%EB%A1%9C.java">소스코드</a></p>
+</blockquote>
+<br/>
+<h1 id="section">위에서 아래로</h1>
+<h2 id="section-1">문제</h2>
+<h3 id="section-2">문제 정의</h3>
+<ul>
+<li>하나의 수여렝는 다양한 수가 존재한다.</li>
+<li>이러한 수는 크기에 상관없이 나열되어 있다.</li>
+<li>이 수를 큰수부터 작은 수의 순서로 정렬해야 한다.</li>
+<li>수열을 내림차순으로 정렬하는 프로그램을 만드시오.</li>
+</ul>
+<br/>
+<h3 id="section-3">입력조건</h3>
+<ul>
+<li>첫째 줄에 수열에 속해 있는 수의 개수 N이 주어진다.
+<ul>
+<li>N: 1 이상, 500 이하</li>
+</ul>
+</li>
+<li>두 번째 줄부터 N+1 번째 줄까지 N개의 수가 입력된다. 수의 범위는 1 이상 100,000 이하의 자연수이다.</li>
+</ul>
+<br/>
+<h3 id="section-4">출력조건</h3>
+<ul>
+<li>입력으로 주어진 수열이 내림차순으로 정렬된 결과를 공백으로 구분하여 출력한다.<br />
+동일한 수의 순서는 자유롭게 출력해도 된다.</li>
+</ul>
+<br/>
+<h3 id="section-5">입·출력 예시</h3>
+<ul>
+<li>
+<p>입력</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3
+15
+27
+12
+</code></pre></div></div>
+</li>
+<li>
+<p>출력</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>27 15 12
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<h2 id="section-6">풀이</h2>
+<h3 id="section-7">문제 해설</h3>
+<ul>
+<li>아주 기본적인 정렬을 할 수 있는 물어보는 문제이다.</li>
+<li>수의 개수가 500개 이하로 매우 적으며, 모든 수는 1 이상 100,000 이하이므로 어떠한 정렬 알고리즘을 사용해도 문제를 해결할 수 있다.</li>
+<li>따라서 자바 라이브러리가 제공하는 기본 <code>sort()</code> 메서드를 사용하자.</li>
+</ul>
+<br/>
+<h3 id="section-8">소스코드</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">위에서_아래로</span> <span class="o">{</span>
+<p><span class="kd">private</span> <span class="kd">static</span> <span class="nc">Integer</span><span class="o">[]</span> <span class="nf">solution1</span><span class="o">(</span><span class="nc">Integer</span><span class="o">[]</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+<span class="nc">Arrays</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">n</span><span class="o">,</span> <span class="nc">Collections</span><span class="o">.</span><span class="na">reverseOrder</span><span class="o">());</span>
+<span class="k">return</span> <span class="n">n</span><span class="o">;</span>
+<span class="o">}</span></p>
+<p><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">()</span> <span class="o">{</span>
+<span class="nc">Scanner</span> <span class="n">scn</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Scanner</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+<span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="n">scn</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+<span class="nc">Integer</span><span class="o">[]</span> <span class="n">n</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Integer</span><span class="o">[</span><span class="n">size</span><span class="o">];</span>
+<span class="n">scn</span><span class="o">.</span><span class="na">nextLine</span><span class="o">();</span></p>
+<pre><code>&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;nextInt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;scn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;nextLine&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nc&quot;&gt;TimeCheck&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+&lt;span class=&quot;nc&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;answer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;solution1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;nc&quot;&gt;TimeCheck&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;answer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; &quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+<span class="o">}</span></p>
+<p></code></pre></div></div>
+<br/></p>
+<h3 id="section-9">시간복잡도</h3>
+<ul>
+<li><code>sort()</code> 메서드는 TimSort 방식을 사용하며, 이것의 시간복잡도는 <code>O(nlogn)</code>이다.</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>나동빈, 『이것이 코딩 테스트다』</li>
+  </ul>
+  본 게시글은 위 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

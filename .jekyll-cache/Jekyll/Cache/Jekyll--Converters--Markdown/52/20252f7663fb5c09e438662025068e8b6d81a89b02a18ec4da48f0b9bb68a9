@@ -1,0 +1,267 @@
+I"1%<p><br/><br/></p>
+<blockquote>
+<p><a href="https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/implementation/%EC%99%95%EC%8B%A4%EC%9D%98_%EB%82%98%EC%9D%B4%ED%8A%B8.java">소스코드</a></p>
+</blockquote>
+<br/>
+<h1 id="section">구현 : 왕실의 나이트</h1>
+<h2 id="section-1">문제</h2>
+<h3 id="section-2">문제 정의</h3>
+<ul>
+<li>행복 왕국의 왕실 정원은 체스판과 같은 8x8좌표 평면이다.</li>
+<li>왕실 정원의 특정한 한 칸에 나이트가 서있다.</li>
+<li>나이트는 이동 시, L자 형태로만 이동할 수 있으며 정원 밖으로는 나갈 수 없다.</li>
+<li>나이트는 특정한 위치에서 다음과 같은 2가지 경우로 이동할 수 있다.
+<ul>
+<li>수평으로 두 칸 이동한 뒤에 수직으로 한 칸 이동하기</li>
+<li>수직으로 두 칸 이동한 뒤에 수평으로 한 칸 이동하기</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><hr/></th>
+<th>a</th>
+<th>b</th>
+<th>c</th>
+<th>d</th>
+<th>e</th>
+<th>f</th>
+<th>g</th>
+<th>h</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>6</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>7</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>8</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>이처럼 8x8 좌표 평면상에서 나이트의 위치가 주어졌을 때 나이트가 이동할 수 있는 경우의 수를 출력하는 프로그램을 작성하시오.</li>
+<li>이때 왕실의 정원에서 행 위치를 표현할 때는 1부터 8로 표현하고, 열 위치를 표현할 때는 a부터 h로 표현한다.</li>
+<li>예시
+<ul>
+<li>나이트가 a1에 있을 때 이동할 수 있는 경우의 수는 다음 2가지이다.
+<ul>
+<li>오른쪽으로 두 칸 이동 후, 아래로 한 칸 이동하기 (결과적으로 c2에 위치)</li>
+<li>아래로 두 칸 이동 후, 오른쪽으로 한 칸 이동하기 (결과적으로 b3에 위치)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-3">입력조건</h3>
+<ul>
+<li>첫째 줄에 8x8 좌표 평면상에서 현재 나이트가 위치한 곳의 좌표를 나타내는 두 문자로 구성된 문자열이 입력된다.
+<ul>
+<li>입력 문자는 a1처럼 열과 행으로 이뤄진다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-4">출력조건</h3>
+<ul>
+<li>첫째 줄에 나이트가 이동할 수 있는 경우의 수를 출력하시오.</li>
+</ul>
+<br/>
+<h3 id="section-5">입·출력 예시</h3>
+<ul>
+<li>
+<p>입력</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c2
+</code></pre></div></div>
+</li>
+<li>
+<p>출력</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>6
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<h2 id="section-6">풀이</h2>
+<h3 id="section-7">문제 해설</h3>
+<ul>
+<li>나이트가 이동할 수 있는 모든 경우의 수는 아래와 같이 총 8가지이다.
+<ul>
+<li>위로 2칸, 왼쪽으로 1칸</li>
+<li>위로 2칸, 오른쪽으로 1칸</li>
+<li>아래로 2칸, 왼쪽으로 1칸</li>
+<li>아래로 2칸, 오른쪽으로 1칸</li>
+<li>왼쪽으로 2칸, 위로 1칸</li>
+<li>왼쪽으로 2칸, 아래로 1칸</li>
+<li>오른쪽으로 2칸, 위로 1칸</li>
+<li>오른쪽으로 2칸, 아래로 1칸</li>
+</ul>
+</li>
+<li>따라서, 단순히 위 8가지 중 가능한 이동만 확인하면 된다.
+<ul>
+<li>가능한 이동: 평면을 벗어나지 않는 이동</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-8">소스코드</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">왕실의_나이트</span> <span class="o">{</span>
+<p><span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">answer</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span></p>
+<p><span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">solution1</span><span class="o">(</span><span class="kt">int</span> <span class="n">row</span><span class="o">,</span> <span class="kt">char</span> <span class="n">col</span><span class="o">)</span> <span class="o">{</span>
+<span class="c1">//위로 이동하는 경우</span>
+<span class="k">if</span> <span class="o">(</span><span class="n">row</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
+<span class="c1">//왼쪽으로 이동하는 경우</span>
+<span class="k">if</span> <span class="o">(</span><span class="n">col</span> <span class="o">&gt;</span> <span class="sc">‘a’</span><span class="o">)</span> <span class="o">{</span>
+<span class="n">answer</span><span class="o">++;</span>
+<span class="o">}</span>
+<span class="c1">//오른쪽으로 이동하는 경우</span>
+<span class="k">if</span> <span class="o">(</span><span class="n">col</span> <span class="o">&lt;</span> <span class="sc">‘h’</span><span class="o">)</span> <span class="o">{</span>
+<span class="n">answer</span><span class="o">++;</span>
+<span class="o">}</span>
+<span class="o">}</span>
+<span class="c1">//아래로 이동하는 경우</span>
+<span class="k">if</span> <span class="o">(</span><span class="n">row</span> <span class="o">&lt;</span> <span class="mi">7</span><span class="o">)</span> <span class="o">{</span>
+<span class="c1">//왼쪽으로 이동하는 경우</span>
+<span class="k">if</span> <span class="o">(</span><span class="n">col</span> <span class="o">&gt;</span> <span class="sc">‘a’</span><span class="o">)</span> <span class="o">{</span>
+<span class="n">answer</span><span class="o">++;</span>
+<span class="o">}</span>
+<span class="c1">//오른쪽으로 이동하는 경우</span>
+<span class="k">if</span> <span class="o">(</span><span class="n">col</span> <span class="o">&lt;</span> <span class="sc">‘h’</span><span class="o">)</span> <span class="o">{</span>
+<span class="n">answer</span><span class="o">++;</span>
+<span class="o">}</span>
+<span class="o">}</span>
+<span class="c1">//왼쪽으로 이동하는 경우</span>
+<span class="k">if</span> <span class="o">(</span><span class="n">col</span> <span class="o">&gt;</span> <span class="sc">‘b’</span><span class="o">)</span> <span class="o">{</span>
+<span class="c1">//위로 이동하는 경우</span>
+<span class="k">if</span> <span class="o">(</span><span class="n">row</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+<span class="n">answer</span><span class="o">++;</span>
+<span class="o">}</span>
+<span class="c1">//아래로 이동하는 경우</span>
+<span class="k">if</span> <span class="o">(</span><span class="n">row</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="o">)</span> <span class="o">{</span>
+<span class="n">answer</span><span class="o">++;</span>
+<span class="o">}</span>
+<span class="o">}</span>
+<span class="c1">//오른쪽으로 이동하는 경우</span>
+<span class="k">if</span> <span class="o">(</span><span class="n">col</span> <span class="o">&lt;</span> <span class="sc">‘g’</span><span class="o">)</span> <span class="o">{</span>
+<span class="c1">//위로 이동하는 경우</span>
+<span class="k">if</span> <span class="o">(</span><span class="n">row</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+<span class="n">answer</span><span class="o">++;</span>
+<span class="o">}</span>
+<span class="c1">//아래로 이동하는 경우</span>
+<span class="k">if</span> <span class="o">(</span><span class="n">row</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="o">)</span> <span class="o">{</span>
+<span class="n">answer</span><span class="o">++;</span>
+<span class="o">}</span>
+<span class="o">}</span></p>
+<pre><code>&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;answer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<br/></p>
+<h3 id="section-9">시간복잡도</h3>
+<ul>
+<li><code>solution1</code> 의 경우
+<ul>
+<li>정답 구하기
+<ul>
+<li>단순히 8가지 경우 중 가능한 것만 확인하면 된다.</li>
+<li>최대 경우의 수가 8가지이기 때문이다.</li>
+</ul>
+</li>
+<li>따라서 총 시간복잡도는 <code>O(1)</code> 이다.</li>
+</ul>
+</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>나동빈, 『이것이 코딩 테스트다』</li>
+  </ul>
+  본 게시글은 위 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

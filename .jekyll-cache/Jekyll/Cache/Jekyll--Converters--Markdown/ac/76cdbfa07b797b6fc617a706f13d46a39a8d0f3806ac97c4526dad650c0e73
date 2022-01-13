@@ -1,0 +1,178 @@
+I"�<<p><br/><br/></p>
+<blockquote>
+<p><a href="https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/dfs_bfs/%EB%AF%B8%EB%A1%9C_%ED%83%88%EC%B6%9C.java">소스코드</a></p>
+</blockquote>
+<br/>
+<h1 id="section">미로 탈출</h1>
+<h2 id="section-1">문제</h2>
+<h3 id="section-2">문제 정의</h3>
+<ul>
+<li>동빈이는 NxM 크기의 직사각형 형태의 미로에 같혀 있다.</li>
+<li>미로에는 여러 마리의 괴물이 있어 이를 피해 탈출해야 한다.</li>
+<li>동빈이의 위치는 (1,1)이고 미로의 출구는 (N,M)의 위치에 존재하며 한 번에 한칸씩 이동할 수 있다.</li>
+<li>미로는 반드시 탈출할 수 있는 형태로 제시된다.</li>
+<li>이때 동빈이가 탈출하기 위해 움직여야 하는 최소 칸의 개수를 구하시오.</li>
+</ul>
+<br/>
+<h3 id="section-3">입력조건</h3>
+<ul>
+<li>첫째 줄에 두 정수 N, M이 주어진다. 다음 N개의 줄에는 각각 M개의 정수(0 혹은 1)로 미로의 정보가 주어진다. 각각의 수들은 공백없이 붙어서 입력으로 제시된다. 또한 시작 칸과 마지막 칸은 항상 1이다.
+<ul>
+<li>N: 4 이상</li>
+<li>M: 200 이하</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-4">출력조건</h3>
+<ul>
+<li>첫째 줄에 최소 이동 칸의 개수를 출력한다.</li>
+</ul>
+<br/>
+<h3 id="section-5">입·출력 예시</h3>
+<ul>
+<li>
+<p>입력</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5 6
+101010
+111111
+000001
+111111
+111111
+</code></pre></div></div>
+</li>
+<li>
+<p>출력</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>10
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<h2 id="section-6">풀이</h2>
+<h3 id="section-7">문제 해설</h3>
+<ul>
+<li>BFS를 활용하여 해결할 수 있다.
+<ul>
+<li>BFS는 현재 위치에서 가장 가까운 곳(그래프 깊이가 낮은 곳)을 최우선으로 방문한다는 특성을 이용하자.</li>
+</ul>
+</li>
+<li>문제 해결 절차
+<ol>
+<li>시작점 위치를 enqueue 한다.</li>
+<li>하나를 dequeue 하고, dequeue 한 위치의 상하좌우 위치를 계산한다.</li>
+<li>계산된 위치가 존재할 수 없는 위치가 아니고 몬스터도 없다면, dequeue한 곳의 값을 각 위치(상하좌우)에 더한다.</li>
+<li>그리고 dequeue한 곳의 인접 위치를 enqueue 한다.</li>
+<li>(N,M)의 값이 갱신될 때까지, 2번 ~ 4번을 반복한다.</li>
+</ol>
+</li>
+<li>DFS가 아닌, BFS를 사용하는 이유?
+<ul>
+<li>본 문제의 핵심은 <strong>시작점부터 하나씩 이동횟수를 계산하는</strong> 이다.</li>
+<li>만약 DFS를 사용한다면, 그래프에서 가장 깊게 인접한 위치를 우선으로 탐색하므로 최소 이동 횟수를 계산할 수 없다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-8">소스코드</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">미로_탈출</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span><span class="o">[][]</span> <span class="n">graph</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">n</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">m</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="nc">Deque</span><span class="o">&lt;</span><span class="nc">Position</span><span class="o">&gt;</span> <span class="n">deque</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayDeque</span><span class="o">&lt;&gt;();</span>
+
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">solution1</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">deque</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="k">new</span> <span class="nc">Position</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">));</span> <span class="c1">//항상 가장 왼쪽 위 지점부터 시작하므로</span>
+
+    <span class="k">while</span> <span class="o">(</span><span class="n">graph</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">][</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+      <span class="nc">Position</span> <span class="n">dequeuedPosition</span> <span class="o">=</span> <span class="n">deque</span><span class="o">.</span><span class="na">pollFirst</span><span class="o">();</span>
+      <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Position</span><span class="o">&gt;</span> <span class="n">aroundPosition</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;&gt;();</span>
+
+      <span class="c1">//dequeue한 지점을 기준으로 상, 하, 좌, 우 위치 구하기</span>
+      <span class="n">aroundPosition</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"up"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Position</span><span class="o">(</span><span class="n">dequeuedPosition</span><span class="o">.</span><span class="na">row</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">dequeuedPosition</span><span class="o">.</span><span class="na">column</span><span class="o">));</span>
+      <span class="n">aroundPosition</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"down"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Position</span><span class="o">(</span><span class="n">dequeuedPosition</span><span class="o">.</span><span class="na">row</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">dequeuedPosition</span><span class="o">.</span><span class="na">column</span><span class="o">));</span>
+      <span class="n">aroundPosition</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"left"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Position</span><span class="o">(</span><span class="n">dequeuedPosition</span><span class="o">.</span><span class="na">row</span><span class="o">,</span> <span class="n">dequeuedPosition</span><span class="o">.</span><span class="na">column</span><span class="o">-</span><span class="mi">1</span><span class="o">));</span>
+      <span class="n">aroundPosition</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"right"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Position</span><span class="o">(</span><span class="n">dequeuedPosition</span><span class="o">.</span><span class="na">row</span><span class="o">,</span> <span class="n">dequeuedPosition</span><span class="o">.</span><span class="na">column</span><span class="o">+</span><span class="mi">1</span><span class="o">));</span>
+
+      <span class="k">for</span> <span class="o">(</span><span class="nc">Position</span> <span class="n">p</span> <span class="o">:</span> <span class="n">aroundPosition</span><span class="o">.</span><span class="na">values</span><span class="o">())</span> <span class="o">{</span>
+        <span class="c1">//불가능한 위치라면 무시</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">row</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">p</span><span class="o">.</span><span class="na">row</span> <span class="o">&gt;=</span> <span class="n">n</span> <span class="o">||</span> <span class="n">p</span><span class="o">.</span><span class="na">column</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">p</span><span class="o">.</span><span class="na">column</span> <span class="o">&gt;=</span> <span class="n">m</span><span class="o">)</span> <span class="o">{</span>
+          <span class="k">continue</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="c1">//몬스터가 있다면 무시</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">graph</span><span class="o">[</span><span class="n">p</span><span class="o">.</span><span class="na">row</span><span class="o">][</span><span class="n">p</span><span class="o">.</span><span class="na">column</span><span class="o">]</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+          <span class="k">continue</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="c1">// 인접 지점에 이전 지점의 값 더하기</span>
+        <span class="n">graph</span><span class="o">[</span><span class="n">p</span><span class="o">.</span><span class="na">row</span><span class="o">][</span><span class="n">p</span><span class="o">.</span><span class="na">column</span><span class="o">]</span> <span class="o">+=</span> <span class="n">graph</span><span class="o">[</span><span class="n">dequeuedPosition</span><span class="o">.</span><span class="na">row</span><span class="o">][</span><span class="n">dequeuedPosition</span><span class="o">.</span><span class="na">column</span><span class="o">];</span>
+        <span class="n">deque</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">p</span><span class="o">);</span> <span class="c1">// 인접 지점 enqueue</span>
+      <span class="o">}</span>
+
+    <span class="o">}</span>
+
+    <span class="k">return</span> <span class="n">graph</span><span class="o">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">][</span><span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="o">];</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">execute</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">//-------입력--------</span>
+    <span class="nc">Scanner</span> <span class="n">scn</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Scanner</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">scn</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">scn</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+    <span class="n">scn</span><span class="o">.</span><span class="na">nextLine</span><span class="o">();</span>
+
+    <span class="n">graph</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">][</span><span class="n">m</span><span class="o">];</span>
+
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+      <span class="nc">String</span><span class="o">[]</span> <span class="n">s</span> <span class="o">=</span> <span class="n">scn</span><span class="o">.</span><span class="na">nextLine</span><span class="o">().</span><span class="na">split</span><span class="o">(</span><span class="s">""</span><span class="o">);</span>
+      <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">u</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">u</span> <span class="o">&lt;</span> <span class="n">m</span><span class="o">;</span> <span class="n">u</span><span class="o">++)</span> <span class="o">{</span>
+        <span class="n">graph</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">u</span><span class="o">]</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">s</span><span class="o">[</span><span class="n">u</span><span class="o">]);</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="c1">//------입력 종료----------</span>
+
+    <span class="nc">TimeCheck</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+    <span class="kt">int</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">solution1</span><span class="o">();</span>
+
+    <span class="nc">TimeCheck</span><span class="o">.</span><span class="na">end</span><span class="o">();</span>
+
+    <span class="k">return</span> <span class="n">answer</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Position</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">row</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">column</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Position</span><span class="o">(</span><span class="kt">int</span> <span class="n">row</span><span class="o">,</span> <span class="kt">int</span> <span class="n">column</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">this</span><span class="o">.</span><span class="na">row</span> <span class="o">=</span> <span class="n">row</span><span class="o">;</span>
+      <span class="k">this</span><span class="o">.</span><span class="na">column</span> <span class="o">=</span> <span class="n">column</span><span class="o">;</span>
+    <span class="o">}</span>
+
+  <span class="o">}</span>
+<span class="o">}</span>
+
+
+</code></pre></div></div>
+<br/>
+<h3 id="section-9">시간복잡도</h3>
+<ul>
+<li><code>solution1</code> 메서드를 최대 (n)번 호출한다.</li>
+<li>따라서 시간복잡도는 <code>O(n)</code> 이다.
+<ul>
+<li><code>solution1</code> 의 시간복잡도는 <code>O(1)</code> 로 가정한다.</li>
+</ul>
+</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>나동빈, 『이것이 코딩 테스트다』</li>
+  </ul>
+  본 게시글은 위 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

@@ -1,0 +1,242 @@
+I"�<p><br/><br/></p>
+<blockquote>
+<p><a href="https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/dfs_bfs/BFS_MatrixGraph.java">소스코드: 인접행렬 방식</a><br />
+<a href="https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/dfs_bfs/BFS_ListGraph.java">소스코드: 인접리스트 방식</a></p>
+</blockquote>
+<br/>
+<h1 id="bfs--">BFS : 개념</h1>
+<h2 id="section">개요</h2>
+<h3 id="bfs">BFS란?</h3>
+<ul>
+<li>Breadth First Search의 약자로, 너비 우선 탐색 알고리즘이다.</li>
+<li>그래프 구조에서 탐색을 위해 사용되는 탐색 알고리즘이다.</li>
+<li>그래프의 모든 노드들을 방문(탐색)해야 한다.</li>
+<li>가까운 노드부터 탐색하는 알고리즘이다.</li>
+<li>큐(Queue) 자료구조를 이용하는 것이 정석이다.</li>
+<li>인접한 노드를 반복적으로 큐에 넣도록 알고리즘을 작성하면 자연스럽게 먼저 들어온 것이 먼저 나가게 되어, 가까운 노드부터 탐색을 진행하게 된다.</li>
+</ul>
+<h3 id="bfs---1">BFS 동작 과정</h3>
+<ol>
+<li>탐색 시작 노드를 큐에 삽입하고 방문 처리를 한다.</li>
+<li>큐에서 노드를 꺼내 해당 노드의 인접 노드 중에서 방문하지 않은 노드를 모두 큐에 삽입하고 방문 처리를 한다.</li>
+<li>2번 과정을 더 이상 수행할 수 없을 때까지 반복한다.</li>
+</ol>
+<blockquote>
+<p>BFS에서 인접 노드를 선택(enqueue)할 땐, 가장 낮은 번호를 갖는 노드부터 선택하는 것이 좋다.</p>
+</blockquote>
+<h2 id="section-1">예시</h2>
+<h3 id="section-2">예시에서 사용할 그래프 형태</h3>
+<p><img src="/assets/img/2022-01-09-ALGORITHM_DFSBFS_BFS/Untitled14.jpg" alt="" /></p>
+<blockquote>
+<p><strong>8번 노드가 1번 노드가 아닌 2번 노드와 인접함에 주의하자!</strong><br />
+(교재와 다르다.)</p>
+</blockquote>
+<h3 id="step-01">Step 01</h3>
+<p><img src="/assets/img/2022-01-09-ALGORITHM_DFSBFS_BFS/Untitle26.jpg" alt="" /></p>
+<h3 id="step-02">Step 02</h3>
+<p><img src="/assets/img/2022-01-09-ALGORITHM_DFSBFS_BFS/Untitle27.jpg" alt="" /></p>
+<h3 id="step-03">Step 03</h3>
+<p><img src="/assets/img/2022-01-09-ALGORITHM_DFSBFS_BFS/Untitle28.jpg" alt="" /></p>
+<h3 id="step-04">Step 04</h3>
+<p><img src="/assets/img/2022-01-09-ALGORITHM_DFSBFS_BFS/Untitle29.jpg" alt="" /></p>
+<h3 id="step-05">Step 05</h3>
+<p><img src="/assets/img/2022-01-09-ALGORITHM_DFSBFS_BFS/Untitle30.jpg" alt="" /></p>
+<h3 id="step-06">Step 06</h3>
+<p><img src="/assets/img/2022-01-09-ALGORITHM_DFSBFS_BFS/Untitle31.jpg" alt="" /></p>
+<h3 id="section-3">결과</h3>
+<ul>
+<li>BFS 수행 결과, 아래 순서대로 탐색되었다.</li>
+</ul>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1 -&gt; 2 -&gt; 3 -&gt; 7 -&gt; 8 -&gt; 4 -&gt; 5 -&gt; 6
+</code></pre></div></div>
+<h3 id="section-4">특징</h3>
+<ul>
+<li>큐 자료구조에 기초한다는 점에서 구현이 간단하다.</li>
+<li>탐색을 수행함에 있어 <code>O(n)</code>시간이 소요된다.</li>
+<li>일반적인 경우 실제 수행 시간은 DFS보다 좋은 편이다.</li>
+</ul>
+<h2 id="section-5">소스코드 - 인접리스트</h2>
+<h3 id="bfs-">BFS 알고리즘</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BFS_ListGraph</span> <span class="o">{</span>
+ <span class="kd">private</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;&gt;</span> <span class="n">graph</span><span class="o">;</span> <span class="c1">//리스트형 그래프</span>
+ <span class="kd">private</span> <span class="kt">boolean</span><span class="o">[]</span> <span class="n">visitedNode</span><span class="o">;</span> <span class="c1">//방문 노드 표시 (index == 노드번호)</span>
+ <span class="kd">private</span> <span class="nc">Deque</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">deque</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayDeque</span><span class="o">&lt;&gt;();</span> <span class="c1">//BFS에서 사용할 큐</span>
+ <span class="kd">private</span> <span class="kt">int</span> <span class="n">numbersOfNode</span><span class="o">;</span> <span class="c1">//노드 총 개수</span>
+<p><span class="kd">private</span> <span class="nf">BFS_ListGraph</span><span class="o">()</span> <span class="o">{</span>
+<span class="o">}</span></p>
+<p><span class="kd">public</span> <span class="nf">BFS_ListGraph</span><span class="o">(</span><span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;&gt;</span> <span class="n">graph</span><span class="o">,</span> <span class="kt">int</span> <span class="n">numbersOfNode</span><span class="o">)</span> <span class="o">{</span>
+<span class="k">this</span><span class="o">.</span><span class="na">graph</span> <span class="o">=</span> <span class="n">graph</span><span class="o">;</span>
+<span class="k">this</span><span class="o">.</span><span class="na">numbersOfNode</span> <span class="o">=</span> <span class="n">numbersOfNode</span><span class="o">;</span>
+<span class="n">visitedNode</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">boolean</span><span class="o">[</span><span class="n">numbersOfNode</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span> <span class="c1">//0번 노드는 없으므로</span>
+<span class="o">}</span></p>
+<p><span class="kd">public</span> <span class="kt">void</span> <span class="nf">solution</span><span class="o">(</span><span class="kt">int</span> <span class="n">indexOfStartNode</span><span class="o">)</span> <span class="o">{</span>
+<span class="c1">//시작 루트 노드 enqueue</span>
+<span class="n">deque</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">indexOfStartNode</span><span class="o">);</span>
+<span class="n">visitedNode</span><span class="o">[</span><span class="n">indexOfStartNode</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">indexOfStartNode</span> <span class="o">+</span> <span class="s">” “</span><span class="o">);</span> <span class="c1">//방문 노드 출력</span></p>
+<p><span class="k">while</span> <span class="o">(!</span><span class="n">deque</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span></p>
+<p><span class="kt">int</span> <span class="n">indexOfDequeuedNode</span> <span class="o">=</span> <span class="n">deque</span><span class="o">.</span><span class="na">pollFirst</span><span class="o">();</span> <span class="c1">//dequeue</span></p>
+<p><span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">indexOfNearNodes</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">indexOfDequeuedNode</span><span class="o">);</span> <span class="c1">//dequeue 한 노드의 인접 노드들 구하기</span></p>
+<p><span class="c1">//인접 노드들을 enqueue</span>
+<span class="k">for</span> <span class="o">(</span><span class="nc">Integer</span> <span class="n">indexOfNearNode</span> <span class="o">:</span> <span class="n">indexOfNearNodes</span><span class="o">)</span> <span class="o">{</span>
+<span class="c1">//만약 인접 노드가 방문하지 않은 노드라면 enqueue</span>
+<span class="k">if</span> <span class="o">(!</span><span class="n">visitedNode</span><span class="o">[</span><span class="n">indexOfNearNode</span><span class="o">])</span> <span class="o">{</span>
+<span class="n">deque</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">indexOfNearNode</span><span class="o">);</span> <span class="c1">//enqueue</span></p>
+<pre><code> &lt;span class=&quot;n&quot;&gt;visitedNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexOfNearNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//enqueue 한 노드 방문처리&lt;/span&gt;
+ &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexOfNearNode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; &quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//방문 노드 출력&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span></p>
+<p><span class="o">}</span> <span class="c1">//while문 종료</span></p>
+<p><span class="o">}</span></p>
+<p><span class="o">}</span>
+</code></pre></div></div>
+<br/></p>
+<h3 id="bfs---2">BFS 알고리즘 실행</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+  <span class="cm">/**
+   * BFS 실행 메서드
+   */</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">()</span> <span class="o">{</span>
+   <span class="kt">int</span> <span class="n">numbersOfNode</span> <span class="o">=</span> <span class="mi">8</span><span class="o">;</span> <span class="c1">//총 노드 개수</span>
+<p><span class="c1">//그래프 초기화 (노드는 1번부터 시작한다.)</span>
+<span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;&gt;</span> <span class="n">graph</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">numbersOfNode</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+<span class="n">graph</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;());</span>
+<span class="o">}</span></p>
+<p><span class="c1">//— 그래프 작성 —</span>
+<span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">1</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span> <span class="c1">//‘1번 노드’와 인접한(연결된) 노드로 ‘2번 노드’ 등록</span>
+<span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">1</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span> <span class="c1">//‘1번 노드’와 인접한(연결된) 노드로 ‘3번 노드’ 등록</span></p>
+<p><span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">2</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span> <span class="c1">//‘2번 노드’와 인접한(연결된) 노드로 ‘1번 노드’ 등록</span>
+<span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">2</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="mi">7</span><span class="o">);</span> <span class="c1">//‘2번 노드’와 인접한(연결된) 노드로 ‘7번 노드’ 등록</span>
+<span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">2</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="mi">8</span><span class="o">);</span> <span class="c1">//‘2번 노드’와 인접한(연결된) 노드로 ‘8번 노드’ 등록</span></p>
+<p><span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">3</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span> <span class="c1">//‘3번 노드’와 인접한(연결된) 노드로 ‘1번 노드’ 등록</span>
+<span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">3</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="mi">4</span><span class="o">);</span> <span class="c1">//‘3번 노드’와 인접한(연결된) 노드로 ‘4번 노드’ 등록</span>
+<span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">3</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span> <span class="c1">//‘3번 노드’와 인접한(연결된) 노드로 ‘5번 노드’ 등록</span></p>
+<p><span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">4</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span> <span class="c1">//‘4번 노드’와 인접한(연결된) 노드로 ‘3번 노드’ 등록</span>
+<span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">4</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span> <span class="c1">//‘4번 노드’와 인접한(연결된) 노드로 ‘5번 노드’ 등록</span></p>
+<p><span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">5</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span> <span class="c1">//‘5번 노드’와 인접한(연결된) 노드로 ‘3번 노드’ 등록</span>
+<span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">5</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="mi">4</span><span class="o">);</span> <span class="c1">//‘5번 노드’와 인접한(연결된) 노드로 ‘4번 노드’ 등록</span></p>
+<p><span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">6</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="mi">7</span><span class="o">);</span> <span class="c1">//‘6번 노드’와 인접한(연결된) 노드로 ‘7번 노드’ 등록</span></p>
+<p><span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">7</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span> <span class="c1">//‘7번 노드’와 인접한(연결된) 노드로 ‘2번 노드’ 등록</span>
+<span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">7</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="mi">6</span><span class="o">);</span> <span class="c1">//‘7번 노드’와 인접한(연결된) 노드로 ‘6번 노드’ 등록</span>
+<span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">7</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="mi">8</span><span class="o">);</span> <span class="c1">//‘7번 노드’와 인접한(연결된) 노드로 ‘8번 노드’ 등록</span></p>
+<p><span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">8</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span> <span class="c1">//‘8번 노드’와 인접한(연결된) 노드로 ‘1번 노드’ 등록</span>
+<span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">8</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="mi">7</span><span class="o">);</span> <span class="c1">//‘8번 노드’와 인접한(연결된) 노드로 ‘7번 노드’ 등록</span></p>
+<p><span class="c1">//—– 그래프 작성 끝 —–</span></p>
+<p><span class="c1">//BFS 알고리즘 시작</span>
+<span class="n">BFS_ListGraph</span> <span class="n">bfs</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BFS_ListGraph</span><span class="o">(</span><span class="n">graph</span><span class="o">,</span> <span class="n">numbersOfNode</span><span class="o">);</span>
+<span class="n">bfs</span><span class="o">.</span><span class="na">solution</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div></p>
+<blockquote>
+<p>본 소스코드의 <code>graph</code> 는 위 그림 예시에서 사용한 그래프와 동일한 것이다.</p>
+</blockquote>
+<br/>
+<h3 id="section-6">출력결과</h3>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1 2 3 7 8 4 5 6
+</code></pre></div></div>
+<br/>
+<h2 id="section-7">소스코드 - 인접행렬</h2>
+<h3 id="bfs--1">BFS 알고리즘</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BFS_MatrixGraph</span> <span class="o">{</span>
+  <span class="kt">boolean</span><span class="o">[][]</span> <span class="n">graph</span><span class="o">;</span>
+  <span class="kt">boolean</span><span class="o">[]</span> <span class="n">visitedNode</span><span class="o">;</span>
+  <span class="kt">int</span> <span class="n">numbersOfNodes</span><span class="o">;</span>
+  <span class="nc">Deque</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">deque</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayDeque</span><span class="o">&lt;&gt;();</span>
+<p><span class="kd">private</span> <span class="nf">BFS_MatrixGraph</span><span class="o">()</span> <span class="o">{}</span></p>
+<p><span class="kd">public</span> <span class="nf">BFS_MatrixGraph</span><span class="o">(</span><span class="kt">boolean</span><span class="o">[][]</span> <span class="n">graph</span><span class="o">,</span> <span class="kt">int</span> <span class="n">numbersOfNodes</span><span class="o">)</span> <span class="o">{</span>
+<span class="k">this</span><span class="o">.</span><span class="na">graph</span> <span class="o">=</span> <span class="n">graph</span><span class="o">;</span>
+<span class="k">this</span><span class="o">.</span><span class="na">numbersOfNodes</span> <span class="o">=</span> <span class="n">numbersOfNodes</span><span class="o">;</span>
+<span class="k">this</span><span class="o">.</span><span class="na">visitedNode</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">boolean</span><span class="o">[</span><span class="n">numbersOfNodes</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span> <span class="c1">//노드는 1번부터 시작하므로</span>
+<span class="o">}</span></p>
+<p><span class="kd">public</span> <span class="kt">void</span> <span class="nf">solution</span><span class="o">(</span><span class="kt">int</span> <span class="n">indexOfStartNode</span><span class="o">)</span> <span class="o">{</span>
+<span class="n">deque</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">indexOfStartNode</span><span class="o">);</span> <span class="c1">//시작 루트 노드 enqueue</span>
+<span class="n">visitedNode</span><span class="o">[</span><span class="n">indexOfStartNode</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span> <span class="c1">//시작 루트 노드 방문 표시 (index == 노드번호)</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">indexOfStartNode</span> <span class="o">+</span> <span class="s">” “</span><span class="o">);</span> <span class="c1">//방문노드 출력</span></p>
+<pre><code>&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;deque&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isEmpty&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;indexOfDequeuedNode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;deque&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;pollFirst&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//dequeue&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;//dequeue 한 노드의 인접 노드 구하기&lt;/span&gt;
+  &lt;span class=&quot;kt&quot;&gt;boolean&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;indexOfNearNodes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;graph&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexOfDequeuedNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;indexOfNearNodes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexOfNearNodes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//만약 i번 노드가 dequeue된 노드와 인접한다면&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;visitedNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//만약 i번 노드가 미방문 상태라면&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;deque&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addLast&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//인접노드 enqueue&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;visitedNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//방문 표시&lt;/span&gt;
+
+        &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; &quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//방문 노드 출력&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//for문 종료&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//while문 종료&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span></p>
+<p><span class="o">}</span>
+</code></pre></div></div>
+<br/></p>
+<h3 id="bfs---3">BFS 알고리즘 실행</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+  <span class="cm">/**
+   * 실행 메서드
+   */</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">numberOfNode</span> <span class="o">=</span> <span class="mi">8</span><span class="o">;</span> <span class="c1">//총 노드 개수</span>
+<pre><code>&lt;span class=&quot;c1&quot;&gt;//graph (true면 인접)&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;boolean&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[][]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;graph&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;boolean&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[][]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;};&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;BFS_MatrixGraph&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bfs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BFS_MatrixGraph&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;graph&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numberOfNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;bfs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;solution&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div></p>
+<blockquote>
+<p>본 소스코드의 <code>graph</code> 는 위 그림 예시에서 사용한 그래프와 동일한 것이다.</p>
+</blockquote>
+<ul>
+<li>모든 첫번째 행과, 모든 첫번째 열은 false로 처리했다. (노드가 1부터 시작하므로)</li>
+<li><code>graph[A][A]</code> 와 같이 자기자신을 의미하는 index의 경우, false로 처리했다.</li>
+<li>true: 해당 노드끼리 인접한다.</li>
+<li>false: 해당 노드끼리 인접하지 않는다.</li>
+<li>예시
+<ul>
+<li><code>graph[4][5] = true</code> : ‘노드4’와 ‘노드5’가 인접한다.</li>
+<li><code>graph[7][1] = false</code> : ‘노드7’과 ‘노드1’은 인접하지 않는다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-8">출력결과</h3>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1 2 3 7 8 4 5 6
+</code></pre></div></div>
+<h3 id="section-9">소스코드 흐름</h3>
+<blockquote>
+<p>인접리스트 방식과 동일하다.</p>
+</blockquote>
+<h2 id="tip">Tip</h2>
+<ul>
+<li>그래프 탐색 문제에서 <strong>가장 가까운, 최소 등</strong> 이 핵심이라면, 주로 BFS를 사용한다.</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>나동빈, 『이것이 코딩 테스트다』</li>
+  </ul>
+  본 게시글은 위 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

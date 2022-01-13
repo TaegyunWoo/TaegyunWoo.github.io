@@ -1,0 +1,125 @@
+I"�4<p><br/><br/></p>
+<blockquote>
+<p><a href="https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/sort/%EC%84%A0%ED%83%9D%EC%A0%95%EB%A0%AC.java">소스코드</a></p>
+</blockquote>
+<br/>
+<h1 id="section">선택정렬</h1>
+<h2 id="section-1">개요</h2>
+<h3 id="section-2">선택정렬이란?</h3>
+<ul>
+<li>데이터가 무작위로 여러 개 있을 때, 이 중에서 가장 작은 데이터를 선택해 맨 앞에 있는 데이터와 바꾸고, 그 다음 작은 데이터를 선택해 앞에서 두번째 데이터와 바꾸는 과정을 반복하는 알고리즘이다.</li>
+<li>무작위 수를 정렬하는 가장 원시적인 방법이다.</li>
+</ul>
+<h3 id="section-3">선택정렬 동작 과정</h3>
+<ol>
+<li>가장 작은 수를 선택하고, 해당 수와 첫번째 수를 서로 교체한다.</li>
+<li>이제 첫번째 수는 정렬되었으므로, 고정된다.</li>
+<li>고정되지 않은 수들 중 가장 작은 수를 선택하고, 고정되지 않은 수들 중 가장 앞에 있는 수와 교체한다.</li>
+<li>(n-1) 번 반복한다.
+<ul>
+<li>n: 전체 숫자의 개수</li>
+<li>n-1번 반복하는 이유: n-1개의 숫자들이 고정되었다면, 자연스럽게 가장 마지막 숫자는 가장 큰 수이므로 굳이 계산하지 않아도 된다.</li>
+</ul>
+</li>
+</ol>
+<h2 id="section-4">예시</h2>
+<h3 id="section-5">예시에서 사용할 그래프 형태</h3>
+<p><img src="/assets/img/2022-01-12-ALGORITHM_Sort_SelectSort/Untitled.jpg" alt="" /></p>
+<h3 id="step-01">Step 01</h3>
+<p><img src="/assets/img/2022-01-12-ALGORITHM_Sort_SelectSort/Untitled01.jpg" alt="" /></p>
+<h3 id="step-02">Step 02</h3>
+<p><img src="/assets/img/2022-01-12-ALGORITHM_Sort_SelectSort/Untitled02.jpg" alt="" /></p>
+<h3 id="step-03">Step 03</h3>
+<p><img src="/assets/img/2022-01-12-ALGORITHM_Sort_SelectSort/Untitled03.jpg" alt="" /></p>
+<h3 id="step-04">Step 04</h3>
+<p><img src="/assets/img/2022-01-12-ALGORITHM_Sort_SelectSort/Untitled04.jpg" alt="" /></p>
+<h3 id="step-05">Step 05</h3>
+<p><img src="/assets/img/2022-01-12-ALGORITHM_Sort_SelectSort/Untitled05.jpg" alt="" /></p>
+<h3 id="step-06">Step 06</h3>
+<p><img src="/assets/img/2022-01-12-ALGORITHM_Sort_SelectSort/Untitled06.jpg" alt="" /></p>
+<h3 id="step-07">Step 07</h3>
+<p><img src="/assets/img/2022-01-12-ALGORITHM_Sort_SelectSort/Untitled07.jpg" alt="" /></p>
+<h3 id="step-08">Step 08</h3>
+<p><img src="/assets/img/2022-01-12-ALGORITHM_Sort_SelectSort/Untitled08.jpg" alt="" /></p>
+<h3 id="step-09">Step 09</h3>
+<p><img src="/assets/img/2022-01-12-ALGORITHM_Sort_SelectSort/Untitled09.jpg" alt="" /></p>
+<h3 id="step-10">Step 10</h3>
+<p><img src="/assets/img/2022-01-12-ALGORITHM_Sort_SelectSort/Untitled10.jpg" alt="" /></p>
+<h3 id="section-6">결과</h3>
+<ul>
+<li>오름차순으로 정렬되었다.</li>
+</ul>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0 -&gt; 1 -&gt; 2 -&gt; 3 -&gt; 4 -&gt; 5 -&gt; 6 -&gt; 7 -&gt; 8 -&gt; 9 -&gt; 10
+</code></pre></div></div>
+<h2 id="section-7">소스코드</h2>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">선택정렬</span> <span class="o">{</span>
+<p><span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">solution</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+<span class="kt">int</span> <span class="n">indexOfLastSortedNum</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="c1">//정렬된 숫자를 기억하기 위한 변수</span></p>
+<pre><code>&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexOfLastSortedNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+
+  &lt;span class=&quot;c1&quot;&gt;//정렬되지 않은 수들 중 가장 작은 것 선택&lt;/span&gt;
+  &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;indexOfSmallestNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;indexOfLastSortedNum&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//초기화&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;indexOfLastSortedNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexOfSmallestNum&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;indexOfSmallestNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;//정렬되지 않은 수들 중, '선택된 것'과 '가장 앞에 있는 것'을 서로 교체한다.&lt;/span&gt;
+  &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;temp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexOfLastSortedNum&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexOfLastSortedNum&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexOfSmallestNum&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexOfSmallestNum&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;temp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;//업데이트&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;indexOfLastSortedNum&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span></p>
+<p><span class="cm">/**</p>
+<ul>
+<li>실행 메서드
+*/</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">()</span> <span class="o">{</span>
+<span class="nc">Scanner</span> <span class="n">scn</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Scanner</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+<span class="kt">int</span> <span class="n">sizeOfN</span> <span class="o">=</span> <span class="n">scn</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+<span class="kt">int</span><span class="o">[]</span> <span class="n">n</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">sizeOfN</span><span class="o">];</span>
+<span class="n">scn</span><span class="o">.</span><span class="na">nextLine</span><span class="o">();</span></li>
+</ul>
+<pre><code>&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sizeOfN&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;nextInt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nc&quot;&gt;TimeCheck&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;answer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;solution&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;nc&quot;&gt;TimeCheck&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;answer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; &quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div></p>
+<h2 id="section-8">시간복잡도</h2>
+<ul>
+<li>고정되지 않은 수 중에서 가장 작은 숫자를 찾아, 고정되지 않은 수들 중 가장 앞에 위치한 수오 교체한다.</li>
+<li>고정되지 않은 수 중에서 가장 작은 숫자를 찾는 연산의 횟수를 수식으로 나타내면 아래와 같다.
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(n) + (n-1) + (n-2) + ... + 2
+<p>이때 n은 고정되지 않은 수의 개수를 뜻한다.
+</code></pre></div></div></p>
+</li>
+<li>따라서 선택정렬의 시간복잡도는 <code>O(n^2)</code> 이다.</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>나동빈, 『이것이 코딩 테스트다』</li>
+  </ul>
+  본 게시글은 위 교재를 기반으로 정리한 글입니다.
+</div>
+:ET
