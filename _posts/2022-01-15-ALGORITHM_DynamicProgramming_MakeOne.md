@@ -59,7 +59,7 @@ sitemap :
 
 ## 풀이
 ### 문제 해설
-- 문제를 풀기 전에 함수가 호출되는 과정을 그림으로 그려보자. 이는 아래와 같다.
+- 문제를 풀기 전에 함수가 호출되는 과정을 그림으로 그려보자. 이는 아래와 같다.  
   - ![](/assets/img/2022-01-15-ALGORITHM_DynamicProgramming_MakeOne/Untitled01.jpg)
 - 이것을 점화식으로 표현하면 아래와 같다.
   ![](https://latex.codecogs.com/svg.image?\alpha_{i}=min(\alpha_{i-1},\alpha_{i/5},\alpha_{i3},\alpha_{i/2})+1)
