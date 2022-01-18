@@ -64,6 +64,7 @@ sitemap :
 ## 동작 예시
 ### 예시에서 사용할 그래프 형태
 ![](/assets/img/2022-01-17-ALGORITHM_ShortestPath_DijkstraBasic/Untitled01.jpg)
+- 시작노드는 1번 노드이다.
 
 <br/>
 
