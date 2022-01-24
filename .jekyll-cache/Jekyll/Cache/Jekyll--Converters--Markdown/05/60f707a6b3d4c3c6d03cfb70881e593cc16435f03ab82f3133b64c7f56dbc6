@@ -1,0 +1,169 @@
+I"�3<p><br/><br/></p>
+<blockquote>
+<p><a href="https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/dp/%EB%A7%8C%EB%93%A4%EA%B8%B0_1%EB%A1%9C.java">소스코드</a></p>
+</blockquote>
+<br/>
+<h1 id="section">1로 만들기</h1>
+<h2 id="section-1">문제</h2>
+<h3 id="section-2">문제 정의</h3>
+<ul>
+<li>정수 X가 주어질 때 정수 X에 사용할 수 있는 연산은 다음과 같이 4가지이다.
+<ul>
+<li>X가 5로 나누어떨어지면, 5로 나눈다.</li>
+<li>X가 3으로 나누어떨어지면, 3으로 나눈다.</li>
+<li>X가 2로 나누어떨어지면, 2로 나눈다.</li>
+<li>X에서 1을 뺀다.</li>
+</ul>
+</li>
+<li>정수 X가 주어졌을 때, 연산 4개를 적절히 사용해서 1을 만들려고 한다. 연산을 사용하는 횟수의 최솟값을 출력하시오.</li>
+<li>예시
+<ul>
+<li>정수가 26이라면 다음과 같이 계산해서 3번의 연산이 최솟값이다.</li>
+</ul>
+<ol>
+<li>26 - 1 = 25</li>
+<li>25 / 5 = 5</li>
+<li>5 / 5 = 1</li>
+</ol>
+</li>
+</ul>
+<br/>
+<h3 id="section-3">입력조건</h3>
+<ul>
+<li>첫째 줄에 정수 X가 주어진다.
+<ul>
+<li>X: 1 이상, 30,000 이하</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-4">출력조건</h3>
+<ul>
+<li>첫째 줄에 연산을 하는 횟수의 최솟값을 출력한다.</li>
+</ul>
+<br/>
+<h3 id="section-5">입·출력 예시</h3>
+<ul>
+<li>
+<p>입력</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>26
+</code></pre></div></div>
+</li>
+<li>
+<p>출력</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<h2 id="section-6">풀이</h2>
+<h3 id="section-7">문제 해설</h3>
+<ul>
+<li>문제를 풀기 전에 함수가 호출되는 과정을 그림으로 그려보자. 이는 아래와 같다.
+<ul>
+<li><img src="/assets/img/2022-01-15-ALGORITHM_DynamicProgramming_MakeOne/Untitled01.jpg" alt="" /></li>
+</ul>
+</li>
+<li>이것을 점화식으로 표현하면 아래와 같다.
+<img src="https://latex.codecogs.com/svg.image?%5Calpha_%7Bi%7D=min(%5Calpha_%7Bi-1%7D,%5Calpha_%7Bi/5%7D,%5Calpha_%7Bi3%7D,%5Calpha_%7Bi/2%7D)+1" alt="" />
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?i" alt="" /> : 현재 숫자</li>
+<li><img src="https://latex.codecogs.com/svg.image?%5Calpha_%7Bi%7D" alt="" /> : 현재 숫자 i를 만들기 위해 필요한 최소 연산 횟수</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-8">소스코드</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">dp</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">만들기_1로</span> <span class="o">{</span>
+
+  <span class="kd">static</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">d</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="mi">30001</span><span class="o">];</span>
+
+  <span class="cm">/**
+   * Bottom Up 방식
+   */</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">bottomUp</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">)</span> <span class="o">{</span>
+
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">x</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+
+      <span class="n">d</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">d</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+
+      <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">d</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">d</span><span class="o">[</span><span class="n">i</span><span class="o">],</span> <span class="n">d</span><span class="o">[</span><span class="n">i</span> <span class="o">/</span> <span class="mi">2</span><span class="o">]</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+      <span class="o">}</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">d</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">d</span><span class="o">[</span><span class="n">i</span><span class="o">],</span> <span class="n">d</span><span class="o">[</span><span class="n">i</span> <span class="o">/</span> <span class="mi">3</span><span class="o">]</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+      <span class="o">}</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">d</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">d</span><span class="o">[</span><span class="n">i</span><span class="o">],</span> <span class="n">d</span><span class="o">[</span><span class="n">i</span> <span class="o">/</span> <span class="mi">5</span><span class="o">]</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+      <span class="o">}</span>
+
+    <span class="o">}</span>
+
+    <span class="k">return</span> <span class="n">d</span><span class="o">[</span><span class="n">x</span><span class="o">];</span>
+  <span class="o">}</span>
+
+  <span class="cm">/**
+   * Top Down 방식
+   */</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">topDown</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">x</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="k">if</span> <span class="o">(</span><span class="n">d</span><span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">return</span> <span class="n">d</span><span class="o">[</span><span class="n">x</span><span class="o">];</span>
+    <span class="o">}</span>
+
+    <span class="n">d</span><span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="o">=</span> <span class="n">topDown</span><span class="o">(</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+
+    <span class="k">if</span> <span class="o">(</span><span class="n">x</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+      <span class="kt">int</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">topDown</span><span class="o">(</span><span class="n">x</span><span class="o">/</span><span class="mi">5</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">d</span><span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">tmp</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">d</span><span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">;</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="k">if</span> <span class="o">(</span><span class="n">x</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+      <span class="kt">int</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">topDown</span><span class="o">(</span><span class="n">x</span><span class="o">/</span><span class="mi">3</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">d</span><span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">tmp</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">d</span><span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">;</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="k">if</span> <span class="o">(</span><span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+      <span class="kt">int</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">topDown</span><span class="o">(</span><span class="n">x</span><span class="o">/</span><span class="mi">2</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">d</span><span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">tmp</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">d</span><span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">;</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="k">return</span> <span class="n">d</span><span class="o">[</span><span class="n">x</span><span class="o">];</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+    <span class="nc">BufferedReader</span> <span class="n">bf</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="nc">InputStreamReader</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+    <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">bf</span><span class="o">.</span><span class="na">readLine</span><span class="o">());</span>
+
+<span class="c1">//    int answer = bottomUp(n);</span>
+    <span class="kt">int</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">topDown</span><span class="o">(</span><span class="n">x</span><span class="o">);</span>
+
+    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">answer</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>나동빈, 『이것이 코딩 테스트다』</li>
+  </ul>
+  본 게시글은 위 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

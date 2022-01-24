@@ -1,0 +1,242 @@
+I"gx<p><br/><br/></p>
+<blockquote>
+<p><a href="https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/shortestpath/%ED%94%8C%EB%A1%9C%EC%9D%B4%EB%93%9C_%EC%9B%8C%EC%85%9C.java">소스코드</a></p>
+</blockquote>
+<br/>
+<h1 id="section">플로이드 워셜 알고리즘</h1>
+<h2 id="section-1">개요</h2>
+<h3 id="section-2">플로이드 워셜 알고리즘이란?</h3>
+<ul>
+<li>모든 지점에서 다른 모든 지점까지의 최단 경로를 모두 구해야 하는 경우에 사용할 수 있는 알고리즘이다.</li>
+</ul>
+<br/>
+<h3 id="vs--">다익스트라 vs 플로이드 워셜</h3>
+<ul>
+<li>다익스트라 알고리즘은 단계마다 최단 거리를 가지는 노드를 하나씩 반복적으로 선택한다. 그리고 해당 노드를 거쳐 가는 경로를 확인하며, 최단 거리 테이블을 갱신하는 방식으로 동작한다.</li>
+<li>플로이드 워셜 알고리즘 또한 단계마다 ‘거쳐 가는 노드’를 기준으로 알고리즘을 수행한다.
+<ul>
+<li><strong>하지만 매번 ‘방문하지 않은 노드 중에서 최단 거리를 갖는 노드’를 찾을 필요가 없다는 점이 다르다.</strong></li>
+</ul>
+</li>
+<li>다익스트라 알고리즘에서는 출발 노드가 1개이므로 다른 모든 노드까지의 최단 거리를 저장하기 위해서 1차원 리스트를 사용했다.</li>
+<li>플로이드 워셜 알고리즘은 다익스트라 알고리즘과는 다르게 2차원 리스트에 ‘최단 거리’ 정보를 저장한다는 특징이 있다.<br />
+<strong>모든 노드에 대하여 다른 모든 노드로 가는 최단 거리 정보를 담아야 하기 때문이다.</strong></li>
+<li>다익스트라 알고리즘은 그리디 알고리즘인데, 플로이드 워셜 알고리즘은 다이나믹 프로그래밍이다.
+<ul>
+<li>노드의 개수가 N이라고 할 때, N번 만큼의 단계를 반복하며 <strong>‘점화식에 맞게’</strong> 2차원 리스트를 갱신하기 때문에 다이나믹 프로그래밍으로 볼 수 있다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-3">시간복잡도</h3>
+<ul>
+<li>노드의 개수가 N개일 때 알고리즘상으로 N번의 단계를 수행하며, 단계마다 <code>O(n^2)</code>의 연산을 통해 ‘현재 노드를 거쳐가는’ 모든 경로를 고려한다.</li>
+<li>따라서 플로이드 워셜 알고리즘의 시간 복잡도는 <code>O(n^3)</code> 이다.
+<ul>
+<li>다시 말해, 2차원 리스트를 처리해야 하므로 N번의 단계에서 매번 <code>O(N^2)</code>의 시간이 소요된다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-4">동작 개요</h3>
+<blockquote>
+<p>여기에선 포괄적인 동작에 대해서 설명한다.<br />
+자세한 동작 순서는 문서 아래 예시(그림)를 참고하자.</p>
+</blockquote>
+<ul>
+<li>각 단계에서는 해당 노드를 거쳐 가는 경우를 고려한다.</li>
+<li>예시) 1번 노드에 대해서 확인하는 단계
+<ul>
+<li>1번 노드를 중간에 거쳐 지나가는 모든 경우를 고려하면 된다.
+<ul>
+<li>즉 <code>A -&gt; 1번 노드 -&gt; B</code> 로 가는 비용을 확인한 후에 최단 거리를 갱신한다.</li>
+</ul>
+</li>
+<li>만약 현재 최단 거리 테이블에 <code>A번 노드에서 B번 노드로 이동하는 비용</code>이 3으로 기록되어 있을 때,<br />
+<code>A번 노드에서 1번 노드를 거쳐 B번 노드로 이동하는 비용</code>이 2라는 것이 밝혀지면,<br />
+A번 노드에서 B번 노드로 이동하는 비용을 2로 갱신하는 것이다.</li>
+</ul>
+</li>
+<li><strong>따라서 알고리즘에서는 현재 확인하고 있는 노드를 제외하고, N-1개의 노드 중에서 서로 다른 노드 (A, B)쌍을 선택한다.<br />
+이후에 <code>A -&gt; 현재 확인하고 있는 노드 -&gt; B</code>로 가는 비용을 확인한 뒤, 최단 거리를 갱신한다.</strong>
+<ul>
+<li>다시 말해 <img src="https://latex.codecogs.com/svg.image?_%7BN-1%7DP_%7B2%7D" alt="" /> 개의 쌍을 단계마다 반복해서 확인하면 된다.<br />
+이때 <img src="https://latex.codecogs.com/svg.image?_%7BN-1%7DP_%7B2%7D" alt="" /> 는 <img src="https://latex.codecogs.com/svg.image?O(n%5E2)" alt="" /> 이라고 볼 수 있기 때문에, 전체 시간 복잡도는
+<img src="https://latex.codecogs.com/svg.image?O(N%5E3)" alt="" /> 이라고 할 수 있다.</li>
+</ul>
+</li>
+<li><strong>k번째 단계(현재 확인 중인 노드가 k일 때)에 대한 점화식</strong>
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?D_%7Bab%7D=min(D_%7Bab%7D,D_%7Bak%7D+D_%7Bkb%7D)" alt="" /></li>
+<li>‘A에서 B로 가는 최소 비용’과 ‘A에서 K를 거쳐 B로 가는 비용’을 비교하여 더 작은 값으로 갱신하겠다는 뜻이다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-5">플로이드 워셜 알고리즘 동작 방식</h3>
+<ol>
+<li>최단 거리 테이블을 초기화한다.</li>
+<li>K번째 노드를 선택하고, 해당 노드에 대해서 아래 점화식을 적용한다.
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?D_%7Bab%7D=min(D_%7Bab%7D,D_%7Bak%7D+D_%7Bkb%7D)" alt="" /></li>
+</ul>
+</li>
+<li>모든 노드에 대해 2번을 반복한다.</li>
+</ol>
+<p><br/><br/></p>
+<h2 id="section-6">동작 예시</h2>
+<h3 id="section-7">예시에서 사용할 그래프 형태</h3>
+<p><img src="/assets/img/2022-01-20-ALGORITHM_ShortestPath_FloydWarshall/Untitled20.jpg" alt="" /></p>
+<blockquote>
+<p>교재의 그래프와 약간 다르니 주의하자!</p>
+</blockquote>
+<br/>
+<h3 id="step-01">Step 01</h3>
+<p><img src="/assets/img/2022-01-20-ALGORITHM_ShortestPath_FloydWarshall/Untitled21.jpg" alt="" /></p>
+<ul>
+<li>테이블을 초기화한다.</li>
+<li>존재하지 않는 간선은 무한으로 표현한다.</li>
+</ul>
+<br/>
+<h3 id="step-02-k--1">Step 02 (K = 1)</h3>
+<p><img src="/assets/img/2022-01-20-ALGORITHM_ShortestPath_FloydWarshall/Untitled22.jpg" alt="" /></p>
+<ul>
+<li>현재 확인 중인 노드(K)가 1일 때, <strong>‘1을 제외한 나머지 노드들에 대해 가능한 모든 경로’에 점화식을 적용한다.</strong></li>
+</ul>
+<br/>
+<h3 id="step-03-k--2">Step 03 (K = 2)</h3>
+<p><img src="/assets/img/2022-01-20-ALGORITHM_ShortestPath_FloydWarshall/Untitled23.jpg" alt="" /></p>
+<ul>
+<li>현재 확인 중인 노드(K)가 2일 때, <strong>‘2을 제외한 나머지 노드들에 대해 가능한 모든 경로’에 점화식을 적용한다.</strong></li>
+</ul>
+<br/>
+<h3 id="step-04-k--3">Step 04 (K = 3)</h3>
+<p><img src="/assets/img/2022-01-20-ALGORITHM_ShortestPath_FloydWarshall/Untitled24.jpg" alt="" /></p>
+<ul>
+<li>현재 확인 중인 노드(K)가 3일 때, <strong>‘3을 제외한 나머지 노드들에 대해 가능한 모든 경로’에 점화식을 적용한다.</strong></li>
+</ul>
+<br/>
+<h3 id="step-05-k--4">Step 05 (K = 4)</h3>
+<p><img src="/assets/img/2022-01-20-ALGORITHM_ShortestPath_FloydWarshall/Untitled25.jpg" alt="" /></p>
+<ul>
+<li>현재 확인 중인 노드(K)가 4일 때, <strong>‘4을 제외한 나머지 노드들에 대해 가능한 모든 경로’에 점화식을 적용한다.</strong></li>
+</ul>
+<br/>
+<h2 id="section-8">소스코드</h2>
+<h3 id="section-9">플로이드 워셜 알고리즘</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">shortestpath</span><span class="o">;</span>
+<p><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Arrays</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.StringTokenizer</span><span class="o">;</span></p>
+<p><span class="kd">public</span> <span class="kd">class</span> <span class="nc">플로이드_워셜</span> <span class="o">{</span>
+<span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="no">INF</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span> <span class="mi">1</span><span class="n">e9</span><span class="o">;</span> <span class="c1">//무한을 의미하는 값으로 10억을 설정</span>
+<span class="kd">static</span> <span class="kt">int</span> <span class="n">sizeOfNode</span><span class="o">;</span>
+<span class="kd">static</span> <span class="kt">int</span> <span class="n">sizeOfEdge</span><span class="o">;</span>
+<span class="kd">static</span> <span class="kt">int</span><span class="o">[][]</span> <span class="n">graph</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="mi">501</span><span class="o">][</span><span class="mi">501</span><span class="o">];</span> <span class="c1">//그래프</span></p>
+<p><span class="cm">/**</p>
+<ul>
+<li>실행 메서드
+*/</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+<span class="nc">BufferedReader</span> <span class="n">bf</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="nc">InputStreamReader</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+<span class="n">sizeOfNode</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">bf</span><span class="o">.</span><span class="na">readLine</span><span class="o">());</span>
+<span class="n">sizeOfEdge</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">bf</span><span class="o">.</span><span class="na">readLine</span><span class="o">());</span></li>
+</ul>
+<pre><code>&lt;span class=&quot;c1&quot;&gt;//그래프를 무한으로 초기화&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;graph&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nc&quot;&gt;Arrays&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;fill&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;graph&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;INF&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//자기자신으로 가는 최소 거리는 0이므로 0으로 초기화&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;graph&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;graph&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;graph&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//입력받은 간선 정보로 그래프의 나머지 부분 초기화&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sizeOfEdge&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;readLine&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;nc&quot;&gt;StringTokenizer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;st&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;StringTokenizer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fromNode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;parseInt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;st&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;nextToken&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+  &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;toNode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;parseInt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;st&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;nextToken&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+  &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;parseInt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;st&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;nextToken&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;graph&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fromNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;toNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;distance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="c1">//    solution1();</span>
+<span class="n">solution2</span><span class="o">();</span></p>
+<pre><code>&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sizeOfNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sizeOfNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;graph&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;INF&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;INFINITE&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;graph&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; &quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span></p>
+<p><span class="cm">/**</p>
+<ul>
+<li>플로이드 워셜 수행 메서드
+*/</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">solution1</span><span class="o">()</span> <span class="o">{</span></li>
+</ul>
+<pre><code>&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sizeOfNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sizeOfNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;continue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//k를 제외한 나머지에서 선택해야하므로&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sizeOfNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;continue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//k를 제외한 나머지에서 선택해야하므로&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;continue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//k를 제외한 노드 중, 같은 노드끼리인 경우는 생략 (거리=0)&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;graph&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;graph&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;graph&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;graph&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//for문 종료&lt;/span&gt;
+
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//for문 종료&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//for문 종료&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span></p>
+<p><span class="cm">/**</p>
+<ul>
+<li>플로이드 워셜 수행 메서드 (쓸데없는 if문 제거 ver.)
+*/</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">solution2</span><span class="o">()</span> <span class="o">{</span>
+<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="n">sizeOfNode</span><span class="o">;</span> <span class="n">k</span><span class="o">++)</span> <span class="o">{</span>
+<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">sizeOfNode</span><span class="o">;</span> <span class="n">a</span><span class="o">++)</span> <span class="o">{</span>
+<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">b</span> <span class="o">&lt;=</span> <span class="n">sizeOfNode</span><span class="o">;</span> <span class="n">b</span><span class="o">++)</span> <span class="o">{</span>
+<span class="n">graph</span><span class="o">[</span><span class="n">a</span><span class="o">][</span><span class="n">b</span><span class="o">]</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">graph</span><span class="o">[</span><span class="n">a</span><span class="o">][</span><span class="n">b</span><span class="o">],</span> <span class="n">graph</span><span class="o">[</span><span class="n">a</span><span class="o">][</span><span class="n">k</span><span class="o">]+</span><span class="n">graph</span><span class="o">[</span><span class="n">k</span><span class="o">][</span><span class="n">b</span><span class="o">]);</span>
+<span class="o">}</span><span class="c1">//for문 종료</span>
+<span class="o">}</span><span class="c1">//for문 종료</span>
+<span class="o">}</span><span class="c1">//for문 종료</span></li>
+</ul>
+<p><span class="o">}</span></p>
+<p><span class="o">}</span></p>
+<p></code></pre></div></div></p>
+<ul>
+<li><code>solution1</code> 메서드와 <code>solution2</code> 메서드의 차이점
+<ul>
+<li><code>solution1</code> 메서드는 위 문서 내용을 그대로 코드화시켰다.</li>
+<li><code>solution2</code> 메서드는 로직상 삭제해도 영향이 없는 코드를 삭제했다.
+<ul>
+<li>플로이드 워셜 알고리즘에선 원래, 현재 수행 중인 노드(<code>k</code>)를 제외한 나머지 노드들 중에서 점화식을 계산해야 한다.</li>
+<li>하지만 노드 <code>k</code> 를 포함하여 점화식 계산을 수행하더라도, 최소값을 구하는 <code>min()</code> 메서드가 존재하기에 문제가 없다.</li>
+<li>따라서 <code>solution2</code> 메서드에선 필요없는 코드 (<code>if문</code> 3개)를 제거했다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>나동빈, 『이것이 코딩 테스트다』</li>
+  </ul>
+  본 게시글은 위 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

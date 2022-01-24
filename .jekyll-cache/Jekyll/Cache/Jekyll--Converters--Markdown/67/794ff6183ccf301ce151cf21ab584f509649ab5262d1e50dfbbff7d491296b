@@ -1,0 +1,261 @@
+I"Lt<p><br/><br/></p>
+<blockquote>
+<p><a href="https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/shortestpath/%EB%AF%B8%EB%9E%98%EB%8F%84%EC%8B%9C.java">소스코드</a></p>
+</blockquote>
+<br/>
+<h1 id="section">미래도시</h1>
+<h2 id="section-1">문제</h2>
+<h3 id="section-2">문제 정의</h3>
+<ul>
+<li>방문 판매원 A는 많은 회사가 모여 있는 공중 미래 도시에 있다. 공중 미래 도시에는 1번붜 N번까지의 회사가 있는데 특정 회사끼리는 서로 도로를 통해 연결되어 있다.</li>
+<li>방문 판매원 A는 현재 1번 회사에 위치해 있으며, X번 회사에 방문해 물건을 판매하고자 한다.</li>
+<li>공중 미래 도시에서 특정 회사에 도착하기 위한 방법은 회사끼리 연결되어 있는 도로를 이용하는 방법이 유일하다. 또한 연결된 2개의 회사는 양방향으로 이동할 수 있다.<br />
+공중 미래 도시에서의 도로는 마하의 속도로 사람을 이동시켜주기 때문에 특정 회사와 다른 회사가 도로로 연결되어 있다면, 정확히 1만큼의 시간으로 이동할 수 있다.</li>
+<li>또한 오늘 방문 판매원 A는 기대하던 소개팅에도 참석하고자 한다. 소개팅의 상대는 K번 회사에 존재한다. 방문 판매원 A는 X번 회사에 가서 물건을 판매하기 전에 먼저 소개팅 상대의 회사에 찾아가서 함께 커피를 마실 예정이다.</li>
+<li>따라서 방문 판매원 A는 가능한 한 빠르게 이동하고자 한다. 방문 판매원이 회사 사이를 이동하게 되는 최소 시간을 계산하는 프로그램을 작성하시오.</li>
+<li>이때 소개팅 상대방과 커피를 마시는 시간 등은 고려하지 않는다고 가정한다.</li>
+<li>예시
+<ul>
+<li>N = 5, X = 4, K = 5 이고 회사 간 도로가 7개면서 각 도로가 다음과 같이 연결되어 있을 때를 가정할 수 있다.
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(1번, 2번), (1번, 3번), (1번, 4번), (2번, 4번), (3번, 4번), (3번, 5번), (4번, 5번) 
+</code></pre></div></div>
+</li>
+<li>이때 방문 판매원 A가 최종적으로 4번 회사에 가는 경로를 <code>(1번 -&gt; 3번 -&gt; 5번 -&gt; 4번)</code> 으로 설정하면, 소개팅에도 참석할 수 있으면서 총 3만큼의 시간으로 이동할 수 있다.</li>
+<li>따라서 이 경우 최소 이동 시간은 3이다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-3">입력조건</h3>
+<ul>
+<li>첫째 줄에 회사의 개수 N과 경로의 개수 M이 공백으로 구분되어 차례대로 주어진다.
+<ul>
+<li>N : 1 이상</li>
+<li>M : 100 이하</li>
+</ul>
+</li>
+<li>둘째 줄부터 M+1번째 줄에는 연결된 두 회사의 번호가 공백으로 구분되어 주어진다.</li>
+<li>M+2번째 줄에는 X와 K가 공백으로 구분되어 차례대로 주어진다.
+<ul>
+<li>k : 1 이상, 100 이하</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-4">출력조건</h3>
+<ul>
+<li>첫째 줄에 판맨원 A가 K번 회사를 거쳐 X번 회사로 가는 최소 이동 시간을 출력한다.</li>
+<li>만약 X번 회사에 도달할 수 없다면 <code>-1</code> 을 출력한다.</li>
+</ul>
+<br/>
+<h3 id="section-5">입·출력 예시</h3>
+<ul>
+<li>
+<p>입력</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5 7
+1 2
+1 3
+1 4
+2 4
+3 4
+3 5
+4 5
+4 5
+</code></pre></div></div>
+</li>
+<li>
+<p>출력</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<h2 id="section-6">풀이</h2>
+<h3 id="section-7">문제 해설</h3>
+<ul>
+<li>본 문제는 전형적인 플로이드 워셜 알고리즘 문제이다.
+<ul>
+<li>다익스트라 알고리즘을 활용하여 문제를 해결할 수 있지만, 플로이드 워셜을 사용하는 것이 훨씬 편하고 성능도 좋다.</li>
+<li>아래 소스코드에는 플로이드 워셜과 다익스트라 모두 활용한 예시가 작성되어있으니 참고하자.</li>
+</ul>
+</li>
+<li>문제의 핵심은 1번 노드에서 X를 거쳐 K로 가는 최단 거리를 구하는 것이다.
+<ul>
+<li><code>1번 노드에서 X까지의 최단 거리</code> + <code>X에서 K까지의 최단 거리</code></li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-8">소스코드</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">미래도시</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="no">INFINITE</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span> <span class="mi">1</span><span class="n">e9</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">sizeOfNode</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">sizeOfEdge</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">x</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">k</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Node</span><span class="o">&gt;&gt;</span> <span class="n">graph</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">shortestTable</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">answer</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="mi">2</span><span class="o">];</span>
+
+  <span class="cm">/**
+   * 실행 메서드
+   */</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+    <span class="nc">BufferedReader</span> <span class="n">bf</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="nc">InputStreamReader</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+    <span class="nc">String</span> <span class="n">s</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+    <span class="nc">StringTokenizer</span> <span class="n">st</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringTokenizer</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+    <span class="n">sizeOfNode</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">nextToken</span><span class="o">());</span>
+    <span class="n">sizeOfEdge</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">nextToken</span><span class="o">());</span>
+
+    <span class="n">shortestTable</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">sizeOfNode</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">sizeOfNode</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+      <span class="n">graph</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;());</span>
+    <span class="o">}</span>
+
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">sizeOfEdge</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+      <span class="n">s</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+      <span class="n">st</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringTokenizer</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+      <span class="kt">int</span> <span class="n">nodeA</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">nextToken</span><span class="o">());</span>
+      <span class="kt">int</span> <span class="n">nodeB</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">nextToken</span><span class="o">());</span>
+      <span class="kt">int</span> <span class="n">distance</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+      <span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">nodeA</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Node</span><span class="o">(</span><span class="n">nodeB</span><span class="o">,</span> <span class="n">distance</span><span class="o">));</span> <span class="c1">//양방향이므로</span>
+      <span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">nodeB</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Node</span><span class="o">(</span><span class="n">nodeA</span><span class="o">,</span> <span class="n">distance</span><span class="o">));</span> <span class="c1">//양방향이므로</span>
+    <span class="o">}</span>
+
+    <span class="n">s</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+    <span class="n">st</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringTokenizer</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">nextToken</span><span class="o">());</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">nextToken</span><span class="o">());</span>
+
+    <span class="c1">//다익스트라 사용시 (총 2번 호출된다.)</span>
+<span class="c1">//    int distanceOfK = solution1(1, k);</span>
+<span class="c1">//    int distanceOfX = solution1(k, x);</span>
+
+    <span class="c1">//플로이드 워셜 사용시 (1번만 호출해도 된다.)</span>
+    <span class="kt">int</span><span class="o">[][]</span> <span class="n">floyedGraph</span> <span class="o">=</span> <span class="n">solution2</span><span class="o">();</span>
+    <span class="kt">int</span> <span class="n">distanceOfK</span> <span class="o">=</span> <span class="n">floyedGraph</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="n">k</span><span class="o">];</span>
+    <span class="kt">int</span> <span class="n">distanceOfX</span> <span class="o">=</span> <span class="n">floyedGraph</span><span class="o">[</span><span class="n">k</span><span class="o">][</span><span class="n">x</span><span class="o">];</span>
+
+    <span class="k">if</span> <span class="o">(</span><span class="n">distanceOfK</span> <span class="o">&gt;=</span> <span class="no">INFINITE</span> <span class="o">||</span> <span class="n">distanceOfX</span> <span class="o">&gt;=</span> <span class="no">INFINITE</span><span class="o">)</span> <span class="o">{</span>
+      <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(-</span><span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+      <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">distanceOfX</span> <span class="o">+</span> <span class="n">distanceOfK</span><span class="o">);</span>
+    <span class="o">}</span>
+
+  <span class="o">}</span>
+
+  <span class="cm">/**
+   * 다익스트라 수행 메서드
+   */</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">solution1</span><span class="o">(</span><span class="kt">int</span> <span class="n">startNode</span><span class="o">,</span> <span class="kt">int</span> <span class="n">targetNode</span><span class="o">)</span> <span class="o">{</span>
+
+    <span class="nc">PriorityQueue</span><span class="o">&lt;</span><span class="nc">Node</span><span class="o">&gt;</span> <span class="n">priorityQueue</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">PriorityQueue</span><span class="o">&lt;&gt;();</span>
+
+    <span class="nc">Arrays</span><span class="o">.</span><span class="na">fill</span><span class="o">(</span><span class="n">shortestTable</span><span class="o">,</span> <span class="no">INFINITE</span><span class="o">);</span>
+    <span class="n">shortestTable</span><span class="o">[</span><span class="n">startNode</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="n">priorityQueue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="k">new</span> <span class="nc">Node</span><span class="o">(</span><span class="n">startNode</span><span class="o">,</span> <span class="mi">0</span><span class="o">));</span>
+
+
+    <span class="k">while</span> <span class="o">(!</span><span class="n">priorityQueue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
+      <span class="nc">Node</span> <span class="n">currentNode</span> <span class="o">=</span> <span class="n">priorityQueue</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+      <span class="kt">int</span> <span class="n">currentNodeIndex</span> <span class="o">=</span> <span class="n">currentNode</span><span class="o">.</span><span class="na">getNodeIndex</span><span class="o">();</span>
+      <span class="kt">int</span> <span class="n">currentNodeDistance</span> <span class="o">=</span> <span class="n">currentNode</span><span class="o">.</span><span class="na">getDistance</span><span class="o">();</span>
+
+      <span class="k">if</span> <span class="o">(</span><span class="n">currentNodeDistance</span> <span class="o">&gt;</span> <span class="n">shortestTable</span><span class="o">[</span><span class="n">currentNodeIndex</span><span class="o">])</span> <span class="k">continue</span><span class="o">;</span>
+
+      <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">currentNodeIndex</span><span class="o">).</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">indexOfNearNode</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">currentNodeIndex</span><span class="o">).</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">).</span><span class="na">getNodeIndex</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">distanceOfCurrentToNear</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">currentNodeIndex</span><span class="o">).</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">).</span><span class="na">getDistance</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">distanceOfStartToNear</span> <span class="o">=</span> <span class="n">currentNodeDistance</span> <span class="o">+</span> <span class="n">distanceOfCurrentToNear</span><span class="o">;</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">shortestTable</span><span class="o">[</span><span class="n">indexOfNearNode</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">distanceOfStartToNear</span><span class="o">)</span> <span class="o">{</span>
+          <span class="n">shortestTable</span><span class="o">[</span><span class="n">indexOfNearNode</span><span class="o">]</span> <span class="o">=</span> <span class="n">distanceOfStartToNear</span><span class="o">;</span>
+          <span class="n">priorityQueue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="k">new</span> <span class="nc">Node</span><span class="o">(</span><span class="n">indexOfNearNode</span><span class="o">,</span> <span class="n">distanceOfStartToNear</span><span class="o">));</span>
+        <span class="o">}</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="k">return</span> <span class="n">shortestTable</span><span class="o">[</span><span class="n">targetNode</span><span class="o">];</span>
+  <span class="o">}</span>
+
+  <span class="cm">/**
+   * 플로이드 워셜 수행 메서드
+   */</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span><span class="o">[][]</span> <span class="nf">solution2</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kt">int</span><span class="o">[][]</span> <span class="n">floyedGraph</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">sizeOfNode</span><span class="o">+</span><span class="mi">1</span><span class="o">][</span><span class="n">sizeOfNode</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+
+    <span class="c1">// ------------ 플로이드 워셜에 사용될 그래프 초기화 ---------</span>
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">floyedGraph</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+      <span class="nc">Arrays</span><span class="o">.</span><span class="na">fill</span><span class="o">(</span><span class="n">floyedGraph</span><span class="o">[</span><span class="n">i</span><span class="o">],</span> <span class="no">INFINITE</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">floyedGraph</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+      <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">u</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">u</span> <span class="o">&lt;</span> <span class="n">floyedGraph</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">length</span><span class="o">;</span> <span class="n">u</span><span class="o">++)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">u</span><span class="o">)</span> <span class="n">floyedGraph</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">u</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">graph</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+      <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">u</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">u</span> <span class="o">&lt;</span> <span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">).</span><span class="na">size</span><span class="o">();</span> <span class="n">u</span><span class="o">++)</span> <span class="o">{</span>
+        <span class="n">floyedGraph</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">).</span><span class="na">get</span><span class="o">(</span><span class="n">u</span><span class="o">).</span><span class="na">getNodeIndex</span><span class="o">()]</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">).</span><span class="na">get</span><span class="o">(</span><span class="n">u</span><span class="o">).</span><span class="na">getDistance</span><span class="o">();</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="c1">// ------------ 플로이드 워셜에 사용될 그래프 초기화 (끝) ---------</span>
+
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="n">sizeOfNode</span><span class="o">;</span> <span class="n">k</span><span class="o">++)</span> <span class="o">{</span>
+      <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">sizeOfNode</span><span class="o">;</span> <span class="n">a</span><span class="o">++)</span> <span class="o">{</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">b</span> <span class="o">&lt;=</span> <span class="n">sizeOfNode</span><span class="o">;</span> <span class="n">b</span><span class="o">++)</span> <span class="o">{</span>
+          <span class="n">floyedGraph</span><span class="o">[</span><span class="n">a</span><span class="o">][</span><span class="n">b</span><span class="o">]</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">floyedGraph</span><span class="o">[</span><span class="n">a</span><span class="o">][</span><span class="n">b</span><span class="o">],</span> <span class="n">floyedGraph</span><span class="o">[</span><span class="n">a</span><span class="o">][</span><span class="n">k</span><span class="o">]</span> <span class="o">+</span> <span class="n">floyedGraph</span><span class="o">[</span><span class="n">k</span><span class="o">][</span><span class="n">b</span><span class="o">]);</span>
+        <span class="o">}</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="k">return</span> <span class="n">floyedGraph</span><span class="o">;</span>
+
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Node</span> <span class="kd">implements</span> <span class="nc">Comparable</span><span class="o">&lt;</span><span class="nc">Node</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">nodeIndex</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">distance</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Node</span><span class="o">(</span><span class="kt">int</span> <span class="n">nodeIndex</span><span class="o">,</span> <span class="kt">int</span> <span class="n">distance</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">this</span><span class="o">.</span><span class="na">nodeIndex</span> <span class="o">=</span> <span class="n">nodeIndex</span><span class="o">;</span>
+      <span class="k">this</span><span class="o">.</span><span class="na">distance</span> <span class="o">=</span> <span class="n">distance</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getNodeIndex</span><span class="o">()</span> <span class="o">{</span>
+      <span class="k">return</span> <span class="n">nodeIndex</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getDistance</span><span class="o">()</span> <span class="o">{</span>
+      <span class="k">return</span> <span class="n">distance</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">compareTo</span><span class="o">(</span><span class="nc">Node</span> <span class="n">other</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">distance</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="na">distance</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+      <span class="o">}</span>
+      <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+
+  <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+<ul>
+<li>다익스트라 알고리즘을 사용할 시, <code>1번 노드에서 X까지의 최단 거리</code> 를 구할 때와 <code>X에서 K까지의 최단 거리</code> 를 구할 때, 총 2번 알고리즘을 수행해야 한다.</li>
+<li>또한 소스코드도 복잡하다.</li>
+<li>따라서 플로이드 워셜 알고리즘을 사용하는 것이 좋다.</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>나동빈, 『이것이 코딩 테스트다』</li>
+  </ul>
+  본 게시글은 위 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

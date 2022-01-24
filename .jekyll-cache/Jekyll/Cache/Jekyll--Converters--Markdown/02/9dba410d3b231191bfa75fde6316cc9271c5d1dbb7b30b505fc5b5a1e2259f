@@ -1,0 +1,202 @@
+I"I<p><br/><br/></p>
+<blockquote>
+<p><a href="https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/binarysearch/%EB%96%A1%EB%B3%B6%EC%9D%B4_%EB%96%A1_%EB%A7%8C%EB%93%A4%EA%B8%B0.java">소스코드</a></p>
+</blockquote>
+<br/>
+<h1 id="section">떡볶이 떡 만들기</h1>
+<h2 id="section-1">문제</h2>
+<h3 id="section-2">문제 정의</h3>
+<ul>
+<li>동빈이네 떡볶이 떡은 길이가 일정하지 않다. 대신에 한 봉지 안에 들어가는 떡의 총 길이는 절단기로 잘라서 맞춰준다.</li>
+<li>절단기에 높이(H)를 지정하면 줄지어진 떡을 한 번에 절단한다. 높이가 H보다 긴 떡은 H 위의 부분이 잘릴 것이고, 낮은 떡은 잘리지 않는다.</li>
+<li>예시
+<ul>
+<li>높이가 19, 14, 10, 17cm인 떡이 나란히 있고 절단기 높이를 15cm로 지정하면 자른 뒤 떡의 높이는 15, 14, 10, 15cm 가 될 것이다.</li>
+<li>잘린 떡의 길이는 차례대로 4, 0, 0, 2cm 이다. 손님은 6cm만큼의 길이를 가져간다.</li>
+</ul>
+</li>
+<li>손님이 왔을 때 요청한 총 길이가 M일 때, 적어도 M만큼의 떡을 얻기 위해 절단기에 설정할 수 있는 높이의 최댓값을 구하는 프로그램을 작성하시오.</li>
+</ul>
+<br/>
+<h3 id="section-3">입력조건</h3>
+<ul>
+<li>첫째 줄에 떡의 개수 N과 요청한 떡의 길이 M이 주어진다.
+<ul>
+<li>N: 1 이상, 1,000,000 이하</li>
+<li>M: 1 이상, 2,000,000,000 이하</li>
+</ul>
+</li>
+<li>둘째 줄에는 떡의 개별 높이가 주어진다. 떡 높이의 총합은 항상 M 이상이므로, 손님은 필요한 양만큼 떡을 사갈 수 있다. 높이는 10억보다 작거나 같은 양의 정수 혹은 0이다.</li>
+</ul>
+<br/>
+<h3 id="section-4">출력조건</h3>
+<ul>
+<li>적어도 M만큼의 떡을 집에 가져가기 위해 절단기에 설정할 수 있는 높이의 최댓값을 출력한다.</li>
+</ul>
+<br/>
+<h3 id="section-5">입·출력 예시 - 1</h3>
+<ul>
+<li>
+<p>입력</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4 6
+19 15 10 17
+</code></pre></div></div>
+</li>
+<li>
+<p>출력</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>15
+</code></pre></div></div>
+</li>
+</ul>
+<h3 id="section-6">입·출력 예시 - 2</h3>
+<ul>
+<li>
+<p>입력</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4 7
+19 15 10 17
+</code></pre></div></div>
+</li>
+<li>
+<p>출력</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>14
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<h2 id="section-7">풀이</h2>
+<h3 id="section-8">문제 해설</h3>
+<ul>
+<li>본 문제는 전형적인 이진 탐색 문제이자, 파라메트릭 서치 유형의 문제이다.
+<ul>
+<li>파라메트릭 서치: 최적화 문제를 결정 문제로 바꾸어 해결하는 기법
+<ul>
+<li>예시) 범위 내에서 조건을 만족하는 가장 큰 값을 찾으라는 최적화 문제라면, 이진 탐색으로 결정 문제를 해결하면서 범위를 좁혀갈 수 있다.</li>
+<li>보통 파라메트릭 서치 유형은 이진 탐색을 이용하여 해결한다.</li>
+</ul>
+</li>
+<li>결정 문제: ‘예’, ‘아니오’로 답하는 문제</li>
+</ul>
+</li>
+<li>문제해결의 Key Point: <strong>적절한 높이를 찾을 때까지 절단기의 높이 H를 반복해서 조정한다.</strong>
+<ul>
+<li>’현재 이 높이로 자르면 조건을 만족할 수 있는가?’를 확인한 뒤에 조건의 만족 여부(‘예’ 또는 ‘아니오’)에 따라서 탐색 범위를 좁혀서 해결할 수 있다.<br />
+범위를 좁힐 때는 이진 탐색의 원리를 이용하여 절반씩 탐색 범위를 좁혀 나간다.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>본 문제에서 절단기의 높이 즉, 탐색 범위가 1~10억까지의 정수이다.<br />
+<strong>이처럼 큰 수를 보면 당연하다는듯이 가장 먼저 이진 탐색을 떠올려야 한다.</strong></p>
+</blockquote>
+<ul>
+<li>문제 해결 절차
+<ol>
+<li>이진 탐색의 시작점과 끝점 그리고 중간점을 아래와 같이 설정한다.
+<ul>
+<li>시작점: 0 (가장 짧은 떡의 길이)</li>
+<li>끝점: 배열 N에서 가장 큰 수 (가장 긴 떡의 길이)</li>
+<li>중간점: (시작점+끝점)/2
+<blockquote>
+<p>소수점 이하는 버린다.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>중간점을 절단기의 높이 H로 취급했을 때, 잘리는 떡의 길이 (결과값)를 계산한다.
+<ul>
+<li><code>결과값 &lt; M</code> 인 경우:<br />
+절단되는 떡의 길이를 증가시켜야하므로, 절단기의 높이를 낮춰야 한다.<br />
+그러므로 끝점을 (‘중간점의 값’+1)로 설정한다. 그리고 중간점을 ((‘시작점’+‘끝점’)/2)로 설정한다.</li>
+<li><code>결과값 &gt;= M</code> 인 경우:<br />
+절단되는 떡의 길이를 감소시켜야하므로, 절단기의 높이를 증가시켜야 한다.<br />
+그러므로 시작점을 (‘중간점의 값’-1)로 설정한다. 그리고 중간점을 ((‘시작점’+‘끝점’)/2)로 설정한다.<br />
+결과값과 M이 정확히 일치하지 않을 수 있다. 이때는 결과값이 M보다 큰 최소값이어야 한다.</li>
+</ul>
+</li>
+<li>시작점이 끝점보다 클 때까지 2번을 반복한다.</li>
+<li>결과적으로 중간점이 정답으로 도출된다.</li>
+</ol>
+</li>
+<li>시간복잡도
+<ul>
+<li>잘린 떡의 총 길이를 구하는 시간: <code>O(N)</code></li>
+<li>이진 탐색으로 절단기의 높이를 구하는 시간: <code>O(logK) (이때 K는 떡 길이의 최댓값)</code></li>
+<li>따라서 총 시간복잡도는 <code>O( N * logK )</code> 이다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-9">소스코드</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">떡볶이_떡_만들기</span> <span class="o">{</span>
+<p><span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">solution1</span><span class="o">(</span><span class="kt">long</span><span class="o">[]</span> <span class="n">n</span><span class="o">,</span> <span class="kt">long</span> <span class="n">m</span><span class="o">)</span> <span class="o">{</span>
+<span class="kt">long</span> <span class="n">start</span> <span class="o">=</span> <span class="mi">0L</span><span class="o">;</span> <span class="c1">//시작점</span>
+<span class="kt">long</span> <span class="n">end</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">stream</span><span class="o">(</span><span class="n">n</span><span class="o">).</span><span class="na">max</span><span class="o">().</span><span class="na">getAsLong</span><span class="o">();</span> <span class="c1">//끝점</span>
+<span class="kt">long</span> <span class="n">middle</span> <span class="o">=</span> <span class="o">(</span><span class="n">end</span><span class="o">+</span><span class="n">start</span><span class="o">)/</span><span class="mi">2</span><span class="o">;</span> <span class="c1">//중간점</span>
+<span class="kt">long</span> <span class="n">height</span> <span class="o">=</span> <span class="n">middle</span><span class="o">;</span> <span class="c1">//절단기의 높이 (중간점이 절단기의 높이가 된다.)</span></p>
+<pre><code>&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+
+  &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;resultLength&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getResultLength&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//잘린 떡의 총 길이 구하기&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resultLength&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;middle&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resultLength&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;middle&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;middle&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)/&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;height&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;middle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span></p>
+<p><span class="cm">/**</p>
+<ul>
+<li>절단기 높이에 따라, 잘린 떡의 총 길이를 구하는 메서드
+*/</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="kt">long</span> <span class="nf">getResultLength</span><span class="o">(</span><span class="kt">long</span><span class="o">[]</span> <span class="n">n</span><span class="o">,</span> <span class="kt">long</span> <span class="n">height</span><span class="o">)</span> <span class="o">{</span>
+<span class="kt">long</span> <span class="n">resultLength</span> <span class="o">=</span> <span class="mi">0L</span><span class="o">;</span> <span class="c1">//절단기의 높이에 따라, 구해질 떡의 총 길이 (결과)</span></li>
+</ul>
+<pre><code>&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;height&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;resultLength&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;resultLength&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span></p>
+<p><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+<span class="nc">BufferedReader</span> <span class="n">bf</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="nc">InputStreamReader</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+<span class="nc">String</span> <span class="n">s</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+<span class="nc">StringTokenizer</span> <span class="n">st</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringTokenizer</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+<span class="kt">int</span> <span class="n">sizeOfN</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">nextToken</span><span class="o">());</span>
+<span class="kt">long</span> <span class="n">m</span> <span class="o">=</span> <span class="nc">Long</span><span class="o">.</span><span class="na">parseLong</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">nextToken</span><span class="o">());</span></p>
+<pre><code>&lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sizeOfN&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;readLine&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;st&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;StringTokenizer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sizeOfN&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Long&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;parseLong&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;st&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;nextToken&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nc&quot;&gt;TimeCheck&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;solution1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;nc&quot;&gt;TimeCheck&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+</code></pre>
+<p><span class="o">}</span>
+<span class="o">}</span></p>
+<p></code></pre></div></div></p>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>나동빈, 『이것이 코딩 테스트다』</li>
+  </ul>
+  본 게시글은 위 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

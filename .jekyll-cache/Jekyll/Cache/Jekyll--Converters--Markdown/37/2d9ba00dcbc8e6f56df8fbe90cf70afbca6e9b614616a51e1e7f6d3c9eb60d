@@ -1,0 +1,203 @@
+I"<p><br/><br/></p>
+<blockquote>
+<p><a href="https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/dp/%EB%B0%94%EB%8B%A5_%EA%B3%B5%EC%82%AC.java">소스코드</a></p>
+</blockquote>
+<br/>
+<h1 id="section">바닥 공사</h1>
+<h2 id="section-1">문제</h2>
+<h3 id="section-2">문제 정의</h3>
+<ul>
+<li>
+<p>가로의 길이가 N, 세로의 길이가 2인 직사각형 형태의 얇은 바닥이 있다.</p>
+</li>
+<li>
+<p>태일이는 이 얇은 바닥을 1x2의 덮개, 2x1의 덮개, 2x2의 덮개를 이용해 채우고자 한다.</p>
+<ul>
+<li>
+<p>바닥: Nx2</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>회색 영역은 무시하자.</p>
+</blockquote>
+</li>
+<li>
+<p>1x2 덮개</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>2x1 덮개</p>
+<table>
+<thead>
+<tr>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>2x2 덮개</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</li>
+<li>
+<p>이때 바닥을 채우는 모든 경우의 수를 구하는 프로그램을 작성하시오.</p>
+</li>
+<li>
+<p>예시</p>
+<ul>
+<li>2x3 크기의 바닥을 채우는 경우의 수는 5가지이다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-3">입력조건</h3>
+<ul>
+<li>첫째 줄에 정수 N이 주어진다.
+<ul>
+<li>N: 1 이상, 1,000 이하</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-4">출력조건</h3>
+<ul>
+<li>첫째 줄에 2xN 크기의 바닥을 채우는 방법의 수를 796,796으로 나눈 나머지를 출력한다.</li>
+</ul>
+<br/>
+<h3 id="section-5">입·출력 예시</h3>
+<ul>
+<li>
+<p>입력</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3
+</code></pre></div></div>
+</li>
+<li>
+<p>출력</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<h2 id="section-6">풀이</h2>
+<h3 id="section-7">문제 해설</h3>
+<ul>
+<li>문제 풀이를 위해 도식화해보자.
+<img src="/assets/img/2022-01-16-ALGORITHM_DynamicProgramming_FloorTiling/Untitled02.jpg" alt="" />
+<img src="/assets/img/2022-01-16-ALGORITHM_DynamicProgramming_FloorTiling/Untitled03.jpg" alt="" />
+<img src="/assets/img/2022-01-16-ALGORITHM_DynamicProgramming_FloorTiling/Untitled04.jpg" alt="" /></li>
+<li>이것을 점화식으로 표현하면 아래와 같다.<br />
+<img src="https://latex.codecogs.com/svg.image?%5Calpha_%7Bi%7D=%5Calpha_%7Bi-1%7D+%5Calpha_%7Bi-2%7D*2" alt="" />
+<ul>
+<li><img src="https://latex.codecogs.com/svg.image?%5Calpha_%7Bi%7D" alt="" /> : ix2 영역을 채우는 모든 경우의 수</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-8">소스코드</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">바닥_공사</span> <span class="o">{</span>
+
+  <span class="kd">static</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">d</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="mi">1000</span><span class="o">];</span>
+
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">solution1</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">//d[n] = n*2의 영역을 채우는 경우의 수</span>
+    <span class="n">d</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="n">d</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+    <span class="n">d</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
+
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+      <span class="n">d</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="o">(</span><span class="n">d</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">d</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="o">])%</span><span class="mi">796796</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="k">return</span> <span class="n">d</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+    <span class="nc">BufferedReader</span> <span class="n">bf</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="nc">InputStreamReader</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">bf</span><span class="o">.</span><span class="na">readLine</span><span class="o">());</span>
+
+    <span class="nc">TimeCheck</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+    <span class="kt">int</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">solution1</span><span class="o">(</span><span class="n">n</span><span class="o">);</span>
+
+    <span class="nc">TimeCheck</span><span class="o">.</span><span class="na">end</span><span class="o">();</span>
+
+    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">answer</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>나동빈, 『이것이 코딩 테스트다』</li>
+  </ul>
+  본 게시글은 위 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

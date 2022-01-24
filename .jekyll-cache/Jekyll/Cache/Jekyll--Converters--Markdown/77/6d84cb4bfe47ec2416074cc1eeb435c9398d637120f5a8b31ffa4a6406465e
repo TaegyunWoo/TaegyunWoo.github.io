@@ -1,0 +1,288 @@
+I"dj<p><br/><br/></p>
+<blockquote>
+<p><a href="https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/shortestpath/%EB%8B%A4%EC%9D%B5%EC%8A%A4%ED%8A%B8%EB%9D%BC_%EA%B8%B0%EB%B3%B8.java">소스코드</a></p>
+</blockquote>
+<br/>
+<h1 id="section">다익스트라 알고리즘</h1>
+<h2 id="section-1">개요</h2>
+<h3 id="section-2">최단 경로 알고리즘이란?</h3>
+<ul>
+<li>가장 짧은 경로를 찾는 알고리즘이다.</li>
+<li>최단 경로 문제는 보통 그래프를 이용해서 표현한다.</li>
+<li>대표 알고리즘
+<ul>
+<li>다익스트라 알고리즘</li>
+<li>플로이드 워셜 알고리즘</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>실제 코딩 테스트에서는 최단 경로를 모두 출력하는 문제보단, <strong>단순히 최단 거리를 출력하도록 요구하는 문제</strong>가 많이 출제된다.</p>
+</blockquote>
+<br/>
+<h3 id="section-3">다익스트라 알고리즘이란?</h3>
+<ul>
+<li>그래프에서  여러 개의 노드가 있을 때, 특정한 노드에서 출발하여 다른 노드로 가는 각각의 최단 경로를 구해주는 알고리즘이다.</li>
+<li>다익스트라 최단 경로 알고리즘은 <strong>음의 간선이 없을 때 정상적으로 동작</strong>한다.
+<ul>
+<li>음의 간선: 0보다 작은 값을 가지는 간선(Edge)</li>
+</ul>
+</li>
+<li>현실 세계의 길(간선)은 음의 간선으로 표현되지 않으므로 다익스트라 알고리즘은 실제로 GPS 소프트웨어의 기본 알고리즘으로 채택된다.</li>
+<li>다익스트라 최단 경로 알고리즘은 기본적으로 <strong>그리디 알고리즘</strong>으로 분류된다.</li>
+</ul>
+<br/>
+<h3 id="section-4">다익스트라 알고리즘 동작 방식</h3>
+<ol>
+<li>출발 노드를 설정한다.</li>
+<li>최단 거리 테이블을 초기화한다.</li>
+<li>방문하지 않은 노드 중에서 최단 거리가 가장 짧은 노드를 선택한다.</li>
+<li>해당 노드를 거쳐 다른 노드로 가는 비용을 계산하여 최단 거리 테이블을 갱신한다.</li>
+<li>위 과정에서 3번과 4번을 반복한다.</li>
+</ol>
+<br/>
+<h3 id="section-5">특징</h3>
+<ul>
+<li>다익스트라 알고리즘은 ‘각 노드에 대한 현재까지의 최단 거리’ 정보를 항상 1차원 리스트에 저장하며 리스트를 계속 갱신한다.
+<ul>
+<li>매번 현재 처리하고 있는 노드를 기준으로 주변 간선을 확인한다.</li>
+<li>나중에 현재 처리하고 있는 노드와 인접한 노드로 도달하는 더 짧은 경로를 찾으면 그것을 제일 짧은 경로로 판단한다.</li>
+</ul>
+</li>
+<li>따라서 다익스트라 알고리즘은 <strong>그리디 알고리즘</strong>의 일종으로 취급할 수 있다.</li>
+</ul>
+<br/>
+<h3 id="section-6">다익스트라 알고리즘 구현 방식</h3>
+<ul>
+<li>다익스트라 알고리즘을 구현하는 방식에서 총 2가지 방법이 있다.
+<ul>
+<li>방법 1. 구현하기 쉽지만 느리게 동작하는 코드</li>
+<li>방법 2. 구현하기에 조금 더 까다롭지만 빠르게 동작하는 코드</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>코딩 테스트를 위해선, 방법 2를 정확히 이해하고 구현할 수 있을 때까지 연습해야 한다.</strong></p>
+</blockquote>
+<p><br/><br/></p>
+<h2 id="section-7">동작 예시</h2>
+<h3 id="section-8">예시에서 사용할 그래프 형태</h3>
+<p><img src="/assets/img/2022-01-17-ALGORITHM_ShortestPath_DijkstraBasic/Untitled01.jpg" alt="" /></p>
+<ul>
+<li>시작노드는 1번 노드이다.</li>
+</ul>
+<br/>
+<h3 id="step-01">Step 01</h3>
+<p><img src="/assets/img/2022-01-17-ALGORITHM_ShortestPath_DijkstraBasic/Untitled02.jpg" alt="" /></p>
+<ul>
+<li>출발 노드에서 출발 노드로의 거리는 0이다.</li>
+</ul>
+<br/>
+<h3 id="step-02">Step 02</h3>
+<p><img src="/assets/img/2022-01-17-ALGORITHM_ShortestPath_DijkstraBasic/Untitled03.jpg" alt="" /></p>
+<ul>
+<li>방문하지 않은 노드 중에서 최단 거리가 가장 짧은 노드를 선택한다.</li>
+<li>그리고 <code>'시작 노드'부터 '선택된 노드에서 갈 수 있는 노드'까지의 거리</code> 와 <code>테이블에 저장되어 있는 값</code> 끼리 비교한다.</li>
+<li><code>'시작 노드부터 갈 수 있는 노드'까지의 거리</code>가 더 작다면 <code>'시작 노드부터 갈 수 있는 노드'까지의 거리</code>으로 갱신한다.</li>
+<li>위 그림에선 ‘무한’보다 모두 짧으므로 전부 갱신된다.</li>
+</ul>
+<br/>
+<h3 id="step-03">Step 03</h3>
+<p><img src="/assets/img/2022-01-17-ALGORITHM_ShortestPath_DijkstraBasic/Untitled04.jpg" alt="" /></p>
+<ul>
+<li>선택했던 노드를 방문 처리한다.</li>
+<li>다시, 방문하지 않은 노드 중 최단 거리가 가장 짧은 노드를 선택한다.</li>
+<li>그리고 <code>'시작 노드'부터 '선택된 노드에서 갈 수 있는 노드'까지의 거리</code> 와 <code>테이블에 저장되어 있는 값</code> 끼리 비교한다.</li>
+<li><code>'시작 노드부터 갈 수 있는 노드'까지의 거리</code>가 더 작다면 <code>'시작 노드부터 갈 수 있는 노드'까지의 거리</code>으로 갱신한다.</li>
+</ul>
+<br/>
+<h3 id="step-04">Step 04</h3>
+<p><img src="/assets/img/2022-01-17-ALGORITHM_ShortestPath_DijkstraBasic/Untitled05.jpg" alt="" /></p>
+<ul>
+<li>선택했던 노드를 방문 처리한다.</li>
+<li>다시, 방문하지 않은 노드 중 최단 거리가 가장 짧은 노드를 선택한다.
+<blockquote>
+<p>거리가 같을 땐, 더 앞에 있는 노드를 선택한다.</p>
+</blockquote>
+</li>
+<li>그리고 <code>'시작 노드'부터 '선택된 노드에서 갈 수 있는 노드'까지의 거리</code> 와 <code>테이블에 저장되어 있는 값</code> 끼리 비교한다.</li>
+<li><code>'시작 노드부터 갈 수 있는 노드'까지의 거리</code>가 더 작다면 <code>'시작 노드부터 갈 수 있는 노드'까지의 거리</code>으로 갱신한다.</li>
+<li>위 그림에선 <code>1 -&gt; 2 -&gt; 3</code>으로 갈 때의 거리 ‘5’보다<br />
+기존의 <code>1 -&gt; 4 -&gt; 3</code> 방식의 거리 ‘4’가 더 작기 때문에, 갱신하지 않는다.</li>
+</ul>
+<br/>
+<h3 id="step-05">Step 05</h3>
+<p><img src="/assets/img/2022-01-17-ALGORITHM_ShortestPath_DijkstraBasic/Untitled06.jpg" alt="" /></p>
+<br/>
+<h3 id="step-06">Step 06</h3>
+<p><img src="/assets/img/2022-01-17-ALGORITHM_ShortestPath_DijkstraBasic/Untitled07.jpg" alt="" /></p>
+<br/>
+<h3 id="step-07">Step 07</h3>
+<p><img src="/assets/img/2022-01-17-ALGORITHM_ShortestPath_DijkstraBasic/Untitled08.jpg" alt="" /></p>
+<br/>
+<h3 id="step-08">Step 08</h3>
+<p><img src="/assets/img/2022-01-17-ALGORITHM_ShortestPath_DijkstraBasic/Untitled09.jpg" alt="" /></p>
+<br/>
+<h3 id="section-9">특징</h3>
+<ul>
+<li>최단 거리 테이블이 의미하는 바는 1번 노드로부터 출발했을 때 2번, 3번, 4번, 5번, 6번 노드까지 가기 위한 최단 경로가 각각 2, 3, 1, 2, 4라는 의미이다.</li>
+<li>그리고 ‘방문하지 않은 노드 중에서 가장 최단 거리가 짧은 노드를 선택’하는 과정을 반복한다.</li>
+<li>이렇게 선택된 노드는 ‘최단 거리’가 완전히 선택된 노드이므로, 더 이상 알고리즘을 반복해도 최단 거리가 줄어들지 않는다.</li>
+<li><strong>즉 다익스트라 알고리즘이 진행되면서 한 단계당 하나의 노드에 대한 최단 거리를 확실히 찾는 것으로 이해할 수 있다.</strong></li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-10">소스코드</h2>
+<h3 id="section-11">다익스트라 알고리즘</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">다익스트라_기본</span> <span class="o">{</span>
+  <span class="kd">static</span> <span class="kt">boolean</span><span class="o">[]</span> <span class="n">isVisitedNode</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">boolean</span><span class="o">[</span><span class="mi">100001</span><span class="o">];</span> <span class="c1">//방문한 노드인지 (isVisitedNode[i] = i번째 노드를 방문한적 있는지)</span>
+  <span class="kd">static</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">shortestTable</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="mi">100001</span><span class="o">];</span> <span class="c1">//최단거리 테이블 (shortedTable[i] = startNode에서 i노드까지의 최단 거리)</span>
+  <span class="kd">static</span> <span class="kt">int</span> <span class="n">sizeOfVertex</span><span class="o">;</span> <span class="c1">//노드개수</span>
+  <span class="kd">static</span> <span class="kt">int</span> <span class="n">sizeOfEdge</span><span class="o">;</span> <span class="c1">//간선개수</span>
+  <span class="kd">static</span> <span class="kt">int</span> <span class="n">startNode</span><span class="o">;</span> <span class="c1">//시작노드(index)</span>
+  <span class="kd">static</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Node</span><span class="o">&gt;&gt;</span> <span class="n">graph</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span> <span class="c1">//그래프</span>
+
+  <span class="cm">/**
+   * 실행 메서드
+   */</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+    <span class="nc">BufferedReader</span> <span class="n">bf</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="nc">InputStreamReader</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+    <span class="nc">String</span> <span class="n">s</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+    <span class="nc">StringTokenizer</span> <span class="n">st</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringTokenizer</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+    <span class="n">sizeOfVertex</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">nextToken</span><span class="o">());</span>
+    <span class="n">sizeOfEdge</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">nextToken</span><span class="o">());</span>
+    <span class="n">startNode</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">bf</span><span class="o">.</span><span class="na">readLine</span><span class="o">());</span>
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">sizeOfVertex</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+      <span class="n">graph</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Node</span><span class="o">&gt;());</span>
+    <span class="o">}</span>
+
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">sizeOfEdge</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+      <span class="n">s</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+      <span class="n">st</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringTokenizer</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+      <span class="kt">int</span> <span class="n">fromNode</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">nextToken</span><span class="o">());</span>
+      <span class="kt">int</span> <span class="n">toNode</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">nextToken</span><span class="o">());</span>
+      <span class="kt">int</span> <span class="n">weight</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">nextToken</span><span class="o">());</span>
+      <span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">fromNode</span><span class="o">).</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Node</span><span class="o">(</span><span class="n">toNode</span><span class="o">,</span> <span class="n">weight</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="n">solution</span><span class="o">();</span>
+
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">sizeOfVertex</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+
+      <span class="c1">//시작노드에서 도달할 수 없는 노드인 경우</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">shortestTable</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">==</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"INFINITE"</span><span class="o">);</span>
+      <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">shortestTable</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="cm">/**
+   * 다익스트라 알고리즘 수행 메서드
+   */</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">solution</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nc">Arrays</span><span class="o">.</span><span class="na">fill</span><span class="o">(</span><span class="n">shortestTable</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">);</span>
+
+    <span class="c1">// 시작 노드에 대해 초기화</span>
+    <span class="n">shortestTable</span><span class="o">[</span><span class="n">startNode</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="n">isVisitedNode</span><span class="o">[</span><span class="n">startNode</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">startNode</span><span class="o">).</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span> <span class="c1">//시작 노드와 인접한 노드들에 대한 shortest 테이블 값 설정</span>
+      <span class="n">shortestTable</span><span class="o">[</span><span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">startNode</span><span class="o">).</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">).</span><span class="na">getNodeNum</span><span class="o">()]</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">startNode</span><span class="o">).</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">).</span><span class="na">getDistance</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 시작 노드를 제외한 전체 n-1 개의 노드에 대해 반복한다.</span>
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">sizeOfVertex</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+      <span class="kt">int</span> <span class="n">currentNode</span> <span class="o">=</span> <span class="n">getShortestNode</span><span class="o">();</span> <span class="c1">//시작노드로부터 가장 거리가 짧은 노드 구하기</span>
+      <span class="n">isVisitedNode</span><span class="o">[</span><span class="n">currentNode</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span> <span class="c1">//방문 처리</span>
+
+      <span class="c1">//현재 노드와 인접한 노드들 확인 (시작노드와 인접노드 간의 최소거리 구하기)</span>
+      <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">u</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">u</span> <span class="o">&lt;</span> <span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">currentNode</span><span class="o">).</span><span class="na">size</span><span class="o">();</span> <span class="n">u</span><span class="o">++)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">distanceBetweenCurrentNodeAndNearNode</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">currentNode</span><span class="o">).</span><span class="na">get</span><span class="o">(</span><span class="n">u</span><span class="o">).</span><span class="na">getDistance</span><span class="o">();</span> <span class="c1">//'현재노드'와 '인접 노드' 간의 거리</span>
+        <span class="kt">int</span> <span class="n">distanceBetweenStartNodeAndNearNode</span> <span class="o">=</span> <span class="n">shortestTable</span><span class="o">[</span><span class="n">currentNode</span><span class="o">]</span> <span class="o">+</span> <span class="n">distanceBetweenCurrentNodeAndNearNode</span><span class="o">;</span> <span class="c1">//'시작노드'와 '인접 노드' 간의 거리</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">shortestTable</span><span class="o">[</span><span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">currentNode</span><span class="o">).</span><span class="na">get</span><span class="o">(</span><span class="n">u</span><span class="o">).</span><span class="na">getNodeNum</span><span class="o">()]</span> <span class="o">&gt;</span> <span class="n">distanceBetweenStartNodeAndNearNode</span><span class="o">)</span> <span class="o">{</span>
+          <span class="n">shortestTable</span><span class="o">[</span><span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">currentNode</span><span class="o">).</span><span class="na">get</span><span class="o">(</span><span class="n">u</span><span class="o">).</span><span class="na">getNodeNum</span><span class="o">()]</span> <span class="o">=</span> <span class="n">distanceBetweenStartNodeAndNearNode</span><span class="o">;</span>
+        <span class="o">}</span>
+      <span class="o">}</span> <span class="c1">//내부 for문 종료</span>
+
+    <span class="o">}</span> <span class="c1">//외부 for문 종료</span>
+    
+  <span class="o">}</span>
+
+  <span class="cm">/**
+   * 방문하지 않은 노드 중에서,
+   * 가장 최단 거리가 짧은 노드의 번호를 반환하는 메서드
+   */</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">getShortestNode</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">min_value</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="c1">// 가장 최단 거리가 짧은 노드 (인덱스)</span>
+
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">sizeOfVertex</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">shortestTable</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">min_value</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">isVisitedNode</span><span class="o">[</span><span class="n">i</span><span class="o">])</span> <span class="o">{</span>
+        <span class="n">min_value</span> <span class="o">=</span> <span class="n">shortestTable</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="k">return</span> <span class="n">index</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  
+  <span class="cm">/**
+   * 노드 클래스
+   */</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Node</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">nodeNum</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">distance</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Node</span><span class="o">(</span><span class="kt">int</span> <span class="n">nodeNum</span><span class="o">,</span> <span class="kt">int</span> <span class="n">distance</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">this</span><span class="o">.</span><span class="na">nodeNum</span> <span class="o">=</span> <span class="n">nodeNum</span><span class="o">;</span>
+      <span class="k">this</span><span class="o">.</span><span class="na">distance</span> <span class="o">=</span> <span class="n">distance</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getNodeNum</span><span class="o">()</span> <span class="o">{</span>
+      <span class="k">return</span> <span class="n">nodeNum</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getDistance</span><span class="o">()</span> <span class="o">{</span>
+      <span class="k">return</span> <span class="n">distance</span><span class="o">;</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+<br/>
+<h3 id="section-12">시간복잡도</h3>
+<ul>
+<li>위 알고리즘은 <code>O(V^2)</code>의 시간복잡도를 갖는다.
+<ul>
+<li><code>V</code> : 노드 개수</li>
+</ul>
+</li>
+<li>왜냐하면 <strong>각 단계마다 ‘방문하지 않은 노드 중에서 최단 거리가 가장 짧은 노드를 선택’하기 위해, 매 단계마다 1차원 리스트의 모든 원소를 확인 (순차 탐색)</strong> 하기 때문이다.
+<ul>
+<li>즉 <code>O(V)</code>번에 걸쳐서 최단 거리가 가장 짧은 노드를 매번 선형 탐색해야 하고,<br />
+현재 노드와 연결된 노드를 매번 일일이 확인하여 거리를 계산하기 때문이다.</li>
+</ul>
+</li>
+<li>따라서 다익스트라 알고리즘의 속도를 높히려면, ‘개선된 다익스트라 알고리즘’을 사용해야 한다.</li>
+</ul>
+<br/>
+<h2 id="tip">Tip</h2>
+<ul>
+<li>왜 1차원 리스트에는 ‘최단 거리’만을 저장할까? 경로를 저장하지 않고?
+<ul>
+<li>보통 코딩 테스트에서는 특정한 노드에서 다른 특정한 노드까지의 최단 거리만을 출력하도록 요청하기 때문이다.</li>
+</ul>
+</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>나동빈, 『이것이 코딩 테스트다』</li>
+  </ul>
+  본 게시글은 위 교재를 기반으로 정리한 글입니다.
+</div>
+:ET

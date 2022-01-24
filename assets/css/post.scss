@@ -97,8 +97,8 @@
 #markdown-outline ul{
     margin:5px 0 5px 0;
     padding-left:30px;
-    font-size:12px;
-    border-left:1px dotted #ccc;
+    font-size:14px;
+    border-left:1px dashed #ccc;
 }
 #markdown-outline ul:first-child{
     border:none;
@@ -153,8 +153,8 @@
 #outline-outer {
     margin-top: 5rem;
     font-family: RIDIBatang;
-    border:1px solid #ccc;
-    box-shadow:0 0 10px #999;
+    // border:1px solid #ccc;
+    // box-shadow:0 0 10px #999;
     padding: 5px 10px;
     max-width: 100%;
     background-color: #fff;
@@ -162,7 +162,7 @@
 
 @media (max-width: 1200px) {
     #markdown-outline {
-        display: none !important;
+        // display: none !important;
     }
 }
 
