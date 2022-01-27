@@ -140,17 +140,17 @@ public interface Comparator {
   public class PersonOrder implements Comparator<Person> {
     @Override
     public int compare(Person me, Person other) {
-      if (this.age > other.age) {
+      if (me.age > other.age) {
         return 1;
-      } else if (this.age == other.age) {
+      } else if (me.age == other.age) {
         return 0;
-      } else if (this.age < other.age) {
+      } else if (me.age < other.age) {
         return -1;
       }
     }
   }
   ```
-  - 구현 내용은 Comparable 인터페이스의 `compareTo` 메서드와 같다.
+  - 구현 내용은 Comparable 인터페이스의 `compareTo` 메서드와 비슷하다.
 
 - 결과 출력
     ```java
@@ -221,11 +221,11 @@ public interface Comparator {
     */
     @Override
     public int compare(Person me, Person other) {
-      if (this.age > other.age) {
+      if (me.age > other.age) {
         return -1;
-      } else if (this.age == other.age) {
+      } else if (me.age == other.age) {
         return 0;
-      } else if (this.age < other.age) {
+      } else if (me.age < other.age) {
         return 1;
       }
     }
