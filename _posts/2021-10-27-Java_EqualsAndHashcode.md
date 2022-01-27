@@ -189,6 +189,54 @@ HashTable에 특정 데이터를 put하거나 get하려면, **Key 값을 hash화
 
 ![untitled](/assets/img/2021-10-27-Java_EqualsAndHashcode/Untitled%203.png)
 
+## 주의사항
+### `hashCode` 메서드 오버라이딩 시, 주의사항
+- `hashCode` 메서드를 오버라이딩 할 때, 지켜야하는 3가지 원칙이 있다. 이것은 아래와 같다.
+  - **실행 중인 애플리케이션 내의 동일한 객체에 대해서 여러 번 `hashCode()` 를 호출해도, 동일한 int값을 반환해야한다.**
+    > 하지만 실행시마다 동일한 int값을 반환할 필요는 없다.
+  - **`equals` 메서드를 이용한 비교에 의해서 `true`를 얻은 두 객체에 대해 각각 `hashCode` 메서드를 호출해서 얻은 결과는 반드시 같아야 한다.**
+    - 즉 `A.equals(B) == true` 라면, 객체 A와 B는 반드시 hash 값이 같아야 한다.
+  - **`equals` 메서드를 호출했을 때 false를 반환하는 두 객체는 `hashCode` 메서드 호출에 대해 같은 int값을 반환하는 경우가 있어도 괜찮지만, 해싱(hashing)을 사용하는 컬렉션의 성능을 향상시키기 위해서는 다른 int 값을 반환하는 것이 좋다.**
+    - 즉 `A.equals(B) == false` 일 때 객체 A와 B의 hash 값이 서로 같아도 상관없지만, Hash 관련 자료구조에서의 성능이 저하된다.
+
+<br/>
+
+- 여기서 가장 중요한 것은 **"`equals` 메서드를 이용한 비교에 의해서 `true`를 얻은 두 객체에 대해 각각 `hashCode` 메서드를 호출해서 얻은 결과는 반드시 같아야 한다는 것"** 이다.
+  - `equals` 메서드는 주로 객체의 필드값을 기준으로 두 객체가 같은지 판단한다.
+  - 따라서 `hashCode` 메서드도 필드값을 기준으로 hash값을 만들어 반환해야 한다. 이렇게 해야, 위 원칙을 지킬 수 있다. 아래는 이에 대한 예시 코드이다.
+    ```java
+    public class Person {
+      private String name;
+      private int age;
+
+      /**
+      * 필드값을 활용하여 동등성 비교를 한다.
+      */
+      @Override
+      public boolean equals(Object obj) {
+        Person other = (Person) obj;
+        if (!this.name.equals(other)) return false;
+        if (this.age != other.age) return false;
+        return true;
+      }
+      
+      /**
+      * equals 결과가 true라면, hash값이 같아야 한다.
+      */
+      @Override
+      public int hashCode() {
+        Objects.hash(name, age); //따라서 equals와 마찬가지로, 필드값을 활용하여 hash값을 만든다.
+      }
+    }
+    ```
+
+- 만약 `equals` 비교 결과가 `true` 일 때, hash 값은 다르다면 Hash 관련 자료구조에 저장된 객체를 찾을 수 없게 된다! 그 이유는 아래와 같다.
+  - 어떤 객체 A를 HashTable에서 찾기 위해선, 먼저 `hashCode` 메서드로 hash값을 구한다.  
+  이때 구해진 hash값은 '객체 A와 `equals`로 비교 시 `true` 인 객체'와 다른 hash 값이라고 해보자.
+  - **그리고 해당 hash값을 index로 갖는 곳에 저장되어 있는 객체들과 객체 A를 `equals` 비교하면, 모두 `false` 이다.**
+  - 왜냐하면 애초에 구해진 hash값이 '객체 A와 `equals`로 비교 시 `true` 인 객체'와 다르기 때문이다.
+  - 따라서 저장된 객체를 찾을 수 없다.
+
 ## 정리
 지금까지 `equals`와 `hashCode` 메서드의 목적과 사용방법 그리고 HashTable에서의 사용까지 알아보았다. 지금까지 설명한 내용을 정리하자면 다음과 같다.
 
