@@ -2,8 +2,8 @@
 category: JPA
 tags: [JPA, Hibernate]
 title: "[JPA] JPA Auditing으로 생성시간/수정시간 자동화하기"
-date:   2021-01-28 14:19:00 
-lastmod : 2021-01-28 14:19:00
+date:   2022-01-28 14:19:00 
+lastmod : 2022-01-28 14:19:00
 sitemap :
   changefreq : daily
   priority : 1.0
