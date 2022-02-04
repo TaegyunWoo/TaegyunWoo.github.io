@@ -1,7 +1,7 @@
 ---
 category: Java
 tags: [Java]
-title: "람다식"
+title: "Java8 람다식 총정리"
 date:   2022-02-04 23:15:00 
 lastmod : 2022-02-04 23:15:00
 sitemap :
