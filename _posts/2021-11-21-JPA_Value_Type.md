@@ -331,7 +331,7 @@ public class Member {
 
 - 상세설명
     - '값 타입 `Address`' 가 '값 타입 `Zipcode`'를 포함한다.
-    - `값 타입 `PhoneNumber`'가 '엔티티 타입 `PhoneServiceProvider`'를 참조한다.
+    - '값 타입 `PhoneNumber`'가 '엔티티 타입 `PhoneServiceProvider`'를 참조한다.
 
 <br/>
 
