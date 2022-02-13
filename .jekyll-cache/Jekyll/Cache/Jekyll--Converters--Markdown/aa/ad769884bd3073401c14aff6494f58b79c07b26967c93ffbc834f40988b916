@@ -1,0 +1,995 @@
+I"s�<p><br/><br/></p>
+<h1 id="section">값 타입</h1>
+<h2 id="section-1">개요</h2>
+<h3 id="jpa---">JPA의 데이터 타입 종류</h3>
+<p>JPA의 데이터 타입 종류에는 크게 2가지가 있다.</p>
+<blockquote>
+<p>JPA의 데이터 타입: 쉽게 말해 ‘엔티티가 갖는 속성 타입’을 말한다.</p>
+</blockquote>
+<ul>
+<li><strong>엔티티 타입</strong>
+<ul>
+<li><code>@Entity</code> 로 정의하는 객체</li>
+<li>식별자를 통해, 지속적으로 추적할 수 있다.</li>
+</ul>
+</li>
+<li><strong>값 타입</strong>
+<ul>
+<li><code>int</code> , <code>Integer</code> , <code>String</code> 등과 같은 자바 기본 타입이나 객체</li>
+<li>식별자가 없고 숫자나 문자같은 속성만 존재하여, 추적할 수 없다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-2">값 타입의 종류</h3>
+<p>여기서 <strong>값 타입</strong>은 다시 3가지 종류로 구분될 수 있다.</p>
+<ul>
+<li><strong>기본값 타입</strong>
+<ul>
+<li>자바 기본 타입 (<code>int</code> , <code>double</code> 등)</li>
+<li>래퍼 클래스 (<code>Integer</code> , <code>Long</code> 등)</li>
+<li><code>String</code></li>
+</ul>
+</li>
+<li><strong>임베디드 타입 (복합값 타입)</strong>
+<ul>
+<li>JPA에서 사용자가 직접 정의한 값 타입</li>
+</ul>
+</li>
+<li><strong>컬렉션 값 타입</strong>
+<ul>
+<li>하나 이상의 값 타입을 저장할 때 사용하는 타입</li>
+</ul>
+</li>
+</ul>
+<p>이제부터 예시코드와 함께 하나씩 알아보자.</p>
+<p><br/><br/></p>
+<h2 id="section-3">값 타입: 기본값 타입</h2>
+<h3 id="section-4">예시 코드</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="c1">//기본값 타입</span>
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
+
+	<span class="c1">// 생성자, getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li><code>Member</code> 엔티티
+<ul>
+<li>다른 엔티티의 속성으로 사용될 수 있다. ⇒ 엔티티 타입</li>
+<li><code>id</code> 라는 식별자 값을 갖는다.</li>
+<li>생명주기도 역시 존재한다.</li>
+</ul>
+</li>
+<li><code>name</code> , <code>age</code> 속성
+<ul>
+<li>값 타입 속성이다.</li>
+<li>식별자 값이 없다.</li>
+<li>생명주기도 없다.</li>
+</ul>
+</li>
+</ul>
+<p>우리가 지금까지 JPA를 공부하며, 자주 다룬 내용이다. 이것은 너무 간단하니 빠르게 넘어가겠다.</p>
+<p><br/><br/></p>
+<h2 id="section-5">값 타입: 임베디드 타입 (복합값 타입)</h2>
+<h3 id="section-6">임베디드 타입이란?</h3>
+<ul>
+<li>JPA에서 새로운 값 타입을 직접 정의해서 사용하는 타입을 말한다.</li>
+<li>중요사항
+<ul>
+<li><strong>직접 정의한 임베디드 타입도 <code>int</code> , <code>String</code> 과 같은 값 타입으로 취급된다!</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-7">예시 코드: 임베디드 타입 적용을 하지 않는다면</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="c1">//근무 기간</span>
+	<span class="nd">@Temporal</span><span class="o">(</span><span class="nc">TemporalType</span><span class="o">.</span><span class="na">DATE</span><span class="o">)</span>
+	<span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Date</span> <span class="n">startDate</span><span class="o">;</span>
+
+	<span class="nd">@Temporal</span><span class="o">(</span><span class="nc">TemporalType</span><span class="o">.</span><span class="na">DATE</span><span class="o">)</span>
+	<span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Date</span> <span class="n">endDate</span><span class="o">;</span>
+
+	<span class="c1">//집주소</span>
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">city</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">street</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">zipcode</span><span class="o">;</span>
+
+	<span class="c1">// 생성자, getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>근무 기간 속성
+<ul>
+<li>근무 기간을 표현하기 위해 시작일, 종료일을 아래와 같이 표현하였다.</li>
+<li><code>Date startDate</code> , <code>Date endDate</code></li>
+</ul>
+</li>
+<li>집주소 속성
+<ul>
+<li>집주소를 표현하기 위해 도시, 지번, 우편번호를 아래와 같이 표현하였다.</li>
+<li><code>String city</code> , <code>String street</code> , <code>String zipcode</code></li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-8">예시 코드: 임베디드 타입 적용을 한다면</h3>
+<ul>
+<li>위에서 설명한 방식으로 근무 기간과 집주소를 표현하는 것보다, 더욱 명확하게 설명할 수 있는 방법은 ’<strong>직접 작성한 클래스 타입으로 설정하는 것</strong>’이다.</li>
+<li>이에 대한 예시는 아래와 같다.
+<ul>
+<li>근무 기간
+<ul>
+<li><code>Date startDate</code> , <code>Date endDate</code> ⇒ <code>Period workPeriod</code></li>
+</ul>
+</li>
+<li>집 주소
+<ul>
+<li><code>String city</code> , <code>String street</code> , <code>String zipcode</code> ⇒ <code>Address homeAddress</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<p>전체 예시 코드는 아래와 같다.</p>
+<ul>
+<li>
+<p>회원 엔티티 클래스</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="c1">//근무 기간</span>
+	<span class="nd">@Embedded</span>
+	<span class="kd">private</span> <span class="nc">Period</span> <span class="n">workPeriod</span><span class="o">;</span>
+
+	<span class="c1">//집주소</span>
+	<span class="nd">@Embedded</span>
+	<span class="kd">private</span> <span class="nc">Address</span> <span class="n">homeAddress</span><span class="o">;</span>
+
+	<span class="c1">// 생성자, getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>기간 임베디드 타입</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Embeddable</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Period</span> <span class="o">{</span>
+
+	<span class="nd">@Temporal</span><span class="o">(</span><span class="nc">TemporalType</span><span class="o">.</span><span class="na">DATE</span><span class="o">)</span>
+	<span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Date</span> <span class="n">startDate</span><span class="o">;</span>
+
+	<span class="nd">@Temporal</span><span class="o">(</span><span class="nc">TemporalType</span><span class="o">.</span><span class="na">DATE</span><span class="o">)</span>
+	<span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Date</span> <span class="n">endDate</span><span class="o">;</span>
+
+	<span class="c1">// 생성자, getter, setter 생략</span>
+
+	<span class="c1">//기타 필요한 메서드 추가 가능</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>주소 임베디드 타입</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Embeddable</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Address</span> <span class="o">{</span>
+
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"city"</span><span class="o">)</span> <span class="c1">//생략가능</span>
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">city</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">street</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">zipcode</span><span class="o">;</span>
+
+	<span class="c1">// 생성자, getter, setter 생략</span>
+
+	<span class="c1">//기타 필요한 메서드 추가 가능</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>회원 클래스</p>
+<ul>
+<li><code>startDate</code> , <code>endDate</code> 를 합쳐서 <code>Period</code> (기간) 클래스를 만들었다.</li>
+<li><code>city</code> , <code>street</code> , <code>zipcode</code> 를 합쳐서 <code>Address</code> (주소) 클래스를 만들었다.</li>
+<li>이를 통해, 기존 코드보다 훨씬 응집력있고 명확해졌다.</li>
+</ul>
+</li>
+<li>
+<p>임베디드 타입 클래스</p>
+<ul>
+<li>해당 클래스를 통해, 사용자 임의의 타입을 만들고 매핑할 수 있다.</li>
+<li>그리고 해당 값 타입만 사용하는 의미 있는 메서드 역시 만들 수 있다.</li>
+<li><strong>기본 생성자가 필수적으로 필요하다!</strong></li>
+</ul>
+</li>
+<li>
+<p>임베디드 타입 애너테이션</p>
+<ul>
+<li><code>@Embeddable</code>
+<ul>
+<li>값 타입을 정의하는 곳에 적용한다.</li>
+</ul>
+</li>
+<li><code>@Embedded</code>
+<ul>
+<li>값 타입을 사용하는 곳에 적용한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>모든 값 타입들은 엔티티의 생명주기에 의존한다.</p>
+<ul>
+<li>즉 엔티티가 제거되면, 관련된 값 타입들도 제거된다.</li>
+<li>따라서 ‘엔티티’와 ‘임베디드 타입’의 관계를 UML로 표현하면, <strong>컴포지션 관계</strong>가 된다.
+<ul>
+<li>
+<p>컴포지션 관계</p>
+<p><img src="/assets/img/2021-11-21-JPA_Value_Type/Untitled.png" alt="Untitled" /></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>‘하이버네이트에서의 임베디드 타입’ == ‘컴포넌트’</p>
+</blockquote>
+<br/>
+<h3 id="section-9">임베디드 타입과 테이블 매핑</h3>
+<p>임베디드 타입 사용 시, DB 테이블에는 어떻게 매핑될까? 이는 아래 그림과 같다.</p>
+<p><img src="/assets/img/2021-11-21-JPA_Value_Type/Untitled%201.png" alt="Untitled" /></p>
+<ul>
+<li><strong>임베디드 타입은 엔티티의 값일 뿐이다.</strong>
+<ul>
+<li>따라서 값이 속한 엔티티의 테이블에 매핑한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-10">임베디드 타입과 연관관계</h3>
+<ul>
+<li>임베디드 타입은 값 타입을 포함하거나 엔티티를 참조할 수 있다.
+<ul>
+<li>즉, 위에서 살펴본 <code>Period</code> 나 <code>Address</code> 클래스에서 값 타입을 포함하거나, 엔티티를 참조할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>예시 코드
+<ul>
+<li>
+<p>멤버 엔티티 클래스</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+
+	<span class="nd">@Embedded</span>
+	<span class="nc">Address</span> <span class="n">address</span><span class="o">;</span> <span class="c1">//임베디드 타입 포함</span>
+
+	<span class="nd">@Embedded</span>
+	<span class="nc">PhoneNumber</span> <span class="n">phoneNumber</span><span class="o">;</span> <span class="c1">//임베디드 타입 포함</span>
+
+	<span class="c1">// 생성자, getter, setter 생략</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>주소 임베디드 타입 클래스</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Embeddable</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Address</span> <span class="o">{</span>
+
+	<span class="nd">@Embedded</span>
+	<span class="nc">Zipcode</span> <span class="n">zipcode</span><span class="o">;</span> <span class="c1">//임베디드 타입 포함</span>
+
+	<span class="nc">String</span> <span class="n">street</span><span class="o">;</span>
+	<span class="nc">String</span> <span class="n">city</span><span class="o">;</span>
+	<span class="nc">String</span> <span class="n">state</span><span class="o">;</span>
+
+	<span class="c1">//기본 생성자 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>우편번호 임베디드 타입 클래스</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Embeddable</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Zipcode</span> <span class="o">{</span>
+
+	<span class="nc">String</span> <span class="n">zip</span><span class="o">;</span>
+	<span class="nc">String</span> <span class="n">plusFour</span><span class="o">;</span>
+
+	<span class="c1">//기본 생성자 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>전화번호 임베디드 타입 클래스</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Embeddable</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">PhoneNumber</span> <span class="o">{</span>
+
+	<span class="nd">@ManyToOne</span>
+	<span class="nc">PhoneServiceProvider</span> <span class="n">provider</span><span class="o">;</span> <span class="c1">//엔티티 참조</span>
+
+	<span class="nc">String</span> <span class="n">areaCode</span><span class="o">;</span>
+	<span class="nc">String</span> <span class="n">localNumber</span><span class="o">;</span>
+
+	<span class="c1">//기본 생성자 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>통신사 임베디드 타입 클래스</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">PhoneServiceProvider</span> <span class="o">{</span>
+
+	<span class="nd">@Id</span>
+	<span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="c1">//이하 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>상세설명
+<ul>
+<li>‘값 타입 <code>Address</code>’ 가 ’값 타입 <code>Zipcode</code>’를 포함한다.</li>
+<li>’값 타입 <code>PhoneNumber</code>’가 ’엔티티 타입 <code>PhoneServiceProvider</code>’를 참조한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="codeattributeoverridecode">속성 재정의: <code>@AttributeOverride</code></h3>
+<ul>
+<li><code>@AttibuteOverride</code> 애너테이션을 통해, 임베디드 타입에 정의한 매핑정보를 재정의할 수 있다.</li>
+</ul>
+<br/>
+<ul>
+<li>예시 코드
+<ul>
+<li>
+<p>임베디드 타입을 재정의하지 않을 때</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="c1">// 같은 임베디드 타입을 사용한다.</span>
+	<span class="nd">@Embededd</span>
+	<span class="nc">Address</span> <span class="n">homeAddress</span><span class="o">;</span>
+	<span class="nd">@Embededd</span>
+	<span class="nc">Address</span> <span class="n">companyAddress</span><span class="o">;</span>
+
+	<span class="c1">//생성자, getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li>발생하는 문제
+<ul>
+<li>테이블에 매핑하는 칼럼명이 중복된다.</li>
+<li><code>homeAddress</code> 에서 사용하는 칼럼명과 <code>companyAddress</code> 에서 사용하는 칼럼명이 겹친다.</li>
+<li><strong>이때 <code>@AttributeOverride</code> 를 통해 매핑정보를 재정의해야 한다.</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>임베디드 타입을 재정의할 때</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+	<span class="nd">@Embededd</span>
+	<span class="nc">Address</span> <span class="n">homeAddress</span><span class="o">;</span>
+
+	<span class="nd">@Embededd</span>
+	<span class="nd">@AttributeOverrides</span><span class="o">({</span>
+		<span class="nd">@AttributeOverride</span><span class="o">(</span><span class="n">name</span><span class="o">=</span><span class="s">"city"</span><span class="o">,</span> <span class="n">column</span><span class="o">=</span><span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"COMPANY_CITY"</span><span class="o">)),</span>
+		<span class="nd">@AttributeOverride</span><span class="o">(</span><span class="n">name</span><span class="o">=</span><span class="s">"street"</span><span class="o">,</span> <span class="n">column</span><span class="o">=</span><span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"COMPANY_STREET"</span><span class="o">)),</span>
+		<span class="nd">@AttributeOverride</span><span class="o">(</span><span class="n">name</span><span class="o">=</span><span class="s">"zipcode"</span><span class="o">,</span> <span class="n">column</span><span class="o">=</span><span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"COMPANY_ZIPCODE"</span><span class="o">))</span>
+	<span class="o">})</span>
+	<span class="nc">Address</span> <span class="n">companyAddress</span><span class="o">;</span>
+
+	<span class="c1">//생성자, getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+<li><strong><code>homeAddress</code> 의 각 필드와 매핑되는 DB 테이블의 칼럼</strong>
+<ul>
+<li><code>city</code> (필드) ↔ <code>CITY</code> (칼럼)</li>
+<li><code>street</code> (필드) ↔ <code>STREET</code> (칼럼)</li>
+<li><code>zipcode</code> (필드) ↔ <code>ZIPCODE</code> (칼럼)</li>
+</ul>
+</li>
+<li><strong><code>companyAddress</code> 와 매핑되는 DB 테이블의 칼럼</strong>
+<ul>
+<li><code>city</code> (필드) ↔ <code>COMPANY_CITY</code> (칼럼)</li>
+<li><code>street</code> (필드) ↔ <code>COMPANY_STREET</code> (칼럼)</li>
+<li><code>zipcode</code> (필드) ↔ <code>COMPANY_ZIPCODE</code> (칼럼)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>하지만 <code>@AttributeOverride</code>를 사용하면 애너테이션을 너무 많이 사용해서, 엔티티 코드가 지저분해진다.<br />
+따라서 이런 상황을 최대한 피하자.</p>
+</blockquote>
+<br/>
+<h3 id="null">임베디드 타입과 null</h3>
+<ul>
+<li>
+<p>임베디드 타입이 <code>null</code> 이면 매핑한 칼럼의 값은 모두 <code>null</code>이 된다.</p>
+</li>
+<li>
+<p>예시</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">member</span><span class="o">.</span><span class="na">setAddress</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span> <span class="c1">//Address는 임베디드 타입</span>
+<span class="n">em</span><span class="o">.</span><span class="na">persist</span><span class="o">(</span><span class="n">member</span><span class="o">);</span>
+</code></pre></div></div>
+<ul>
+<li>이때, 회원 테이블의 주소와 관련된 <code>CITY</code> , <code>STREET</code> , <code>ZIPCODE</code> 칼럼의 값은 모두 <code>null</code> 이 된다.</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-11">값 타입과 불변 객체</h2>
+<h3 id="section-12">값 타입 공유 참조시 문제</h3>
+<ul>
+<li>
+<p><strong>임베디드 타입과 같은 값 타입을 여러 엔티티에서 공유하면 위험하다.</strong></p>
+</li>
+<li>
+<p>예시 코드</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">member1</span><span class="o">.</span><span class="na">setHomeAddress</span><span class="o">(</span><span class="k">new</span> <span class="nc">Address</span><span class="o">(</span><span class="s">"Old City"</span><span class="o">));</span>
+<span class="nc">Address</span> <span class="n">address</span> <span class="o">=</span> <span class="n">member1</span><span class="o">.</span><span class="na">getHomeAddress</span><span class="o">();</span>
+
+<span class="n">address</span><span class="o">.</span><span class="na">setCity</span><span class="o">(</span><span class="s">"New City"</span><span class="o">);</span> <span class="c1">//임베디드 타입의 값 수정</span>
+<span class="n">member2</span><span class="o">.</span><span class="na">setHomeAddress</span><span class="o">(</span><span class="n">address</span><span class="o">);</span> <span class="c1">//다른 엔티티에 포함시킴</span>
+</code></pre></div></div>
+<ul>
+<li>기대: <strong>회원2의 주소만 “New City”로 변경</strong></li>
+<li>실제 동작: <strong>회원1과 회원2의 주소가 모두 “New City”로 변경</strong></li>
+<li>이유: <strong>회원1과 회원2가 같은 <code>address</code> 인스턴스를 참조하기 때문</strong>
+<ul>
+<li>이 경우, 영속성 컨텍스트는 회원1과 회원2 둘 다 <code>city</code> 속성이 변경된 것으로 판단해서, <strong>회원1와 회원2에 대해 각각 UPDATE SQL을 실행</strong>한다.</li>
+<li>이것을 <strong>부작용(Side Effect)</strong> 이라고 한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>부작용(Side Effect) 해결방법
+<ul>
+<li>값을 복사해서 사용해야 한다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-13">값 타입 복사</h3>
+<ul>
+<li>값(임베디드 타입의 인스턴스)을 복사해서 사용하면, 부작용(Side Effect)를 방지할 수 있다.</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>예시 코드</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">member1</span><span class="o">.</span><span class="na">setHomeAddress</span><span class="o">(</span><span class="k">new</span> <span class="nc">Address</span><span class="o">(</span><span class="s">"Old City"</span><span class="o">));</span>
+<span class="nc">Address</span> <span class="n">address</span> <span class="o">=</span> <span class="n">member1</span><span class="o">.</span><span class="na">getHomeAddress</span><span class="o">();</span>
+
+<span class="c1">//회원1의 address 값을 복사해서, 새로운 newAddress 값 생성</span>
+<span class="nc">Address</span> <span class="n">newAddress</span> <span class="o">=</span> <span class="n">address</span><span class="o">.</span><span class="na">clone</span><span class="o">();</span>
+
+<span class="n">newAddress</span><span class="o">.</span><span class="na">setCity</span><span class="o">(</span><span class="s">"New City"</span><span class="o">);</span>
+<span class="n">member2</span><span class="o">.</span><span class="na">setHomeAddress</span><span class="o">(</span><span class="n">newAddress</span><span class="o">);</span>
+</code></pre></div></div>
+<ul>
+<li><code>clone()</code> 메서드가 자신을 복사해서 반환하도록 구현되었다고 하자.</li>
+<li>그럼 이때, <code>address</code> 인스턴스와 <code>newAddress</code> 인스턴스는 서로 다른 객체이다.</li>
+<li>따라서 이 경우, 영속성 컨텍스트는 회원2의 주소만 변경된 것으로 판단하여 <strong>회원2에 대해서만 UPDATE SQL을 실행</strong>한다.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>기본 값 타입(<code>int</code> , <code>Long</code> 등)은 원래 값을 복사하여 전달하므로 부작용의 위험이 없다.</p>
+</blockquote>
+<br/>
+<h3 id="section-14">값 타입 복사의 문제</h3>
+<ul>
+<li>값 타입을 복사하여 사용하면, ‘부작용이 있는 공유 값 타입 사용’을 부작용 없이 대체할 수 있다.</li>
+<li><strong>하지만 이러한 방식을 사용하도록 강제할 수 있는 방법은 없다.</strong>
+<ul>
+<li>다른 개발자가 임의로 ‘공유 값 타입’을 사용할 수 있다.</li>
+</ul>
+</li>
+<li>따라서 ‘값 타입 복사’를 하여 부작용을 막는 것이 아니라, <strong>애초에 ‘값 타입 객체’의 값을 수정하지 못하게 하면 된다.</strong>
+<ul>
+<li>즉 <code>Address</code> 객체의 수정자(setter) 메서드를 제거하거나 private으로 선언한다면, 이미 생성된 객체의 값을 수정할 수 없다.</li>
+<li>객체의 값을 수정할 수 없다면, 값 타입 객체가 공유되더라도 아무런 문제가 없다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-15">불변 객체</h3>
+<ul>
+<li><strong>객체를 불변하게 만들면 값을 수정할 수 없으므로, 부작용을 원천 차단할 수 있다.</strong></li>
+<li><strong>따라서 값 타입은 될 수 있으면 불변 객체로 설계해야 한다.</strong>
+<ul>
+<li>불변 객체: 한 번 만들면 절대 변경할 수 없는 객체</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>예시 코드: 주소 불변 객체</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Embeddable</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Address</span> <span class="o">{</span>
+
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">city</span><span class="o">;</span>
+
+	<span class="c1">//기본 생성자: 임베디드 타입에서 필수적으로 필요하다.</span>
+	<span class="kd">public</span> <span class="nf">Address</span><span class="o">()</span> <span class="o">{}</span>
+
+	<span class="c1">//생성자로 초기값 설정</span>
+	<span class="kd">public</span> <span class="nf">Address</span><span class="o">(</span><span class="nc">String</span> <span class="n">city</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">city</span> <span class="o">=</span> <span class="n">city</span><span class="o">;</span>
+	<span class="o">}</span>
+
+	<span class="c1">//접근자(getter)는 노출한다.</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">getCity</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="n">city</span><span class="o">;</span>
+	<span class="o">}</span>
+
+	<span class="c1">//수정자(setter)는 숨긴다.</span>
+	<span class="kd">private</span> <span class="kt">void</span> <span class="nf">setCity</span><span class="o">(</span><span class="nc">String</span> <span class="n">city</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">city</span> <span class="o">=</span> <span class="n">city</span><span class="o">;</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<blockquote>
+<p>교재에서는 아예 setter를 만들지 않았지만, 그럴 경우 IDE 상에서 오류가 발생한다.<br />
+Hibernate가 setter를 사용하기 때문이다. 따라서, setter를 private으로 숨겨주자.<br />
+<a href="https://stackoverflow.com/questions/2676689/does-hibernate-always-need-a-setter-when-there-is-a-getter">참고 자료</a></p>
+</blockquote>
+</li>
+<li>
+<p>위 예시 코드처럼 private으로 setter를 숨기면, 외부에서 값을 수정하기 위해선 new 연산자를 통해 값 타입 객체를 새로 생성해야만 한다.</p>
+</li>
+<li>
+<p>이 방식을 통해, 부작용을 막을 수 있다.</p>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-16">값 타입의 비교</h2>
+<p>값 타입간 비교를 하는 상황에서 필요한 것이 바로, <code>equals</code> 와 <code>hashCode</code> 메서드이다. 자세한 것은 아래 게시글을 참고하자.</p>
+<p><a href="https://taegyunwoo.github.io/java/Java_EqualsAndHashcode">equals 와 hashCode 메서드에 대하여</a></p>
+<p><br/><br/></p>
+<h2 id="section-17">값 타입 컬렉션</h2>
+<h3 id="section-18">값 타입 하나 이상 저장하기</h3>
+<ul>
+<li>값 타입을 하나 이상 저장하려면 컬렉션에 보관하고 아래 애너테이션을 사용하면 된다.
+<ul>
+<li><code>@ElementCollection</code></li>
+<li><code>@CollectionTable</code></li>
+</ul>
+</li>
+</ul>
+<p>바로 예시 코드를 통해, 알아보자.</p>
+<br/>
+<h3 id="section-19">예시 코드</h3>
+<ul>
+<li>
+<p>회원 엔티티 클래스</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="nd">@Embededd</span>
+	<span class="nc">Address</span> <span class="n">homeAddress</span><span class="o">;</span>
+
+	<span class="nd">@ElementCollection</span>
+	<span class="nd">@CollectionTable</span><span class="o">(</span>
+		<span class="n">name</span> <span class="o">=</span> <span class="s">"FAVORITE_FOODS"</span><span class="o">,</span>
+		<span class="n">joinColumns</span> <span class="o">=</span> <span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_ID"</span><span class="o">)</span>
+	<span class="o">)</span>
+	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"FOOD_NAME"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Set</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">favoriteFoods</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashSet</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;();</span>
+
+	<span class="nd">@ElementCollection</span>
+	<span class="nd">@CollectionTable</span><span class="o">(</span>
+		<span class="n">name</span> <span class="o">=</span> <span class="s">"ADDRESS"</span><span class="o">,</span>
+		<span class="n">joinColumns</span> <span class="o">=</span> <span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_ID"</span><span class="o">)</span>
+	<span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Address</span><span class="o">&gt;</span> <span class="n">addressHistory</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Address</span><span class="o">&gt;();</span>
+
+	<span class="c1">//생성자, getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>주소 임베디드 값 타입 클래스</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Embeddable</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Address</span> <span class="o">{</span>
+
+	<span class="nd">@Column</span>
+	<span class="nc">String</span> <span class="n">city</span><span class="o">;</span>
+	<span class="nc">String</span> <span class="n">street</span><span class="o">;</span>
+	<span class="nc">String</span> <span class="n">state</span><span class="o">;</span>
+
+	<span class="c1">//기본 생성자 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>값 타입 컬렉션 ERD</p>
+<p><img src="/assets/img/2021-11-21-JPA_Value_Type/Untitled%202.png" alt="Untitled" /></p>
+<ul>
+<li><strong>‘값 타입 컬렉션을 저장하는 테이블’은 모든 칼럼을 묶어서 기본키로 구성해야 한다.</strong></li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>상세 설명
+<ul>
+<li><code>favoriteFoods</code> 는 기본값 타입인 <code>String</code> 을 컬렉션으로 가진다.
+<ul>
+<li>관계형 DB 테이블은 칼럼 안에 컬렉션을 포함할 수 없다.</li>
+<li>즉 <code>MEMBER</code> 테이블에 List형 데이터를 저장할 수 없다.</li>
+</ul>
+</li>
+<li><strong>따라서 위 그림(ERD)처럼 별도의 테이블을 추가하고, <code>CollectionTable</code>을 사용해서 추가한 테이블을 매핑해야 한다.</strong>
+<ul>
+<li>또한 테이블 <code>FAVORITE_FOOD</code> 에서 사용되는 칼럼이 <code>FOOD_NAME</code> 하나이므로, 엔티티 클래스의 <code>Set&lt;FavoriteFood&gt; favoriteFoods</code> 속성에서 <code>@Column</code> 을 통해 칼럼명을 지정할 수 있다.</li>
+</ul>
+</li>
+<li><code>@CollectionTable</code> 생략 시, 기본값을 사용해서 매핑한다. 기본값 형태는 아래와 같다.
+<ul>
+<li>엔티티이름_컬렉션속성이름</li>
+<li>예시
+<ul>
+<li><code>Member</code> 엔티티의 <code>addressHistory</code> 는 아래 테이블과 매핑한다.</li>
+<li><code>Member_addressHistory</code> 테이블</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-20">값 타입 컬렉션 사용</h3>
+<p>예시 코드를 통해, 값 타입 컬렉션을 어떻게 사용하는지 알아보자.</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">();</span>
+
+<span class="c1">//임베디드 값 타입</span>
+<span class="n">member</span><span class="o">.</span><span class="na">setHomeAddress</span><span class="o">(</span><span class="k">new</span> <span class="nc">Address</span><span class="o">(</span><span class="s">"통영"</span><span class="o">,</span> <span class="s">"몽돌해수욕장"</span><span class="o">,</span> <span class="s">"660-123"</span><span class="o">));</span>
+
+<span class="c1">//기본값 타입 컬렉션에 등록</span>
+<span class="n">member</span><span class="o">.</span><span class="na">getFavoriteFoods</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="s">"짬뽕"</span><span class="o">);</span>
+<span class="n">member</span><span class="o">.</span><span class="na">getFavoriteFoods</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="s">"짜장"</span><span class="o">);</span>
+<span class="n">member</span><span class="o">.</span><span class="na">getFavoriteFoods</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="s">"탕수육"</span><span class="o">);</span>
+
+<span class="c1">//임베디드 값 타입 컬렉션에 등록</span>
+<span class="n">member</span><span class="o">.</span><span class="na">getAddressHistory</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Address</span><span class="o">(</span><span class="s">"서울"</span><span class="o">,</span> <span class="s">"강남"</span><span class="o">,</span> <span class="s">"123-123"</span><span class="o">));</span>
+<span class="n">member</span><span class="o">.</span><span class="na">getAddressHistory</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Address</span><span class="o">(</span><span class="s">"서울"</span><span class="o">,</span> <span class="s">"강북"</span><span class="o">,</span> <span class="s">"000-000"</span><span class="o">));</span>
+
+<span class="n">em</span><span class="o">.</span><span class="na">persist</span><span class="o">(</span><span class="n">member</span><span class="o">);</span>
+</code></pre></div></div>
+<ul>
+<li>상세 설명
+<ul>
+<li><strong>마지막에 <code>member</code> 엔티티만 영속화했다.</strong>
+<ul>
+<li><strong>JPA는 이때 <code>member</code> 엔티티의 값 타입도 함께 저장한다.</strong></li>
+</ul>
+</li>
+<li>실제 DB에 실행되는 INSERT SQL
+<ul>
+<li><code>member</code> : INSERT SQL 1번</li>
+<li><code>member.homeAddress</code> : 컬렉션이 아닌 임베디드 값 타입이므로 회원 테이블을 저장하는 SQL에 포함된다.</li>
+<li><code>member.favoriteFoods</code> : INSERT SQL 3번
+<ul>
+<li><code>FAVORITE_FOOD</code> 테이블에 총 3번의 INSERT문이 실행된다.</li>
+</ul>
+</li>
+<li><code>member.addressHistory</code> : INSERT SQL 2번
+<ul>
+<li><code>ADDRESS</code> 테이블에 총 2번의 INSERT문이 실행된다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>값 타입 컬렉션은 ’영속성 전이(cascade)’와 ‘고아 객체 제거’ 기능을 필수로 가진다고 볼 수 있다.</p>
+</blockquote>
+<br/>
+<ul>
+<li>
+<p>값 타입 컬렉션의 페치 전략</p>
+<ul>
+<li>기본적으로 <code>LAZY</code> 전략(지연 로딩)을 사용한다.</li>
+</ul>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@ElementCollection</span><span class="o">(</span><span class="n">fetch</span> <span class="o">=</span> <span class="nc">FetchType</span><span class="o">.</span><span class="na">LAZY</span><span class="o">)</span>
+</code></pre></div></div>
+<ul>
+<li>페치 전략에 대해선 <a href="https://taegyunwoo.github.io/jpa/JPA_Proxy">이전 게시글을 참고</a>하자.</li>
+</ul>
+</li>
+<li>
+<p>지연 로딩으로 모두 설정했을 때의 값 타입 조회 예시 코드</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// **상세설명: 1**</span>
+<span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="nc">Member</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="mi">1L</span><span class="o">);</span>
+
+<span class="c1">// **상세설명: 2**</span>
+<span class="c1">// EAGER</span>
+<span class="nc">Address</span> <span class="n">homeAddress</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="na">getHomeAddress</span><span class="o">();</span>
+
+<span class="c1">// **상세설명: 3**</span>
+<span class="c1">//LAZY: favoriteFoods에는 (컬렉션용) 프록시 객체가 들어간다.</span>
+<span class="nc">Set</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">favoriteFoods</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="na">getFavoriteFoods</span><span class="o">();</span>
+
+<span class="c1">//이때 DB에서 실제로 조회된다.</span>
+<span class="k">for</span> <span class="o">(</span><span class="nc">String</span> <span class="n">favoriteFood</span> <span class="o">:</span> <span class="n">favoriteFoods</span><span class="o">)</span> <span class="o">{</span>
+	<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Favorite Food: "</span> <span class="o">+</span> <span class="n">favoriteFood</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="c1">// **상세설명: 4**</span>
+<span class="c1">//LAZY: addressHistory에는 (컬렉션용) 프록시 객체가 들어간다.</span>
+<span class="nc">List</span><span class="o">&lt;</span><span class="nc">Address</span><span class="o">&gt;</span> <span class="n">addressHistory</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="na">getAddressHistory</span><span class="o">();</span>
+
+<span class="c1">//이때 DB에서 실제로 조회된다.</span>
+<span class="n">addressHistory</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</code></pre></div></div>
+<ol>
+<li><code>member</code>
+<ul>
+<li>회원만 조회한다.</li>
+<li>이때 임베디드 값 타입인 <code>homeAddress</code>도 함께 조회한다.</li>
+<li>SELECT SQL을 1번 호출한다.</li>
+</ul>
+</li>
+<li><code>member.homeAddress</code>
+<ul>
+<li>1번에서 회원을 조회할 때, 같이 조회해 둔다.</li>
+</ul>
+</li>
+<li><code>member.favoriteFoods</code>
+<ul>
+<li>LAZY로 설정했다.</li>
+<li>실제 컬렉션을 사용할 때, SELECT SQL을 1번 호출한다.</li>
+</ul>
+</li>
+<li><code>memberaddressHistory</code>
+<ul>
+<li>LAZY로 설정했다.</li>
+<li>실제 컬렉션을 사용할 때, SELECT SQL을 1번 호출한다.</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<br/>
+<ul>
+<li>
+<p>값 타입 컬렉션 수정 예시 코드</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="nc">Member</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="mi">1L</span><span class="o">);</span>
+
+<span class="c1">// 1. 임베디드 값 타입 수정</span>
+<span class="n">member</span><span class="o">.</span><span class="na">setHomeAddress</span><span class="o">(</span><span class="k">new</span> <span class="nc">Address</span><span class="o">(</span><span class="s">"새로운도시"</span><span class="o">,</span> <span class="s">"신도시1"</span><span class="o">,</span> <span class="s">"123456"</span><span class="o">))</span>
+
+<span class="c1">// 2. 기본값 타입 컬렉션 수정</span>
+<span class="nc">Set</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">favoriteFoods</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="na">getFavoriteFoods</span><span class="o">();</span>
+<span class="n">favoriteFoods</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="s">"탕수육"</span><span class="o">);</span> <span class="c1">//제거후</span>
+<span class="n">favoriteFoods</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"치킨"</span><span class="o">);</span> <span class="c1">//추가</span>
+
+<span class="c1">// 3. 임베디드 값 타입 컬렉션 수정</span>
+<span class="nc">List</span><span class="o">&lt;</span><span class="nc">Address</span><span class="o">&gt;</span> <span class="n">addressHistory</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="na">getAddressHistory</span><span class="o">();</span>
+<span class="n">addressHistory</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="k">new</span> <span class="nc">Address</span><span class="o">(</span><span class="s">"서울"</span><span class="o">,</span> <span class="s">"기존주소"</span><span class="o">,</span> <span class="s">"123-123"</span><span class="o">));</span> <span class="c1">//제거 후</span>
+<span class="n">addressHistory</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Address</span><span class="o">(</span><span class="s">"새로운도시"</span><span class="o">,</span> <span class="s">"새로운주소"</span><span class="o">,</span> <span class="s">"000-000"</span><span class="o">));</span> <span class="c1">//추가</span>
+</code></pre></div></div>
+<ol>
+<li><strong>임베디드 값 타입 수정</strong>
+<ul>
+<li><code>homeAddress</code> 임베디드 값 타입은 <code>MEMBER</code> 테이블과 매핑했다.</li>
+<li>그러므로 <code>MEMBER</code> 테이블만 UPDATE 한다.</li>
+<li>즉 <code>Member</code> 엔티티를 수정하는 것과 같다고 할 수 있다.</li>
+</ul>
+</li>
+<li><strong>기본값 타입 컬렉션 수정</strong>
+<ul>
+<li>탕수육을 치킨으로 변경하려면, 탕수육을 제거하고 치킨을 추가해야 한다.</li>
+<li>왜냐하면 자바의 String 타입은 수정할 수 없기 때문이다.
+<ul>
+<li><code>&quot;탕수육&quot;.setString(&quot;치킨&quot;)</code> 과 같은 코드는 존재하지 않는다.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>임베디드 값 타입 컬렉션 수정</strong>
+<ul>
+<li>값 타입은 불변해야 한다.</li>
+<li>그러므로 컬렉션에서 기존 주소를 삭제하고 새로운 주소를 등록했다.</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<br/>
+<h3 id="section-21">값 타입 컬렉션의 제약사항</h3>
+<ul>
+<li><strong>엔티티는 식별자가 있으므로</strong> 엔티티의 값을 변경해도, 식별자를 통해 DB에 저장된 원본 데이터를 찾아 변경할 수 있다.</li>
+<li><strong>값 타입은 식별자 개념 자체가 없으므로</strong> 값을 변경해버리면, DB에 저장된 원본 데이터를 찾기 어렵다.</li>
+<li><strong>값 타입 컬렉션의 제약사항</strong>
+<ul>
+<li>값 타입 컬렉션에 보관된 값 타입들은 별도의 테이블에 보관된다.</li>
+<li>따라서 여기에 보관된 값 타입의 값이 변경되면, DB에 있는 원본 데이터를 찾기 어렵다.</li>
+<li>이러한 문제를 해결하기 위해, JPA 구현체들은 값 타입 컬렉션에 변경 사항이 발생하면 아래와 같은 방식으로 변경 사항을 반영한다.
+<ul>
+<li><strong>값 타입 컬렉션이 매핑된 테이블의 연관된 모든 데이터를 삭제하고, 현재 값 타입 컬렉션 객체에 있는 모든 값을 DB에 다시 저장한다.</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li>예시 코드
+<ul>
+<li>
+<p>식별자가 100번인 회원이 관리하는 주소 값 타입 컬렉션을 변경하기</p>
+</li>
+<li>
+<p>이때 실행되는 SQL</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">//</span> <span class="mi">1</span><span class="p">.</span>
+<span class="k">DELETE</span> <span class="k">FROM</span> <span class="n">ADDRESS</span> <span class="k">WHERE</span> <span class="n">MEMBER_ID</span><span class="o">=</span><span class="mi">100</span><span class="p">;</span>
+
+<span class="o">//</span> <span class="mi">2</span><span class="p">.</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">ADDRESS</span> <span class="p">(</span><span class="n">MEMBER_ID</span><span class="p">,</span> <span class="n">CITY</span><span class="p">,</span> <span class="n">STREET</span><span class="p">,</span> <span class="n">ZIPCODE</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="p">...);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">ADDRESS</span> <span class="p">(</span><span class="n">MEMBER_ID</span><span class="p">,</span> <span class="n">CITY</span><span class="p">,</span> <span class="n">STREET</span><span class="p">,</span> <span class="n">ZIPCODE</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="p">...);</span>
+</code></pre></div></div>
+<ol>
+<li>100번 회원의 주소 값 타입 컬렉션의 모든 요소 제거</li>
+<li>현재 100번 회원의 주소 값 타입 컬렉션의 모든 요소 추가</li>
+</ol>
+</li>
+<li>
+<p>총 3개의 SQL이 실행된다.</p>
+</li>
+</ul>
+</li>
+</ul>
+<br/>
+<ul>
+<li><strong>‘값 타입 컬렉션이 매핑된 테이블’에 데이터가 많다면, 일대다 관계를 고려하자!</strong>
+<ul>
+<li>
+<p>일대다 관계 대신 값 타입 컬렉션을 사용한다면</p>
+<ul>
+<li><strong>너무 많은 SQL문이 실행될 수 있다.</strong></li>
+<li>또한, ‘값 타입 컬렉션을 저장하는 테이블’은 모든 칼럼을 묶어서 기본키로 구성해야 한다. 따라서 <strong>기본키 제약조건으로 인해ㅡ 칼럼에 null을 입력할 수 없다.</strong></li>
+</ul>
+</li>
+<li>
+<p>따라서 새로운 엔티티를 만들어서 일대다 관계로 설정하는 것을 추천한다.</p>
+<blockquote>
+<p>추가로, 영속성 전이와 고아 객체 제거 기능을 적용하면 값 타입 컬렉션처럼 사용할 수 있다.</p>
+</blockquote>
+</li>
+<li>
+<p>예시 코드</p>
+<ul>
+<li>
+<p>임베디드 값 타입 대체 엔티티 클래스</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//임베디드 값 타입 Address 대신,</span>
+<span class="c1">//엔티티 클래스 AddressEntity 사용</span>
+
+<span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AddressEntity</span> <span class="o">{</span>
+
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="nd">@Embedded</span>
+	<span class="nc">Address</span> <span class="n">address</span><span class="o">;</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+<li>
+<p>엔티티 클래스</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+
+	<span class="nd">@Id</span> <span class="nd">@GeneratedValue</span>
+	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+	<span class="nd">@OneToMany</span><span class="o">(</span><span class="n">cascade</span> <span class="o">=</span> <span class="nc">CascadeType</span><span class="o">.</span><span class="na">ALL</span><span class="o">,</span> <span class="n">orphanRemoval</span> <span class="o">=</span> <span class="kc">true</span><span class="o">)</span>
+	<span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"MEMBER_ID"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">AddressEntity</span><span class="o">&gt;</span> <span class="n">addressHistory</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">AddressEntity</span><span class="o">&gt;();</span>
+
+	<span class="c1">//생성자, getter, setter 생략</span>
+<span class="o">}</span>
+</code></pre></div></div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-22">정리</h2>
+<h3 id="section-23">엔티티 타입의 특징</h3>
+<ul>
+<li>식별자(<code>@Id</code>)가 있다.</li>
+<li>생명 주기가 있다.</li>
+<li>공유할 수 있다.</li>
+</ul>
+<br/>
+<h3 id="section-24">값 타입의 특징</h3>
+<ul>
+<li>식별자가 없다.</li>
+<li>생명 주기를 엔티티에 의존한다.</li>
+<li>공유하지 않는 것이 안전하다.
+<ul>
+<li>대신 값을 복사해서 사용해야 한다.</li>
+<li>오직 하나의 주인만이 관리해야 한다.</li>
+<li>값 타입 객체를 불변 객체로 만드는 것이 안전하다.</li>
+</ul>
+</li>
+</ul>
+<br/>
+<h3 id="section-25">주의사항</h3>
+<ul>
+<li>엔티티와 값 타입을 혼동해서, <strong>엔티티를 값 타입으로 만들면 안된다는 것에 유의</strong>하자!</li>
+</ul>
+<p><br><br></p>
+<hr />
+<br>
+<div style="font-style: italic;color: gray;">
+  <ul>
+    <li>김영한, 『자바 ORM 표준 JPA 프로그래밍』, 에이콘</li>
+  </ul>
+  본 게시글은 위 교재를 기반으로 정리한 글입니다.
+</div>
+:ET
