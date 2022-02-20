@@ -1,0 +1,101 @@
+I" <p><br/><br/></p>
+<h1 id="swagger-jsessionid--">Swagger에서의 jsessionid 인증 사용</h1>
+<h2 id="section">개요</h2>
+<ul>
+<li>Swagger 를 통해 RestAPI 문서를 작성할 때, 인가(Authorization)가 필요한 API를 작성하는 경우가 있다.</li>
+<li>로그인된 사용자만 접근할 수 있는 Endpoint를 Swagger에서 테스팅하려면 어떻게 해야할까?</li>
+<li>본 글에선 Swagger에서 인가가 필요한 API에 접근하기 위해, 인증 및 인가 처리를 하는 방법에 대해 설명한다.
+<ul>
+<li>인증·인가 방식에는 여러 종류가 있지만, 그 중 쿠키 기반 (<code>JSESSIONID</code>) 방식에 대해 다룬다.</li>
+</ul>
+</li>
+<li><strong>즉 Swagger에서 쿠키 기반 인가 방식을 사용하는 방법에 대해 알아보자.</strong></li>
+</ul>
+<p><br/><br/></p>
+<h2 id="section-1">코드</h2>
+<h3 id="codebuildgradlecode-">의존성 추가: <code>build.gradle</code> 파일</h3>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>implementation 'org.springdoc:spring-boot-springdoc:3.1.2'
+</code></pre></div></div>
+<blockquote>
+<p>Swagger를 사용하려면 기본적으로 추가해야 한다.</p>
+</blockquote>
+<br/>
+<h3 id="swagger--codeswaggerconfigjavacode">Swagger 설정: <code>SwaggerConfig.java</code></h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">io.swagger.v3.oas.models.Components</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">io.swagger.v3.oas.models.OpenAPI</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">io.swagger.v3.oas.models.info.Contact</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">io.swagger.v3.oas.models.info.Info</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">io.swagger.v3.oas.models.info.License</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">io.swagger.v3.oas.models.security.SecurityRequirement</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">io.swagger.v3.oas.models.security.SecurityScheme</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.context.annotation.Bean</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.stereotype.Component</span><span class="o">;</span>
+
+<span class="nd">@Component</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SwaggerConfig</span> <span class="o">{</span>
+
+  <span class="nd">@Bean</span>
+  <span class="kd">public</span> <span class="nc">OpenAPI</span> <span class="nf">api</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nc">Info</span> <span class="n">info</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Info</span><span class="o">()</span>
+      <span class="o">.</span><span class="na">title</span><span class="o">(</span><span class="s">"제목"</span><span class="o">)</span>
+      <span class="o">.</span><span class="na">version</span><span class="o">(</span><span class="s">"V1.0"</span><span class="o">)</span>
+      <span class="o">.</span><span class="na">contact</span><span class="o">(</span><span class="k">new</span> <span class="nc">Contact</span><span class="o">()</span>
+              <span class="o">.</span><span class="na">name</span><span class="o">(</span><span class="s">"Web Site"</span><span class="o">)</span>
+              <span class="o">.</span><span class="na">url</span><span class="o">(</span><span class="s">"배포 주소"</span><span class="o">))</span>
+      <span class="o">.</span><span class="na">license</span><span class="o">(</span><span class="k">new</span> <span class="nc">License</span><span class="o">()</span>
+              <span class="o">.</span><span class="na">name</span><span class="o">(</span><span class="s">"Apache License Version 2.0"</span><span class="o">)</span>
+              <span class="o">.</span><span class="na">url</span><span class="o">(</span><span class="s">"http://www.apache.org/license/LICENSE-2.0"</span><span class="o">));</span>
+
+		<span class="c1">//-------------------- 인가 방식 지정 ---------------------</span>
+    <span class="nc">SecurityScheme</span> <span class="n">auth</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SecurityScheme</span><span class="o">()</span>
+      <span class="o">.</span><span class="na">type</span><span class="o">(</span><span class="nc">SecurityScheme</span><span class="o">.</span><span class="na">Type</span><span class="o">.</span><span class="na">APIKEY</span><span class="o">).</span><span class="na">in</span><span class="o">(</span><span class="nc">SecurityScheme</span><span class="o">.</span><span class="na">In</span><span class="o">.</span><span class="na">COOKIE</span><span class="o">).</span><span class="na">name</span><span class="o">(</span><span class="s">"JSESSIONID"</span><span class="o">);</span>
+    <span class="nc">SecurityRequirement</span> <span class="n">securityRequirement</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SecurityRequirement</span><span class="o">().</span><span class="na">addList</span><span class="o">(</span><span class="s">"basicAuth"</span><span class="o">);</span>
+
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">OpenAPI</span><span class="o">()</span>
+      <span class="o">.</span><span class="na">components</span><span class="o">(</span><span class="k">new</span> <span class="nc">Components</span><span class="o">().</span><span class="na">addSecuritySchemes</span><span class="o">(</span><span class="s">"basicAuth"</span><span class="o">,</span> <span class="n">auth</span><span class="o">))</span>
+      <span class="o">.</span><span class="na">addSecurityItem</span><span class="o">(</span><span class="n">securityRequirement</span><span class="o">)</span>
+      <span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="n">info</span><span class="o">);</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<br/>
+<ul>
+<li>상세 설명
+<ul>
+<li>쿠키 기반 인가 방식
+<ul>
+<li>클라이언트가 인증(Authorization)에 성공하면, 서버가 HTTP 응답 MSG의 헤더에 <code>Set-Cookie: JSESSIONID=값</code> 을 담아서 보낸다.</li>
+<li>클라이언트는 서버가 보낸 <code>JSESSIONID</code> 값을 쿠키에 저장한다.</li>
+<li>클라이언트가 HTTP 요청 MSG를 보낼 때, 헤더부분에 <code>Cookie: JSESSIONID=값</code> 를 함께 보낸다.</li>
+<li>그리고 서버가 해당 <code>JSESSIONID</code> 값을 확인하여, 인증된 사용자인지 확인(인가)한다.</li>
+<li>위와 같은 방식을 <code>APIKEY</code> 방식이라고 한다.</li>
+<li>자세한 것은 <a href="https://swagger.io/docs/specification/authentication/api-keys/">공식문서</a> 를 참고하자.</li>
+</ul>
+</li>
+<li><code>.type(SecurityScheme.Type.APIKEY)</code>
+<ul>
+<li>우리는 현재 쿠키 기반 인가 방식을 사용하므로, <code>APIKEY</code> 타입으로 지정해야 한다.</li>
+</ul>
+</li>
+<li><code>.in(SecurityScheme.In.COOKIE)</code>
+<ul>
+<li><code>APIKEY</code> 값이 쿠키에 담겨있으므로, <code>COOKIE</code> 로 지정한다.</li>
+</ul>
+</li>
+<li><code>.name(&quot;JSESSIONID&quot;)</code>
+<ul>
+<li>인가에 사용되는 키(Key)가 <code>JSESSIONID</code> 이므로, name을 <code>JSESSIONID</code> 로 지정한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><br/><br/></p>
+<h1 id="reference">Reference</h1>
+<ul>
+<li><a href="https://swagger.io/docs/specification/authentication/cookie-authentication/">https://swagger.io/docs/specification/authentication/cookie-authentication/</a></li>
+<li><a href="https://swagger.io/docs/specification/authentication/api-keys/">https://swagger.io/docs/specification/authentication/api-keys/</a></li>
+<li><a href="https://prodo-developer.tistory.com/50">https://prodo-developer.tistory.com/50</a></li>
+</ul>
+:ET
