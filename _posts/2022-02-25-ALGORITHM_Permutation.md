@@ -52,7 +52,7 @@ public class 순열 {
       if (visited[i]) continue; //i번째 원소가 이미 선택되어 있다면, 뽑는것을 생략한다.
 
       visited[i] = true; //i번째 원소를 뽑는다.
-      result[depth] = numbers[i];
+      result[depth] = numbers[i]; //뽑은 순서를 기억하기 위해, result 배열에 depth를 인덱스로 삼아 저장한다.
       permutation(depth+1); //재귀호출을 하여, 나머지를 뽑는다.
 
       //위 재귀호출을 통해, 나머지를 모두 뽑아 결과를 확인했으므로
