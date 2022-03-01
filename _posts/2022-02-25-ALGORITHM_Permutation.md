@@ -1,7 +1,7 @@
 ---
 category: Algorithm
 tags: [알고리즘, 순열]
-title: "[알고리즘 - 분할정복] 순열과 순열 알고리즘"
+title: "[알고리즘 - 순열] 순열과 순열 알고리즘"
 date:   2022-02-25 22:30:00 
 lastmod : 2022-02-25 22:30:00
 sitemap :
@@ -113,3 +113,45 @@ public class 순열 {
 ![](/assets/img/2022-02-25-ALGORITHM_Permutation/Untitled7.png)
 
 > 이하 생략
+
+<br/>
+
+## 중복 가능한 순열 구하기
+### 코드
+```java
+public class 중복_순열 {
+  static int[] numbers = new int[] {1, 2, 3};
+  static int r = 3;
+  static int[] result = new int[3];
+  
+  //3개의 원소 중, 순서를 고려하지 않고 중복해서 3개를 뽑기
+  public static void permutation(int depth, int r) { //n은 필요없다.
+    if (r == 0) { //3개를 모두 뽑았다면
+      printResult();
+      return;
+    }
+
+    for (int i = 0; i < numbers.length; i++) { //각 원소를 뽑는다.
+      result[depth] = numbers[i]; //i번째 원소를 뽑는다.
+      
+      //중복 가능하므로, visited에 기록할 필요가 없다.
+      
+      permutation(depth + 1, r - 1);
+    }
+  }
+  
+  private static void printResult() {
+    for (int number : result) {
+      System.out.print(number + " ");
+    }
+    System.out.println();
+  }
+}
+
+```
+
+### 상세 설명
+- `visited` 배열이 사용되지 않음에 주목하자.
+  - 중복이 가능하므로, 뽑았었던 것을 다음 선택에서 제외할 필요가 없다.
+- 하지만 결과를 확인하기 위해선, 뽑았던 숫자를 기록해야 한다.
+  - 따라서 `result` 배열에 기록하였다.
