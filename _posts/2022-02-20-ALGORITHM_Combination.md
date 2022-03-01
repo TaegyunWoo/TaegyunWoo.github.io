@@ -203,3 +203,46 @@ public class 조합_구하기 {
 ![](/assets/img/2022-02-20-ALGORITHM_Combination/Untitled9.png)
 
 > 이하 생략...
+
+<br/>
+
+## 중복 가능한 조합 구하기
+### 코드
+```java
+public class 중복_조합 {
+  static int[] numbers = new int[] {1, 2, 3};
+  static int r = 3;
+  static int[] result = new int[3];
+  
+  //3개의 원소 중, 순서를 고려하지 않고 중복해서 3개를 뽑기
+  public static void combination(int depth, int r) { //n은 필요없다.
+    if (r == 0) { //3개를 모두 뽑았다면
+      printResult();
+      return;
+    }
+
+    for (int i = 0; i < numbers.length; i++) { //각 원소를 뽑는다.
+      result[depth] = numbers[i]; //i번째 원소를 뽑는다.
+      
+      //중복 가능하므로, visited에 기록할 필요가 없다.
+      
+      combination(depth + 1, r - 1);
+    }
+  }
+  
+  private static void printResult() {
+    for (int number : result) {
+      System.out.print(number + " ");
+    }
+    System.out.println();
+  }
+}
+
+```
+
+### 상세 설명
+- `visited` 배열이 사용되지 않음에 주목하자.
+  - 중복이 가능하므로, 뽑았었던 것을 다음 선택에서 제외할 필요가 없다.
+- 하지만 결과를 확인하기 위해선, 뽑았던 숫자를 기록해야 한다.
+  - 따라서 `result` 배열에 기록하였다.
+- 중복 가능하지 않은 조합과는 다르게, 각 원소를 `for` 반복문으로 선택한다.
