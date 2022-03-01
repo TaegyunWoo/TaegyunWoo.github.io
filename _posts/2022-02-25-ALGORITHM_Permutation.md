@@ -124,7 +124,7 @@ public class 중복_순열 {
   static int r = 3;
   static int[] result = new int[3];
   
-  //3개의 원소 중, 순서를 고려하지 않고 중복해서 3개를 뽑기
+  //3개의 원소 중, 순서를 고려하여 중복해서 3개를 뽑기
   public static void permutation(int depth, int r) { //n은 필요없다.
     if (r == 0) { //3개를 모두 뽑았다면
       printResult();
