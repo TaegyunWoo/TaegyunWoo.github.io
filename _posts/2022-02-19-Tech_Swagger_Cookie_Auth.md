@@ -81,7 +81,7 @@ public class SwaggerConfig {
 
 - 상세 설명
     - 쿠키 기반 인가 방식
-        - 클라이언트가 인증(Authorization)에 성공하면, 서버가 HTTP 응답 MSG의 헤더에 `Set-Cookie: JSESSIONID=값` 을 담아서 보낸다.
+        - 클라이언트가 인증(Authentication, 로그인)에 성공하면, 서버가 HTTP 응답 MSG의 헤더에 `Set-Cookie: JSESSIONID=값` 을 담아서 보낸다.
         - 클라이언트는 서버가 보낸 `JSESSIONID` 값을 쿠키에 저장한다.
         - 클라이언트가 HTTP 요청 MSG를 보낼 때, 헤더부분에 `Cookie: JSESSIONID=값` 를 함께 보낸다.
         - 그리고 서버가 해당 `JSESSIONID` 값을 확인하여, 인증된 사용자인지 확인(인가)한다.
