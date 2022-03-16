@@ -202,7 +202,8 @@ public class UnionFind {
       return nodeNumber; //해당 노드가 루트노드인 트리에 속해있다.
     }
 
-    return find(array[nodeNumber]);
+    array[nodeNumber] = find(array[nodeNumber]); //경로 압축을 위해, 상단 루트노드로 저장한다.
+    return array[nodeNumber];
   }
 
   /**
