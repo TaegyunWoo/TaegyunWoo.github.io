@@ -1,7 +1,7 @@
 ---
 category: Algorithm
-tags: [알고리즘, 유니온파인드]
-title: "[알고리즘] 유니온-파인드 알고리즘"
+tags: [알고리즘, 벨만포드]
+title: "[알고리즘] 벨만포드 알고리즘"
 date:   2022-03-23 15:20:00 
 lastmod : 2022-03-23 15:20:00
 sitemap :
