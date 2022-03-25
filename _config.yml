@@ -4,6 +4,7 @@ markdown: CommonMarkGhPages
 
 kramdown:
   input: GFM
+  math_engine: MathJax
 
 commonmark:
   options: ["SMART", "FOOTNOTES"]
