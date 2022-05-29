@@ -1,7 +1,7 @@
 ---
-category: Spring-Advanced
+category: Spring-ADV
 tags: [스프링]
-title: "[스프링] 앞으로의 설명을 위한 프로젝트 설정"
+title: "[스프링-ADV] 고급 내용 설명을 위한 프로젝트 설정"
 date:   2022-05-29 15:30:00 
 lastmod : 2022-05-29 15:30:00
 sitemap :
