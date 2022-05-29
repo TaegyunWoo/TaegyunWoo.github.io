@@ -594,7 +594,7 @@ public class OrderRepositoryV2 {
 
 <br>
 
-<a href="https://inf.run/ru7S"><img src="/assets/img/Inflearn_Spring_Advanced/logo.png" width="400px" height="300px"></a>
+<a href="https://inf.run/ru7S"><img src="/assets/img/Inflearn_Spring_Advanced/Logo.png" width="400px" height="300px"></a>
 
 - *본 게시글은 김영한님의 강의를 토대로 정리한 글입니다.*
 - *더 자세한 내용을 알고 싶으신 분들이 계신다면, 해당 강의를 수강하시는 것을 추천드립니다.*
