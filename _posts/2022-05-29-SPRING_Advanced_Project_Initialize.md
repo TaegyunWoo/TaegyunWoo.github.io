@@ -356,7 +356,7 @@ public class OrderRepositoryV1 {
 - 트랜잭션 ID 값도 다르다.
 - `/v1/request?itemId=hello` 요청 결과 (정상실행)
     
-    ```
+    ```text
     [11111111] OrderController.request()
     [22222222] OrderService.orderItem()
     [33333333] OrderRepository.save()
@@ -367,7 +367,7 @@ public class OrderRepositoryV1 {
     
 - `/v1/request?itemId=ex` 요청 결과 (예외실행)
     
-    ```
+    ```text
     [5e110a14] OrderController.request()
     [6bc1dcd2] OrderService.orderItem()
     [48ddffd6] OrderRepository.save()
@@ -559,7 +559,7 @@ public class OrderRepositoryV2 {
 - 동일한 HTTP 요청이라면, 트랜잭션 ID 값도 같도록 수정했다.
 - `/v1/request?itemId=hello` 요청 결과 (정상실행)
     
-    ```
+    ```text
     [c80f5dbb] OrderController.request()
     [c80f5dbb] |-->OrderService.orderItem()
     [c80f5dbb] | |-->OrderRepository.save()
@@ -570,7 +570,7 @@ public class OrderRepositoryV2 {
     
 - `/v1/request?itemId=ex` 요청 결과 (예외실행)
     
-    ```
+    ```text
     [ca867d59] OrderController.request()
     [ca867d59] |-->OrderService.orderItem()
     [ca867d59] | |-->OrderRepository.save()
