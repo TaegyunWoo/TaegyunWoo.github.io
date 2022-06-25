@@ -523,8 +523,8 @@ Content-Type: application/json
 
 ### REST를 만족하지 않는 REST API 가이드
 
-- 아래는 MicroSoft에서 제공하는 REST API 가이드이다.
-- 하지만 이 가이드는 **‘REST를 만족하지 않는 REST API 가이드’** 이며, MicroSoft도 인정했다.
+- 아래는 Microsoft에서 제공하는 REST API 가이드이다.
+- 하지만 이 가이드는 **‘REST를 만족하지 않는 REST API 가이드’** 이며, Microsoft도 인정했다.
 - 어떻게 API를 설계해야하는지에 대한 상세한 가이드이다.
 
 [https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md](https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md)
