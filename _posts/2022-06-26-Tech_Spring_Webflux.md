@@ -304,3 +304,7 @@ void mapFlux() {
 - End-to-End Reactive 하지 않다면, 의미가 없다.
     - `Spring Security Reactive` , `ReactiveRepository` 를 함께 사용하자.
 - Spring MVC가 멀쩡히 잘 돌아가면, Spring Webflux로 반드시 갈아탈 필요는 없다.
+
+### 실제 프로젝트 예시 만들기
+실제로 Spring Webflux를 활용한 프로젝트 예시는 아래 링크를 참고하자.
+[DEVKUMA - Spring WebFlux의 간단한 사용법](https://www.devkuma.com/docs/spring-webflux/)
