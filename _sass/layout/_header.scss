@@ -9,6 +9,13 @@
     font-weight: normal;
     font-style: normal;
 }
+@font-face {
+    font-family: 'NanumBarunGothic';
+    font-style: normal;
+    font-weight: 400;
+    src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot');
+    src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot?#iefix') format('embedded-opentype'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.woff') format('woff'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.ttf') format('truetype');
+}
 
 #l-header {
     background-color: rgb(28, 51, 64);
@@ -23,7 +30,7 @@
     }
 
     p {
-        font: normal bold 3rem/1.5rem RIDIBatang,"verdana",sans-serif;
+        font: normal bold 3rem/1.5rem NanumBarunGothic,"verdana",sans-serif;
         margin-top: 3.5rem;
         margin-right: -1.8rem;
         text-align: right;
@@ -53,7 +60,7 @@
         // height: 5rem;
         float: left;
         text-align: center;
-        font-family: RIDIBatang;
+        font-family: NanumBarunGothic;
         font-size: 2rem;
         line-height: 5rem;
         border-right: 1px solid #e0e0e0;

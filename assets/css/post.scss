@@ -13,6 +13,13 @@
     font-weight: normal;
     font-style: normal;
 }
+@font-face {
+    font-family: 'NanumBarunGothic';
+    font-style: normal;
+    font-weight: 400;
+    src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot');
+    src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot?#iefix') format('embedded-opentype'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.woff') format('woff'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.ttf') format('truetype');
+}
 
 *{margin:0;padding:0;}
 #markdown-container{
@@ -22,16 +29,16 @@
     box-shadow:0 0 10px #999;
     padding:2em;
     line-height:1.4em;
-    font:16px RIDIBatang,helvetica,arial,freesans,clean,sans-serif;
+    font:16px NanumBarunGothic,helvetica,arial,freesans,clean,sans-serif;
     color:black;
 }
 #markdown-container table{
-    font:13.34px RIDIBatang,helvetica,arial,freesans,clean,sans-serif;
+    font:13.34px NanumBarunGothic,helvetica,arial,freesans,clean,sans-serif;
     color:black;
 }
 #markdown-container p {
     margin:1em 0;
-    font-family: RIDIBatang;
+    font-family: NanumBarunGothic;
     line-height:1.5em;
 }
 
@@ -89,7 +96,7 @@
 #markdown-container dd{margin-left:2em;margin-bottom:1em;}
 
 #markdown-outline{
-    font-family: RIDIBatang;
+    font-family: NanumBarunGothic;
     padding: 5px 10px;
     max-width: 100%;
     background-color: #fff;
@@ -147,12 +154,12 @@
 }
 
 #outline-title {
-    font:21px RIDIBatang,helvetica,arial,freesans,clean,sans-serif;
+    font:21px NanumBarunGothic,helvetica,arial,freesans,clean,sans-serif;
 }
 
 #outline-outer {
     margin-top: 5rem;
-    font-family: RIDIBatang;
+    font-family: NanumBarunGothic;
     // border:1px solid #ccc;
     // box-shadow:0 0 10px #999;
     padding: 5px 10px;
