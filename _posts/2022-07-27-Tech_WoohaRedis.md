@@ -149,14 +149,14 @@ INSERT INTO USERS(NAME, EMAIL) VALUES ('test', 'test@gmail.com');
 
 - Strings - 단일키
     
-    ```
+    ```text
     Set name:test test
     Set email:test test@gmail.com
     ```
     
 - Strings - 멀티키
     
-    ```
+    ```text
     Mset name:test test email:test test@gmail.com
     ```
     
@@ -221,7 +221,7 @@ INSERT INTO USERS(NAME, EMAIL) VALUES ('test', 'test@gmail.com');
 
 Hash 를 사용한다면 아래와 같다.
 
-```
+```text
 Hmset testKey name test email test@gmail.com
 ```
 
