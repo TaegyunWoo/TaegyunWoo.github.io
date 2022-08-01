@@ -1,7 +1,7 @@
 ---
 category: Redis
 tags: [Redis]
-title: "Redis Key 관리 명령어"
+title: "Redis Strings 타입과 명령어"
 date:   2022-08-01 10:50:00 
 lastmod : 2022-08-01 10:50:00
 sitemap :
