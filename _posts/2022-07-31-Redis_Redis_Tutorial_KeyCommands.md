@@ -24,13 +24,13 @@ sitemap :
 
 ### 문법
 
-```
+```text
 redis 127.0.0.1:6379> COMMAND KEY_NAME
 ```
 
 ### 예시
 
-```
+```text
 redis 127.0.0.1:6379> SET tutorialspoint redis
 OK
 redis 127.0.0.1:6379> DEL tutorialspoint
