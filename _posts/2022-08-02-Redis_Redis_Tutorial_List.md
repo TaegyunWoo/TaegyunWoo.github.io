@@ -30,7 +30,7 @@ Redis의 데이터 타입 중 하나인 List에 대해 알아보자.
 
 ## 예시
 
-```
+```text
 redis 127.0.0.1:6379> LPUSH tutorials redis
 (integer) 1
 redis 127.0.0.1:6379> LPUSH tutorials mongodb
