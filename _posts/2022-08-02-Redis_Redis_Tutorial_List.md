@@ -1,7 +1,7 @@
 ---
 category: Redis
 tags: [Redis]
-title: "Redis Hashes 타입과 명령어"
+title: "Redis List 타입과 명령어"
 date:   2022-08-02 16:30:00 
 lastmod : 2022-08-02 16:30:00
 sitemap :
