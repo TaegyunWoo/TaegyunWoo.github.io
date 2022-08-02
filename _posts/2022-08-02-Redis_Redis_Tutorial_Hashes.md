@@ -1,7 +1,7 @@
 ---
 category: Redis
 tags: [Redis]
-title: "Redis Strings 타입과 명령어"
+title: "Redis Hashes 타입과 명령어"
 date:   2022-08-02 15:50:00 
 lastmod : 2022-08-01 15:50:00
 sitemap :
