@@ -49,21 +49,21 @@ redis 127.0.0.1:6379> DEL tutorialspoint
 
 ## 주요 명령어 Reference
 
-| NO. | 명령어 | 설명 |
-| --- | --- | --- |
-| 1 | DEL key | 해당 키가 존재하다면, 해당 키를 삭제한다. |
-| 2 | DUMP key | 해당 키를 DUMP로 만든다. <br/> 그럼 Redis-specific format으로 값을 리턴하는데, 이 값을 RESTORE 명령어로 사용하면 그 key를 다시 복원할 수 있다. |
-| 3 | EXISTS key | 해당 key가 존재하는지 확인한다. <br/> (1: 해당 key가 존재함, 0: 해당 key가 존재하지 않음) |
-| 4 | EXPIRE key seconds | 해당 키의 유효 **“시간”** 을 설정한다. <br/> 설정한 시간(초)가 지나면, 자동으로 제거된다. |
-| 5 | EXPIREAT key timestamp | 해당 키의 유효 **“시각”** 을 설정한다. <br/> 설정된 시각이 되면, 자동으로 제거된다. |
-| 6 | PEXPIRE key milliseconds | 해당 키의 유효 시간을 ms단위로 설정한다. |
-| 7 | PEXPIREAT key milliseconds-timestamp | 해당 키의 유효 시각을 ms단위로 설정한다. |
-| 8 | KEYS pattern | 정규표현식으로 일치하는 키를 찾는다. |
-| 9 | MOVE key db | 다른 db로 키를 옮긴다. |
-| 10 | PERSIST key | 해당 key에 설정된 유효 시간을 제거한다. |
-| 11 | PTTL key | 남은 유효 시간을 ms단위로 반환한다. |
-| 12 | TTL key | 남은 유효 시간을 반환한다. |
-| 13 | RANDOMKEY | 저장된 아무키를 반환한다. |
-| 14 | RENAME key newkey | 키 이름을 재설정한다. |
-| 15 | RENAMENX key newkey | 만약 newkey가 없다면, 키 이름을 재설정한다. |
-| 16 | TYPE key | 해당 key의 데이터 타입을 반환한다. |
+| NO. | 명령어 | 설명 | 시간복잡도 |
+| --- | --- | --- | --- |
+| 1 | DEL key | 해당 키가 존재하다면, 해당 키를 삭제한다. | O(1) |
+| 2 | DUMP key | 해당 키를 DUMP로 만든다. 그럼 Redis-specific format으로 값을 리턴하는데, 이 값을 RESTORE 명령어로 사용하면 그 key를 다시 복원할 수 있다. | O(1) |
+| 3 | EXISTS key | 해당 key가 존재하는지 확인한다. (1: 해당 key가 존재함, 0: 해당 key가 존재하지 않음) | O(N) <br/> N: 전체 key 갯수 |
+| 4 | EXPIRE key seconds | 해당 키의 유효 **"시간"** 을 설정한다. 설정한 시간(초)가 지나면, 자동으로 제거된다. | O(1) |
+| 5 | EXPIREAT key timestamp | 해당 키의 유효 **"시각"** 을 설정한다. 설정된 시각이 되면, 자동으로 제거된다. | O(1) |
+| 6 | PEXPIRE key milliseconds | 해당 키의 유효 **"시간"** 을 ms단위로 설정한다. | O(1) |
+| 7 | PEXPIREAT key milliseconds-timestamp | 해당 키의 유효 **"시각"** 을 ms단위로 설정한다. | O(1) |
+| 8 | KEYS pattern | 정규표현식으로 일치하는 키를 찾는다. | O(N) <br/> N: 전체 key 갯수 |
+| 9 | MOVE key db | 다른 db로 키를 옮긴다. | O(1) |
+| 10 | PERSIST key | 해당 key에 설정된 유효 시간을 제거한다. | O(1) |
+| 11 | PTTL key | 남은 유효 시간을 ms단위로 반환한다. | O(1) |
+| 12 | TTL key | 남은 유효 시간을 반환한다. | O(1) |
+| 13 | RANDOMKEY | 저장된 아무키를 반환한다. | O(1) |
+| 14 | RENAME key newkey | 키 이름을 재설정한다. | O(1) |
+| 15 | RENAMENX key newkey | 만약 newkey가 없다면, 키 이름을 재설정한다. | O(1) |
+| 16 | TYPE key | 해당 key의 데이터 타입을 반환한다. | O(1) |

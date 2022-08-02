@@ -57,25 +57,25 @@ redis 127.0.0.1:6379> GET tutorialspoint
 
 ## 주요 명령어 Reference
 
-| NO. | 명령어 | 설명 |
-| --- | --- | --- |
-| 1 | SET key value | 데이터(key-value)를 저장한다. |
-| 2 | GET key | 해당 key의 value를 반환한다. |
-| 3 | GETRANGE key start end | 해당 key의 value의 substring을 반환한다. <br/> (start~end 까지의 string 반환) |
-| 4 | GETSET key value | 해당 key에 저장된 기존의 value를 반환하고, 새 value를 저장한다. |
-| 5 | GETBIT key offset | 해당 key에 저장된 문자열의 offset(index)에 해당하는 문자의 비트값을 반환한다. |
-| 6 | MGET key1 key2 ... | 여러 key의 value를 순서대로 반환한다. |
-| 7 | SETBIT key offset value | 해당 key에 저장된 문자열의 offset(index)에 해당하는 문자의 비트값을 설정한다. |
-| 8 | SETEX key seconds value | key-value를 저장하고, 유효시간을 초단위로 설정한다. |
-| 9 | SETNX key value | 해당 key에 기존의 value가 없다면, 저장한다. |
-| 10 | SETRANGE key offset value | 해당 key의 기존 value에서 offset에 해당하는 부분을 새 value로 덮어쓴다. |
-| 11 | STRLEN key | 해당 key의 value의 길이를 반환한다. |
-| 12 | MSET key1 value1 key2 value2 ... | 여러 key-value를 저장한다. |
-| 13 | MSETNX key1 value1 key2 value2 | 여러 key-value를 key가 존재하지 않는 경우에만 저장한다. |
-| 14 | PSETEX key milliseconds value | key-value를 저장하고, 유효시간을 밀리초 단위로 설정한다. |
-| 15 | INCR key | 해당 key에 저장된 정수형 value의 값을 1 증가시킨다. |
-| 16 | INCRBY key increment | 해당 key에 저장된 정수형 value의 값을 increment 만큼 증가시킨다. |
-| 17 | INCRBYFLOAT key increment | 해당 key에 저장된 실수형 value의 값을 increment 만큼 증가시킨다. |
-| 18 | DECR key | 해당 key에 저장된 정수형 value의 값을 1 감소시킨다. |
-| 19 | DECRBY key decrement | 해당 key에 저장된 정수형 value의 값을 increment 만큼 감소시킨다. |
-| 20 | APPEND key value | 해당 key의 기존 value 뒤에 새 문자열을 이어붙인다. |
+| NO. | 명령어 | 설명 | 시간 복잡도 | 비고 |
+| --- | --- | --- | --- | --- |
+| 1 | SET key value | 데이터(key-value)를 저장한다. | O(1) |  |
+| 2 | GET key | 해당 key의 value를 반환한다. | O(1) |  |
+| 3 | GETRANGE key start end | 해당 key의 value의 substring을 반환한다. <br/> (start~end 까지의 string 반환) | O(N) <br/> N: value의 길이 |  |
+| 4 | GETSET key value | 해당 key에 저장된 기존의 value를 반환하고, 새 value를 저장한다. | O(1) | deprecate (비권장) <br/> SET 사용 권장 |
+| 5 | GETBIT key offset | 해당 key에 저장된 문자열의 offset(index)에 해당하는 문자의 비트값을 반환한다. | O(1) |  |
+| 6 | MGET key1 key2 ... | 여러 key의 value를 순서대로 반환한다. | O(N) <br/> N: 찾을 key 갯수 |  |
+| 7 | SETBIT key offset value | 해당 key에 저장된 문자열의 offset(index)에 해당하는 문자의 비트값을 설정한다. | O(1) |  |
+| 8 | SETEX key seconds value | key-value를 저장하고, 유효시간을 초단위로 설정한다. | O(1) |  |
+| 9 | SETNX key value | 해당 key에 기존의 value가 없다면, 저장한다. | O(1) |  |
+| 10 | SETRANGE key offset value | 해당 key의 기존 value에서 offset에 해당하는 부분을 새 value로 덮어쓴다. | O(1) |  |
+| 11 | STRLEN key | 해당 key의 value의 길이를 반환한다. | O(1) |  |
+| 12 | MSET key1 value1 key2 value2 ... | 여러 key-value를 저장한다. | O(N) <br/> N: 저장할 key 갯수 |  |
+| 13 | MSETNX key1 value1 key2 value2 | 여러 key-value를 key가 존재하지 않는 경우에만 저장한다. | O(N) <br/> N: 저장할 key 갯수 |  |
+| 14 | PSETEX key milliseconds value | key-value를 저장하고, 유효시간을 밀리초 단위로 설정한다. | O(1) |  |
+| 15 | INCR key | 해당 key에 저장된 정수형 value의 값을 1 증가시킨다. | O(1) |  |
+| 16 | INCRBY key increment | 해당 key에 저장된 정수형 value의 값을 increment 만큼 증가시킨다. | O(1) |  |
+| 17 | INCRBYFLOAT key increment | 해당 key에 저장된 실수형 value의 값을 increment 만큼 증가시킨다. | O(1) |  |
+| 18 | DECR key | 해당 key에 저장된 정수형 value의 값을 1 감소시킨다. | O(1) |  |
+| 19 | DECRBY key decrement | 해당 key에 저장된 정수형 value의 값을 increment 만큼 감소시킨다. | O(1) |  |
+| 20 | APPEND key value | 해당 key의 기존 value 뒤에 새 문자열을 이어붙인다. | O(1) |  |

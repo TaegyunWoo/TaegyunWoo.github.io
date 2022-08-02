@@ -60,19 +60,19 @@ redis 127.0.0.1:6379> HGETALL tutorialspoint
 
 ## **주요 명령어 Reference**
 
-| NO. | 명령어 | 설명 |
-| --- | --- | --- |
-| 1 | HDEL key field1 field2 … | 해당 key에 저장된 하나 이상의 field들을 제거 |
-| 2 | HEXISTS key field | 해당 key에 해당 field가 존재하는지 확인 <br/> 1: 존재함, 0: 존재안함 |
-| 3 | HGET key field | 해당 key의 해당 field 값을 반환 |
-| 4 | HGETALL key | 해당 key의 모든 field-value 를 반환 |
-| 5 | HINCRBY key field incremen` | 해당 key의 해당 field의 정수형 값을 increment 만큼 증가 |
-| 6 | HINCRBYFLOAT key field increment | 해당 key의 해당 field의 실수형 값을 increment 만큼 증가 |
-| 7 | HKEYS key | 해당 key의 모든 fields 반환 |
-| 8 | HLEN key | 해당 key의 모든 fields 개수 반환 |
-| 9 | HMGET key field1 field2 ... | 해당 key의 한 개 이상의 field 값 반환 |
-| 10 | HMSET key field1 value1 field2 value2 ... | 해당 key에 한 개 이상의 field-value 저장 |
-| 11 | HSET key field value | 해당 key에 field-value 저장 |
-| 12 | HSETNX key field value | 해당 key에 동일한 field가 없다면 field-value 저장 |
-| 13 | HVALS key | 해당 key의 모든 value 반환 |
-| 14 | HSCAN key cursor [MATCH pattern] [COUNT count] | 해당 key의 몇 개의 field-value 반환 |
+| NO. | 명령어 | 설명 | 시간복잡도 | 비고 |
+| --- | --- | --- | --- | --- |
+| 1 | HDEL key field1 field2 … | 해당 key에 저장된 하나 이상의 field들을 제거 | O(N) <br/> N: 지울 field 갯수 |  |
+| 2 | HEXISTS key field | 해당 key에 해당 field가 존재하는지 확인 <br/> 1: 존재함, 0: 존재안함 | O(1) |  |
+| 3 | HGET key field | 해당 key의 해당 field 값을 반환 | O(1) |  |
+| 4 | HGETALL key | 해당 key의 모든 field-value 를 반환 | O(N) <br/> N: 저장된 아이템 갯수 |  |
+| 5 | HINCRBY key field increment | 해당 key의 해당 field의 정수형 값을 increment 만큼 증가 | O(1) |  |
+| 6 | HINCRBYFLOAT key field increment | 해당 key의 해당 field의 실수형 값을 increment 만큼 증가 | O(1) |  |
+| 7 | HKEYS key | 해당 key의 모든 fields 반환 | O(N) <br/> N: 저장된 아이템 갯수 |  |
+| 8 | HLEN key | 해당 key의 모든 fields 개수 반환 | O(1) |  |
+| 9 | HMGET key field1 field2 ... | 해당 key의 한 개 이상의 field 값 반환 | O(N) <br/> N: 반환할 field 갯수 |  |
+| 10 | HMSET key field1 value1 field2 value2 ... | 해당 key에 한 개 이상의 field-value 저장 | O(N) <br/> N: 저장될 아이템 갯수 | deprecate (비권장) <br/> HSET 사용 권장 |
+| 11 | HSET key field1 value1 field2 value2 | 해당 key에 한 개 이상의 field-value 저장 | O(N) <br/> N: 저장될 아이템 갯수 |  |
+| 12 | HSETNX key field value | 해당 key에 동일한 field가 없다면 field-value 저장 | O(1) |  |
+| 13 | HVALS key | 해당 key의 모든 value 반환 | O(N) <br/> N: 저장된 아이템 갯수 |  |
+| 14 | HSCAN key cursor [MATCH pattern] [COUNT count] | 해당 key의 몇 개의 field-value 반환 | O(1) <br/> 단, 모든 아이템을 조회한 경우 총 O(N) |  |
