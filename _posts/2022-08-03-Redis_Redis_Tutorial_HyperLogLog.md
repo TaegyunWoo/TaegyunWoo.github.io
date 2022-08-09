@@ -25,7 +25,7 @@ Redis에서 제공하는 HyperLogLog 데이터 구조에 대해 알아보자.
     - HyperLogLog 알고리즘으로 집합의 원소 개수를 근사하게 알아낼 수 있는 데이터 구조이다.
     - HyperLogLog는 키당 약 12kbyte의 매우 작은 양의 메모리를 사용하며, 0.81% 정도의 아주 작은 오차를 갖는다.
 - HyperLogLog 알고리즘을 더 깊게 알아보고 싶다면, 아래 글을 추천한다.
-    - [[Naver D2] 확률적 자료구조를 이용한 추정 - 유일한 원소 개수(Cardinality) 추정과 HyperLogLog](https://www.notion.so/Home-7431a134001345b292b9924ce1d73110)
+    - [[Naver D2] 확률적 자료구조를 이용한 추정 - 유일한 원소 개수(Cardinality) 추정과 HyperLogLog](https://d2.naver.com/helloworld/711301)
 
 <br/>
 
