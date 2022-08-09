@@ -36,7 +36,7 @@ Redis 에서 지원하는 Transaction 기능에 대해 알아보자.
 
 ### 트랜잭션 정의
 
-```
+```text
 redis 127.0.0.1:6379> MULTI
 OK
 [실행할 명령어 입력]
