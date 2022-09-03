@@ -53,12 +53,11 @@ public class Repository {
   @PersistenceContext
   private EntityManager em;
   
-  public List<EntityA> findAll(int startIndex, int size) {
+  public List<EntityA> findAll(int size) {
     String jpql = "SELECT a FROM EntityA a" +
                   " JOIN FETCH a.entityBList";
 
     return em.createQuery(jpql, EntityA.class)
-              .setFirstResult(startIndex)
               .setMaxResults(size)
               .getResultList();
   }
@@ -130,12 +129,11 @@ SELECT A.ID FROM EntityA as A
 기존 `Repository.findAll` 메서드의 로직은 아래와 같다.
 
 ```java
-public List<EntityA> findAll(int startIndex, int size) {
+public List<EntityA> findAll(int size) {
   String jpql = "SELECT a FROM EntityA a" +
                 " JOIN FETCH a.entityBList";
 
   return em.createQuery(jpql, EntityA.class)
-            .setFirstResult(startIndex)
             .setMaxResults(size)
             .getResultList();
 }
@@ -144,12 +142,11 @@ public List<EntityA> findAll(int startIndex, int size) {
 이것을 아래처럼 변경하여 문제를 해결할 수 있다.
 
 ```java
-public List<EntityA> findAll(int startIndex, int size) {
-  //먼저 EntityA 의 ID를 Pagination하여 조회한다.
+public List<EntityA> findAll(int size) {
+  //먼저 EntityA 의 ID를 조회한다.
   String jpql = "SELECT a.id FROM EntityA a" +
                 " JOIN FETCH a.entityBList";
   List<Long> idResult = em.createQuery(jpql, Long.class)
-                   .setFirstResult(startIndex)
                    .setMaxResults(size)
                    .getResultList();
   
@@ -172,12 +169,11 @@ public List<EntityA> findAll(int startIndex, int size) {
 아래는 그 예시 코드이다.
 
 ```java
-public List<EntityB> findAll(int startIndex, int size) {
+public List<EntityB> findAll(int size) {
   String jpql = "SELECT b FROM EntityB b" +
                 " JOIN FETCH b.entityA";
 
   return em.createQuery(jpql, EntityA.class)
-            .setFirstResult(startIndex)
             .setMaxResults(size)
             .getResultList();
 }
