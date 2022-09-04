@@ -7,7 +7,7 @@ kramdown:
   math_engine: MathJax
 
 commonmark:
-  options: ["SMART", "FOOTNOTES"]
+  options: ["SMART", "FOOTNOTES", "UNSAFE"]
   extensions: ["strikethrough", "autolink", "table", "tagfilter"]
 
 plugins:
@@ -39,9 +39,9 @@ google_analytics:
 
 collections: # Define post series here
   CRUD_Web:
-    output: true
+    output: false
   EMS:
-    output: true
+    output: false
 
 defaults:
   - scope:
