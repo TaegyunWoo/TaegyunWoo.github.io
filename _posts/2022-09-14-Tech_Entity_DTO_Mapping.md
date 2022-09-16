@@ -1,7 +1,7 @@
 ---
 category: Tech
 tags: [Spring]
-title: "MapStruct 라이브러리를 사용해서, Entity와 DTO 매핑 박살내기"
+title: "MapStruct 라이브러리로 Entity와 DTO 매핑 박살내기"
 date:   2022-09-16 21:15:00 
 lastmod : 2022-09-16 21:15:00
 sitemap :
