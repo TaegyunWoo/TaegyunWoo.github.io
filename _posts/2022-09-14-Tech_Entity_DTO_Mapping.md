@@ -51,6 +51,8 @@ public class AEntity {
 
 아주 기본적인 엔티티 클래스이다.
 
+<br/>
+
 ### DTO 클래스
 
 ```java
@@ -98,6 +100,8 @@ public class ADto {
 
 나는 이런 방식으로 DTO 와 Entity 간의 변환 작업을 수행하고 있다.
 
+<br/>
+
 ### Service 클래스
 
 ```java
@@ -123,6 +127,8 @@ public MyService {
 
 이런 방식으로 프로젝트를 진행하다가 겪은 문제점은 아래와 같다.
 
+<br/>
+
 ### 엔티티의 필드가 많으면 일일히 생성자와 `toEntity()` 메서드를 작성하기 어렵다!
 
 위 예시에서는 엔티티의 필드 개수가 3개밖에 되지 않는다.
@@ -139,6 +145,8 @@ public MyService {
 나도 약 20여 개의 필드를 갖는 엔티티에 대해 DTO 클래스를 작성하다 힘들어서…
 
 따라서 이러한 문제를 해결하기 위한 방법을 조사하여 설명하고자 한다.
+
+<br/>
 
 ### 만약 엔티티의 필드가 수정되면 다시 일일이 변경해줘야 한다.
 
@@ -184,6 +192,8 @@ DTO 클래스와 Entity 클래스에 따로 이 둘을 변환(매핑)하는 로�
 
 ![Untitled](/assets/img/2022-09-14-Tech_Entity_DTO_Mapping/Untitled%203.png)
 
+<br/>
+
 ### MapStruct 의 특징
 
 간단하게 매핑을 도와주는 MapStruct 는 어떤 특징이 있을까?
@@ -224,6 +234,8 @@ MapStruct 를 사용하기 전에 build.gradle 파일을 위와 같이 설정하
 
 > IntelliJ MapStruct Support : [https://plugins.jetbrains.com/plugin/10036-mapstruct-support](https://plugins.jetbrains.com/plugin/10036-mapstruct-support)
 
+<br/>
+
 ### 엔티티와 DTO 클래스 선언
 
 MapStruct 의 사용방법을 설명하기 위한 엔티티 클래스와 DTO 클래스를 선언하겠다.
@@ -260,6 +272,8 @@ public class BasicDto {
 
 `Entity` → `DTO` 로 변환을 하려면, `DTO` 에 setter 가 있어야 한다.
 
+<br/>
+
 ### 기본 Mapper Interface
 
 아주 기본적인 Mapper 구현체를 생성하기 위한, 인터페이스를 작성해보자.
@@ -287,6 +301,8 @@ MapStruct 는 Annotation Processor 를 사용하여, 컴파일 시점에 구현 
 
 > 우리가 사용하는 Lombok 과 동일한 방식으로 코드를 생성해준다!  
 Annotation Processor 에 대한 보다 자세한 내용은 [https://roadj.tistory.com/9](https://roadj.tistory.com/9) 을 참고해도 좋을 것 같다.
+
+<br/>
 
 ### Mapper 실행
 
@@ -316,6 +332,8 @@ void useBasicMapper() {
 이렇게 너무나도 간단하게 매핑을 할 수 있다니…
 
 놀랍지 않은가?
+
+<br/>
 
 ### 생성된 Mapper Impl 클래스 코드
 
@@ -355,6 +373,8 @@ Annotation Processor 를 통해, 컴파일 시점에 위와 같은 코드를 생
 
 이번에는 필드명이 서로 다를 때, 매핑을 해보자.
 
+<br/>
+
 ### 매핑할 엔티티와 필드명이 서로 다른 DTO 클래스
 
 엔티티 클래스는 그대로 두고, 새로운 DTO 클래스를 만들어 **기존의 필드명을 수정**하겠다.
@@ -370,6 +390,8 @@ public class DiffFieldNameDto {
   private String newFieldB; //매핑할 엔티티의 필드명은 fieldB
 }
 ```
+
+<br/>
 
 ### 서로 다른 필드를 매핑하는 Mapper Interface
 
@@ -391,6 +413,8 @@ public interface DiffFieldNameMapper {
     - `target` 속성을 통해 변환되어야 하는 필드명을 지정할 수 있고, `source` 속성을 통해 변환할 필드명을 지정할 수 있다.
     - `target` : Return 할 타입의 필드명
     - `source` : Parameter 타입의 필드명
+
+<br/>
 
 ### Mapper 실행
 
@@ -416,6 +440,8 @@ public interface DiffFieldNameMapper {
 ```
 
 정상적으로 동작하는 것을 확인할 수 있다.
+
+<br/>
 
 ### 생성된 Mapper Impl 클래스 코드
 
@@ -451,6 +477,8 @@ public class DiffFieldNameMapperImpl implements DiffFieldNameMapper {
 
 이번에는 하나의 DTO 에 여러 Entity 를 매핑해보자.
 
+<br/>
+
 ### 새로운 엔티티 클래스
 
 먼저 새 엔티티 클래스를 작성하겠다.
@@ -469,6 +497,8 @@ public class OtherEntity {
 
 위 엔티티 클래스는 기존의 `Entity` 클래스와는 다른 클래스이다.
 
+<br/>
+
 ### 매핑할 엔티티가 2개인 DTO 클래스
 
 `Entity` 엔티티 클래스와 `OtherEntity` 엔티티 클래스 2개와 매핑되어야 하는 새로운 DTO 클래스를 작성하자.
@@ -485,6 +515,8 @@ public class MultiEntityDto {
   private String otherFieldB; //OtherEntity 클래스의 fieldB 와 매핑
 }
 ```
+
+<br/>
 
 ### 여러 엔티티와 매핑하는 Mapper Interface
 
@@ -506,6 +538,8 @@ public interface MultiEntityMapper {
 - `@Mapping` 애너테이션의 `target` 속성을 사용해서 return 될 클래스의 필드를 지정한다.
 - `@Mapping` 애너테이션의 `source` 속성을 사용해서 원 클래스의 필드를 지정한다.
     - 이때 Parameter 이름을 사용한다.
+
+<br/>
 
 ### Mapper 실행
 
@@ -537,6 +571,8 @@ void multiEntity() {
 한 DTO 객체를 만들기 위해, 매핑할 엔티티가 2개 보다 많더라도 이렇게 매핑하면 된다.
 
 > 물론 반대로 엔티티를 만들 때도 상관없다.
+
+<br/>
 
 ### 생성된 Mapper Impl 클래스 코드
 
@@ -573,6 +609,8 @@ public class MultiEntityMapperImpl implements MultiEntityMapper {
 
 다른 엔티티와의 연관관계를 맺어, 다른 엔티티 타입의 필드가 존재하는 경우에 어떻게 매핑해야 하는지 알아보자.
 
+<br/>
+
 ### 다른 엔티티 타입을 필드로 갖는 엔티티
 
 아래와 같이 새로운 엔티티를 작성하자.
@@ -595,6 +633,8 @@ public class DependentOtherEntity {
 또한 `OtherEntity` 엔티티와는 **일대다 관계**를 갖는다.
 
 > 여기서 사용한 `Entity` 엔티티와 `OtherEntity` 엔티티는 위에서 사용한 것과 동일한 것이다.
+
+<br/>
 
 ### 의존하는 엔티티의 DTO 클래스
 
@@ -624,6 +664,8 @@ public class OtherEntityDto {
 }
 ```
 
+<br/>
+
 ### 의존하는 엔티티의 Mapper Interface
 
 바로 위에서 의존하는 엔티티들의 DTO 클래스를 작성했다.
@@ -648,6 +690,8 @@ public interface OtherEntityMapper {
 }
 ```
 
+<br/>
+
 ### 다른 엔티티 타입을 필드로 갖는 DTO 클래스
 
 이제 `DependentOtherEntity` 를 위한 DTO 클래스를 작성해보자.
@@ -663,6 +707,8 @@ public class DependentOtherDto {
   private List<OtherEntityDto> otherEntityDtoList;
 }
 ```
+
+<br/>
 
 ### 다른 엔티티 타입까지 매핑하는 Mapper Interface
 
@@ -684,6 +730,8 @@ public interface DependentOtherMapper {
 - `@Mapper` 애너테이션의 `uses` 속성을 통해, (`의존하는 엔티티` → `DTO`)로 변환해줄 Mapper 들을 설정해야 한다.
 - 그러면 `@Mapping(target = "entityDto", source = "dependentEntity.entity")` 와 같이, target 과 source 가 서로 다른 타입이더라도 매핑할 수 있다.
     - target 과 source 간의 Mapper 가 필요한데, 이것을 `@Mapper` 의 `uses` 속성에 작성하는 것이다.
+
+<br/>
 
 ### Mapper 실행
 
@@ -726,6 +774,8 @@ void dependentEntity() {
 ```
 
 역시나 정상적으로 동작한다.
+
+<br/>
 
 ### 생성된 Mapper Impl 클래스 코드
 
@@ -783,6 +833,8 @@ List 타입 필드를 처리하기 위한 메서드까지 생성된 것을 확�
 
 **보통 기존의 객체를 업데이트하는 경우는 Entity 를 업데이트하는 경우일테니, 해당 케이스로 설명하겠다.**
 
+<br/>
+
 ### 기존 엔티티 업데이트 Mapper Interface
 
 바로 위에서 사용한 `DependentOtherEntity` 와 관련 엔티티, DTO, Mapper 모두 **그대로 사용**하여 설명하겠다.
@@ -809,6 +861,8 @@ public interface EntityUpdateMapper {
     - 값을 넣을 곳이 `DependentOtherEntity` 이므로, `target` 속성 값은 `DependentOtherEntity` 의 필드명(`entity` , `otherEntityList`)이 된다.
     - `DependentOtherDto` 로부터 값을 전달받을 것이므로, `source` 속성 값은 `DependentOtherDto` 의 필드명(`entityDto` , `otherEntityDtoList`)이 된다.  
     **단, 반드시 앞에 `파라미터명.` 을 붙여야 한다.**
+
+<br/>
 
 ### Mapper 실행
 
@@ -850,6 +904,8 @@ void updateEntity() {
 ```
 
 역시 정상적으로 동작한다.
+
+<br/>
 
 ### 생성된 Mapper Impl 클래스 코드
 
@@ -949,6 +1005,8 @@ public interface BasicMapper {
 
 바로 알아보자.
 
+<br/>
+
 ### 스프링 빈으로 등록할 수 있는 Mapper 를 위한 Interface
 
 ```java
@@ -968,6 +1026,8 @@ public interface BeanMapper {
     - 우리의 경우, spring bean 으로 등록할 것이므로 spring 으로 작성했다.
 - `BeanMapper INSTANCE = Mappers.getMapper(BeanMapper.class);`
     - 우리는 DI 컨테이너로부터 Mapper Impl 구체 클래스를 주입받아 사용할 것이므로, 이제 더 이상 위 코드는 필요하지 않다.
+
+<br/>
 
 ### Mapper 실행
 
@@ -999,6 +1059,8 @@ public class MapStructWithSpringTest {
   }
 }
 ```
+
+<br/>
 
 ### 생성된 Mapper Impl 클래스 코드
 
@@ -1035,6 +1097,8 @@ public class BeanMapperImpl implements BeanMapper {
 
 이번에는 enum 값끼리 매핑을 해보자!
 
+<br/>
+
 ### FruitType Enum 와 AppleType Enum
 
 Enum 끼리 매핑을 하기 위해, 총 2개의 Enum 을 선언하자.
@@ -1067,6 +1131,8 @@ public enum DetailFruitType {
 
 `DetailFruitType` 의 `RED_APPLE` , `YELLOW_APPLE` , `GREEN_APPLE` 을 `GeneralFruitType.APPLE` 에 매핑해보자.
 
+<br/>
+
 ### Enum 끼리 매핑시키기 위한 Mapper Interface
 
 그렇다면 아래와 같이, enum 을 매핑하기 위한 Interface를 작성할 수 있다.
@@ -1094,6 +1160,8 @@ public interface EnumMapper {
 - 혹은 **두번째 방법**처럼 `@ValueMapping` 의 `source` 속성에 `MappingConstants.ANY_REMAINING` 을 지정하여 조금 더 편리하게 매핑할 수도 있다.
     - `GeneralFruitType` Enum 과 `DetailFruitType` Enum 간의 공통점은 `ORANGE` , `BANANA` 값이 존재하는 것이다.
     - 따라서 `DetailFruitType` Enum 의 나머지 값 (`RED_APPLE` , `YELLOW_APPLE` , `GREEN_APPLE`) 을 모두 `GeneralFruitType.APPLE` 에 매핑하면 되므로, 이렇게 간단하게 표현할 수 있다.
+
+<br/>
 
 ### Mapper 실행
 
@@ -1156,6 +1224,8 @@ void enumMapping2() {
 ```
 
 모두 정상적으로 동작한다.
+
+<br/>
 
 ### 생성된 Mapper Impl 클래스 코드
 
@@ -1240,6 +1310,8 @@ public class EnumMapperImpl implements EnumMapper {
 
 우리는 직접 Date 타입의 값을 String 타입의 필드에 매핑해보도록 하자.
 
+<br/>
+
 ### LocalDate 타입의 필드를 갖는 엔티티
 
 `LocalDate` 타입의 필드를 갖도록 새로운 엔티티를 작성하자.
@@ -1254,6 +1326,8 @@ public class LocalDateEntity {
   private LocalDate localDate;
 }
 ```
+
+<br/>
 
 ### String 타입의 필드를 갖는 DTO
 
@@ -1270,6 +1344,8 @@ public class LocalDateDto {
 }
 ```
 
+<br/>
+
 ### LocalDate → String 으로 자동으로 타입을 변환하는 Mapper Interface
 
 ```java
@@ -1284,6 +1360,8 @@ public interface LocalDateMapper {
 
 - `@Mapping` 애너테이션의 `dateFormat` 속성을 통해, 어떤 형식의 String 으로 변환할 것인지 설정할 수 있다.
 - `target` , `source` 속성은 이전과 동일하게 사용하면 된다. 그럼 자동으로 데이터를 변환하여 매핑해준다.
+
+<br/>
 
 ### Mapper 실행
 
@@ -1307,6 +1385,8 @@ void localDateMapper() {
 ```
 
 정규표현식을 통해 제대로 변환이 되었는지 검증하였다.
+
+<br/>
 
 ### 생성된 Mapper Impl 클래스 코드
 
@@ -1347,6 +1427,8 @@ public class LocalDateMapperImpl implements LocalDateMapper {
 
 이때는 `default` 메서드를 작성하면 된다.
 
+<br/>
+
 ### default 메서드가 있는 Mapper Interface
 
 ```java
@@ -1372,6 +1454,8 @@ public interface DefaultMethodMapper {
 
 - `default` 키워드를 사용하여 직접 메서드를 인터페이스에서 구현한다.
 
+<br/>
+
 ### Mapper 실행
 
 ```java
@@ -1396,6 +1480,8 @@ void defaultMethodMapper() {
   );
 }
 ```
+
+<br/>
 
 ### 생성된 Mapper Impl 클래스 코드
 
@@ -1431,6 +1517,8 @@ public class DefaultMethodMapperImpl implements DefaultMethodMapper {
 
 바로 알아보자.
 
+<br/>
+
 ### 필드의 기본값을 설정하는 Mapper Interface
 
 ```java
@@ -1446,6 +1534,8 @@ public interface DefaultValueMapper {
 
 - `constant` 속성은 source 의 필드(여기에선 `Entity.id`)에 관계없이 무조건 해당 값을 매핑하는 역할이다.
 - `defaultValue` 속성은 source 의 필드 (여기에선 `Entity.fieldA`)이 null 일 때, 해당 값을 매핑하는 역할이다.
+
+<br/>
 
 ### Mapper 실행
 
@@ -1473,6 +1563,8 @@ void abstractMapper() {
 `fieldA` 필드에는 `defaultValue` 속성을 설정했으니, 엔티티의 필드값인 null 대신 `empty value` 가 들어간다.
 
 `defaultValue` 가 없다면 `fieldB` 처럼 그대로 null 이 들어가게 된다.
+
+<br/>
 
 ### 생성된 Mapper Impl 클래스 코드
 
@@ -1508,6 +1600,8 @@ public class DefaultValueMapperImpl implements DefaultValueMapper {
 
 매핑할 필드에 들어갈 값을 직접 자바 표현식으로 넣을 수 있다.
 
+<br/>
+
 ### 자바 표현식이 포함된 Mapper Interface
 
 ```java
@@ -1526,6 +1620,8 @@ public interface ExpressionMapper {
     - `expression` 속성 : 무조건 해당 표현식의 반환값으로 값을 매핑한다.
     - `defaultExpression` 속성 : source 의 필드값이 null 인 경우 적용한다.
 - 자바 표현식은 `java(표현식)` 형식으로 작성해야 한다.
+
+<br/>
 
 ### Mapper 실행
 
@@ -1563,6 +1659,8 @@ dto.fieldB = fieldB value
 
 정상적으로 적용됐다!
 
+<br/>
+
 ### 생성된 Mapper Impl 클래스 코드
 
 ```java
@@ -1599,6 +1697,8 @@ MapStruct는 매핑을 하면서 간편하게 예외처리를 할 수 있도록 
 
 이를 위해선 먼저 예외처리 관련 로직을 따로 작성해야한다.
 
+<br/>
+
 ### 예외처리 클래스 작성
 
 예외처리를 위한 Validator 라는 클래스를 따로 만들어서 설명하겠다.
@@ -1629,7 +1729,8 @@ public class Validator {
     - 따라서 `Entity` 엔티티 클래스의 필드 중 `fieldA` 와 `fieldB` 가 `String` 형이므로, 이 두 개의 필드값이 `validate2` 메서드에 전달되어 검증된다.
     
     > **타입을 통해 어떤 필드를 검증할지 결정하므로, 파라미터의 이름은 전혀 관계가 없다.**
-    > 
+
+<br/>
 
 ### 예외처리를 적용한 Mapper Interface
 
@@ -1644,6 +1745,8 @@ public interface ExceptionMapper {
 
 - 매우 단순하게 `@Mapper` 애너테이션의 `uses` 속성으로 예외처리 클래스를 넘겨주면 된다.
 - 메서드에 `throws` 문을 추가해주면 자동으로 예외처리를 하게 된다.
+
+<br/>
 
 ### Mapper 실행
 
@@ -1683,6 +1786,8 @@ void exceptionMapper() {
   );
 }
 ```
+
+<br/>
 
 ### 생성된 Mapper Impl 클래스 코드
 
@@ -1799,6 +1904,8 @@ public interface NoInheritMapper {
 
 바로 이런 경우, `@InheritConfiguration` 애너테이션을 사용할 수 있다.
 
+<br/>
+
 ### `@InheritConfiguration` 을 사용하는 Mapper Interface
 
 위에서 작성한 `NoInheritMapper` 인터페이스를 아래와 같이 수정할 수 있다.
@@ -1872,6 +1979,8 @@ public interface NoInheritMapper {
 
 이런 경우엔, `@InheritConfiguration` 대신, `@InheritInverseConfiguration` 을 사용할 수 있다.
 
+<br/>
+
 ### `@InheritInverseConfiguration` 을 사용하는 Mapper Interface
 
 ```java
@@ -1927,6 +2036,8 @@ public interface InheritMapper {
 이 글을 작성하며, 나 역시 MapStruct 에 대해 많은 것을 알게되어 만족스럽다.
 
 > 그리고 후반부로 갈수록 글이 딱딱하게 지는 것 같다… 반성…
+
+<br/>
 
 ### 다루지 않은 부분
 
