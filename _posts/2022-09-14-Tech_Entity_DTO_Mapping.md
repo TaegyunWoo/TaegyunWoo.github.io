@@ -860,7 +860,7 @@ public interface EntityUpdateMapper {
 - 기존과는 다르게 `@Mapping` 애너테이션의 `target` 과 `source` 속성의 값이 변경되었다.
     - 값을 넣을 곳이 `DependentOtherEntity` 이므로, `target` 속성 값은 `DependentOtherEntity` 의 필드명(`entity` , `otherEntityList`)이 된다.
     - `DependentOtherDto` 로부터 값을 전달받을 것이므로, `source` 속성 값은 `DependentOtherDto` 의 필드명(`entityDto` , `otherEntityDtoList`)이 된다.  
-    **단, 반드시 앞에 `파라미터명.` 을 붙여야 한다.**
+    **`파라미터명.` 은 붙여도 되고, 생략해도 된다.**
 
 <br/>
 
