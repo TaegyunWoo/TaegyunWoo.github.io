@@ -2,8 +2,8 @@
 category: Tech
 tags: [AWS]
 title: "AWS CodeDeploy 에서 시스템 환경변수 사용하기"
-date:   2022-11-06 22:15:00 
-lastmod : 2022-11-06 22:15:00
+date:   2022-11-14 14:00:00 
+lastmod : 2022-11-14 14:00:00
 sitemap :
   changefreq : daily
   priority : 1.0
