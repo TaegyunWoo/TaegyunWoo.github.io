@@ -38,9 +38,7 @@ google_analytics:
   id: "G-VDE33NGC7S" # Required if you use google analytics. Replace with your tracking id here
 
 collections: # Define post series here
-  CRUD_Web:
-    output: false
-  EMS:
+  Interview:
     output: false
 
 defaults:
