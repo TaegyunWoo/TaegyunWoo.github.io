@@ -37,9 +37,9 @@ disqus:
 google_analytics:
   id: "G-VDE33NGC7S" # Required if you use google analytics. Replace with your tracking id here
 
-collections: # Define post series here
-  interview:
-    output: true
+# collections: # Define post series here
+#   interview:
+#     output: true
 
 defaults:
   - scope:

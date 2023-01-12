@@ -1,7 +1,7 @@
 ---
-category: Redis
-tags: [Redis]
-title: "Redis 트랜잭션"
+category: Interview
+tags: [Interview]
+title: "[Interview 대비] 연결 리스트"
 date:   2023-01-12 13:00:00 
 lastmod : 2022-01-12 13:00:00
 sitemap :
@@ -15,7 +15,7 @@ sitemap :
 
 ## 연결 리스트의 특징
 
-![Untitled](/_interview/img/2023-01-12-Interview_Linked_Lists/Untitled.png)
+![Untitled](/assets/img/2023-01-12-Interview_Linked_Lists/Untitled.png)
 
 - **불연속적인 메모리 위치에 저장**되는 **선형** 데이터 구조
     - **포인터**를 사용해서 연결된다.
@@ -33,12 +33,12 @@ sitemap :
 - **새로운 요소를 삽입**하는 것은 **비용이 많이 든다.**
     - 삽입할 위치 이후의 모든 요소를 한칸씩 뒤로 밀고 삽입해야한다.
     
-    ![Untitled](/_interview/img/2023-01-12-Interview_Linked_Lists/Untitled%201.png)
+    ![Untitled](/assets/img/2023-01-12-Interview_Linked_Lists/Untitled%201.png)
     
     - 시간 복잡도 : **O(n)**
 - **중간 요소를 제거**하는 것 역시 **비용이 많이 든다.**
     
-    ![Untitled](/_interview/img/2023-01-12-Interview_Linked_Lists/Untitled%202.png)
+    ![Untitled](/assets/img/2023-01-12-Interview_Linked_Lists/Untitled%202.png)
     
     - 시간 복잡도 : **O(n)**
 
@@ -48,13 +48,13 @@ sitemap :
 - **삽입이 용이**하다.
     - 새로운 노드를 만들고, 삽입할 위치에 따라 포인터를 설정하기만 하면 된다.
     
-    ![Untitled](/_interview/img/2023-01-12-Interview_Linked_Lists/Untitled%203.png)
+    ![Untitled](/assets/img/2023-01-12-Interview_Linked_Lists/Untitled%203.png)
     
     - 시간 복잡도 : O(1)
 - **삭제가 용이**하다.
     - 삭제할 위치에 따라 포인터를 설정하기만 하면 된다.
     
-    ![Untitled](/_interview/img/2023-01-12-Interview_Linked_Lists/Untitled%204.png)
+    ![Untitled](/assets/img/2023-01-12-Interview_Linked_Lists/Untitled%204.png)
     
     - 시간 복잡도 : O(1)
 
