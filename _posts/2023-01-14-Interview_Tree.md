@@ -1,0 +1,92 @@
+---
+category: Interview
+tags: [Interview]
+title: "[Interview Study] Tree"
+date:   2023-01-14 21:00:00 
+lastmod : 2022-01-14 21:00:00
+sitemap :
+  changefreq : daily
+  priority : 1.0
+---
+
+<br/><br/>
+
+# 트리
+
+![Untitled](/assets/img/2023-01-14-Interview_Tree/Untitled.png)
+
+## 트리란?
+
+- 값을 가진 `노드` 와 노드들을 연결해주는 `간선` 으로 이루어져 있다.
+- 최상단에 있는 노드가 `루트노드` 이다.
+- 모든 노드들은 0개 이상의 자식 노드를 가지고 있다.
+
+<br/><br/>
+
+## 트리의 특징
+
+- 트리에는 **사이클이 존재할 수 없다.**
+    - 만약 사이클이 존재한다면 그것은 **그래프**가 된다.
+- 모든 노드는 자료형으로 표현이 가능하다.
+- **루트에서 한 노드로 가는 경로는 유일한 경로**뿐이다.
+- **노드의 개수가 N개면, 간선은 N-1개**이다.
+
+### 트리 vs 그래프
+
+- 트리에는 사이클이 존재할 수 없다.
+- 그래프에는 사이클이 존재할 수 있다.
+
+<br/><br/>
+
+## 트리 순회 방식
+
+총 4가지의 트리 순회 방식이 존재한다.
+
+- **전위 순회**
+- **중위 순회**
+- **후위 순회**
+- **레벨 순회**
+
+### 전위 순회
+
+![Untitled](/assets/img/2023-01-14-Interview_Tree/Untitled%201.png)
+
+- **각 서브트리의 루트노드를 순차적으로 먼저 방문한다.**
+- Root → 왼쪽 자식 → 오른쪽 자식
+
+> 1 → 2 → 4 → 5 → 3 → 6 → 7
+
+### 중위 순회
+
+![Untitled](/assets/img/2023-01-14-Interview_Tree/Untitled%202.png)
+
+- **왼쪽 서브트리를 방문하고, 루트노드를 방문한다.**
+- 왼쪽 자식 → Root → 오른쪽 자식
+
+> 4 → 2 → 5 → 1 → 6 → 3 → 7
+> 
+
+### 후위 순회
+
+![Untitled](/assets/img/2023-01-14-Interview_Tree/Untitled%203.png)
+
+- **왼쪽 서브트리부터 하위를 모두 방문 하고, 마지막에 루트노드를 방문한다.**
+- 왼쪽 자식 → 오른쪽 자식 → Root
+
+> 4 → 5 → 2 → 6 → 7 → 3 → 1
+
+### 레벨 순회
+
+![Untitled](/assets/img/2023-01-14-Interview_Tree/Untitled%204.png)
+
+- **루트노드부터 계층별로 방문한다.**
+
+> 1 → 2 → 3 → 4 → 5 → 6 → 7
+
+<br/><br/>
+
+## Reference
+
+[https://taegyunwoo.github.io/datastructure/DATASTRUCTURE_BinaryTree_Traversal](https://taegyunwoo.github.io/datastructure/DATASTRUCTURE_BinaryTree_Traversal)
+
+> 위 링크에서 코드를 확인해볼 수 있다.
