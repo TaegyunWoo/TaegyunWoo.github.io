@@ -3,21 +3,21 @@
 
 name: "우태균"
 job: "Back-end Programmer"
-hi: "안녕하세요.<br/>모두 환영합니다!"
+hi: "안녕하세요!<br/>"
 avatar_img: "/assets/img/me.png" # path to your avatar
 intro:
-  - "항상 성장하고자 하는 백엔드 프로그래머입니다."
-  - "좋은 프로그래머란 무엇인지 항상 고민합니다."
+  - "주니어 Backend Developer입니다."
+  - "함께 성장하는 것에 관심이 많습니다."
 skills:
   - name: "Programming"
     icon-class: "fa fa-terminal"
-    list: ["Java", "Servlet/JSP", "MySQL"]
+    list: ["Java", "MySQL"]
   - name: "Framework"
     icon-class: "fa fa-th-list"
-    list: ["Spring-Boot", "JPA", "JUnit", "Mockito", "Thymeleaf"]
+    list: ["Spring-Boot", "JPA"]
   - name: "Tools"
     icon-class: "fa fa-cogs"
-    list: ["Linux", "Git"]
+    list: ["Linux", "Git", "AWS", "Jira", "Confluence"]
 
 display_name: "WooTaegyun"
 contact:
