@@ -1,0 +1,151 @@
+---
+category: Interview
+tags: [Interview]
+title: "[Interview Study] Trie 자료구조"
+date:   2023-01-24 21:00:00 
+lastmod : 2022-01-24 21:00:00
+sitemap :
+  changefreq : daily
+  priority : 1.0
+---
+
+<br/><br/>
+
+# 트라이
+
+![Untitled](/assets/img/2023-01-24-Interview_Trie/Untitled.png)
+
+## 트라이란?
+
+- **문자열에서 검색을 빠르게** 도와주는 자료구조이다.
+- 일반적인 Tree 자료구조와 같은 모양이지만 저장하는 값이 다른 형태이다.
+    - 트라이는 문자열 전체를 하나의 노드에 저장하는 게 아니라, **한 단어씩 노드에 저장하는 트리**이다.
+
+<br/><br/>
+
+## 일반 이진트리 vs 트라이 시간복잡도
+
+### 일반 이진트리 검색 시간복잡도
+
+![Untitled](/assets/img/2023-01-24-Interview_Trie/Untitled%201.png)
+
+- 위와 같은 정수형 자료의 이진트리에서 검색하는데 소요되는 시간복잡도는 `O(logN)` 이다. (`N` 은 전체 노드 개수)
+
+<br/>
+
+### 트라이 검색 시간복잡도
+
+![Untitled](/assets/img/2023-01-24-Interview_Trie/Untitled%202.png)
+
+- 위 그림에서 저장된 단어는 `AB` , `ABC` , `CAR` , `CAM` 이다.
+- 만약 `ABC` 를 검색한다면, `A` → `B` → `C` 순으로 노드를 방문하면 된다.
+- 따라서 시간복잡도는 `O(M)` 이다. (`M` 은 단어 길이)
+- **일반적인 이진 트리보다 훨씬 효율적**이다.
+
+<br/><br/>
+
+## 트라이 구현
+
+### Node 클래스
+
+```java
+public class Node {
+	//자식 노드들을 저장하는 필드
+	Map<Character, Node> childNodeMap = new HashMap<>();
+	//this 노드가 단어의 끝인지 아닌지를 체크하는 필드
+	boolean endOfWord;
+}
+```
+
+- `childNodeMap` 필드를 통해, 자식 노드들을 관리한다.
+    - `<자식노드의 Key, 자식노드 객체>`
+- `endOfWord` 필드가 true면, **”루트노드에서 해당 노드까지의 경로에 있는 모든 Key”를 하나의 단어로 저장한다는 뜻**이다.
+
+<br/>
+
+### Trie 클래스
+
+```java
+public class Trie {
+
+	//Trie 자료구조를 생성할 때, rootNode는 기본적으로 생성한다.
+	private Node rootNode = new Node();
+
+	/**
+	 * INSERT 연산
+	 */
+	public void insert(String str) {
+		//Trie 자료구조는 항상 rootNode부터 시작한다.
+		Node node = this.rootNode;
+
+		//문자열의 각 문자마다 가져와서 자식노드 중에 있는지 체크한다. (없으면 자식노드를 새로 생성한다.)
+		for (int i = 0; i < str.length(); i++) {
+			char c = str.charAt(i);
+			Map<Character, Node> childNodeMap = node.childNodeMap;
+			if (childNodeMap.containsKey(c)) { //만약 해당 key를 갖는 노드가 존재하면
+				node = childNodeMap.get(c);
+			} else { //만약 해당 key를 갖는 노드가 없다면
+				node = new Node();
+				childNodeMap.put(c, node);
+			}
+		}
+
+		//저장할 문자열의 마지막 단어에 매핑되는 노드에 단어의 끝임을 명시한다.
+		node.endOfWord = true;
+	}
+
+	/**
+	 * SEARCH 연산
+	 */
+	public boolean search(String str) {
+		//Trie 자료구조는 항상 rootNode부터 시작한다.
+		Node node = this.rootNode;
+
+		//문자열의 각 문자마다 노드가 존재하는지 확인
+		for (int i = 0; i < str.length(); i++) {
+			char c = str.charAt(i);
+			Map<Character, Node> childNodeMap = node.childNodeMap;
+			if (childNodeMap.containsKey(c)) { //문자열의 각 문자에 매핑된 노드가 존재하면 가져온다.
+				node = childNodeMap.get(c);
+			} else { //문자열의 각 문자에 매핑된 노드가 존재하지 않는다면 false 리턴
+				return false;
+			}
+		}
+
+		//문자열의 모든 문자에 대한 노드가 존재한다고 해서, 무조건 해당 문자열이 존재하는것이 아니다.
+		//실제로 현재 노드가 단어의 끝인지 판단해야함.
+		return node.endOfWord;
+	}
+}
+```
+
+<br/>
+
+### 테스트
+
+![Untitled](/assets/img/2023-01-24-Interview_Trie/Untitled%203.png)
+
+위 그림과 같은 트라이 구조를 코드로 구현하면 아래와 같다.
+
+```java
+public static void main(String[] args) {
+	//Trie 자료구조 생성
+	Trie trie = new Trie();
+
+	//Trie에 문자열 저장
+	trie.insert("AB");
+	trie.insert("AC");
+
+	//Trie에 저장된 문자열 확인
+	trie.search("AB"); //true
+	trie.search("AC"); //true
+	trie.search("A"); //false
+	trie.search("ABC"); //false
+}
+```
+
+<br/><br/>
+
+## 연습문제
+
+[https://www.acmicpc.net/problem/5052](https://www.acmicpc.net/problem/5052)
