@@ -1,7 +1,7 @@
 ---
 category: Interview
 tags: [Interview]
-title: "[Interview Study] B-Tree 와 B+Tree"
+title: "[CS Study] B-Tree 와 B+Tree"
 date:   2023-01-21 01:00:00 
 lastmod : 2022-01-21 01:00:00
 sitemap :

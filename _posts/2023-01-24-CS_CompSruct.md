@@ -1,7 +1,7 @@
 ---
 category: Interview
 tags: [Interview]
-title: "[Interview Study] 컴퓨터의 구조"
+title: "[CS Study] 컴퓨터의 구조"
 date:   2023-01-24 23:00:00 
 lastmod : 2022-01-24 23:00:00
 sitemap :

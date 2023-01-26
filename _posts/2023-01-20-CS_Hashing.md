@@ -1,7 +1,7 @@
 ---
 category: Interview
 tags: [Interview]
-title: "[Interview Study] Java에서의 Vector와 ArrayList"
+title: "[CS Study] Java에서의 Vector와 ArrayList"
 date:   2023-01-19 20:00:00 
 lastmod : 2022-01-19 20:00:00
 sitemap :

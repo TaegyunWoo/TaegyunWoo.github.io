@@ -1,7 +1,7 @@
 ---
 category: Interview
 tags: [Interview]
-title: "[Interview Study] Stack & Queue"
+title: "[CS Study] Stack & Queue"
 date:   2023-01-16 21:00:00 
 lastmod : 2022-01-16 21:00:00
 sitemap :

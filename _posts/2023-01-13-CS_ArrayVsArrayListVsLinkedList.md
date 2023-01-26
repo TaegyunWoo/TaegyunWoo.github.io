@@ -1,7 +1,7 @@
 ---
 category: Interview
 tags: [Interview]
-title: "[Interview Study] Array vs ArrayList vs LinkedList"
+title: "[CS Study] Array vs ArrayList vs LinkedList"
 date:   2023-01-13 23:00:00 
 lastmod : 2022-01-13 23:00:00
 sitemap :

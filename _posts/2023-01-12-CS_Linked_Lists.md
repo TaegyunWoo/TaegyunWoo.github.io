@@ -1,7 +1,7 @@
 ---
 category: Interview
 tags: [Interview]
-title: "[Interview Study] 연결 리스트"
+title: "[CS Study] 연결 리스트"
 date:   2023-01-12 13:00:00 
 lastmod : 2022-01-12 13:00:00
 sitemap :
