@@ -89,13 +89,11 @@ Spring 컨테이너는 서블릿 컨테이너 내부에 존재하죠.
 
 Spring 컨테이너와 서블릿 컨테이너는 분명히 서로 다른 환경입니다.
 
-그렇기 때문에, 서블릿 컨테이너는 자체 표준을 사용(`Filter` 인터페이스를 구현하는 방식)해야만 필터로 동작합니다. **따라서 Spring의 Bean 객체는 인식하지 못합니다.**
-
 그러면 어떻게 Spring에서 필터를 다룰 수 있도록 하는 것일까요?
 
 **다시 말해서, 어떻게 필터가 Spring Context를 참조할 수 있을까요?**
 
-**그 해답이 바로, `DelegatingFilterProxy` 입니다.**
+**그 해답은 바로, `DelegatingFilterProxy` 입니다.**
 
 <br/>
 
@@ -182,7 +180,7 @@ Spring Security는 `FilterChainProxy` 을 사용해서 서블릿 컨테이너와
 
 **이 `FilterChainProxy` 은 위에서 살펴본 `DelegatingFilterProxy` 에 의해서 호출됩니다.**
 
-그리고 `FilterChainProxy` 을 통해서 `SecurityFilterChain` 을 호출되고, 다시 다른 필터들에게 필터링 작업을 위임하죠.
+그리고 `FilterChainProxy` 을 통해서 `SecurityFilterChain` 가 호출되고, 다시 다른 필터들에게 필터링 작업을 위임하죠.
 
 > `SecurityFilterChain` 은 조금 있다가 설명할게요!
 > 
