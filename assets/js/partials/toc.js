@@ -1,3 +1,9 @@
+// Run Toc
+$(document).ready(function() {
+  $('#toc').toc();
+});
+
+// Build Toc
 // https://github.com/ghiculescu/jekyll-table-of-contents
 (function($){
   $.fn.toc = function(options) {
