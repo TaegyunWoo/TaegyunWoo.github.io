@@ -1,7 +1,8 @@
 # SITE CONFIGURATION
 # baseurl: "/Type-on-Strap"
 baseurl: ""
-url: "https://taegyunwoo.github.io"
+url: "https://TaegyunWoo.github.io"
+
 
 # THEME-SPECIFIC CONFIGURATION
 title: Dev Blog                                    # site's title
