@@ -1,6 +1,6 @@
 ---
 category: Spring-MVC
-tags: [스프링, MVC, 요청파라미터]
+tags: [Spring-MVC]
 title: "[스프링 - MVC] HTTP 요청 파라미터 조회"
 date:   2021-07-28 14:30:00 
 lastmod : 2021-07-28 14:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 개요
 

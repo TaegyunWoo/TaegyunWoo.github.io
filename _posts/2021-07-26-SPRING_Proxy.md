@@ -1,6 +1,6 @@
 ---
 category: Spring-Core
-tags: [스프링, 핵심원리, 빈스코프, 웹스코프, 프록시]
+tags: [Spring-Core]
 title: "[스프링 - 핵심원리] 스코프와 프록시"
 date:   2021-07-26 17:30:00 
 lastmod : 2021-07-26 17:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 [이전 글](https://taegyunwoo.github.io/spring/SPRING_WebScope)에서 request 스코프를 다뤘다. `ObjectProvider` 를 통해 request 빈의 조회를 지연시켰다. 하지만 보다 더 간편한 방법이 있다. 그것이 바로 프록시를 활용하는 것이다.
 

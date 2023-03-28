@@ -1,6 +1,6 @@
 ---
 category: Tech
-tags: [스프링]
+tags: [Tech]
 title: "SpringBoot - Dispatcher Servlet을 활용해 매핑되는 핸들러 구하기"
 date:   2022-03-10 16:10:00 
 lastmod : 2022-03-10 16:10:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # Dispatcher Servlet을 활용해 매핑되는 핸들러 구하기
 ## 개요

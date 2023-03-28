@@ -1,6 +1,6 @@
 ---
 category: Spring-ADV
-tags: [스프링]
+tags: [Spring-Advanced]
 title: "[스프링-ADV] 쓰레드 로컬"
 date:   2022-07-21 15:30:00 
 lastmod : 2022-07-21 15:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 쓰레드 로컬 - ThreadLocal
 

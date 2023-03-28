@@ -1,6 +1,6 @@
 ---
 category: Spring-MVC
-tags: [스프링, MVC, H2]
+tags: [Spring-MVC]
 title: "[스프링 - MVC] 스프링부트와 H2 연결 세팅"
 date:   2021-09-05 16:10:00 
 lastmod : 2021-09-05 16:10:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 스프링부트와 H2 데이터베이스
 ## 개요

@@ -1,6 +1,6 @@
 ---
 category: TS
-tags: [트러블슈팅, AWS, EC2, RDS]
+tags: [TS]
 title: "AWS - EC2에서 RDS 연결시, 무반응 현상과 해결방법"
 date:   2021-08-23 11:30:00 
 lastmod : 2021-08-23 11:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 문제 배경
 - AWS의 EC2에서 RDS와 연결을 시도했다. 아래 명령어를 통해 MySql이 설치된 RDS와의 연결을 기대했다.

@@ -1,6 +1,6 @@
 ---
 category: Spring-ADV
-tags: [스프링]
+tags: [Spring-Advanced]
 title: "[스프링-ADV] 프록시 패턴, 데코레이터 패턴 예시 프로젝트 설정"
 date:   2022-07-24 17:00:00 
 lastmod : 2022-07-24 17:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 프록시 패턴, 데코레이터 패턴 학습을 위한 예시 프로젝트 설정
 

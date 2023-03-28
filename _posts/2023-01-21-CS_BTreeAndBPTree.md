@@ -9,8 +9,6 @@ sitemap :
   priority : 1.0
 ---
 
-<br/><br/>
-
 # B Tree & B+ Tree
 
 ## B Tree

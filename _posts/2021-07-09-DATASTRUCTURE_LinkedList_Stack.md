@@ -1,6 +1,6 @@
 ---
 category: DataStructure
-tags: [데이터구조, 자료구조, 연결리스트, 스택]
+tags: [DataStructure]
 title: "[데이터구조] 연결리스트-스택"
 date:   2021-07-09 12:00:00 
 lastmod : 2021-07-09 12:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 연결리스트
 

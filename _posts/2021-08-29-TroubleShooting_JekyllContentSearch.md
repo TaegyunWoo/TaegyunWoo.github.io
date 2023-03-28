@@ -1,6 +1,6 @@
 ---
 category: TS
-tags: [트러블슈팅, 지킬블로그, SimpleJekyllSearch]
+tags: [TS]
 title: "Simple-Jekyll-Search에서 게시글 content 내용 검색이 안되는 문제와 해결방법"
 date:   2021-08-29 18:30:00 
 lastmod : 2021-08-29 18:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 문제 배경
 - 현재 블로그 테마로 사용 중인 [`jekyll-theme-textalic`](https://github.com/UniFreak/jekyll-theme-textalic)의 검색기능이 제대로 작동하지 않는다.

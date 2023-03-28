@@ -1,6 +1,6 @@
 ---
 category: Thymeleaf
-tags: [타임리프, 속성설정]
+tags: [Thymeleaf]
 title: "[타임리프] 타임리프를 통한 HTML 속성 값 설정"
 date:   2021-08-02 12:10:00 
 lastmod : 2021-08-02 12:10:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 속성 값 설정
 

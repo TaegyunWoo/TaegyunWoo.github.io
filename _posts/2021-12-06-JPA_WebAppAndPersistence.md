@@ -9,8 +9,6 @@ sitemap :
   priority : 1.0
 ---
 
-<br/><br/>
-
 # Spring과 영속성 관리
 
 ## 트랜잭션 범위의 영속성 컨텍스트

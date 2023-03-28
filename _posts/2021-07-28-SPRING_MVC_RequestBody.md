@@ -1,6 +1,6 @@
 ---
 category: Spring-MVC
-tags: [스프링, MVC, 요청메시지, 바디데이터]
+tags: [Spring-MVC]
 title: "[스프링 - MVC] HTTP 요청 바디 데이터 조회"
 date:   2021-07-28 17:30:00 
 lastmod : 2021-07-28 17:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 이전 게시글들 ([요청파라미터](https://taegyunwoo.github.io/spring/SPRING_MVC_HTTP_RequestParameter) , [@ModelAttribute](https://taegyunwoo.github.io/spring/SPRING_MVC_ModelAttribute)) 에서 "GET, 쿼리 파라미터"와 "POST, HTML Form" 으로 전달된 파라미터를 처리하는 방법에 대해 설명하였다.
 

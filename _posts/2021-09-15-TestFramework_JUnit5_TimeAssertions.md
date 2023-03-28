@@ -1,6 +1,6 @@
 ---
 category: Test-Framework
-tags: [JUnit5]
+tags: [Test-Framework, JUnit5]
 title: "[JUnit 5] 시간에 따른 테스트"
 date:   2021-09-15 17:00:00 
 lastmod : 2021-09-15 17:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 - **[예시 프로젝트 다운로드](https://github.com/TaegyunWoo/Spring-Test-Code-Example)**
 - 이전 게시글

@@ -1,6 +1,6 @@
 ---
 category: TS
-tags: [트러블슈팅, ViewResolver]
+tags: [TS]
 title: "@WebMvcTest로 컨트롤러 테스트시 ViewResolver 에러 발생 문제"
 date:   2021-09-23 22:08:00 
 lastmod : 2021-09-23 22:08:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 - 문제 발생 개발기록
   - [CRUD Web 개발일지: 2021-09-23](https://taegyunwoo.github.io/CRUD_Web/2021-09-23)

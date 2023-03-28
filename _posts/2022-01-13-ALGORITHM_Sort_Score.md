@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 정렬]
+tags: [Algorithm]
 title: "[알고리즘 - 정렬] 성적이 낮은 순서로 학생 출력하기"
 date:   2022-01-13 17:10:00 
 lastmod : 2022-01-13 17:10:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 > [소스코드](https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/sort/%EC%84%B1%EC%A0%81%EC%9D%B4_%EB%82%AE%EC%9D%80_%EC%88%9C%EC%84%9C%EB%A1%9C_%ED%95%99%EC%83%9D_%EC%B6%9C%EB%A0%A5%ED%95%98%EA%B8%B0.java)  
 

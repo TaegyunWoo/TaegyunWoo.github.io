@@ -1,6 +1,6 @@
 ---
 category: Comput-Struct
-tags: [ComputerStructure, 기억장치, Memory]
+tags: [ComputerStructure]
 title: "[Computer Structure] 기억장치"
 date:   2021-09-30 17:06:00 
 lastmod : 2021-09-30 17:06:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 컴퓨터 기억장치 시스템 개요
 

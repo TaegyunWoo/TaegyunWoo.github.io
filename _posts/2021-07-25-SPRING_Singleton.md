@@ -1,6 +1,6 @@
 ---
 category: Spring-Core
-tags: [스프링, 핵심원리, 싱글톤, 스프링컨테이너]
+tags: [Spring-Core]
 title: "[스프링 - 핵심원리] 싱글톤과 스프링 컨테이너"
 date:   2021-07-25 00:30:00 
 lastmod : 2021-07-25 00:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 웹 애플리케이션의 기본 동작
 

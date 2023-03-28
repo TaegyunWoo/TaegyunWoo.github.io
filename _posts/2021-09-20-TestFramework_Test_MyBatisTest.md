@@ -1,6 +1,6 @@
 ---
 category: Test-Framework
-tags: [Test]
+tags: [Test-Framework]
 title: "[테스트] MyBatis 테스트"
 date:   2021-09-20 10:30:00 
 lastmod : 2021-09-20 10:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # MyBatis 테스트
 

@@ -1,6 +1,6 @@
 ---
 category: Spring-MVC
-tags: [스프링, MVC, 검증]
+tags: [Spring-MVC]
 title: "[스프링 - MVC] 검증 - API 응답"
 date:   2021-08-14 19:30:00 
 lastmod : 2021-08-14 19:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 - 이전 게시글
   1. [검증 - 기초](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_Validation)

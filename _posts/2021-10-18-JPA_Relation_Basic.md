@@ -9,8 +9,6 @@ sitemap :
   priority : 1.0
 ---
 
-<br/><br/>
-
 # 연관관계 매핑 기초
 
 ## 개요

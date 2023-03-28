@@ -1,6 +1,6 @@
 ---
 category: Spring-Core
-tags: [스프링, 핵심원리, 제어역전, 의존관계주입, 컨테이너]
+tags: [Spring-Core]
 title: "[스프링 - 핵심원리] 제어의 역전, 의존관계 주입, 컨테이너"
 date:   2021-07-24 00:30:00 
 lastmod : 2021-07-24 00:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 제어의 역전: IoC(Inversion of Control)
 

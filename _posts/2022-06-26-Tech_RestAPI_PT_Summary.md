@@ -1,6 +1,6 @@
 ---
 category: Tech
-tags: [API]
+tags: [Tech]
 title: "Naver D2 - '그런 REST API로 괜찮은가' PT 정리"
 date:   2022-06-26 02:10:00 
 lastmod : 2022-06-26 02:10:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # ‘그런 REST API로 괜찮은가’ 컨퍼런스 정리
 

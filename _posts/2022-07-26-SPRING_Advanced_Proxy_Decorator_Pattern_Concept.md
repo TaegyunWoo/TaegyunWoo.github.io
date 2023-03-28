@@ -1,6 +1,6 @@
 ---
 category: Spring-ADV
-tags: [스프링]
+tags: [Spring-Advanced]
 title: "[스프링-ADV] 프록시 패턴, 데코레이터 패턴 개념"
 date:   2022-07-26 01:00:00 
 lastmod : 2022-07-26 01:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 프록시, 프록시 패턴, 데코레이터 패턴 개념
 

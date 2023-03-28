@@ -1,6 +1,6 @@
 ---
 category: Spring-MVC
-tags: [스프링, MVC]
+tags: [Spring-MVC]
 title: "[스프링 - MVC] HandlerMethodArgumentResolver"
 date:   2021-12-20 14:00:00 
 lastmod : 2021-12-20 14:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # HandlerMethodArgumentResolver
 

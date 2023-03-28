@@ -1,6 +1,6 @@
 ---
 category: Comput-Struct
-tags: [ComputerStructure, 개요]
+tags: [ComputerStructure]
 title: "[Computer Structure] 컴퓨터 구조 개요"
 date:   2021-09-10 20:30:00 
 lastmod : 2021-09-10 20:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 컴퓨터 구조 개요
 

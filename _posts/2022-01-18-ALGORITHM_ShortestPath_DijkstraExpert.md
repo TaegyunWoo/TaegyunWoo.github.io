@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 최단거리]
+tags: [Algorithm]
 title: "[알고리즘 - 최단거리] 개선된 다익스트라 알고리즘"
 date:   2022-01-18 21:30:00 
 lastmod : 2022-01-18 21:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 > [소스코드](https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/shortestpath/다익스트라_개선.java)
 

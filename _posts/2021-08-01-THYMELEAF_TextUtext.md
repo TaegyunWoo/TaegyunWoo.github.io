@@ -1,6 +1,6 @@
 ---
 category: Thymeleaf
-tags: [타임리프, 개요, text, utext]
+tags: [Thymeleaf]
 title: "[타임리프] 기본 표현식: text와 utext"
 date:   2021-08-01 16:30:00 
 lastmod : 2021-08-01 16:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 개요
 

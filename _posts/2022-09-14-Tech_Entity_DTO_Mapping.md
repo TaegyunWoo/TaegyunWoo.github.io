@@ -1,6 +1,6 @@
 ---
 category: Tech
-tags: [Spring]
+tags: [Tech]
 title: "MapStruct 라이브러리로 Entity와 DTO 매핑 박살내기"
 date:   2022-09-16 21:15:00 
 lastmod : 2022-09-16 21:15:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 ## 개요
 

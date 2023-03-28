@@ -9,8 +9,6 @@ sitemap :
   priority : 1.0
 ---
 
-<br/><br/>
-
 # Redis 란 무엇인가
 
 Redis에 대해 시리즈로 포스팅을 할 예정이다. 이 포스팅를 통해, 시리즈의 첫번째로 Redis 가 무엇인지 알아보자.

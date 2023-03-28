@@ -1,6 +1,6 @@
 ---
 category: Tech
-tags: [Spring]
+tags: [Tech]
 title: "Spring Boot 2.4 이상에서 설정파일을 다루는 방법"
 date:   2022-08-07 15:30:00 
 lastmod : 2022-08-07 15:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # Spring Boot 2.4 이상에서 설정파일을 다루는 방법
 

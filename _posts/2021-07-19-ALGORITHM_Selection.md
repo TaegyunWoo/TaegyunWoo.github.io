@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 분할정복, 선택문제]
+tags: [Algorithm]
 title: "[알고리즘 - 분할정복] 선택문제"
 date:   2021-07-19 15:00:00 
 lastmod : 2021-07-19 15:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 분할 정복 : 선택문제 (Selection)
 

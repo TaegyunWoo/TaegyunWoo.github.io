@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 분할정복]
+tags: [Algorithm]
 title: "[알고리즘 - 분할정복] 분할정복 알고리즘"
 date:   2022-02-25 15:30:00 
 lastmod : 2022-02-25 15:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 분할정복 알고리즘
 ## 개요

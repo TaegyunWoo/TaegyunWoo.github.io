@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 그리디]
+tags: [Algorithm]
 title: "[알고리즘 - 그리디] 숫자가 1이 될 때까지"
 date:   2022-01-04 14:30:00 
 lastmod : 2022-01-04 14:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 > [소스코드](https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/greedy/%EC%88%AB%EC%9E%90%EA%B0%80_1%EC%9D%B4_%EB%90%A0_%EB%95%8C%EA%B9%8C%EC%A7%80.java)
 

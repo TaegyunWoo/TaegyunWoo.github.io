@@ -1,6 +1,6 @@
 ---
 category: Spring-MVC
-tags: [스프링, MVC, 메시지바디, 응답]
+tags: [Spring-MVC]
 title: "[스프링 - MVC] 메시지 바디에 직접 입력하여 응답하기"
 date:   2021-07-29 15:00:00 
 lastmod : 2021-07-29 15:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 [이전 글](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ResponseStaticTemplate)에서 정적 리소스와 뷰 템플릿을 통해 응답하는 방법을 살펴보았다. 이번 글에서는 HTTP 메시지 바디에 직접 데이터를 입력하여 응답하는 방법을 알아보도록 하겠다.
 

@@ -1,6 +1,6 @@
 ---
 category: Spring-Core
-tags: [스프링, 핵심원리, 빈스코프, 웹스코프]
+tags: [Spring-Core]
 title: "[스프링 - 핵심원리] 웹 스코프"
 date:   2021-07-26 15:30:00 
 lastmod : 2021-07-26 15:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 [이전 글](https://taegyunwoo.github.io/spring/SPRING_BeanScope)에서 싱글톤과 프로토타입 스코프를 학습했다. 이제 나머지 웹 스코프에 대해 알아보자.
 

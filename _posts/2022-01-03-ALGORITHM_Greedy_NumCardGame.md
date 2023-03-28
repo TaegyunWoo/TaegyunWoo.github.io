@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 그리디]
+tags: [Algorithm]
 title: "[알고리즘 - 그리디] 숫자 카드 게임"
 date:   2022-01-03 19:30:00 
 lastmod : 2022-01-03 19:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 > [소스코드](https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/greedy/%EC%88%AB%EC%9E%90_%EC%B9%B4%EB%93%9C_%EA%B2%8C%EC%9E%84.java)
 

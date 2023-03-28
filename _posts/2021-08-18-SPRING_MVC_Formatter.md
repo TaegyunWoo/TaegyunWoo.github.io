@@ -1,6 +1,6 @@
 ---
 category: Spring-MVC
-tags: [스프링, MVC, Converter, Formatter]
+tags: [Spring-MVC]
 title: "[스프링 - MVC] 포맷터(Formatter)"
 date:   2021-08-18 14:30:00 
 lastmod : 2021-08-18 14:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 - 이전 게시글
     1. [[스프링 - MVC] 스프링 타입 컨버터](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_TypeConverter)

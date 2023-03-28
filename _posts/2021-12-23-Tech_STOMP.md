@@ -1,6 +1,6 @@
 ---
 category: Tech
-tags: [WebSocket]
+tags: [Tech]
 title: "STOMP와 Spring-Boot"
 date:   2021-12-23 17:55:00 
 lastmod : 2021-12-23 17:55:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # STOMP
 

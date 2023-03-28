@@ -1,6 +1,6 @@
 ---
 category: Thymeleaf
-tags: [타임리프, 변수표현식, SpringEL]
+tags: [Thymeleaf]
 title: "[타임리프] 기본 표현식: 변수 표현식과 Spring EL"
 date:   2021-08-01 19:30:00 
 lastmod : 2021-08-01 19:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 변수 표현식과 Spring EL
 

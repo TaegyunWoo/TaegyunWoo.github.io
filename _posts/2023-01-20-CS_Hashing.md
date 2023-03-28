@@ -9,8 +9,6 @@ sitemap :
   priority : 1.0
 ---
 
-<br/><br/>
-
 # Java Vector / ArrayList
 
 ## Vector와 ArrayList

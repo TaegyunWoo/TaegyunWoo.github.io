@@ -9,8 +9,6 @@ sitemap :
   priority : 1.0
 ---
 
-<br/><br/>
-
 # Redis Key 관리 명령어
 
 ## 개요

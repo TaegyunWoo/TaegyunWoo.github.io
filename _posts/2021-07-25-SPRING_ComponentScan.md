@@ -1,6 +1,6 @@
 ---
 category: Spring-Core
-tags: [스프링, 핵심원리, 컴포넌트스캔, Autowired]
+tags: [Spring-Core]
 title: "[스프링 - 핵심원리] 컴포넌트 스캔"
 date:   2021-07-25 14:30:00 
 lastmod : 2021-07-25 14:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 컴포넌트 스캔과 의존관계 자동 주입
 

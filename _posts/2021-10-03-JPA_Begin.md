@@ -9,8 +9,6 @@ sitemap :
   priority : 1.0
 ---
 
-<br/><br/>
-
 - [예시 프로젝트 다운로드](https://github.com/TaegyunWoo/jpa-study/tree/master/BasicJpaApp)
 
 <br/><br/>

@@ -1,6 +1,6 @@
 ---
 category: Thymeleaf
-tags: [타임리프, 조건부]
+tags: [Thymeleaf]
 title: "[타임리프] 조건부 평가"
 date:   2021-08-02 13:00:00 
 lastmod : 2021-08-02 13:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 조건부 평가
 

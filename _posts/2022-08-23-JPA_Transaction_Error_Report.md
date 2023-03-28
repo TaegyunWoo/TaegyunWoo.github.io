@@ -1,6 +1,6 @@
 ---
 category: JPA
-tags: [JPA, Hibernate]
+tags: [JPA]
 title: "[JPA] 엔티티 연관관계·트랜잭션 관련 오류와 해결방법"
 date:   2022-08-23 12:10:00 
 lastmod : 2022-08-23 12:10:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # JPA 엔티티 연관관계·트랜잭션 관련 오류와 해결방법
 

@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 정렬]
+tags: [Algorithm]
 title: "[알고리즘 - 정렬] 삽입 정렬"
 date:   2022-01-12 15:30:00 
 lastmod : 2022-01-12 15:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 > [소스코드](https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/sort/%EC%82%BD%EC%9E%85%EC%A0%95%EB%A0%AC.java)  
 

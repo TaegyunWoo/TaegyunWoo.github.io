@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 벨만포드]
+tags: [Algorithm]
 title: "[알고리즘] 벨만포드 알고리즘"
 date:   2022-03-23 15:20:00 
 lastmod : 2022-03-23 15:20:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 벨만포드 알고리즘
 ## 개요

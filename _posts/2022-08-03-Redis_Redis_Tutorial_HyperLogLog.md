@@ -9,8 +9,6 @@ sitemap :
   priority : 1.0
 ---
 
-<br/><br/>
-
 # HyperLogLog 알고리즘과 Redis 에서의 데이터 구조
 
 ## 개요

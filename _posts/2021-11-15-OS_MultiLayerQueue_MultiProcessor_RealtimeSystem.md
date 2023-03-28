@@ -9,8 +9,6 @@ sitemap :
   priority : 1.0
 ---
 
-<br/><br/>
-
 - 이전 게시글
     - [[OS] CPU 스케줄링](https://taegyunwoo.github.io/os/OS_CPU_Scheduling)
 

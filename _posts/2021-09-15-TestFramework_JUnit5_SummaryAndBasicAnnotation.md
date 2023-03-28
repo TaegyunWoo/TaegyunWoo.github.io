@@ -1,6 +1,6 @@
 ---
 category: Test-Framework
-tags: [JUnit5, 개요]
+tags: [Test-Framework, JUnit5]
 title: "[JUnit 5] 개요 및 기본 애너테이션"
 date:   2021-09-15 15:30:00 
 lastmod : 2021-09-15 15:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 - **[예시 프로젝트 다운로드](https://github.com/TaegyunWoo/Spring-Test-Code-Example)**
 

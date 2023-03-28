@@ -1,6 +1,6 @@
 ---
 category: Tech
-tags: [Spring]
+tags: [Tech]
 title: "‘우아한레디스 by 강대명’ 세미나 정리"
 date:   2022-07-27 00:30:00 
 lastmod : 2022-07-27 00:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # ‘우아한레디스 by 강대명’ 세미나 정리
 

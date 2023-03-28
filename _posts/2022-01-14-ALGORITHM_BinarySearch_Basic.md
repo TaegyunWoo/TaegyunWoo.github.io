@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 이진탐색]
+tags: [Algorithm]
 title: "[알고리즘 - 이진탐색] 이진탐색"
 date:   2022-01-14 15:00:00 
 lastmod : 2022-01-14 15:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 > [소스코드 - 재귀 방식](https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/binarysearch/%EC%9D%B4%EC%A7%84%ED%83%90%EC%83%89_%EC%9E%AC%EA%B7%80.java)  
 [소스코드 - 반복문 방식](https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/binarysearch/%EC%9D%B4%EC%A7%84%ED%83%90%EC%83%89_%EB%B0%98%EB%B3%B5%EB%AC%B8.java)

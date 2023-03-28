@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 분할정복, 최근접점쌍]
+tags: [Algorithm]
 title: "[알고리즘 - 분할정복] 최근접점쌍 문제"
 date:   2021-07-20 10:00:00 
 lastmod : 2021-07-21 09:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 분할 정복 : 최근접 점의 쌍 찾기
 

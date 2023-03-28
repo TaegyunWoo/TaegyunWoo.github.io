@@ -1,6 +1,6 @@
 ---
 category: Thymeleaf
-tags: [타임리프, 문자리터럴]
+tags: [Thymeleaf]
 title: "[타임리프] 타임리프의 문자 리터럴"
 date:   2021-08-02 10:30:00 
 lastmod : 2021-08-02 10:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 문자 리터럴
 

@@ -1,6 +1,6 @@
 ---
 category: Test-Framework
-tags: [JUnit5, 테스트반복]
+tags: [Test-Framework, JUnit5]
 title: "[JUnit 5] 테스트 반복"
 date:   2021-09-16 22:00:00 
 lastmod : 2021-09-16 22:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 - **[예시 프로젝트 다운로드](https://github.com/TaegyunWoo/Spring-Test-Code-Example)**
 - 이전 게시글

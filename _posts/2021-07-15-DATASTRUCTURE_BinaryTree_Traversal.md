@@ -1,6 +1,6 @@
 ---
 category: DataStructure
-tags: [데이터구조, 자료구조, 이진트리, 트리순회]
+tags: [DataStructure]
 title: "[데이터구조] 이진트리 순회"
 date:   2021-07-15 15:00:00 
 lastmod : 2021-07-15 15:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 트리
 

@@ -1,6 +1,6 @@
 ---
 category: TS
-tags: [트러블슈팅, BeanValidation]
+tags: [TS]
 title: "Bean Validation과 400 오류"
 date:   2021-09-24 17:30:00 
 lastmod : 2021-09-24 17:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 - 문제 발생 개발기록
   - [CRUD Web 개발일지: 2021-09-24](https://taegyunwoo.github.io/CRUD_Web/2021-09-24)

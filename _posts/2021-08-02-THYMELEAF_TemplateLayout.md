@@ -1,6 +1,6 @@
 ---
 category: Thymeleaf
-tags: [타임리프, 템플릿, 레이아웃]
+tags: [Thymeleaf]
 title: "[타임리프] 템플릿 레이아웃"
 date:   2021-08-02 20:00:00 
 lastmod : 2021-08-02 20:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 템플릿 레이아웃
 

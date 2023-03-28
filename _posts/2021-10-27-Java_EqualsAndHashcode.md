@@ -1,6 +1,6 @@
 ---
 category: Java
-tags: [Java, Hash]
+tags: [Java]
 title: "equals 와 hashCode 메서드에 대하여"
 date:   2021-10-27 17:15:00 
 lastmod : 2021-10-27 17:15:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 개요
 

@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 정렬]
+tags: [Algorithm]
 title: "[알고리즘 - 정렬] 선택 정렬"
 date:   2022-01-12 14:10:00 
 lastmod : 2022-01-12 14:10:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 > [소스코드](https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/sort/%EC%84%A0%ED%83%9D%EC%A0%95%EB%A0%AC.java)  
 

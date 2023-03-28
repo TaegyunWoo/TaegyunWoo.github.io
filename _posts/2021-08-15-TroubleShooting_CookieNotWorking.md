@@ -1,6 +1,6 @@
 ---
 category: TS
-tags: [트러블슈팅, 스프링, 쿠키]
+tags: [TS]
 title: "스프링에서 쿠키가 추가되지 않는 문제와 해결법"
 date:   2021-08-15 16:30:00 
 lastmod : 2021-08-15 16:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 문제 배경
 - `response.addCookie(cookie)` 를 통해 쿠키 응답을 시도했다.

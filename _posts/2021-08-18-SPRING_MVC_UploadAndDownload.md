@@ -1,6 +1,6 @@
 ---
 category: Spring-MVC
-tags: [스프링, MVC, Upload, Download]
+tags: [Spring-MVC]
 title: "[스프링 - MVC] 파일 업로드와 다운로드"
 date:   2021-08-18 16:30:00 
 lastmod : 2021-08-18 16:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 파일 업로드
 

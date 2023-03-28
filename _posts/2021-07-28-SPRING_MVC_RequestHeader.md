@@ -1,6 +1,6 @@
 ---
 category: Spring-MVC
-tags: [스프링, MVC, 요청헤더]
+tags: [Spring-MVC]
 title: "[스프링 - MVC] HTTP 헤더 정보 조회"
 date:   2021-07-28 13:30:00 
 lastmod : 2021-07-28 13:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 [이전 글](https://taegyunwoo.github.io/spring/SPRING_MVC_RequestMapping_AnnotationX)에서 요청을 매핑하는 것에 대해 다뤘다. 이번 글에서는 HTTP 헤더 정보를 위주로 간단하게 정리하겠다.
 

@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 이진탐색]
+tags: [Algorithm]
 title: "[알고리즘 - 이진탐색] 떡볶이 떡 만들기"
 date:   2022-01-15 14:30:00 
 lastmod : 2022-01-15 14:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 > [소스코드](https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/binarysearch/떡볶이_떡_만들기.java)
 

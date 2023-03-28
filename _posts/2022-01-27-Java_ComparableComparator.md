@@ -9,8 +9,6 @@ sitemap :
   priority : 1.0
 ---
 
-<br/><br/>
-
 # Comparable과 Comparator
 ## 개요
 ### Comparable이란?

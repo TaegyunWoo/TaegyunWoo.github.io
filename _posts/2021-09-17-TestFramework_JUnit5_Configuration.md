@@ -1,6 +1,6 @@
 ---
 category: Test-Framework
-tags: [JUnit5]
+tags: [Test-Framework, JUnit5]
 title: "[JUnit 5] JUnit 설정 파일"
 date:   2021-09-17 15:30:00 
 lastmod : 2021-09-17 15:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 Title: JUnit 설정 파일
 

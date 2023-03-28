@@ -1,6 +1,6 @@
 ---
 category: DataStructure
-tags: [데이터구조, 자료구조, 이진탐색트리]
+tags: [DataStructure]
 title: "[데이터구조] 이진탐색트리"
 date:   2021-07-15 18:00:00 
 lastmod : 2021-07-15 18:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 이진 탐색 트리
 

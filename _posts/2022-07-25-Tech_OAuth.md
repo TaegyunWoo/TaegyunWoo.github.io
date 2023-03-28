@@ -1,6 +1,6 @@
 ---
 category: Tech
-tags: [Spring]
+tags: [Tech]
 title: "OAuth 원리"
 date:   2022-07-25 17:30:00 
 lastmod : 2022-07-25 17:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # OAuth
 

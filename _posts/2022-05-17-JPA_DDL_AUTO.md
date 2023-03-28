@@ -1,6 +1,6 @@
 ---
 category: JPA
-tags: [JPA, Hibernate]
+tags: [JPA]
 title: "[JPA] DDL-AUTO 옵션을 통한 칼럼 업데이트"
 date:   2022-05-17 14:19:00 
 lastmod : 2022-05-17 14:19:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # DDL-AUTO 옵션을 통한 칼럼 업데이트
 

@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, DFS, BFS]
+tags: [Algorithm]
 title: "[알고리즘 - DFS와 BFS] Breadth First Search 개념"
 date:   2022-01-09 20:00:00 
 lastmod : 2022-01-09 20:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 > [소스코드: 인접행렬 방식](https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/dfs_bfs/BFS_MatrixGraph.java)  
 [소스코드: 인접리스트 방식](https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/dfs_bfs/BFS_ListGraph.java)

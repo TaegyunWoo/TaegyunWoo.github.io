@@ -1,6 +1,6 @@
 ---
 category: TS
-tags: [트러블슈팅, HTML]
+tags: [TS]
 title: "input 태그에 disabled 속성 설정시 값이 전달되지 않는 문제"
 date:   2021-09-06 15:08:00 
 lastmod : 2021-09-06 15:08:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 - 문제 발생 개발기록
   - [CRUD Web 개발일지: 2021-09-06](https://taegyunwoo.github.io/CRUD_Web/2021-09-06)

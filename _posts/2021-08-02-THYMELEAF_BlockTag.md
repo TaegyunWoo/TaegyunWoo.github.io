@@ -1,6 +1,6 @@
 ---
 category: Thymeleaf
-tags: [타임리프, 블록태그]
+tags: [Thymeleaf]
 title: "[타임리프] 타임리프에서 제공하는 block 태그"
 date:   2021-08-02 14:00:00 
 lastmod : 2021-08-02 14:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 블록 태그
 

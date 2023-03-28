@@ -1,6 +1,6 @@
 ---
 category: Tech
-tags: [Swagger]
+tags: [Tech]
 title: "Swagger에서 jsessionid 인증·인가 사용하기"
 date:   2022-02-19 20:10:00 
 lastmod : 2022-02-19 20:10:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # Swagger에서의 jsessionid 인증 사용
 

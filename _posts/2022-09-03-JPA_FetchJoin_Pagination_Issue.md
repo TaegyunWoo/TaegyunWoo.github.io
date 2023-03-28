@@ -1,6 +1,6 @@
 ---
 category: JPA
-tags: [JPA, Hibernate]
+tags: [JPA]
 title: "[JPA] 페치조인과 페이지네이션 사용시 주의사항"
 date:   2022-09-03 22:10:00 
 lastmod : 2022-09-03 22:10:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 ## 개요
 

@@ -1,6 +1,6 @@
 ---
 category: Spring-Security
-tags: [Spring, SpringSecurity]
+tags: [Spring-Security]
 title: "[Spring-Security] Spring Security의 전체 구조"
 date:   2023-03-24 21:15:00 
 lastmod : 2023-03-24 21:15:00
@@ -9,13 +9,9 @@ sitemap :
   priority : 1.0
 ---
 
-<br/><br/>
-
 Spring Security의 각 기능에 대해 설명하기 전에, 먼저 전체적인 구조를 알아봅시다!
 
 이번 포스팅에서는 Spring Security의 전체 구조에 대해 설명합니다.
-
-<br/><br/>
 
 ## 서블릿 필터
 

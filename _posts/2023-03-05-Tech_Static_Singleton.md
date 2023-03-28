@@ -1,6 +1,6 @@
 ---
 category: Tech
-tags: [Java]
+tags: [Tech]
 title: "Static VS Singleton 패턴"
 date:   2023-03-05 17:15:00 
 lastmod : 2023-03-05 17:15:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 최근 모기업 과제전형을 진행하면서, `static 클래스를 사용하는 것`과 `Singleton 패턴을 사용하는 것`의 차이점에 대해 의문이 들었다.
 

@@ -1,6 +1,6 @@
 ---
 category: MyBatis
-tags: [MyBatis, 마이바티스]
+tags: [MyBatis]
 title: "MyBatis와 SpringBoot 구조"
 date:   2021-09-01 17:30:00 
 lastmod : 2021-09-01 17:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # MyBatis와 MyBatis-Spring 구조
 

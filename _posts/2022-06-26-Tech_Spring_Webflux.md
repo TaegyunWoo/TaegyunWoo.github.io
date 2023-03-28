@@ -1,6 +1,6 @@
 ---
 category: Tech
-tags: [Spring]
+tags: [Tech]
 title: "Spring Webflux 찍먹하기"
 date:   2022-06-26 18:10:00 
 lastmod : 2022-06-26 18:10:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # About Spring Webflux
 

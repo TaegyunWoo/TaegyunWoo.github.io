@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 정렬]
+tags: [Algorithm]
 title: "[알고리즘 - 정렬] 두 배열의 원소 교체"
 date:   2022-01-14 13:00:00 
 lastmod : 2022-01-14 13:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 > [소스코드](https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/sort/%EB%91%90_%EB%B0%B0%EC%97%B4%EC%9D%98_%EC%9B%90%EC%86%8C_%EA%B5%90%EC%B2%B4.java)  
 

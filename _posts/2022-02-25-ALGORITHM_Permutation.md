@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 순열]
+tags: [Algorithm]
 title: "[알고리즘 - 순열] 순열과 순열 알고리즘"
 date:   2022-02-25 22:30:00 
 lastmod : 2022-02-25 22:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 순열과 순열 알고리즘
 ## 개요

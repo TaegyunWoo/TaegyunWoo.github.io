@@ -1,6 +1,6 @@
 ---
 category: Thymeleaf
-tags: [타임리프, 스프링통합, 입력폼]
+tags: [Thymeleaf]
 title: "[타임리프-스프링] 입력 폼 처리"
 date:   2021-08-03 17:00:00 
 lastmod : 2021-08-03 17:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 입력 폼 처리
 

@@ -1,6 +1,6 @@
 ---
 category: DataStructure
-tags: [데이터구조, 자료구조, 스택, 괄호검사, 후위표기식]
+tags: [DataStructure]
 title: "[데이터구조] 스택응용"
 date:   2021-07-02 12:00:00 
 lastmod : 2021-07-02 12:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 스택 응용
 

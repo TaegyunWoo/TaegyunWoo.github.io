@@ -1,6 +1,6 @@
 ---
 category: Thymeleaf
-tags: [타임리프, 기본객체, 편리객체]
+tags: [Thymeleaf]
 title: "[타임리프] 타임리프가 제공하는 객체"
 date:   2021-08-01 19:30:00 
 lastmod : 2021-08-01 19:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 기본 객체
 

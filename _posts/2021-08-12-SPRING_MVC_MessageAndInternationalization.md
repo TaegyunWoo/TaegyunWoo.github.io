@@ -1,6 +1,6 @@
 ---
 category: Spring-MVC
-tags: [스프링, MVC, 메시지, 국제화]
+tags: [Spring-MVC]
 title: "[스프링 - MVC] 메시지와 국제화"
 date:   2021-08-12 18:00:00 
 lastmod : 2021-08-12 18:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 메시지와 국제화
 

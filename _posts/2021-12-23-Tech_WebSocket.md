@@ -1,6 +1,6 @@
 ---
 category: Tech
-tags: [WebSocket]
+tags: [Tech]
 title: "WebSocket과 Spring-Boot"
 date:   2021-12-23 13:55:00 
 lastmod : 2021-12-23 13:55:00

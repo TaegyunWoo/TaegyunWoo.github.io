@@ -1,6 +1,6 @@
 ---
 category: Spring-Core
-tags: [스프링, 핵심원리, 싱글톤, Configuration]
+tags: [Spring-Core]
 title: "[스프링 - 핵심원리] @Configuration과 싱글톤"
 date:   2021-07-25 01:30:00 
 lastmod : 2021-07-25 01:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 문제 제기
 

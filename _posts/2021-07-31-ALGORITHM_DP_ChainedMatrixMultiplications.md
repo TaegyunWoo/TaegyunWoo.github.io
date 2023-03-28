@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, DP, 연속행렬곱셈]
+tags: [Algorithm]
 title: "[알고리즘 - 동적계획] 연속 행렬 곱셈"
 date:   2021-07-31 13:30:00 
 lastmod : 2021-07-31 13:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 동적 계획 : 연속 행렬 곱셈
 

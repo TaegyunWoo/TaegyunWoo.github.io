@@ -1,6 +1,6 @@
 ---
 category: Tech
-tags: [Spring, Selenium]
+tags: [Tech]
 title: "우당탕탕! 효율적인 Selenium 크롤링 서버 구축 기행"
 date:   2022-11-06 22:15:00 
 lastmod : 2022-11-06 22:15:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 ## 개요
 

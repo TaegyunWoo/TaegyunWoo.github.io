@@ -9,8 +9,6 @@ sitemap :
   priority : 1.0
 ---
 
-<br/><br/>
-
 # Redis Strings 타입과 명령어
 
 ## 개요

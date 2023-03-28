@@ -1,6 +1,6 @@
 ---
 category: Comput-Struct
-tags: [ComputerStructure, 기억장치]
+tags: [ComputerStructure]
 title: "[Computer Structure] 외부 기억장치"
 date:   2021-10-21 22:36:00 
 lastmod : 2021-10-21 22:36:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 외부 기억장치
 

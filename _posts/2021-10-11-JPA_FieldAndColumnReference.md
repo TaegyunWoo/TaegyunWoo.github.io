@@ -9,8 +9,6 @@ sitemap :
   priority : 1.0
 ---
 
-<br/><br/>
-
 # 필드와 칼럼 매핑 관련 Reference
 
 ## 개요

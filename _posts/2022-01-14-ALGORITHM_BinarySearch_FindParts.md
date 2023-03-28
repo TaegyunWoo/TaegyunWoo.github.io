@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 이진탐색]
+tags: [Algorithm]
 title: "[알고리즘 - 이진탐색] 부품 찾기"
 date:   2022-01-14 16:30:00 
 lastmod : 2022-01-14 16:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 > [소스코드](https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/binarysearch/%EB%B6%80%ED%92%88_%EC%B0%BE%EA%B8%B0.java)
 

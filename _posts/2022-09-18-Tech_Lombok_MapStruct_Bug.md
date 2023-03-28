@@ -1,6 +1,6 @@
 ---
 category: Tech
-tags: [Spring]
+tags: [Tech]
 title: "Lombok 의 @Builder 사용시, MapStruct 버그"
 date:   2022-09-18 21:15:00 
 lastmod : 2022-09-18 21:15:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 MapStruct 를 사용하여 프로젝트를 진행하던 중, 이상한 버그를 발견하여 포스팅으로 해결 방법을 남긴다.
 

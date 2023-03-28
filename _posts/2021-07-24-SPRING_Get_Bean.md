@@ -1,6 +1,6 @@
 ---
 category: Spring-Core
-tags: [스프링, 핵심원리, Bean, getBean]
+tags: [Spring-Core]
 title: "[스프링 - 핵심원리] 스프링 빈 조회의 방법들"
 date:   2021-07-24 20:30:00 
 lastmod : 2021-07-24 20:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 본 게시글은 테스트 코드만을 다룬다. 이미 작성된 코드들 (`AppConfig` , `MemberService` , `MemberServiceImpl` 등)은 [이전 게시글](https://taegyunwoo.github.io/spring/SPRING_OCP_DIP)을 참고하면 된다.
 

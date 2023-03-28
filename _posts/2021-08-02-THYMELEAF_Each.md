@@ -1,6 +1,6 @@
 ---
 category: Thymeleaf
-tags: [타임리프, each문]
+tags: [Thymeleaf]
 title: "[타임리프] 반복문 each"
 date:   2021-08-02 12:30:00 
 lastmod : 2021-08-02 12:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 반복문
 

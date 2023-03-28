@@ -1,6 +1,6 @@
 ---
 category: Test-Framework
-tags: [Mockito, 개요]
+tags: [Test-Framework, Mockito]
 title: "[Mockito] Mockito 개요"
 date:   2021-09-17 17:00:00 
 lastmod : 2021-09-17 17:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 - **[예시 프로젝트 다운로드](https://github.com/TaegyunWoo/Spring-Test-Code-Example)**
 

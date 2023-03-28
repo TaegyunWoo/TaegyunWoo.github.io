@@ -1,6 +1,6 @@
 ---
 category: Spring-ADV
-tags: [스프링]
+tags: [Spring-Advanced]
 title: "[스프링-ADV] 고급 내용 설명을 위한 프로젝트 설정"
 date:   2022-05-29 15:30:00 
 lastmod : 2022-05-29 15:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 기본 프로젝트
 

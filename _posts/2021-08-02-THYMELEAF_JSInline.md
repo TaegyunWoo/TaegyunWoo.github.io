@@ -1,6 +1,6 @@
 ---
 category: Thymeleaf
-tags: [타임리프, JS인라인]
+tags: [Thymeleaf]
 title: "[타임리프] 자바스크립트 인라인"
 date:   2021-08-02 15:30:00 
 lastmod : 2021-08-02 15:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 자바스크립트 인라인
 

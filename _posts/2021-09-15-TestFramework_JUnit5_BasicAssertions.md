@@ -1,6 +1,6 @@
 ---
 category: Test-Framework
-tags: [JUnit5]
+tags: [Test-Framework, JUnit5]
 title: "[JUnit 5] 기본 테스트"
 date:   2021-09-15 16:30:00 
 lastmod : 2021-09-15 16:30:00

@@ -1,6 +1,6 @@
 ---
 category: Tech
-tags: [AWS]
+tags: [Tech]
 title: "AWS CodeDeploy 에서 시스템 환경변수 사용하기"
 date:   2022-11-14 14:00:00 
 lastmod : 2022-11-14 14:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 AWS CodeDeploy 를 사용해서 배포를 할 때, 배포할 서버의 환경변수를 사용해야 하는 경우가 있다.
 

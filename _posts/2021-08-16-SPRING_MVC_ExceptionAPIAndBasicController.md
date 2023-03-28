@@ -1,6 +1,6 @@
 ---
 category: Spring-MVC
-tags: [스프링, MVC, 예외처리]
+tags: [Spring-MVC]
 title: "[스프링 - MVC] 예외처리 - API 예외처리와 BasicErrorController"
 date:   2021-08-16 18:00:00 
 lastmod : 2021-08-16 18:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 - 이전 게시글
     1. [예외처리 - 서블릿 예외 처리](https://taegyunwoo.github.io/spring-mvc/SPRING_MVC_ExceptionServlet)

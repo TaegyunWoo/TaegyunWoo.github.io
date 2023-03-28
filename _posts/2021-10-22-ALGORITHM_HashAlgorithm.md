@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 해시알고리즘]
+tags: [Algorithm]
 title: "[알고리즘] 해시알고리즘"
 date:   2021-10-22 23:30:00 
 lastmod : 2021-10-22 23:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 해시 알고리즘이란?
 

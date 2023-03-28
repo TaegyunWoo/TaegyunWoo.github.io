@@ -1,6 +1,6 @@
 ---
 category: Diary
-tags: [Github]
+tags: [Diary]
 title: "인생 첫 PR Merge"
 date:   2021-10-25 14:15:00 
 lastmod : 2021-10-25 14:15:00

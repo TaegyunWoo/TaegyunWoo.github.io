@@ -1,6 +1,6 @@
 ---
 category: Test-Framework
-tags: [Test]
+tags: [Test-Framework]
 title: "[테스트] MockMvc와 실제 ServletContainer 통합 테스트"
 date:   2022-06-01 23:10:00 
 lastmod : 2022-06-01 23:10:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # MockMvc VS 실제 Servlet Container
 

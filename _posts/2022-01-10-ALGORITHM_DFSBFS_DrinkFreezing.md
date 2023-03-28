@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, DFS]
+tags: [Algorithm]
 title: "[알고리즘 - DFS] 음료수 얼려먹기"
 date:   2022-01-10 15:22:00 
 lastmod : 2022-01-10 15:22:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 > [소스코드](https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/dfs_bfs/%EC%9D%8C%EB%A3%8C%EC%88%98_%EC%96%BC%EB%A0%A4%EB%A8%B9%EA%B8%B0.java)  
 

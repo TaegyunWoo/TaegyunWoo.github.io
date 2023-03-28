@@ -9,8 +9,6 @@ sitemap :
   priority : 1.0
 ---
 
-<br/><br/>
-
 - 이전 게시글
     - [[JPA] 고급매핑 (1)](https://taegyunwoo.github.io/jpa/JPA_Mapping_Expert_1)
 

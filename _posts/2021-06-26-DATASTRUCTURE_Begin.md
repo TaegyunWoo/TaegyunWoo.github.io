@@ -1,6 +1,6 @@
 ---
 category: DataStructure
-tags: [데이터구조, 자료구조, 개요]
+tags: [DataStructure]
 layout: post
 title: "[데이터구조] 개요"
 date:   2021-06-26 12:00:00 
@@ -9,8 +9,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 자료형 & 추상 자료형
 

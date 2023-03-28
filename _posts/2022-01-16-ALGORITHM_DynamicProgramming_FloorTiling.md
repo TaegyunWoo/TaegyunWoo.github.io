@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, DP]
+tags: [Algorithm]
 title: "[알고리즘 - DP] 바닥 공사"
 date:   2022-01-16 18:30:00 
 lastmod : 2022-01-16 18:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 > [소스코드](https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/dp/바닥_공사.java)
 

@@ -1,6 +1,6 @@
 ---
 category: JPA
-tags: [JPA, 영속성관리]
+tags: [JPA]
 title: "[JPA] 영속성 관리 - 2"
 date:   2021-10-09 21:06:00 
 lastmod : 2021-10-09 21:06:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 - 이전 게시글
     - [[JPA] 영속성 관리 - 1](https://taegyunwoo.github.io/jpa/JPA_Persistence1)

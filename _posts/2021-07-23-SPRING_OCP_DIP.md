@@ -1,6 +1,6 @@
 ---
 category: Spring-Core
-tags: [스프링, 핵심원리, OCP, DIP, SRP]
+tags: [Spring-Core]
 title: "[스프링 - 핵심원리] OCP와 DIP 그리고 SRP"
 date:   2021-07-23 11:00:00 
 lastmod : 2021-07-23 11:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 들어가며..
 

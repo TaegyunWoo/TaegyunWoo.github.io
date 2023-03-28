@@ -1,6 +1,6 @@
 ---
 category: Test-Framework
-tags: [Test, MockMvc]
+tags: [Test-Framework]
 title: "[테스트] 단위테스트: @WebMvcTest와 MockMvc"
 date:   2021-09-21 14:30:00 
 lastmod : 2021-09-21 14:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # `@WebMvcTest` 애너테이션과 MockMvc 활용
 

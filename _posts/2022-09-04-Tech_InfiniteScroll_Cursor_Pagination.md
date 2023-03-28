@@ -1,6 +1,6 @@
 ---
 category: Tech
-tags: [DB]
+tags: [Tech]
 title: "Cursor Pagination 과 무한 스크롤"
 date:   2022-09-04 22:30:00 
 lastmod : 2022-09-04 22:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 ## 개요
 

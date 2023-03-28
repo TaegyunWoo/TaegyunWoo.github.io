@@ -1,6 +1,6 @@
 ---
 category: JPA
-tags: [JPA, 개요]
+tags: [JPA]
 title: "[JPA] JPA 개요"
 date:   2021-10-02 20:06:00 
 lastmod : 2021-10-02 20:06:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # JPA 소개
 

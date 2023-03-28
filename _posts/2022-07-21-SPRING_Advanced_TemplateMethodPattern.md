@@ -1,6 +1,6 @@
 ---
 category: Spring-ADV
-tags: [스프링]
+tags: [Spring-Advanced]
 title: "[스프링-ADV] 템플릿 메서드 패턴"
 date:   2022-07-21 22:30:00 
 lastmod : 2022-07-21 22:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 템플릿 메서드 패턴
 

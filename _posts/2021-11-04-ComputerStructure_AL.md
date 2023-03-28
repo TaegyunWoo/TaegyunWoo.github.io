@@ -9,8 +9,6 @@ sitemap :
   priority : 1.0
 ---
 
-<br/><br/>
-
 # 컴퓨터 산술
 
 ## 산술논리연산장치 (ALU)

@@ -9,8 +9,6 @@ sitemap :
   priority : 1.0
 ---
 
-<br/><br/>
-
 # 연결리스트 (Linked Lists)
 
 ## 연결 리스트의 특징

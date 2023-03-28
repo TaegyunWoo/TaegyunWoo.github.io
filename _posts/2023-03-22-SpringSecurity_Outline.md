@@ -1,6 +1,6 @@
 ---
 category: Spring-Security
-tags: [Spring, SpringSecurity]
+tags: [Spring-Security]
 title: "[Spring-Security] Spring Security가 무엇인가요?"
 date:   2023-03-22 17:15:00 
 lastmod : 2023-03-22 17:15:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 Spring 에서 인증/인가, 보안관리를 안전하고 편리하게 구현할 수 있도록 지원하는 프레임워크 Spring Security에 대해 알아보겠습니다.
 

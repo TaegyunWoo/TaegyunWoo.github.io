@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 그리디]
+tags: [Algorithm]
 title: "[알고리즘 - 그리디] 큰 수의 법칙"
 date:   2022-01-03 17:30:00 
 lastmod : 2022-01-03 17:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 > [소스코드](https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/greedy/%ED%81%B0_%EC%88%98%EC%9D%98_%EB%B2%95%EC%B9%99.java)
 

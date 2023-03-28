@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 분할정복, 합병정렬]
+tags: [Algorithm]
 title: "[알고리즘 - 분할정복] 합병정렬"
 date:   2021-07-16 15:00:00 
 lastmod : 2021-07-16 15:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 분할 정복 : 합병 정렬
 

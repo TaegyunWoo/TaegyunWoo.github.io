@@ -1,6 +1,6 @@
 ---
 category: Thymeleaf
-tags: [타임리프, 링크표현식]
+tags: [Thymeleaf]
 title: "[타임리프] 기본 표현식: URL 링크"
 date:   2021-08-01 20:30:00 
 lastmod : 2021-08-01 20:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # URL 링크
 

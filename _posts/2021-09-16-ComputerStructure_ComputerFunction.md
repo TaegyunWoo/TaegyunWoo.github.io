@@ -1,6 +1,6 @@
 ---
 category: Comput-Struct
-tags: [ComputerStructure, 컴퓨터기능, 인터럽트]
+tags: [ComputerStructure]
 title: "[Computer Structure] 컴퓨터 기능"
 date:   2021-09-16 16:00:00 
 lastmod : 2021-09-16 16:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 컴퓨터 기능
 

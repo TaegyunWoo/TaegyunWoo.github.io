@@ -1,6 +1,6 @@
 ---
 category: Thymeleaf
-tags: [타임리프, 연산방법]
+tags: [Thymeleaf]
 title: "[타임리프] 타임리프에서의 연산 방법들"
 date:   2021-08-02 11:30:00 
 lastmod : 2021-08-02 11:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 연산
 

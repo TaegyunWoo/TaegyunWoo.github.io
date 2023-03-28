@@ -1,6 +1,6 @@
 ---
 category: Spring-MVC
-tags: [스프링, MVC, 요청매핑]
+tags: [Spring-MVC]
 title: "[스프링 - MVC] 요청매핑을 하는 다양한 방법"
 date:   2021-07-28 11:30:00 
 lastmod : 2021-07-28 11:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 > 본 게시글은 로그 라이브러리로 `SLF4J` 와 `LogBack` 을 사용한다. 관련 자료는 따로 검색해보길 바란다.  
 SLF4J - [http://www.slf4j.org/](http://www.slf4j.org/)  

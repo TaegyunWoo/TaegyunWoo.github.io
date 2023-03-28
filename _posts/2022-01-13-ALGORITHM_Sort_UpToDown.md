@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 정렬]
+tags: [Algorithm]
 title: "[알고리즘 - 정렬] 위에서 아래로"
 date:   2022-01-13 13:10:00 
 lastmod : 2022-01-13 13:10:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 > [소스코드](https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/sort/%EC%9C%84%EC%97%90%EC%84%9C_%EC%95%84%EB%9E%98%EB%A1%9C.java)  
 

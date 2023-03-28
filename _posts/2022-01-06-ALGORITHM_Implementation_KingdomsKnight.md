@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 구현]
+tags: [Algorithm]
 title: "[알고리즘 - 구현] 왕실의 나이트"
 date:   2022-01-06 14:30:00 
 lastmod : 2022-01-06 14:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 > [소스코드](https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/implementation/%EC%99%95%EC%8B%A4%EC%9D%98_%EB%82%98%EC%9D%B4%ED%8A%B8.java)
 

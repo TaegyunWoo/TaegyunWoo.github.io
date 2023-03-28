@@ -1,30 +1,36 @@
----
-layout: compress
----
 <!DOCTYPE html>
-<html>
-<head>
-  {% include head.html %}
-</head>
-
-<!-- bare layout means not header and footer
-  like resume
+<!--
+    Type on Strap jekyll theme v2.4.5
+    Theme free for personal and commercial use under the MIT license
+    https://github.com/sylhare/Type-on-Strap/blob/master/LICENSE
 -->
-{% unless layout.bare %}
+<html lang="en">
+  <style>
+    pre {
+      tab-size: 2;
+    }
+
+    /* TOC (Outline) */
+    .section-nav {
+      margin: 2rem 1rem;
+      padding: 10px 30px;
+      border: 1px solid #929191;
+      border-radius: 3px;
+      font-size: medium;
+      box-shadow: 2px 1px 1px #3e3e3e;
+    }
+
+    .section-nav a {
+      color: black;
+    }
+  </style>
+
+  {% include default/head.liquid %}
   <body>
-    {% include header.html %}
-
-    <section id="l-main">
-      <div class="container">
-        {% include search_result.html %}
-        {{ content }}
-      </div>
-    </section>
-
-    {% include footer.html %}
+    {% include default/navbar.liquid %}
+    <div class="content main-content">
+      {{ content }}
+    </div>
+    {% include default/footer.liquid %}
   </body>
-{% else %}
-  {{ content }}
-{% endunless %}
-
 </html>

@@ -1,7 +1,7 @@
 ---
 category: Spring-Core
 layout: post
-tags: [스프링, 핵심원리, autowired, 충돌]
+tags: [Spring-Core]
 title: "[스프링 - 핵심원리] @Autowired 와 충돌문제"
 date:   2021-07-26 12:30:00 
 lastmod : 2021-07-26 12:30:00
@@ -9,8 +9,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # `@Autowired` - 조회 빈이 2개 이상일때
 

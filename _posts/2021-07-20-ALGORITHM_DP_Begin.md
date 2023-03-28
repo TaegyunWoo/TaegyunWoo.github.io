@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, DP, 개요]
+tags: [Algorithm]
 title: "[알고리즘 - 동적계획] 개요"
 date:   2021-07-21 11:00:00 
 lastmod : 2021-07-21 11:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # Dynamic Programming : 개요
 

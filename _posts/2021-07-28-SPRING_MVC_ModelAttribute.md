@@ -1,6 +1,6 @@
 ---
 category: Spring-MVC
-tags: [스프링, MVC, ModelAttribute, 객체바인딩]
+tags: [Spring-MVC]
 title: "[스프링 - MVC] @ModelAttribute"
 date:   2021-07-28 15:30:00 
 lastmod : 2021-07-28 15:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 개요
 

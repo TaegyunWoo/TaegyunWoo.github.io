@@ -1,6 +1,6 @@
 ---
 category: Algorithm
-tags: [알고리즘, 구현]
+tags: [Algorithm]
 title: "[알고리즘 - 구현] 게임 개발"
 date:   2022-01-06 16:30:00 
 lastmod : 2022-01-06 16:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 > [소스코드](https://github.com/TaegyunWoo/algorithm-study/blob/main/src/main/java/implementation/%EA%B2%8C%EC%9E%84_%EA%B0%9C%EB%B0%9C.java)
 

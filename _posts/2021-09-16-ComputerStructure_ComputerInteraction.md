@@ -1,6 +1,6 @@
 ---
 category: Comput-Struct
-tags: [ComputerStructure, 상호연결, 버스]
+tags: [ComputerStructure]
 title: "[Computer Structure] 컴퓨터 상호연결"
 date:   2021-09-16 16:06:00 
 lastmod : 2021-09-16 16:06:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 상호연결
 

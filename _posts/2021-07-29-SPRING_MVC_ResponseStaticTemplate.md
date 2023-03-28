@@ -1,6 +1,6 @@
 ---
 category: Spring-MVC
-tags: [스프링, MVC, 정적리소스, 뷰템플릿]
+tags: [Spring-MVC]
 title: "[스프링 - MVC] 정적 리소스와 뷰 템플릿으로 응답하기"
 date:   2021-07-29 14:30:00 
 lastmod : 2021-07-29 14:30:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 개요
 

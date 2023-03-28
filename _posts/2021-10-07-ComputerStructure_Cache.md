@@ -1,6 +1,6 @@
 ---
 category: Comput-Struct
-tags: [ComputerStructure, 기억장치, Cache]
+tags: [ComputerStructure]
 title: "[Computer Structure] 캐시 기억장치"
 date:   2021-10-07 22:06:00 
 lastmod : 2021-10-07 22:06:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 캐시 기억장치
 

@@ -1,6 +1,6 @@
 ---
 category: Thymeleaf
-tags: [타임리프, 스프링통합, 셀렉트박스]
+tags: [Thymeleaf]
 title: "[타임리프-스프링] 셀렉트 박스 처리"
 date:   2021-08-03 18:45:00 
 lastmod : 2021-08-03 18:45:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 # 셀렉트 박스
 

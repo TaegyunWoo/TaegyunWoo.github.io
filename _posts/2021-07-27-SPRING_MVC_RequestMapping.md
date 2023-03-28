@@ -1,6 +1,6 @@
 ---
 category: Spring-MVC
-tags: [스프링, MVC, 요청매핑]
+tags: [Spring-Core]
 title: "[스프링 - MVC] @RequestMapping과 원리"
 date:   2021-07-27 20:30:00 
 lastmod : 2021-07-27 21:00:00
@@ -8,8 +8,6 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-
-<br/><br/>
 
 스프링은 매우 유연하고, 실용적인 컨트롤러를 만들 수 있도록 `@RequestMapping` 애노테이션을 지원한다.
 
