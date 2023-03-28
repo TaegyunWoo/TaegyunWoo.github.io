@@ -14,6 +14,10 @@ layout: default
     </div>
   </header>
 
+  <div id="markdown-toc">
+    {% include toc.html html=content %}
+  </div>
+
   <section class="post-content">
   {% if page.bootstrap %}
     <div class="bootstrap-iso">
@@ -79,4 +83,24 @@ layout: default
   {% if page.feature-img %}
   header#main { background-image: url('{{ page.feature-img | relative_url }}'); }
   {% endif %}
+
+  /* TOC */
+  #markdown-toc::before {
+      content: "Contents";
+      font-weight: bold;
+  }
+  #markdown-toc {
+  border: 1px solid #aaa;
+  padding: 1.5em;
+  list-style: decimal;
+  display: inline-block;
+  font-size: medium;
+  width: 100%;
+  }
+  #markdown-toc a {
+    color: inherit;
+  }
+  #markdown-toc ul {
+    margin-left: 2rem;
+  }
 </style>
