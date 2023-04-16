@@ -78,6 +78,8 @@ author:
       icon: "fab fa-fw fa-github"
       url: "https://github.com/TaegyunWoo"
 
+timezone: "Asia/Seoul"
+
 # Defaults
 defaults:
   # _posts

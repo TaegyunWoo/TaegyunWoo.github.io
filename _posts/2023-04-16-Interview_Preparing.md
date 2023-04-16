@@ -2,8 +2,8 @@
 category: Interview
 tags: [코딩인터뷰 완전분석]
 title: "[코딩인터뷰 완전분석] 개발자 면접 전에 준비해야 하는 것들"
-date:   2023-04-16 16:00:00 
-lastmod : 2023-04-16 16:00:00
+date:   2023-04-16 16:00:00 +0900
+lastmod : 2023-04-16 16:00:00 +0900
 sitemap :
   changefreq : daily
   priority : 1.0
