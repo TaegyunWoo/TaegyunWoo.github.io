@@ -572,6 +572,8 @@ public void solution(int depth) {
 	}
 
 	resultSet = tmpSet;
+
+	solution(depth + 1);
 }
 ```
 
