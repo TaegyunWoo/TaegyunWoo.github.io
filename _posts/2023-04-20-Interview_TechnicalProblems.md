@@ -411,18 +411,18 @@ for (int a = 1; a <= 1000; a++)
 코드로 나타내면 아래와 같습니다.
 
 ```java
-HashSet<Integer, List<int[]>> hashSet = new HashSet<>();
+HashMap<Integer, List<int[]>> hashMap = new HashMap<>();
 
 //1번 절차
 for (int a = 1; a <= 1000; a++) {
 	for (int b = 1; b <= 1000; b++) {
 		int key = a^3 + b^3;
-		if (hashSet.containsKey(key)) {
-			hashSet.get(key).add(new int[] {a, b});
+		if (hashMap.containsKey(key)) {
+			hashMap.get(key).add(new int[] {a, b});
 		} else {
 			List<int[]> list = new ArrayList<>();
 			list.add(new int[] {a, b});
-			hashSet.put(key, list);
+			hashMap.put(key, list);
 		}
 	}
 }
@@ -430,7 +430,7 @@ for (int a = 1; a <= 1000; a++) {
 //2번 절차
 for (int a = 1; a <= 1000; a++) {
 	for (int b = 1; b <= 1000; b++) {
-		List<int[]> cdList = hashSet.get(a^3 + b^3);
+		List<int[]> cdList = hashMap.get(a^3 + b^3);
 		for (int[] cd : cdList)
 			print(a, b, cd[0], cd[1]);
 	}
