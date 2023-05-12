@@ -2,8 +2,8 @@
 category: Tech
 tags: [Tech]
 title: "Java와 쓰레드 모니터"
-date:   2023-05-12 16:15:00 
-lastmod : 2023-05-12 16:15:00
+date:   2023-05-12 16:15:00 +0900
+lastmod : 2023-05-12 16:15:00 +0900
 sitemap :
   changefreq : daily
   priority : 1.0
