@@ -43,6 +43,8 @@ sitemap :
 
 ## 애너테이션 프로세서를 통해, 자동으로 소스파일 만들기
 
+> [프로젝트 전체 소스코드](https://github.com/TaegyunWoo/Study-Pratices/tree/main/Annotation-Processor)
+
 이번에는 실제로 애너테이션 프로세서를 사용해서, 소스파일을 만들어봅시다.
 
 **어떤 객체를 나타내는 클래스(`Employee`)가 있을 때, 이 클래스에 대한 빌더 클래스(`EmployeeBuilder`)를 컴파일 시점에 자동으로 생성하도록 해보겠습니다.**
