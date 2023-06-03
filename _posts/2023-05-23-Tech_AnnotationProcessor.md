@@ -96,7 +96,7 @@ public @interface MyBuilder {
     - `@MyBuilder` 애너테이션을 컴파일 시점까지만 유지하고, 런타임 시점에서는 제거합니다.
     - 애너테이션 프로세서는 컴파일 시점에 동작하므로, 런타임 시점까지 애너테이션 정보를 유지할 필요가 없기 때문에 `RetentionPolicy.SOURCE` 으로 설정했습니다.
     
-    |||
+    |정책|애너테이션 유지 시점|
     | --- | --- |
     | RetentionPolicy.SOURCE | 컴파일러가 해당 애너테이션 정보를 사용한 뒤 제거합니다. |
     | RetentionPolicy.CLASS | 컴파일 이후, 클래스 파일까지 유지합니다. <br/> 런타임 시점에서는 제거됩니다. |
