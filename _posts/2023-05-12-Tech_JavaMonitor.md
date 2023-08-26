@@ -79,6 +79,7 @@ Critical Section을 지켜내기 위한 방법인 **상호 배제(Mutual Exclusi
 모니터는 주요 구성요소는 `공유자원` , `공유자원에 대한 작업 (함수)` , `Entry Queue` , `Waiting Queue` , `Condition Variable` 입니다.
 
 - `Condition Variable` (조건변수)
+    - **쓰레드 간의 시그널**을 주고 받는 방법을 제공합니다.
     - 이를 통해서, `wait()` 나 `notify()` 같은 함수를 호출해 쓰레드를 조작할 수 있습니다.
 - `Entry Queue`
     - 특정 객체의 임계영역에 접근할 때, 쓰레드는 해당 객체의 모니터(락)을 얻어야 합니다.  
