@@ -325,6 +325,9 @@ public class Example {
 
 하지만 **기억해야 하는 것은 `synchronized` 키워드는 동일한 객체에서만 동작한다는 것**입니다.
 
+> 참고로 `synchronized` 를 메서드에 적용하면, `synchronized(this)` 를 의미하게 됩니다.  
+즉, 현재 인스턴스에 대해 락을 건다는 의미이죠.
+
 **즉 `threadA` 와 `threadB` 가 서로 다른 `MyBusiness` 객체를 사용한다면, `synchronized` 메서드라도 동시에 호출할 수 있습니다.**  
 아래처럼 호출하면 말이죠!
 
@@ -357,8 +360,7 @@ public static void main(String[] args) throws InterruptedException {
 
 정적 메서드, 즉 static 메서드는 **‘클래스 락’** 에 의해서 동기화됩니다.
 
-클래스 락이란, **클래스 단위로 락이 걸리는 동기화 방식**입니다. **특정 클래스의 모든 static 메서드를 함께 동기화 처리하게 됩니다.**  
-**즉, 해당 클래스의 모든 static 메서드는 여러 쓰레드에서 동시에 실행될 수 없습니다.**
+클래스 락이란, **클래스 단위로 락이 걸리는 동기화 방식**입니다. **특정 클래스의 모든 synchronized static 메서드를 함께 동기화 처리하게 됩니다.**
 
 ```java
 public class Example {
@@ -398,13 +400,14 @@ public class Example {
     Thread threadA = new MyThread(1); //첫번째 static synchronized 메서드 실행
     Thread threadB = new MyThread(2); //두번째 static synchronized 메서드 실행
 
-    threadA.start(); //동시 실행 불가
-    threadB.start(); //동시 실행 불가
+    threadA.start(); //doSync1와 doSync2 동시 실행 불가
+    threadB.start(); //doSync1와 doSync2 동시 실행 불가
   }
 }
 ```
 
-**서로 다른 static 메서드라고 해도, 클래스 단위로 락이 걸리기 때문에 동시에 수행될 수 없습니다.**
+**서로 다른 static 메서드라고 해도, 클래스 단위로 락이 걸리기 때문에, 클래스 레벨에서의 락을 얻어야 각 synchronized static 메서드를 실행할 수 있습니다.**  
+**따라서 `doSync1()`와 `doSync2()`가 동시에 수행될 수 없습니다.**
 
 결과는 아래와 같습니다.
 
@@ -542,8 +545,6 @@ public class Example {
     - 다른 프로세스(쓰레드)의 자원 접근 권한을 강제로 취소할 수 없는 것
 - **대기 상태의 사이클 (순환대기)**
     - 두 개 이상의 프로세스(쓰레드)가 자원 접근을 서로 기다리는 상태
-
-마지막 조건을 방지하는 것이 가장 쉽기 때문에, 대부분의 데드락 방지 알고리즘은 4번 조건(순환대기)을 막는데 초점이 맞춰져 있습니다.
 
 <br/>
 
