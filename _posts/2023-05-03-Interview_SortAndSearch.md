@@ -70,7 +70,7 @@ public class BubbleSort {
     for (int count = 0; count < array.length; count++) {
       boolean isUpdated = false;
 
-      for (int idx = 0; idx < array.length-1; idx++) {
+      for (int idx = 0; idx < array.length - 1 - count; idx++) {
         if (array[idx] > array[idx+1]) {
           int tmp = array[idx+1];
           array[idx+1] = array[idx];
@@ -97,7 +97,9 @@ public class BubbleSort {
 }
 ```
 
-간단히 버블 정렬을 최적화할 수도 있습니다. **‘배열의 처음부터 끝까지 2개 원소를 살펴보는 작업’에서 아무런 변화가 없다면 이미 정렬된 상태이므로 반복을 중단시켜도 됩니다.**
+간단히 버블 정렬을 최적화할 수도 있습니다.  
+**‘배열의 처음부터 끝까지 2개 원소를 살펴보는 작업’에서 아무런 변화가 없다면 이미 정렬된 상태이므로 반복을 중단시켜도 됩니다.**  
+**또한, ‘배열의 처음부터 끝까지 2개 원소를 살펴보는 작업’을 수행할 때마다, 가장 큰 수부터 배열의 뒷쪽에 정렬된 상태가 됩니다. 따라서, 한번 반복할 때마다, 뒷쪽 원소를 1개씩 확인하지 않아도 됩니다.**
 
 <br/>
 
