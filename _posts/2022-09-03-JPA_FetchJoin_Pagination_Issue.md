@@ -141,15 +141,14 @@ public List<EntityA> findAll(int size) {
 
 ```java
 public List<EntityA> findAll(int size) {
-  //먼저 EntityA 의 ID를 조회한다.
-  String jpql = "SELECT a.id FROM EntityA a" +
-                " JOIN FETCH a.entityBList";
+  //먼저 EntityA 의 ID를 조회한다. 이때, Pagination API를 사용한다.
+  String jpql = "SELECT a.id FROM EntityA a"
   List<Long> idResult = em.createQuery(jpql, Long.class)
                    .setMaxResults(size)
                    .getResultList();
   
-  //추출된 ID를 통해, 원하는 결과를 얻는다.
-  jpql = "SELECT a FROM EntityA a" +
+  //추출된 ID를 IN 조건으로 사용하고 Fetch Join을 사용해, 원하는 결과를 얻는다.
+  jpql = "SELECT DISTINCT a FROM EntityA a" +
           " JOIN FETCH a.entityBList" +
           " WHERE a.id IN (:ids)";
   List<EntityA> finalResult = em.createQuery(jpql, EntityA.class)
@@ -159,6 +158,12 @@ public List<EntityA> findAll(int size) {
   return finalResult;
 }
 ```
+
+다만, `DISTINCT` 키워드를 두번째 쿼리에서 사용해줘야 한다.
+
+왜냐하면, 두번째 쿼리의 Fetch Join에 의해서 EntityA가 여전히 중복되어 등장하기 때문이다.
+
+`DISTINCT` 를 사용하는 대신, `Set` 자료구조를 사용해도 된다.
 
 ### 2. 1 -> N 으로 조회하지 않고, N -> 1 로 조회하기
 
