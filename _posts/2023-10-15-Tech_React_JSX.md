@@ -1,6 +1,6 @@
 ---
-category: Tech
-tags: [Tech, React]
+category: React
+tags: [React]
 title: "[React] JSX 알아보기"
 date: 2023-10-15 19:40:00 +0900
 lastmod: 2023-10-15 19:40:00 +0900

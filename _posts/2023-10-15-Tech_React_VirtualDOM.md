@@ -1,6 +1,6 @@
 ---
-category: Tech
-tags: [Tech, React]
+category: React
+tags: [React]
 title: "[React] 가상 DOM 객체"
 date: 2023-10-15 20:10:00 +0900
 lastmod: 2023-10-15 20:10:00 +0900
