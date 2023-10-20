@@ -145,7 +145,7 @@ ReactDOM.render(
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import TopMenuComponent from "./menu/TopMenuComponent";
+
 function App() {
   return <div className="App">{/* 개발자 작성 */}</div>;
 }
