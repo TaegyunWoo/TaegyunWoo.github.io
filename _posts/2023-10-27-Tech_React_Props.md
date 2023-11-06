@@ -180,7 +180,7 @@ function ChildComponent({prop1, prop2}) {
 > [setter 메서드에 의해서 변경되어야 하는 이유]  
 > React의 컴포넌트는 아래 조건에서 재 렌더링됩니다.
 >
-> 1. props가 바뀔 때
+> 1. props가 바뀔 때 (부모 컴포넌트가 재렌더링되며, 새로운 props를 전달해줄 때)
 > 2. state가 바뀔 때
 > 3. 부모 컴포넌트가 리렌더링 될 때
 > 4. this.forceUpdate로 강제로 렌더링을 트리거할 때
