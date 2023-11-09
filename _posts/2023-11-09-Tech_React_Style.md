@@ -48,7 +48,7 @@ React에서 스타일을 사용하는 방법에는 여러 가지가 존재합니
 만약, 여러 스타일을 적용한다면 아래와 같이 매우 지저분한 코드가 됩니다.
 
 ```jsx
-<h1 style={{ color: 'white', background: 'black', ... }}>Hello world</h1>
+<h1 style={ { color: 'white', background: 'black', ... } }>Hello world</h1>
 ```
 
 이 경우, 아래와 같이 변수를 통해 전달하는 것이 가독성 측면에서 효과적입니다.
@@ -87,8 +87,8 @@ const styles = {
 
 ```jsx
 {
-  fontSize: 30;
-} //30px
+  fontSize: 30; //30px
+}
 ```
 
 <br/><br/>
