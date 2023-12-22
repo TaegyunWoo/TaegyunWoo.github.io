@@ -2,8 +2,8 @@
 category: Diary
 tags: [Diary]
 title: "가비아 2023 하반기 백엔드 인턴 합격 후기"
-date: 2023-12-22 13:15:00
-lastmod: 2023-12-22 13:15:00
+date: 2023-12-22 14:50:00 +0900
+lastmod: 2023-12-22 14:50:00 +0900
 sitemap:
   changefreq: daily
   priority: 1.0
