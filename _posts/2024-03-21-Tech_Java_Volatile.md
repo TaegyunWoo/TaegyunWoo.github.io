@@ -124,25 +124,25 @@ public class Main {
     
     ![Untitled](/assets/img/2024-03-21-Tech_Java_Volatile/Untitled%202.png)
     
-    메인 메모리로부터 가져온 `flag` 변수의 값 true를 Cache에 저장한 뒤, 코드를 실행합니다.
+    - 메인 메모리로부터 가져온 `flag` 변수의 값 true를 Cache에 저장한 뒤, 코드를 실행합니다.
     
-    Cache에 저장된 `flag` 변수의 값이 true이므로, while 문을 계속 반복합니다.
+    - Cache에 저장된 `flag` 변수의 값이 true이므로, while 문을 계속 반복합니다.
     
 3. 메인 쓰레드가 `flag` 변수 업데이트
     
     ![Untitled](/assets/img/2024-03-21-Tech_Java_Volatile/Untitled%203.png)
     
-    메인 쓰레드가 `flag` 변수를 false로 업데이트 합니다.
+    - 메인 쓰레드가 `flag` 변수를 false로 업데이트 합니다.
     
-    여기서 중요한 것은 **쓰레드 `threadA` (CPU Core B)에 캐싱된 `flag` 값은 여전히 true라는 것**입니다.
+    - 여기서 중요한 것은 **쓰레드 `threadA` (CPU Core B)에 캐싱된 `flag` 값은 여전히 true라는 것**입니다.
     
-    이 때문에 `threadA` 는 여전히 while 문을 벗어나지 못합니다.
+    - 이 때문에 `threadA` 는 여전히 while 문을 벗어나지 못합니다.
     
 
 이 문제를 해결하는 방법에는 크게 두 가지가 있습니다.
 
 - 매 while 반복마다, Cache를 Flush하는 방법
-- 바로 Main Memory에서 데이터를 읽어오는 방법 (volatile)
+- Cache를 무시하고, 바로 Main Memory에서 데이터를 읽어오는 방법 (volatile)
 
 각 방법에 대해 좀 더 자세히 알아볼까요?
 
@@ -196,7 +196,7 @@ public class Main {
     
     ![Untitled](/assets/img/2024-03-21-Tech_Java_Volatile/Untitled%206.png)
     
-    시스템 API를 호출함으로써 Cache가 Flush 되었습니다.
+    - 시스템 API를 호출함으로써 Cache가 Flush 되었습니다.
     
 4. 메인 쓰레드가 `flag` 변수 업데이트
     
@@ -206,9 +206,9 @@ public class Main {
     
     ![Untitled](/assets/img/2024-03-21-Tech_Java_Volatile/Untitled%208.png)
     
-    **쓰레드 `threadA` 의 캐시가 Flush 되었으므로, 메인 메모리에서 `flag` 변수의 값을 가져옵니다.**
+    - **쓰레드 `threadA` 의 캐시가 Flush 되었으므로, 메인 메모리에서 `flag` 변수의 값을 가져옵니다.**
     
-    이를 통해, 업데이트된 최신 값을 확인할 수 있고, **while문이 종료**됩니다.
+    - 이를 통해, 업데이트된 최신 값을 확인할 수 있고, **while문이 종료**됩니다.
     
 
 이를 통해, 변수의 일관성이 깨지는 문제를 해결할 수 있습니다.
