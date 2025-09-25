@@ -1,7 +1,7 @@
 ---
 category: Tech
 tags: [Tech]
-title: "JPA "
+title: "다중 DB 환경에서의 UPDATE/DELETE 무시 이슈. 그리고 Transaction Manager, Entity Manager 간의 관계"
 date: 2025-09-24 23:15:00
 lastmod: 2025-09-24 23:15:00
 sitemap:
