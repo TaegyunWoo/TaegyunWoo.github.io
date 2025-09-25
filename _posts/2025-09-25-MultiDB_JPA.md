@@ -165,7 +165,7 @@ class OracleConfig {
    1. JPA의 `EntityManager`는 각자 독립적인 **영속성 컨텍스트**를 가집니다.
    2. 제 프로젝트에서는 `mysqlEntityManager`와 `oracleEntityManager`가 각각 별개의 영속성 컨텍스트를 생성 및 관리하고 있었습니다.
 3. Oracle 엔티티 조회 및 변경
-   1. `paymentRepository.findByOrderNumIn(...)`가 호출될 때, `OracleConfig`에 설정된 `oracleEntityManager`가 동작하여 **Oracle 영속성 컨텍스트**에 조회된 `Payment` 엔티티들을 영속화합니다.
+   1. `paymentRepository.findByOrderNumIn(...)`가 호출될 때, `OracleConfig`에 설정된 `oracleEntityManager`가 동작하여 **Oracle 영속성 컨텍스트**에 조회된 `Payment` 엔티티들을 영속화합니다. 읽기 작업은 쓰기 작업과 달리 활성화된 트랜잭션이 필수가 아니며, 보통 즉시 실행되기 때문에 트랜잭션 없이도 실행될 수 있습니다.
    2. 이후 `it.initTaxStatus()` 호출로 상태 변경이 일어납니다. 이 변경 내역은 **Oracle 영속성 컨텍스트**에만 기록됩니다.
 4. 잘못된 컨텍스트에 대한 트랜잭션 커밋
    1. 메서드가 종료될 때, `@Transactional`은 1번에서 지정된 `mysqlTransactionManager`에게 트랜잭션 커밋을 요청합니다.
